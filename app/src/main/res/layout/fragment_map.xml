@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".fragment.MapFragment">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 tools:context=".fragment.MapFragment">
     <com.google.android.gms.maps.MapView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:id="@+id/map_view"
-    />
+            android:layout_height="match_parent"
+            android:id="@+id/map_view"/>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:fillViewport="true"
+            android:id="@+id/bottom_sheet_view"
+            app:layout_behavior="@string/bottom_sheet_behavior"
+            app:behavior_hideable="false"
+            app:behavior_peekHeight="60dp"
+            android:background="@drawable/top_rounded"
+            android:elevation="16dp">
+
+        <include
+            android:id="@+id/scrollview"
+            layout="@layout/friends_list"
+        />
 
 
-</FrameLayout>
+    </FrameLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

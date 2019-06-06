@@ -20,7 +20,7 @@ object DummyContent {
      * A map of sample (dummy) items, by ID.
      */
 
-    private val COUNT = 2
+    private val COUNT = 12
 
     init {
         // Add some sample items.
@@ -34,7 +34,7 @@ object DummyContent {
     }
 
     private fun createDummyItem(position: Int): DummyItem {
-        return DummyItem("010-2922-2661", "Placeholder fake dummy message.", "11:23 PM")
+        return DummyItem("010-2922-2661", "Placeholder fake dummy message.", "11:23 PM", "John", "20s ago")
     }
 
     private fun makeDetails(position: Int): String {
@@ -49,7 +49,7 @@ object DummyContent {
     /**
      * A dummy item representing a piece of content.
      */
-    data class DummyItem(val sender: String, val body: String, val time: String) {
+    data class DummyItem(val sender: String, val body: String, val time: String, val name: String, val elapse: String) {
         override fun toString(): String = sender + "\n" + body
     }
 }

@@ -3,6 +3,11 @@ package com.potados.geomms.fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +16,12 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
+import com.potados.geomms.adapter.FriendsRecyclerViewAdapter
+import com.potados.geomms.dummy.DummyContent
 import kotlinx.android.synthetic.main.fragment_map.*
+import kotlinx.android.synthetic.main.fragment_map.view.*
+import kotlinx.android.synthetic.main.friends_list.*
+import kotlinx.android.synthetic.main.friends_list.view.*
 
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -31,6 +41,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         map.onCreate(savedInstanceState)
         map.getMapAsync(this)
 
+        val friendsRecyclerView: RecyclerView = view.findViewById(R.id.friends_recyclerview)
+        with(friendsRecyclerView) {
+            addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+            layoutManager = LinearLayoutManager(context)
+            itemAnimator = DefaultItemAnimator()
+            adapter = FriendsRecyclerViewAdapter(DummyContent.ITEMS, null)
+
+            ViewCompat.setNestedScrollingEnabled(this, true)
+        }
+
         return view
     }
 
@@ -45,8 +65,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             snippet("Capital of korea")
         })
 
-
-        MapsInitializer.initialize(activity)
+        activity?.let {
+            MapsInitializer.initialize(it)
+        }
 
         map?.moveCamera(CameraUpdateFactory.newLatLng(seoul))
         map?.animateCamera(CameraUpdateFactory.zoomTo(10.0f))

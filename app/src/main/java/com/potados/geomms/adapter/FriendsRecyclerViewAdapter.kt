@@ -11,7 +11,6 @@ import com.potados.geomms.fragment.MessageListFragment.OnListFragmentInteraction
 import com.potados.geomms.R
 import com.potados.geomms.dummy.DummyContent.DummyItem
 
-import kotlinx.android.synthetic.main.fragment_message_list_item.view.*
 import kotlinx.android.synthetic.main.friends_list_item.view.*
 
 /**
@@ -19,10 +18,10 @@ import kotlinx.android.synthetic.main.friends_list_item.view.*
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class MessageListRecyclerViewAdapter(
+class FriendsRecyclerViewAdapter(
     private val mValues: List<DummyItem>,
     private val mListener: OnListFragmentInteractionListener?
-) : RecyclerView.Adapter<MessageListRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<FriendsRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
 
@@ -37,7 +36,7 @@ class MessageListRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_message_list_item, parent, false)
+            .inflate(R.layout.friends_list_item, parent, false)
         return ViewHolder(view)
     }
 
@@ -45,9 +44,8 @@ class MessageListRecyclerViewAdapter(
         val item = mValues[position]
 
         with (holder) {
-            senderTextView.text = item.sender
-            bodyTextView.text = item.body
-            timeTextView.text = item.time
+            nameTextView.text = item.name
+            timeTextView.text = item.elapse
         }
 
         with(holder.mView) {
@@ -59,12 +57,11 @@ class MessageListRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val senderTextView: TextView = mView.sender_textview
-        val bodyTextView: TextView = mView.body_textview
-        val timeTextView: TextView = mView.time_textview
+        val nameTextView: TextView = mView.name_textview
+        val timeTextView: TextView = mView.elapse_textview
 
         override fun toString(): String {
-            return super.toString() + " '" + senderTextView.text + "'"
+            return super.toString() + " '" + nameTextView.text + "'"
         }
     }
 }
