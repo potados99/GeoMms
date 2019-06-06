@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="75dp"
+                                             android:id="@+id/root_layout">
+    <TextView
+            android:text="Sender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sender_textview" android:textStyle="bold"
+            android:textColor="@android:color/black" android:textSize="18sp" android:layout_marginTop="6dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="88dp" app:layout_constraintStart_toStartOf="parent"/>
+    <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp" app:srcCompat="@drawable/ic_home_black_24dp"
+            android:id="@+id/imageView"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.533"/>
+    <TextView
+            android:text="Lorem ipsum dolor amit yeah yeah yeah Lorem ipsum dolor amit yeah yeah yeah yeah yeah"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/body_textview"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="88dp"
+            app:layout_constraintTop_toBottomOf="@+id/sender_textview"
+            android:textSize="15sp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp" android:maxLines="2"/>
+    <TextView
+            android:text="11:23 PM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_textview" android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="6dp"/>
+</android.support.constraint.ConstraintLayout>
