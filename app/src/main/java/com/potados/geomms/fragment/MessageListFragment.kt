@@ -2,11 +2,11 @@ package com.potados.geomms.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +16,9 @@ import com.potados.geomms.adapter.MessageListRecyclerViewAdapter
 import com.potados.geomms.dummy.DummyContent
 import com.potados.geomms.dummy.DummyContent.DummyItem
 
+/**
+ * 메시지 대화 목록을 보여주는 프래그먼트입니다.
+ */
 class MessageListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,11 +32,16 @@ class MessageListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_message_list, container, false)
 
         // Set the adapter
-        if (view is RecyclerView) {
+        if (view is androidx.recyclerview.widget.RecyclerView) {
             with(view) {
-                addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
-                layoutManager = LinearLayoutManager(context)
-                itemAnimator = DefaultItemAnimator()
+                addItemDecoration(
+                    androidx.recyclerview.widget.DividerItemDecoration(
+                        activity,
+                        androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+                    )
+                )
+                layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+                itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator()
                 adapter = MessageListRecyclerViewAdapter(DummyContent.ITEMS, null)
             }
         }

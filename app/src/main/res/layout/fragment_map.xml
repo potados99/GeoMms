@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 tools:context=".fragment.MapFragment">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent"
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     tools:context=".fragment.MapFragment">
     <com.google.android.gms.maps.MapView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -12,22 +12,18 @@
 
     <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="@dimen/bottom_sheet_height"
             android:fillViewport="true"
-            android:id="@+id/bottom_sheet_view"
+            android:id="@+id/fragment_map_bottom_sheet_view"
             app:layout_behavior="@string/bottom_sheet_behavior"
             app:behavior_hideable="false"
-            app:behavior_peekHeight="60dp"
+            app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
             android:background="@drawable/top_rounded"
             android:elevation="16dp">
 
-        <include
-            android:id="@+id/scrollview"
-            layout="@layout/friends_list"
-        />
-
+        <include layout="@layout/friends_list"/>
 
     </FrameLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

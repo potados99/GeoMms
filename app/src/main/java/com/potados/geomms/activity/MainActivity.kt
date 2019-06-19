@@ -1,17 +1,25 @@
 package com.potados.geomms.activity
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.fragment.MapFragment
 import com.potados.geomms.fragment.MessageListFragment
 import com.potados.geomms.R
 import com.potados.geomms.fragment.SettingFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
+/**
+ * 구현 목표:
+ * 1. 코드 알아보기 쉽게 작성하기.
+ * 2. 안전하게 작성하기.
+ */
 class MainActivity : AppCompatActivity() {
 
+    /**
+     * 시작할 때에 프래그먼트를 모두 만들어 가지고 있음.
+     */
     private val mapFragment = MapFragment()
-    private val messageFragment = MessageListFragment()
+    private val messageListFragment = MessageListFragment()
     private val settingFragment = SettingFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,23 +27,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         nav_view.setOnNavigationItemSelectedListener { item ->
-            switchFragment(item.itemId)
+            switchFragmentByNavigationItemId(item.itemId)
         }
 
-        switchFragment(R.id.navigation_home)
+        /**
+         * navigation_home이 기본.
+         */
+        switchFragmentByNavigationItemId(R.id.navigation_map)
     }
 
-
     /**
-     * Switch fragment by id of selected menu item.
+     * 선택된 네비게이션 버튼의 id에 맞게 프래그먼트를 바꾸어줍니다.
+     * @return id가 { navigation_home, navigation_message, navigation_setting } 세 개 중 하나가 아니면 false
      */
-    private fun switchFragment(id: Int): Boolean {
-        val fragment = when (id) {
-            R.id.navigation_home -> {
+    private fun switchFragmentByNavigationItemId(navigationItemId: Int): Boolean {
+        val fragment = when (navigationItemId) {
+            R.id.navigation_map -> {
                 mapFragment
             }
             R.id.navigation_message -> {
-                messageFragment
+                messageListFragment
             }
             R.id.navigation_setting -> {
                 settingFragment
