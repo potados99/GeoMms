@@ -2,10 +2,12 @@ package com.potados.geomms.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.fragment.MapFragment
 import com.potados.geomms.fragment.MessageListFragment
 import com.potados.geomms.R
-import com.potados.geomms.fragment.SettingFragment
+import com.potados.geomms.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -20,20 +22,31 @@ class MainActivity : AppCompatActivity() {
      */
     private val mapFragment = MapFragment()
     private val messageListFragment = MessageListFragment()
-    private val settingFragment = SettingFragment()
+
+    /**
+     * 메인 액티비티 수명주기동안 함께할 뷰모델.
+     */
+    private val mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        /**
+         * 뷰모델과 바인딩
+         */
+        mainViewModel.getSelectedTabMenuItemId().observe(this) {
+            switchFragmentByNavigationItemId(it)
+        }
+
         nav_view.setOnNavigationItemSelectedListener { item ->
-            switchFragmentByNavigationItemId(item.itemId)
+            mainViewModel.setSelectedTabMenuItemId(item.itemId)
         }
 
         /**
-         * navigation_home이 기본.
+         * 지도 탭 선택해놓기.
          */
-        switchFragmentByNavigationItemId(R.id.navigation_map)
+        mainViewModel.setSelectedTabMenuItemId(R.id.menu_item_navigation_map)
     }
 
     /**
@@ -42,15 +55,17 @@ class MainActivity : AppCompatActivity() {
      */
     private fun switchFragmentByNavigationItemId(navigationItemId: Int): Boolean {
         val fragment = when (navigationItemId) {
-            R.id.navigation_map -> {
+            R.id.menu_item_navigation_map -> {
                 mapFragment
             }
-            R.id.navigation_message -> {
+            R.id.menu_item_navigation_message -> {
                 messageListFragment
             }
+            /*
             R.id.navigation_setting -> {
                 settingFragment
             }
+            */
 
             else -> return false
         }
@@ -61,5 +76,12 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         return true
+    }
+
+    companion object {
+        val TAB_IDS = arrayOf(
+            R.id.menu_item_navigation_map,
+            R.id.menu_item_navigation_message
+        )
     }
 }
