@@ -1,7 +1,9 @@
 <resources>
-    <string name="friend_list_title">Friends</string>
+    <string name="label_friend_list_title">Friends</string>
     <string name="app_name">Geo MMS</string>
     <string name="title_setting">Settings</string>
-    <string name="title_message">Message</string>
-    <string name="title_home">Map</string>
+    <string name="tab_label_title_message">Message</string>
+    <string name="tab_label_title_home">Map</string>
+    <string name="btn_lable_refresh">refresh</string>
+    <string name="btn_label_call">call</string>
 </resources>

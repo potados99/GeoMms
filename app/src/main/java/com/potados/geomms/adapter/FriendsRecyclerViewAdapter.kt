@@ -57,8 +57,8 @@ class FriendsRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
-        val nameTextView: TextView = mView.name_textview
-        val timeTextView: TextView = mView.elapse_textview
+        val nameTextView: TextView = mView.friends_list_item_name
+        val timeTextView: TextView = mView.friends_list_item_last_update
 
         override fun toString(): String {
             return super.toString() + " '" + nameTextView.text + "'"

@@ -12,7 +12,6 @@ import com.potados.geomms.R
 import com.potados.geomms.dummy.DummyContent.DummyItem
 
 import kotlinx.android.synthetic.main.fragment_message_list_item.view.*
-import kotlinx.android.synthetic.main.friends_list_item.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
@@ -59,9 +58,9 @@ class MessageListRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
-        val senderTextView: TextView = mView.sender_textview
-        val bodyTextView: TextView = mView.body_textview
-        val timeTextView: TextView = mView.time_textview
+        val senderTextView: TextView = mView.message_list_item_sender_name
+        val bodyTextView: TextView = mView.message_list_item_body
+        val timeTextView: TextView = mView.message_list_item_time
 
         override fun toString(): String {
             return super.toString() + " '" + senderTextView.text + "'"
