@@ -1,7 +1,15 @@
 package com.potados.geomms.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Telephony
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -31,6 +39,25 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        requirePermission(Manifest.permission.READ_SMS)
+
+        val cursor = contentResolver.query(Uri.parse("content://sms/inbox"), null, null, null, null)
+        cursor?.let {
+            if (it.moveToFirst()) {
+                do {
+                    var str = ""
+                    for (i in (0 until it.columnCount)) {
+                        str += " " + cursor.getColumnName(i) + ":" + cursor.getString(i) + "\n"
+                    }
+                    Log.d("Message start:", str)
+                    Log.d("Messages end:","\n\n")
+
+                } while (it.moveToNext())
+            }
+        }
+
+
 
         /**
          * 뷰모델은 onCreate에서 만들어야된답니다..
@@ -86,6 +113,25 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         return true
+    }
+
+
+    /**
+     * 권한을 얻어냅니다.
+     */
+    private fun requirePermission(permission: String) {
+        val permissionCheck = ContextCompat.checkSelfPermission(this@MainActivity, permission)
+        val granted = (permissionCheck == PackageManager.PERMISSION_GRANTED)
+        val userDenied = ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
+
+        if (!granted) {
+            if (userDenied) {
+                val permissionBagging = "Please allow access to $permission"
+                Toast.makeText(this@MainActivity, permissionBagging, Toast.LENGTH_SHORT).show()
+            }
+
+            ActivityCompat.requestPermissions(this, arrayOf(permission), 1)
+        }
     }
 
     companion object {
