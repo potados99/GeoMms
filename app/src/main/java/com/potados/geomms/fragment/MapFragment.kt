@@ -38,24 +38,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
 
-        /**
-         * 레이아웃 씌워주기.
-         */
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
-        /**
-         * 사용할 객체 레퍼런스 가져와놓기.
-         *
-         * kotlin의 synthetic 기능을 이용해 map_view 인스턴스에 바로 접근하면
-         * 널참조가 일어나는 문제를 목격하여 findViewById로 접근함.
-         *
-         * 만약 가져온 인스턴스가 널이라면 로그 출력하고 반환함.
-         */
         val map: MapView = view.findViewById(R.id.map_view) ?: let {
             Log.e("MapFragment:onCreateView()",  "R.id.map_view is null.")
             return view
         }
-        val friendsListRecyclerView: androidx.recyclerview.widget.RecyclerView = view.findViewById(R.id.friends_list_recyclerview) ?: let {
+        val friendsListRecyclerView: RecyclerView = view.findViewById(R.id.friends_list_recyclerview) ?: let {
             Log.e("MapFragment:onCreateView()",  "R.id.friends_list_recyclerview is null.")
             return view
         }
@@ -84,17 +73,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
              * 아이템 사이에 선을 그어줍니다.
              */
             addItemDecoration(
-                androidx.recyclerview.widget.DividerItemDecoration(
+                DividerItemDecoration(
                     activity,
-                    androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+                    DividerItemDecoration.VERTICAL
                 )
             )
 
             /**
              * 어댑터 설정해줍니다.
              */
-            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-            adapter = FriendsRecyclerViewAdapter(DummyContent.ITEMS, null)
+            layoutManager = LinearLayoutManager(context)
+            adapter = FriendsRecyclerViewAdapter(DummyContent.ITEMS)
 
             /**
              * 스크롤 이벤트가 리사이클러뷰에게 도착할 수 있게 해줍니다.

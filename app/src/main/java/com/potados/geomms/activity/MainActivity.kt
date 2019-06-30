@@ -1,6 +1,7 @@
 package com.potados.geomms.activity
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -13,10 +14,13 @@ import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.fragment.MapFragment
 import com.potados.geomms.fragment.MessageListFragment
 import com.potados.geomms.R
+import com.potados.geomms.data.MessageRepositoryImpl
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
 import com.potados.geomms.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_setting_list_item.*
+import kotlin.system.exitProcess
 
 /**
  * 위치정보 공유에 특화된 sms 클라이언트입니다.
@@ -34,21 +38,16 @@ import kotlinx.android.synthetic.main.activity_main.*
  */
 class MainActivity : AppCompatActivity() {
 
-    /**
-     * 프래그먼트
-     */
     private val mapFragment = MapFragment()
     private val messageListFragment = MessageListFragment()
 
-    /**
-     * 뷰모델
-     */
     private lateinit var mainViewModel: MainViewModel
 
     /**
      * Toast wrapper인 Notify 객체
      */
     private val n = Notify(this)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +56,23 @@ class MainActivity : AppCompatActivity() {
         requirePermission(Manifest.permission.READ_SMS)
     }
 
-    /**
-     * 권한 설정 이후 결과를 수신하여 처리합니다.
-     */
+    private fun requirePermission(permission: String) {
+        val permissionCheckResult = ContextCompat.checkSelfPermission(this@MainActivity, permission)
+        val granted = (permissionCheckResult == PackageManager.PERMISSION_GRANTED)
+        val userDenied = ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
+
+        if (granted) {
+            onPermissionSuccess()
+        }
+        else {
+            if (userDenied) {
+                n.short("Please allow access to $permission")
+            }
+
+            ActivityCompat.requestPermissions(this, arrayOf(permission), PERMISSION_REQUEST_CODE)
+        }
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
@@ -81,15 +94,48 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun onPermissionSuccess() {
+        setupViewModelAndUI()
 
-    /**
-     * 권한을 얻어냅니다.
-     */
+        /**
+         * 지도 탭 선택해놓기.
+         */
+        mainViewModel.setSelectedTabMenuItemId(R.id.menu_item_navigation_map)
+    }
 
-    /**
-     * 선택된 네비게이션 버튼의 id에 맞게 프래그먼트를 바꾸어줍니다.
-     * @return id가 { navigation_home, navigation_message } 두 개 중 하나가 아니면 false
-     */
+    private fun onPermissionFail() {
+
+        Popup(this)
+            .withTitle("Alert")
+            .withMessage("Failed to get permission.")
+            .withPositiveButton("OK", object: DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    exitProcess(1)
+                }
+            })
+            .show()
+    }
+
+    private fun setupViewModelAndUI() {
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+
+        mainViewModel.getSelectedTabMenuItemId().observe(this, object: Observer<Int> {
+            override fun onChanged(t: Int) {
+                switchFragmentByNavigationItemId(t)
+
+                // TODO: 테스트 코드입니다.
+                if (t == TAB_IDS[1]) {
+                    usingRepository()
+                }
+            }
+        })
+
+        nav_view.setOnNavigationItemSelectedListener { item ->
+            mainViewModel.setSelectedTabMenuItemId(item.itemId)
+        }
+
+    }
+
     private fun switchFragmentByNavigationItemId(navigationItemId: Int): Boolean {
         val fragment = when (navigationItemId) {
             R.id.menu_item_navigation_map -> {
@@ -110,59 +156,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun requirePermission(permission: String) {
-        val permissionCheckResult = ContextCompat.checkSelfPermission(this@MainActivity, permission)
-        val granted = (permissionCheckResult == PackageManager.PERMISSION_GRANTED)
-        val userDenied = ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
 
-        if (granted) {
-            onPermissionSuccess()
-        }
-        else {
-            if (userDenied) {
-                n.short("Please allow access to $permission")
-            }
-
-            ActivityCompat.requestPermissions(this, arrayOf(permission), PERMISSION_REQUEST_CODE)
-        }
-    }
-
-    private fun onPermissionSuccess() {
-
-        showSmsInbox()
-
-        return
-
-        /**
-         * 뷰모델은 onCreate에서 만들어야된답니다..
-         */
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
-        /**
-         * 뷰모델과 바인딩
-         */
-        mainViewModel.getSelectedTabMenuItemId().observe(this, object: Observer<Int> {
-            override fun onChanged(t: Int) {
-                /**
-                 * 탭이 바뀌면 해야 할 일들입니다.
-                 */
-                switchFragmentByNavigationItemId(t)
-            }
-        })
-
-        nav_view.setOnNavigationItemSelectedListener { item ->
-            mainViewModel.setSelectedTabMenuItemId(item.itemId)
-        }
-
-        /**
-         * 지도 탭 선택해놓기.
-         */
-        mainViewModel.setSelectedTabMenuItemId(R.id.menu_item_navigation_map)
-    }
-
-    private fun onPermissionFail() {
-        Popup.show(this, "Failed to get permission.")
-    }
 
 
     /**
@@ -171,10 +165,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun showSmsInbox() {
         val p = Popup(this).withTitle("Messages")
-        val uri = Uri.parse("content://sms/inbox")
-        val projection = arrayOf("_id", "thread_id", "address", "date", "body")
+        val uri = Uri.parse("content://sms")
+        val projection = arrayOf("thread_id", "_id", "type", "address", "body")
         val cursor = contentResolver.query(uri, projection, null, null, null) ?: return
-
         if (cursor.moveToFirst()) {
             do {
                 var str = ""
@@ -185,10 +178,20 @@ class MainActivity : AppCompatActivity() {
 
             } while (cursor.moveToNext())
         }
+        cursor.close()
 
         p.show()
+    }
 
-        cursor.close()
+    private fun usingRepository() {
+        val repo = MessageRepositoryImpl(contentResolver)
+
+        val p = Popup(this).withTitle("Heads")
+        repo.getConversationHeads().forEach {
+            p.withMoreMessage("${it.address}\n${it.body}\n\n")
+        }
+
+        p.show()
     }
 
     companion object {
