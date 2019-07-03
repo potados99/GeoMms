@@ -8,7 +8,7 @@
     <com.mikhaellopez.circularimageview.CircularImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/avatar"
+            android:src="@drawable/avatar_default"
             android:id="@+id/friends_list_item_pic"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"

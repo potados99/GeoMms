@@ -2,6 +2,8 @@ package com.potados.geomms.data
 
 import android.content.ContentResolver
 import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepository {
 
@@ -14,21 +16,34 @@ class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepo
         Sms.COL_BODY
     )
     private val conversationsUriString = "content://mms-sms/conversations"
-    private val smsUriString = "content://sms"
+    // private val smsUriString = "content://sms"
 
-    override fun updateRepository() {
+    private val conversationHeads = mutableListOf<Sms>()
+    private val liveConversationHeads = MutableLiveData<List<Sms>>()
+
+    init {
+        updateRepository()
     }
 
-    override fun getConversationHeads(): List<Sms> = querySmsToList(resolver, conversationsUriString)
+    override fun updateRepository() {
+        conversationHeads.clear()
+        conversationHeads.addAll(querySmsToList(resolver, conversationsUriString).reversed())
+        liveConversationHeads.value = conversationHeads
+    }
 
-    override fun getSmsThreadByThreadId(threadId: Int): SmsThread = SmsThread(querySmsToList(resolver, "$conversationsUriString/$threadId"))
+    override fun getConversationHeads(): List<Sms> = conversationHeads
+
+    override fun getLiveConversationHeads(): LiveData<List<Sms>> = liveConversationHeads
+
+    override fun getSmsThreadByThreadId(threadId: Int): SmsThread =
+        SmsThread(querySmsToList(resolver, "$conversationsUriString/$threadId"))
 
     override fun addSms(sms: Sms) {
+
     }
 
     override fun deleteSms(id: Int) {
     }
-
 
     private fun querySmsToList(resolver: ContentResolver, uriString: String, where: String? = null): List<Sms> =
         mutableListOf<Sms>().apply {

@@ -9,10 +9,10 @@ import android.widget.TextView
 
 import com.potados.geomms.R
 import com.potados.geomms.data.Sms
+import com.potados.geomms.util.Notify
 import com.potados.geomms.util.ShortDate
 
 import kotlinx.android.synthetic.main.fragment_message_list_item.view.*
-import java.util.*
 
 class MessageListRecyclerViewAdapter(
     private val conversationHeads: List<Sms>
@@ -26,25 +26,29 @@ class MessageListRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = conversationHeads[position]
+        val smsItem = conversationHeads[position]
 
         with (holder) {
-            senderTextView.text = item.address
-            bodyTextView.text = item.body
-            timeTextView.text = ShortDate.of(item.date)
+            senderTextView.text = smsItem.address.trim()
+            bodyTextView.text = smsItem.body.trim()
+            timeTextView.text = ShortDate.of(smsItem.date).trim()
         }
 
-        with(holder.mView) {
-            tag = item
+
+        with(holder.view) {
+            tag = smsItem
+            setOnClickListener {
+               // Notify.short(, "hello!")
+            }
         }
     }
 
     override fun getItemCount(): Int = conversationHeads.size
 
-    inner class ViewHolder(val mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
-        val senderTextView: TextView = mView.message_list_item_sender_name
-        val bodyTextView: TextView = mView.message_list_item_body
-        val timeTextView: TextView = mView.message_list_item_time
+    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        val senderTextView: TextView = view.message_list_item_sender_name
+        val bodyTextView: TextView = view.message_list_item_body
+        val timeTextView: TextView = view.message_list_item_time
 
         override fun toString(): String {
             return super.toString() + " '" + senderTextView.text + "'"

@@ -38,5 +38,6 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1" /* 뷰모델과 live data */
     implementation 'com.mikhaellopez:circularimageview:4.0.1' /* 원형 이미지뷰 */
 
+    implementation "org.koin:koin-android:2.0.1" /* 의존성 주입 */
 
 }

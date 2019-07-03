@@ -124,9 +124,11 @@ class MainActivity : AppCompatActivity() {
                 switchFragmentByNavigationItemId(t)
 
                 // TODO: 테스트 코드입니다.
+                /*
                 if (t == TAB_IDS[1]) {
-                    usingRepository()
+                     usingRepository()
                 }
+                */
             }
         })
 
