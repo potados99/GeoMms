@@ -3,12 +3,12 @@ package com.potados.geomms.fragment
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.R
@@ -16,6 +16,7 @@ import com.potados.geomms.adapter.MessageListRecyclerViewAdapter
 import com.potados.geomms.data.MessageRepository
 import com.potados.geomms.data.Sms
 import com.potados.geomms.viewmodel.MessageListViewModel
+import kotlinx.android.synthetic.main.fragment_message_list.*
 import org.koin.android.ext.android.inject
 
 /**
@@ -40,16 +41,34 @@ class MessageListFragment : Fragment() {
         viewmodel.updateConversationHeads()
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.toobar_menu, menu)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
+
+
+
+
         val view = inflater.inflate(R.layout.fragment_message_list, container, false)
 
         val messageListRecyclerView: RecyclerView = view.findViewById(R.id.fragment_message_list_recyclerview) ?: let {
             Log.e("MessageListFragment:onCreateView()",  "R.id.fragment_message_list_recyclerview is null.")
             return view
         }
+
+        // TODO: 여기 청소
+        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        setHasOptionsMenu(true)
+
 
         with(messageListRecyclerView) {
             layoutManager = LinearLayoutManager(context)

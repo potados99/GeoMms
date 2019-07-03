@@ -123,6 +123,18 @@ class MainActivity : AppCompatActivity() {
             override fun onChanged(t: Int) {
                 switchFragmentByNavigationItemId(t)
 
+
+                when (t) {
+                    R.id.menu_item_navigation_message -> {
+
+                    }
+
+                    R.id.menu_item_navigation_map -> {
+
+                    }
+                }
+
+
                 // TODO: 테스트 코드입니다.
                 /*
                 if (t == TAB_IDS[1]) {

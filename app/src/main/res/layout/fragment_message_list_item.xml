@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:id="@+id/friends_list_root_layout">
+        android:id="@+id/message_list_root_layout">
 
     <TextView
             android:text="Sender"

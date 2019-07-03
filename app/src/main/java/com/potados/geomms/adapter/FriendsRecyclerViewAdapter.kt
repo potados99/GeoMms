@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.potados.geomms.R
 import com.potados.geomms.dummy.DummyContent.DummyItem
 
-import kotlinx.android.synthetic.main.friends_list_item.view.*
+import kotlinx.android.synthetic.main.fragment_map_friends_list_item.view.*
 
 class FriendsRecyclerViewAdapter(
     private val mValues: List<DummyItem>
@@ -17,7 +17,7 @@ class FriendsRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.friends_list_item, parent, false)
+            .inflate(R.layout.fragment_map_friends_list_item, parent, false)
         return ViewHolder(view)
     }
 

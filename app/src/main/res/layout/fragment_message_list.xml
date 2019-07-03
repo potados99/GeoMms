@@ -1,20 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/friends_list_root_layout">
+        android:id="@+id/message_list_root_layout">
+
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:fitsSystemWindows="true"
+            android:layout_height="120dp"
+            android:layout_width="match_parent"
+            android:background="?android:colorBackground">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/toolbar_layout"
+                android:fitsSystemWindows="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:toolbarId="@+id/toolbar"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                >
+
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_width="match_parent"
+                    app:layout_collapseMode="pin"
+                    app:title="Messages"/>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fragment_message_list_recyclerview"
-            android:name="com.potados.geomms.MessageFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".fragment.MessageListFragment"
-            tools:listitem="@layout/fragment_message_list_item"/>
+            tools:listitem="@layout/fragment_message_list_item"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

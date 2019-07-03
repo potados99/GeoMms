@@ -21,7 +21,7 @@
             android:background="@drawable/top_rounded"
             android:elevation="16dp">
 
-        <include layout="@layout/friends_list"/>
+        <include layout="@layout/fragment_map_friends_list"/>
 
     </FrameLayout>
 

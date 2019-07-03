@@ -1,7 +1,9 @@
 package com.potados.geomms.fragment
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.fragment.app.Fragment
@@ -16,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -37,6 +40,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        (activity as AppCompatActivity).window.statusBarColor = Color.TRANSPARENT
 
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
