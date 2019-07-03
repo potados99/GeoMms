@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Geo MMS</string>
     <string name="label_friend_list_title">친구 목록</string>
-    <string name="tab_label_title_home">지도</string>
+    <string name="tab_label_title_map">지도</string>
     <string name="tab_label_title_message">메시지</string>
     <string name="title_setting">설정</string>
     <string name="btn_lable_refresh">새로고침</string>

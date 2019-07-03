@@ -98,9 +98,9 @@ class MainActivity : AppCompatActivity() {
         setupViewModelAndUI()
 
         /**
-         * 지도 탭 선택해놓기.
+         * 메시지가 먼저이니까 메시지 탭 선택해줍니다.
          */
-        mainViewModel.setSelectedTabMenuItemId(R.id.menu_item_navigation_map)
+        mainViewModel.setSelectedTabMenuItemId(R.id.menu_item_navigation_message)
     }
 
     private fun onPermissionFail() {
@@ -140,11 +140,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun switchFragmentByNavigationItemId(navigationItemId: Int): Boolean {
         val fragment = when (navigationItemId) {
-            R.id.menu_item_navigation_map -> {
-                mapFragment
-            }
             R.id.menu_item_navigation_message -> {
                 messageListFragment
+            }
+            R.id.menu_item_navigation_map -> {
+                mapFragment
             }
 
             else -> return false
@@ -184,7 +184,6 @@ class MainActivity : AppCompatActivity() {
 
         p.show()
     }
-
     private fun usingRepository() {
         val repo = MessageRepositoryImpl(contentResolver)
 
@@ -196,14 +195,17 @@ class MainActivity : AppCompatActivity() {
         p.show()
     }
 
+
+
+
     companion object {
         /**
          * 메뉴 아이템의 id를 식별자로 직접 사용합니다.
          * TAB_IDS는 이러한 식별자들의 전체 집합입니다.
          */
         val TAB_IDS = arrayOf(
-            R.id.menu_item_navigation_map,
-            R.id.menu_item_navigation_message
+            R.id.menu_item_navigation_message,
+            R.id.menu_item_navigation_map
         )
 
         /**

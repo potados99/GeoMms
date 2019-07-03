@@ -16,6 +16,11 @@ class MessageListViewModel : ViewModel(), KoinComponent {
      */
     fun getConversationHeads(): LiveData<List<Sms>> = messageRepo.getLiveConversationHeads()
     fun addConversationHead(head: Sms) {
+        if (head.threadId in messageRepo.getConversationHeads().map { it.threadId }) {
+            /**
+             * 이미 있는 대화방인 경우.
+             */
+        }
         // messageRepo.addSms(head)
     }
     fun updateConversationHeads() {
