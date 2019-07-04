@@ -3,15 +3,15 @@ package com.potados.geomms.data
 import androidx.lifecycle.LiveData
 
 interface MessageRepository {
-    fun updateRepository()
+    fun updateConversationList() /* re-query and update */
 
-    fun getConversationHeads(): List<Sms>
+    fun getConversationHeads(): List<ShortMessage>
 
-    fun getLiveConversationHeads(): LiveData<List<Sms>>
+    fun getLiveConversationHeads(): LiveData<List<ShortMessage>>
 
     fun getSmsThreadByThreadId(threadId: Int): SmsThread?
 
-    fun addSms(sms: Sms)
+    fun addSms(sms: ShortMessage)
 
     fun deleteSms(id: Int)
 }

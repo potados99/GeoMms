@@ -8,14 +8,13 @@ import android.widget.TextView
 
 
 import com.potados.geomms.R
-import com.potados.geomms.data.Sms
-import com.potados.geomms.util.Notify
+import com.potados.geomms.data.ShortMessage
 import com.potados.geomms.util.ShortDate
 
 import kotlinx.android.synthetic.main.fragment_message_list_item.view.*
 
 class MessageListRecyclerViewAdapter(
-    private val conversationHeads: List<Sms>
+    private val conversationHeads: List<ShortMessage>
 ) : RecyclerView.Adapter<MessageListRecyclerViewAdapter.ViewHolder>() {
 
 

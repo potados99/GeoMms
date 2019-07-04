@@ -13,11 +13,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.R
 import com.potados.geomms.adapter.MessageListRecyclerViewAdapter
-import com.potados.geomms.data.MessageRepository
-import com.potados.geomms.data.Sms
+import com.potados.geomms.data.ShortMessage
 import com.potados.geomms.viewmodel.MessageListViewModel
-import kotlinx.android.synthetic.main.fragment_message_list.*
-import org.koin.android.ext.android.inject
 
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
@@ -73,8 +70,8 @@ class MessageListFragment : Fragment() {
         with(messageListRecyclerView) {
             layoutManager = LinearLayoutManager(context)
 
-            viewmodel.getConversationHeads().observe(this@MessageListFragment, object: Observer<List<Sms>> {
-                override fun onChanged(t: List<Sms>?) {
+            viewmodel.getConversationHeads().observe(this@MessageListFragment, object: Observer<List<ShortMessage>> {
+                override fun onChanged(t: List<ShortMessage>?) {
                     t?.also {
                         adapter = MessageListRecyclerViewAdapter(it)
                     }

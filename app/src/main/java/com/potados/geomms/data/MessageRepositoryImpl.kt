@@ -4,67 +4,60 @@ import android.content.ContentResolver
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.gson.Gson
+import com.potados.geomms.util.JsonHelper
+import com.potados.geomms.util.QueryHelper
+import com.potados.geomms.util.Types
 
 class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepository {
 
     private val projection = arrayOf(
-        Sms.COL_ID,
-        Sms.COL_THREAD_ID,
-        Sms.COL_TYPE,
-        Sms.COL_ADDRESS,
-        Sms.COL_DATE,
-        Sms.COL_BODY
+        ShortMessage.COL_ID,
+        ShortMessage.COL_THREAD_ID,
+        ShortMessage.COL_ADDRESS,
+        ShortMessage.COL_PERSON,
+
+        ShortMessage.COL_DATE,
+        ShortMessage.COL_READ,
+        ShortMessage.COL_STATUS,
+        ShortMessage.COL_TYPE,
+
+        ShortMessage.COL_SUBJECT,
+        ShortMessage.COL_BODY
     )
     private val conversationsUriString = "content://mms-sms/conversations"
     // private val smsUriString = "content://sms"
 
-    private val conversationHeads = mutableListOf<Sms>()
-    private val liveConversationHeads = MutableLiveData<List<Sms>>()
+    private val conversationHeads = mutableListOf<ShortMessage>()
+    private val liveConversationHeads = MutableLiveData<List<ShortMessage>>()
 
     init {
-        updateRepository()
+        updateConversationList()
     }
 
-    override fun updateRepository() {
+    override fun updateConversationList() {
         conversationHeads.clear()
-        conversationHeads.addAll(querySmsToList(resolver, conversationsUriString).reversed())
+        conversationHeads.addAll(
+            QueryHelper.queryToCollection<List<ShortMessage>>(resolver, conversationsUriString, projection).reversed()
+        )
+
         liveConversationHeads.value = conversationHeads
     }
 
-    override fun getConversationHeads(): List<Sms> = conversationHeads
+    override fun getConversationHeads(): List<ShortMessage> = conversationHeads
 
-    override fun getLiveConversationHeads(): LiveData<List<Sms>> = liveConversationHeads
+    override fun getLiveConversationHeads(): LiveData<List<ShortMessage>> = liveConversationHeads
 
     override fun getSmsThreadByThreadId(threadId: Int): SmsThread =
-        SmsThread(querySmsToList(resolver, "$conversationsUriString/$threadId"))
+        SmsThread(
+            QueryHelper.queryToCollection(resolver, "$conversationsUriString/$threadId", projection)
+        )
 
-    override fun addSms(sms: Sms) {
+    override fun addSms(sms: ShortMessage) {
 
     }
 
     override fun deleteSms(id: Int) {
     }
-
-    private fun querySmsToList(resolver: ContentResolver, uriString: String, where: String? = null): List<Sms> =
-        mutableListOf<Sms>().apply {
-            resolver.query(Uri.parse(uriString), projection, where, null, null)?.apply {
-                if (moveToFirst()) {
-                    do {
-                        add(
-                            Sms(
-                                id = getLong(0), /* 실패 불가. Integer 타입임. */
-                                threadId = getLong(1),
-                                type = getLong(2),
-                                address = getString(3),
-                                date = getLong(4),
-                                body = getString(5)
-                            )
-                        )
-                    } while (moveToNext())
-                }
-
-                close()
-            }
-        }
 
 }

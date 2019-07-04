@@ -40,4 +40,6 @@ dependencies {
 
     implementation "org.koin:koin-android:2.0.1" /* 의존성 주입 */
 
+    implementation 'com.google.code.gson:gson:2.8.5' /* GSON! */
+
 }
