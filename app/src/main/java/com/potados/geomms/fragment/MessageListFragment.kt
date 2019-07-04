@@ -60,6 +60,7 @@ class MessageListFragment : Fragment(), MessageListRecyclerViewAdapter.Conversat
     override fun onConversationClicked(conversationHead: ShortMessage) {
         startActivity(Intent(context, ConversationActivity::class.java).apply {
             putExtra(ConversationActivity.ARG_ADDRESS, conversationHead.address)
+            putExtra(ConversationActivity.ARG_THREAD_ID, conversationHead.threadId)
         })
     }
 

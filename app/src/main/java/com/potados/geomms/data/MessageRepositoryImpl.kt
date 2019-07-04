@@ -1,14 +1,9 @@
 package com.potados.geomms.data
 
 import android.content.ContentResolver
-import android.net.Uri
-import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
-import com.potados.geomms.util.JsonHelper
 import com.potados.geomms.util.QueryHelper
-import com.potados.geomms.util.Types
 
 class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepository {
 
@@ -48,7 +43,7 @@ class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepo
 
     override fun getLiveConversationHeads(): LiveData<List<ShortMessage>> = liveConversationHeads
 
-    override fun getSmsThreadByThreadId(threadId: Int): SmsThread =
+    override fun getSmsThreadByThreadId(threadId: Long): SmsThread =
         SmsThread(
             QueryHelper.queryToCollection(resolver, "$conversationsUriString/$threadId", projection)
         )

@@ -9,7 +9,7 @@ interface MessageRepository {
 
     fun getLiveConversationHeads(): LiveData<List<ShortMessage>>
 
-    fun getSmsThreadByThreadId(threadId: Int): SmsThread?
+    fun getSmsThreadByThreadId(threadId: Long): SmsThread
 
     fun addSms(sms: ShortMessage)
 

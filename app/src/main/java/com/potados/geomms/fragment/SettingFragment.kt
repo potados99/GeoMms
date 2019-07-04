@@ -33,9 +33,9 @@ class SettingFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_setting_list, container, false)
 
         // Set the adapter
-        if (view is androidx.recyclerview.widget.RecyclerView) {
+        if (view is RecyclerView) {
             with(view) {
-                layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+                layoutManager = LinearLayoutManager(context)
                 adapter = SettingRecyclerViewAdapter(DummyContent.ITEMS)
             }
         }
