@@ -17,9 +17,18 @@ data class ShortMessage(
     @SerializedName(COL_SUBJECT)        val subject: String,
     @SerializedName(COL_BODY)           val body: String
 ) {
+    fun isSent(): Boolean = (this.type == TYPE_SENT)
+    fun isReceived(): Boolean = (this.type == TYPE_RECEIVED)
+
+    fun isRead(): Boolean = (this.read == READ_TRUE)
+    fun isNotRead(): Boolean = (this.read == READ_FALSE)
+
     companion object {
-        const val TYPE_RECEIVED = 1
-        const val TYPE_SENT = 2
+        const val TYPE_RECEIVED = 1L
+        const val TYPE_SENT = 2L
+
+        const val READ_TRUE = 1L
+        const val READ_FALSE = 0L
 
         const val COL_ID = "_id"
         const val COL_THREAD_ID = "thread_id"

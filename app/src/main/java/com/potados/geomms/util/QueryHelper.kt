@@ -3,8 +3,6 @@ package com.potados.geomms.util
 import android.content.ContentResolver
 import android.net.Uri
 import com.google.gson.Gson
-import com.potados.geomms.data.ShortMessage
-import kotlin.reflect.typeOf
 
 class QueryHelper {
     companion object {

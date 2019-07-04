@@ -26,6 +26,8 @@ import com.potados.geomms.R
 import com.potados.geomms.adapter.FriendsRecyclerViewAdapter
 import com.potados.geomms.dummy.DummyContent
 import kotlinx.android.synthetic.main.fragment_map.*
+import kotlinx.android.synthetic.main.fragment_map.view.*
+import kotlinx.android.synthetic.main.fragment_map_friends_list.view.*
 
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
@@ -41,31 +43,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
 
-        (activity as AppCompatActivity).window.statusBarColor = Color.TRANSPARENT
+        (activity as AppCompatActivity).window.statusBarColor = Color.TRANSPARENT /* 효과없음 */
 
         val view = inflater.inflate(R.layout.fragment_map, container, false)
-
-        val map: MapView = view.findViewById(R.id.map_view) ?: let {
-            Log.e("MapFragment:onCreateView()",  "R.id.map_view is null.")
-            return view
-        }
-        val friendsListRecyclerView: RecyclerView = view.findViewById(R.id.friends_list_recyclerview) ?: let {
-            Log.e("MapFragment:onCreateView()",  "R.id.friends_list_recyclerview is null.")
-            return view
-        }
-        val friendsListRoot: ConstraintLayout = view.findViewById(R.id.friends_list_root_layout) ?: let {
-            Log.e("MapFragment:onCreateView()",  "R.id.friends_list_root_layout is null.")
-            return view
-        }
-        val bottomSheet: FrameLayout = view.findViewById(R.id.fragment_map_bottom_sheet_view) ?: let {
-            Log.e("MapFragment:onCreateView()",  "R.id.fragment_map_bottom_sheet_view is null.")
-            return view
-        }
 
         /**
          * 지도 설정.
          */
-        with(map) {
+        with(view.map_view) {
             onCreate(savedInstanceState)
             getMapAsync(this@MapFragment) /* 준비 끝나면 onMapReady 호출됨. */
         }
@@ -73,7 +58,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         /**
          * 친구 목록 리사이클러뷰 설정.
          */
-        with(friendsListRecyclerView) {
+        with(view.friends_list_recyclerview) {
             /**
              * 아이템 사이에 선을 그어줍니다.
              */
@@ -100,7 +85,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
          * 친구 목록 레이아웃에 대한 클릭 리스너 설정.
          * Bottom Sheet 위쪽을 누르면 토글되도록 해줌.
          */
-        with(friendsListRoot) {
+        with(view.friends_list_root_layout) {
             /**
              * friendsListRoot는 친구 목록을 보여주는 Bottom Sheet의 루트 레이아웃입니다.
              * 리스트 이외의 영역을 터치하면 Sheet가 올라가거나 내려가도록 리스너를 등록해줍니다.
@@ -112,7 +97,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                  * 따라서 STATE_EXPANDED 상태일 때에는 STATE_COLLAPSED 상태로 바꾸고,
                  * 그 이외에는 STATE_EXPANDED로 설정합니다.
                  */
-                BottomSheetBehavior.from(bottomSheet).apply {
+                BottomSheetBehavior.from(view.fragment_map_bottom_sheet_view).apply {
                     state = when (state) {
                         BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_COLLAPSED
                         else -> BottomSheetBehavior.STATE_EXPANDED
