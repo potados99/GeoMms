@@ -9,7 +9,7 @@ import kotlin.reflect.typeOf
 class QueryHelper {
     companion object {
         /**
-         *
+         * resolver에서 query한 결과를 컬렉션에 집어넣어 반환합니다.
          */
         inline fun <reified T> queryToCollection(
             resolver: ContentResolver,
@@ -21,7 +21,7 @@ class QueryHelper {
             /**
              * 0. Collection만 허용합니다.
              */
-            if (T::class.java is Collection<*>) {
+            if (Types.typeOf<T>() is Collection<*>) {
                 throw IllegalThreadStateException("Wrong generic type: not a collection.")
             }
 

@@ -24,6 +24,8 @@ class MessageListRecyclerViewAdapter(
         return ViewHolder(view)
     }
 
+
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val smsItem = conversationHeads[position]
 

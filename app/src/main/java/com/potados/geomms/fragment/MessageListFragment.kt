@@ -49,35 +49,9 @@ class MessageListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-
-
-
-
-
         val view = inflater.inflate(R.layout.fragment_message_list, container, false)
 
-        val messageListRecyclerView: RecyclerView = view.findViewById(R.id.fragment_message_list_recyclerview) ?: let {
-            Log.e("MessageListFragment:onCreateView()",  "R.id.fragment_message_list_recyclerview is null.")
-            return view
-        }
-
-        // TODO: 여기 청소
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        setHasOptionsMenu(true)
-
-
-        with(messageListRecyclerView) {
-            layoutManager = LinearLayoutManager(context)
-
-            viewmodel.getConversationHeads().observe(this@MessageListFragment, object: Observer<List<ShortMessage>> {
-                override fun onChanged(t: List<ShortMessage>?) {
-                    t?.also {
-                        adapter = MessageListRecyclerViewAdapter(it)
-                    }
-                }
-            })
-        }
+        setupAndBindViewWithViewModel(view)
 
         return view
     }
@@ -90,8 +64,42 @@ class MessageListFragment : Fragment() {
         super.onDetach()
     }
 
-    private fun bindViewWithViewModel(view: View) {
+    private fun setupAndBindViewWithViewModel(view: View) {
+        val toolbar: Toolbar = view.findViewById(R.id.toolbar) ?: let {
+            Log.e("MessageListFragment:setupAndBindViewWithViewModel()",  "R.id.toolbar is null.")
+            return
+        }
 
+        val messageListRecyclerView: RecyclerView = view.findViewById(R.id.fragment_message_list_recyclerview) ?: let {
+            Log.e("MessageListFragment:setupAndBindViewWithViewModel()",  "R.id.fragment_message_list_recyclerview is null.")
+            return
+        }
+
+        setupToolbar(toolbar)
+
+        with(messageListRecyclerView) {
+            layoutManager = LinearLayoutManager(context)
+
+            viewmodel.getConversationHeads().observe(this@MessageListFragment, object: Observer<List<ShortMessage>> {
+                override fun onChanged(t: List<ShortMessage>?) {
+                    t?.also {
+                        /**
+                         * TODO: RecyclerView.notify****Changed로 변경할 것.
+                         */
+                        adapter = MessageListRecyclerViewAdapter(it)
+                    }
+                }
+            })
+        }
+    }
+
+    /**
+     * 시스템의 기본 AppBar를 사용하지 않고 (manifest에서 NoActionBar 사용)
+     * 프래그먼트 내의 view에서 Toolbar를 사용했기 때문에, 이 Toolbar를 supportActionBar로 등록해주어야 합니다.
+     */
+    private fun setupToolbar(bar: Toolbar) {
+        (activity as AppCompatActivity).setSupportActionBar(bar)
+        setHasOptionsMenu(true)
     }
 
 }

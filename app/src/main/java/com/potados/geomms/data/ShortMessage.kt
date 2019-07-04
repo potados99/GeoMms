@@ -1,6 +1,7 @@
 package com.potados.geomms.data
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class ShortMessage(
     @SerializedName(COL_ID)             val id: Long,
@@ -16,7 +17,6 @@ data class ShortMessage(
     @SerializedName(COL_SUBJECT)        val subject: String,
     @SerializedName(COL_BODY)           val body: String
 ) {
-
     companion object {
         const val TYPE_RECEIVED = 1
         const val TYPE_SENT = 2

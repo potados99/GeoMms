@@ -2,6 +2,7 @@ package com.potados.geomms.data
 
 import android.content.ContentResolver
 import android.net.Uri
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
