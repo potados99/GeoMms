@@ -7,7 +7,6 @@ data class ShortMessage(
     @SerializedName(COL_ID)             val id: Long,
     @SerializedName(COL_THREAD_ID)      val threadId: Long,
     @SerializedName(COL_ADDRESS)        val address: String,
-    @SerializedName(COL_PERSON)         val person: Long,
 
     @SerializedName(COL_DATE)           val date: Long,
     @SerializedName(COL_READ)           val read: Long,
@@ -33,7 +32,6 @@ data class ShortMessage(
         const val COL_ID = "_id"
         const val COL_THREAD_ID = "thread_id"
         const val COL_ADDRESS = "address"
-        const val COL_PERSON = "person"
 
         const val COL_DATE = "date"
         const val COL_READ = "read"

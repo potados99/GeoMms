@@ -20,9 +20,13 @@
             android:text="@string/label_friend_list_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/friends_list_title_textview" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="16dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="24dp" android:textSize="24sp" android:textColor="@android:color/black"
+            android:id="@+id/friends_list_title_textview"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="24dp"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
             android:textStyle="bold"/>
     <View
             android:layout_width="0dp"

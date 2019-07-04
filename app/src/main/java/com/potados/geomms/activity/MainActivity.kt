@@ -43,33 +43,47 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mainViewModel: MainViewModel
 
-    /**
-     * Toast wrapper인 Notify 객체
-     */
-    private val n = Notify(this)
-
+    private val permissionsArray = arrayOf(
+        Manifest.permission.READ_SMS,
+        Manifest.permission.READ_CONTACTS
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        requirePermission(Manifest.permission.READ_SMS)
+        requirePermissions(permissionsArray)
     }
 
-    private fun requirePermission(permission: String) {
-        val permissionCheckResult = ContextCompat.checkSelfPermission(this@MainActivity, permission)
-        val granted = (permissionCheckResult == PackageManager.PERMISSION_GRANTED)
-        val userDenied = ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
+    private fun requirePermissions(permissions: Array<String>) {
 
-        if (granted) {
+        val ungrantedPermissions = mutableListOf<String>()
+
+        permissions.forEach {
+            val permissionCheckResult = ContextCompat.checkSelfPermission(this@MainActivity, it)
+            val granted = (permissionCheckResult == PackageManager.PERMISSION_GRANTED)
+            val userDenied = ActivityCompat.shouldShowRequestPermissionRationale(this, it)
+
+            if (granted) {
+                /**
+                 * yeah pass
+                 */
+            }
+            else {
+                if (userDenied) {
+                    Notify.short(this@MainActivity, "Please allow access to $it")
+                }
+
+                ungrantedPermissions.add(it)
+            }
+
+        }
+
+        if (ungrantedPermissions.isEmpty()) {
             onPermissionSuccess()
         }
         else {
-            if (userDenied) {
-                n.short("Please allow access to $permission")
-            }
-
-            ActivityCompat.requestPermissions(this, arrayOf(permission), PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(this, ungrantedPermissions.toTypedArray(), PERMISSION_REQUEST_CODE)
         }
     }
 
@@ -80,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         if (permissions.isEmpty()) return
         if (grantResults.isEmpty()) return
 
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             /**
              * 성공
              */
@@ -180,7 +194,7 @@ class MainActivity : AppCompatActivity() {
     private fun showSmsInbox() {
         val p = Popup(this).withTitle("Messages")
         val uri = Uri.parse("content://sms")
-        val projection = arrayOf("thread_id", "_id", "type", "address", "body")
+        val projection = arrayOf("thread_id", "_id", "type", "address", "body", "person")
         val cursor = contentResolver.query(uri, projection, null, null, null) ?: return
         if (cursor.moveToFirst()) {
             do {

@@ -16,7 +16,6 @@ class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepo
         ShortMessage.COL_ID,
         ShortMessage.COL_THREAD_ID,
         ShortMessage.COL_ADDRESS,
-        ShortMessage.COL_PERSON,
 
         ShortMessage.COL_DATE,
         ShortMessage.COL_READ,

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.potados.geomms">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.potados.geomms">
 
     <uses-permission android:name="android.permission.READ_SMS"/>
-    
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
     <application
             android:name=".app.MyApplication"
             android:icon="@mipmap/ic_launcher"
@@ -12,13 +14,18 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity
+                android:name=".activity.ConversationActivity"
+                android:label="@string/title_activity_conversation"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
         <meta-data
                 android:name="com.google.android.maps.v2.API_KEY"
-                android:value="AIzaSyD6WCI-WbSkzCsA0DiSRCoOgE8wuB0xPiY" />
+                android:value="AIzaSyD6WCI-WbSkzCsA0DiSRCoOgE8wuB0xPiY"/>
         <meta-data
                 android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version" />
+                android:value="@integer/google_play_services_version"/>
 
         <activity
                 android:name=".activity.MainActivity"
@@ -29,7 +36,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

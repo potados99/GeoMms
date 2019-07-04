@@ -1,8 +1,8 @@
 package com.potados.geomms.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -11,17 +11,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DefaultItemAnimator
 import com.potados.geomms.R
+import com.potados.geomms.activity.ConversationActivity
 import com.potados.geomms.adapter.MessageListRecyclerViewAdapter
 import com.potados.geomms.data.ShortMessage
+import com.potados.geomms.util.Notify
 import com.potados.geomms.viewmodel.MessageListViewModel
 import kotlinx.android.synthetic.main.fragment_message_list.view.*
 
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
  */
-class MessageListFragment : Fragment() {
+class MessageListFragment : Fragment(), MessageListRecyclerViewAdapter.ConversationClickListener {
 
     /**
      * 데이터와 마짱을 뜨려면 이친구만 있으면 됩니다. ㅎㅎ
@@ -40,7 +41,6 @@ class MessageListFragment : Fragment() {
         viewmodel.updateConversationHeads()
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.toobar_menu, menu)
@@ -57,6 +57,13 @@ class MessageListFragment : Fragment() {
         return view
     }
 
+    override fun onConversationClicked(conversationHead: ShortMessage) {
+        startActivity(Intent(context, ConversationActivity::class.java).apply {
+            putExtra(ConversationActivity.ARG_ADDRESS, conversationHead.address)
+        })
+    }
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
     }
@@ -64,6 +71,8 @@ class MessageListFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
     }
+
+
 
     private fun setupAndBindViewWithViewModel(view: View) {
         val toolbar: Toolbar = view.toolbar
@@ -80,7 +89,7 @@ class MessageListFragment : Fragment() {
                         /**
                          * TODO: RecyclerView.notify****Changed로 변경할 것.
                          */
-                        adapter = MessageListRecyclerViewAdapter(it)
+                        adapter = MessageListRecyclerViewAdapter(it, this@MessageListFragment)
                     }
                 }
             })
