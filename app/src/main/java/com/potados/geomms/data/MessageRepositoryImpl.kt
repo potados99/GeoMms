@@ -33,7 +33,7 @@ class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepo
     override fun updateConversationList() {
         conversationHeads.clear()
         conversationHeads.addAll(
-            QueryHelper.queryToCollection<List<ShortMessage>>(resolver, conversationsUriString, projection).reversed()
+            QueryHelper.queryToCollection<List<ShortMessage>>(resolver, conversationsUriString, projection, null, "date DESC")
         )
 
         liveConversationHeads.value = conversationHeads
@@ -45,7 +45,7 @@ class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepo
 
     override fun getSmsThreadByThreadId(threadId: Long): SmsThread =
         SmsThread(
-            QueryHelper.queryToCollection(resolver, "$conversationsUriString/$threadId", projection)
+            QueryHelper.queryToCollection(resolver, "$conversationsUriString/$threadId", projection, null, "date ASC")
         )
 
     override fun addSms(sms: ShortMessage) {

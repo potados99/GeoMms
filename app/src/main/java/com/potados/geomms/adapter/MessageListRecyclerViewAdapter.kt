@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -45,9 +46,10 @@ class MessageListRecyclerViewAdapter(
         val smsItem = conversationHeads[position]
 
         with (holder) {
-            senderTextView.text = ContactHelper.getContactName(resolver, smsItem.address.trim()) ?: smsItem.address.trim()
-            bodyTextView.text = smsItem.body.trim()
-            timeTextView.text = ShortDate.of(smsItem.date).trim()
+            Log.d("yyyyyyyyyyyy", smsItem.address)
+            senderTextView.text = ContactHelper.getContactName(resolver, smsItem.address) ?: smsItem.address
+            bodyTextView.text = smsItem.body
+            timeTextView.text = ShortDate.of(smsItem.date)
 
             // TODO: 더미 이미지 교체.
             avatarImageView.setImageResource(R.drawable.avatar_default)
