@@ -46,11 +46,9 @@ class MessageListRecyclerViewAdapter(
         val smsItem = conversationHeads[position]
 
         with (holder) {
-            Log.d("yyyyyyyyyyyy", smsItem.address)
-            senderTextView.text = ContactHelper.getContactName(resolver, smsItem.address) ?: smsItem.address
-            bodyTextView.text = smsItem.body
+            senderTextView.text = ContactHelper.getContactName(resolver, smsItem.address.trim(' ')) ?: smsItem.address.trim(' ')
+            bodyTextView.text = smsItem.body.trim(' ')
             timeTextView.text = ShortDate.of(smsItem.date)
-
             // TODO: 더미 이미지 교체.
             avatarImageView.setImageResource(R.drawable.avatar_default)
 
