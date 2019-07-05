@@ -6,6 +6,11 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val myModules = module {
+
+    single {
+        androidContext().contentResolver
+    }
+
     single {
         MessageRepositoryImpl(androidContext().contentResolver) as MessageRepository /* 타입캐스팅 필쑤!! */
     }

@@ -1,5 +1,6 @@
 package com.potados.geomms.util
 
+import android.content.ContentResolver
 import android.provider.ContactsContract.PhoneLookup
 import android.content.Context
 import android.net.Uri
@@ -7,8 +8,7 @@ import android.net.Uri
 
 class ContactHelper {
     companion object {
-        fun getContactName(context: Context, phoneNumber: String): String? {
-            val resolver = context.contentResolver
+        fun getContactName(resolver: ContentResolver, phoneNumber: String): String? {
             val uri = Uri.withAppendedPath(
                 PhoneLookup.CONTENT_FILTER_URI,
                 Uri.encode(phoneNumber)

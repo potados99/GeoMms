@@ -7,6 +7,7 @@
         android:layout_height="match_parent"
         tools:context=".activity.ConversationActivity">
 
+    <!--툴바 레이아웃-->
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
@@ -23,12 +24,27 @@
                     android:layout_gravity="center"
                     android:id="@+id/activity_conversation_toolbar_title"
                     android:textSize="20sp"
-                    android:text="01029222661" android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black" tools:text="01029222661"/>
 
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_conversation"/>
+    <!--컨텐츠 레이아웃-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!--리사이클러뷰-->
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/activity_conversation_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

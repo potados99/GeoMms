@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.potados.geomms.R
+import com.potados.geomms.adapter.ConversationRecyclerViewAdapter
 import com.potados.geomms.data.MessageRepository
 import com.potados.geomms.util.ContactHelper
 import com.potados.geomms.util.Popup
@@ -13,6 +15,9 @@ import com.potados.geomms.util.ShortDate
 import kotlinx.android.synthetic.main.activity_conversation.*
 import org.koin.android.ext.android.inject
 
+/**
+ * 대화방 액티비티입니다.
+ */
 class ConversationActivity : AppCompatActivity() {
 
     private val messageRepo: MessageRepository by inject()
@@ -34,18 +39,29 @@ class ConversationActivity : AppCompatActivity() {
             val address = getStringExtra(ARG_ADDRESS)
             val threadId = getLongExtra(ARG_THREAD_ID, 0)
 
-            val contactName = ContactHelper.getContactName(this@ConversationActivity, address)
+            val contactName = ContactHelper.getContactName(contentResolver, address)
             setToolbarTitle(contactName ?: address)
 
             val thread = messageRepo.getSmsThreadByThreadId(threadId)
             val p = Popup(this@ConversationActivity).withTitle("Conversation with $address")
 
+            val layoutManager = LinearLayoutManager(this@ConversationActivity)
+
+            activity_conversation_recyclerview.layoutManager = layoutManager
+            activity_conversation_recyclerview.adapter = ConversationRecyclerViewAdapter(thread)
+
+            activity_conversation_recyclerview.scrollToPosition(thread.allMessages().size - 1)
+
+            /*
             thread.allMessages().forEach {
                 p.withMoreMessage("${ShortDate.of(it.date)}\n${it.body}\n\n")
             }
 
             p.show()
+            */
         }
+
+
     }
 
     override fun onDestroy() {
