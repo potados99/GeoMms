@@ -7,7 +7,7 @@ import com.potados.geomms.util.QueryHelper
 
 class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepository {
 
-    private val projection = arrayOf(
+    private val smsColumns = arrayOf(
         ShortMessage.COL_ID,
         ShortMessage.COL_THREAD_ID,
         ShortMessage.COL_ADDRESS,
@@ -20,7 +20,9 @@ class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepo
         ShortMessage.COL_SUBJECT,
         ShortMessage.COL_BODY
     )
-    private val conversationsUriString = "content://mms-sms/conversations"
+    private val threadColumns = arrayOf(1)
+
+    private val conversationsUriString = "content://mms-sms/conversations?simple=true"
     // private val smsUriString = "content://sms"
 
     private val conversationHeads = mutableListOf<ShortMessage>()
@@ -33,7 +35,7 @@ class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepo
     override fun updateConversationList() {
         conversationHeads.clear()
         conversationHeads.addAll(
-            QueryHelper.queryToCollection<List<ShortMessage>>(resolver, conversationsUriString, projection, "body <> ''", "date DESC")
+            QueryHelper.queryToCollection<List<ShortMessage>>(resolver, conversationsUriString, smsColumns, "body <> ''", "date DESC")
         )
 
         liveConversationHeads.value = conversationHeads
@@ -45,7 +47,7 @@ class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepo
 
     override fun getSmsThreadByThreadId(threadId: Long): SmsThread =
         SmsThread(
-            QueryHelper.queryToCollection(resolver, "$conversationsUriString/$threadId", projection, "body <> ''", "date ASC")
+            QueryHelper.queryToCollection(resolver, "$conversationsUriString/$threadId", smsColumns, "body <> ''", "date ASC")
         )
 
     override fun addSms(sms: ShortMessage) {

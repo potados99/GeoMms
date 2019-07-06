@@ -1,6 +1,7 @@
 package com.potados.geomms.util
 
 import android.content.ContentResolver
+import android.database.Cursor
 import android.net.Uri
 import com.google.gson.Gson
 
@@ -36,7 +37,7 @@ class QueryHelper {
             /**
              * 2. json으로 변환
              */
-            val parsedJson = JsonHelper.cursorToJson(cursor) /* 커서 알아서 닫아줌. */
+            val parsedJson = JsonHelper.cursorToJson(cursor).also { cursor.close() }
 
             /**
              * 3. json에서 kotlin 개체 collection으로 변환
@@ -47,5 +48,23 @@ class QueryHelper {
             )
         }
 
+        fun dumpCursor(cursor: Cursor): List<Map<String, String?>> {
+            return mutableListOf<Map<String, String?>>().apply {
+                if (!cursor.moveToFirst()) return@apply
+
+                do {
+                    val map = HashMap<String, String?>()
+
+                    for (i in 0 until cursor.columnCount) {
+                        map[cursor.getColumnName(i)] = cursor.getString(i)
+                    }
+
+                    add(map)
+
+                } while (cursor.moveToNext())
+            }
+        }
+
     }
+
 }

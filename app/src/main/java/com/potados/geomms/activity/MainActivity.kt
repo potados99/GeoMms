@@ -17,6 +17,7 @@ import com.potados.geomms.R
 import com.potados.geomms.data.MessageRepositoryImpl
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
+import com.potados.geomms.util.QueryHelper
 import com.potados.geomms.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_setting_list_item.*
@@ -52,7 +53,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        requirePermissions(permissionsArray)
+        // requirePermissions(permissionsArray)
+
+        val c = contentResolver.query(Uri.parse("content://mms-sms/conversations?simple=true"), null, null, null, "_id DESC")
+        val dump = QueryHelper.dumpCursor(c)
+
+        val p = Popup(this).withTitle("thread table dump:")
+
+        dump.forEach { map ->
+            map.forEach { k, v ->
+                p.withMoreMessage("$k: $v\n")
+            }
+            p.withMoreMessage("\n")
+        }
+
+        p.show()
     }
 
     private fun requirePermissions(permissions: Array<String>) {

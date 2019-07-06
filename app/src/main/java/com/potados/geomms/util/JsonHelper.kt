@@ -36,8 +36,6 @@ class JsonHelper {
 
             } while (cursor.moveToNext())
 
-            cursor.close()
-
             return resultSet
         }
     }
