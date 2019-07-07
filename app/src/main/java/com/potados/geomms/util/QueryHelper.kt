@@ -12,7 +12,7 @@ class QueryHelper {
          */
         inline fun <reified T> queryToCollection(
             resolver: ContentResolver,
-            uriString: String,
+            uri: Uri,
             projection: Array<String>,
             where: String? = null,
             order: String? = null): T {
@@ -28,7 +28,7 @@ class QueryHelper {
              * 1. 쿼리
              */
             val cursor = resolver.query(
-                Uri.parse(uriString),
+                uri,
                 projection,
                 where,
                 null,

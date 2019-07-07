@@ -10,7 +10,6 @@ import com.potados.geomms.adapter.ConversationRecyclerViewAdapter
 import com.potados.geomms.data.MessageRepository
 import com.potados.geomms.util.ContactHelper
 import com.potados.geomms.util.Popup
-import com.potados.geomms.util.ShortDate
 
 import kotlinx.android.synthetic.main.activity_conversation.*
 import org.koin.android.ext.android.inject
@@ -39,18 +38,18 @@ class ConversationActivity : AppCompatActivity() {
             val address = getStringExtra(ARG_ADDRESS)
             val threadId = getLongExtra(ARG_THREAD_ID, 0)
 
-            val contactName = ContactHelper.getContactName(contentResolver, address)
+            val contactName = ContactHelper.getContactNameByPhoneNumber(contentResolver, address)
             setToolbarTitle(contactName ?: address)
 
-            val thread = messageRepo.getSmsThreadByThreadId(threadId)
+            val thread = messageRepo.getSmsThreadById(threadId)
             val p = Popup(this@ConversationActivity).withTitle("Conversation with $address")
 
             val layoutManager = LinearLayoutManager(this@ConversationActivity)
 
             activity_conversation_recyclerview.layoutManager = layoutManager
-            activity_conversation_recyclerview.adapter = ConversationRecyclerViewAdapter(thread)
+            activity_conversation_recyclerview.adapter = ConversationRecyclerViewAdapter(messageRepo.getMessagesFromSmsThread(thread))
 
-            activity_conversation_recyclerview.scrollToPosition(thread.allMessages().size - 1)
+            activity_conversation_recyclerview.scrollToPosition(thread.messageCount.toInt() - 1)
 
             /*
             thread.allMessages().forEach {

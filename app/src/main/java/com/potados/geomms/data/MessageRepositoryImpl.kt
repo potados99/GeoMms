@@ -1,60 +1,40 @@
 package com.potados.geomms.data
 
 import android.content.ContentResolver
+import android.content.ContentUris
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.util.QueryHelper
 
-class MessageRepositoryImpl(private val resolver: ContentResolver) : MessageRepository {
+class MessageRepositoryImpl(
+    private val resolver: ContentResolver,
+    private val queryRepo: QueryInfoRepository
+) : MessageRepository {
 
-    private val smsColumns = arrayOf(
-        ShortMessage.COL_ID,
-        ShortMessage.COL_THREAD_ID,
-        ShortMessage.COL_ADDRESS,
-
-        ShortMessage.COL_DATE,
-        ShortMessage.COL_READ,
-        ShortMessage.COL_STATUS,
-        ShortMessage.COL_TYPE,
-
-        ShortMessage.COL_SUBJECT,
-        ShortMessage.COL_BODY
-    )
-    private val threadColumns = arrayOf(1)
-
-    private val conversationsUriString = "content://mms-sms/conversations?simple=true"
-    // private val smsUriString = "content://sms"
-
-    private val conversationHeads = mutableListOf<ShortMessage>()
-    private val liveConversationHeads = MutableLiveData<List<ShortMessage>>()
-
-    init {
-        updateConversationList()
-    }
-
-    override fun updateConversationList() {
-        conversationHeads.clear()
-        conversationHeads.addAll(
-            QueryHelper.queryToCollection<List<ShortMessage>>(resolver, conversationsUriString, smsColumns, "body <> ''", "date DESC")
+    override fun getSmsThreads(): List<SmsThread> =
+        QueryHelper.queryToCollection(
+            resolver,
+            queryRepo.getConversationsUri(),
+            queryRepo.getThreadsColumns(),
+            queryRepo.getConversationsQuerySelection(),
+            queryRepo.getConversationsQueryOrder()
         )
 
-        liveConversationHeads.value = conversationHeads
-    }
+    override fun getSmsThreadById(id: Long): SmsThread =
+        QueryHelper.queryToCollection<Collection<SmsThread>>(
+            resolver,
+            queryRepo.getConversationsUri(),
+            queryRepo.getThreadsColumns(),
+            queryRepo.getConversationsQuerySelection(id),
+            queryRepo.getConversationsQueryOrder()
+        ).first()
 
-    override fun getConversationHeads(): List<ShortMessage> = conversationHeads
-
-    override fun getLiveConversationHeads(): LiveData<List<ShortMessage>> = liveConversationHeads
-
-    override fun getSmsThreadByThreadId(threadId: Long): SmsThread =
-        SmsThread(
-            QueryHelper.queryToCollection(resolver, "$conversationsUriString/$threadId", smsColumns, "body <> ''", "date ASC")
+    override fun getMessagesFromSmsThread(thread: SmsThread): List<ShortMessage> =
+        QueryHelper.queryToCollection(
+            resolver,
+            queryRepo.getMessagesUriOfThread(thread.id),
+            queryRepo.getSmsColumns(),
+            queryRepo.getMessagesQuerySelection(),
+            queryRepo.getMessageQueryOrder()
         )
-
-    override fun addSms(sms: ShortMessage) {
-
-    }
-
-    override fun deleteSms(id: Int) {
-    }
-
 }

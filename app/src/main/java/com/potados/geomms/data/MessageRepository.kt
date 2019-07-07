@@ -1,17 +1,15 @@
 package com.potados.geomms.data
 
-import androidx.lifecycle.LiveData
-
+/**
+ * 메시지와 관련된 데이터를 공급해주는 저장소.
+ * ContentResolver를 가지고 있는 유일한 repository입니다.
+ *
+ * Reactive한 것들은 각 액티비티 또는 프래그먼트의 뷰모델에 맡깁니다.
+ */
 interface MessageRepository {
-    fun updateConversationList() /* re-query and update */
+    fun getSmsThreads(): List<SmsThread>
 
-    fun getConversationHeads(): List<ShortMessage>
+    fun getSmsThreadById(id: Long): SmsThread
 
-    fun getLiveConversationHeads(): LiveData<List<ShortMessage>>
-
-    fun getSmsThreadByThreadId(threadId: Long): SmsThread
-
-    fun addSms(sms: ShortMessage)
-
-    fun deleteSms(id: Int)
+    fun getMessagesFromSmsThread(thread: SmsThread): List<ShortMessage>
 }

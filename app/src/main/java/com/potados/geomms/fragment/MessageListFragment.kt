@@ -15,6 +15,8 @@ import com.potados.geomms.R
 import com.potados.geomms.activity.ConversationActivity
 import com.potados.geomms.adapter.MessageListRecyclerViewAdapter
 import com.potados.geomms.data.ShortMessage
+import com.potados.geomms.data.SmsThread
+import com.potados.geomms.util.ContactHelper
 import com.potados.geomms.util.Notify
 import com.potados.geomms.viewmodel.MessageListViewModel
 import kotlinx.android.synthetic.main.fragment_message_list.view.*
@@ -38,7 +40,7 @@ class MessageListFragment : Fragment(), MessageListRecyclerViewAdapter.Conversat
     override fun onResume() {
         super.onResume()
 
-        viewmodel.updateConversationHeads()
+        viewmodel.updateConversations()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -57,10 +59,10 @@ class MessageListFragment : Fragment(), MessageListRecyclerViewAdapter.Conversat
         return view
     }
 
-    override fun onConversationClicked(conversationHead: ShortMessage) {
+    override fun onConversationClicked(conversationHead: SmsThread) {
         startActivity(Intent(context, ConversationActivity::class.java).apply {
-            putExtra(ConversationActivity.ARG_ADDRESS, conversationHead.address)
-            putExtra(ConversationActivity.ARG_THREAD_ID, conversationHead.threadId)
+            putExtra(ConversationActivity.ARG_ADDRESS, ContactHelper.getPhoneNumberByRecipientId(this@MessageListFragment.context!!.contentResolver, conversationHead.getRecipientIds()[0]))
+            putExtra(ConversationActivity.ARG_THREAD_ID, conversationHead.id)
         })
     }
 
@@ -84,13 +86,13 @@ class MessageListFragment : Fragment(), MessageListRecyclerViewAdapter.Conversat
         with(messageListRecyclerView) {
             layoutManager = LinearLayoutManager(context)
 
-            viewmodel.getConversationHeads().observe(this@MessageListFragment, object: Observer<List<ShortMessage>> {
-                override fun onChanged(t: List<ShortMessage>?) {
+            viewmodel.getConversations().observe(this@MessageListFragment, object: Observer<List<SmsThread>> {
+                override fun onChanged(t: List<SmsThread>?) {
                     t?.also {
                         /**
                          * TODO: RecyclerView.notify****Changed로 변경할 것.
                          */
-                        adapter = MessageListRecyclerViewAdapter(it, this@MessageListFragment)
+                        adapter = MessageListRecyclerViewAdapter(t, this@MessageListFragment)
                     }
                 }
             })

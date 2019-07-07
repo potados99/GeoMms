@@ -7,17 +7,18 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
+import com.potados.geomms.data.ShortMessage
 import com.potados.geomms.data.SmsThread
 import com.potados.geomms.util.ShortDate
 import kotlinx.android.synthetic.main.activity_conversation_message_item.view.*
 import java.lang.RuntimeException
 
 class ConversationRecyclerViewAdapter(
-    private val thread: SmsThread
+    private val messages: List<ShortMessage>
 ) : RecyclerView.Adapter<ConversationRecyclerViewAdapter.ViewHolder>() {
 
 
-    override fun getItemCount(): Int = thread.allMessages().size
+    override fun getItemCount(): Int = messages.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -31,7 +32,7 @@ class ConversationRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val message = thread.allMessages()[position]
+        val message = messages[position]
 
         if (position == 0) {
             holder.dateLayout.visibility = View.VISIBLE
@@ -59,7 +60,7 @@ class ConversationRecyclerViewAdapter(
     }
 
     override fun getItemViewType(position: Int): Int =
-        if (thread.allMessages()[position].isSent()) TYPE_MESSAGE_SENT
+        if (messages[position].isSent()) TYPE_MESSAGE_SENT
         else TYPE_MESSAGE_RECEIVED
 
 

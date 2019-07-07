@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Telephony
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -52,8 +53,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // requirePermissions(PERMISSIONS_OF_THIS_APP)
-        dumpThread()
+        requirePermissions(PERMISSIONS_OF_THIS_APP)
+        // dumpThread()
     }
 
     /**
@@ -249,6 +250,7 @@ class MainActivity : AppCompatActivity() {
      * 실험용 함수입니다.
      */
     private fun dumpThread() {
+
         val c = contentResolver.query(Uri.parse("content://mms-sms/conversations?simple=true"), null, null, null, "_id DESC")
         val dump = QueryHelper.dumpCursor(c)
 
@@ -282,16 +284,7 @@ class MainActivity : AppCompatActivity() {
 
         p.show()
     }
-    private fun usingRepository() {
-        val repo = MessageRepositoryImpl(contentResolver)
 
-        val p = Popup(this).withTitle("Heads")
-        repo.getConversationHeads().forEach {
-            p.withMoreMessage("${it.address}\n${it.body}\n\n")
-        }
-
-        p.show()
-    }
 
     companion object {
         /**

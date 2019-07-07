@@ -1,7 +1,6 @@
 package com.potados.geomms.data
 
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
 
 data class ShortMessage(
     @SerializedName(COL_ID)             val id: Long,

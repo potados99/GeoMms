@@ -1,23 +1,18 @@
 package com.potados.geomms.adapter
 
 import android.content.ContentResolver
-import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import com.mikhaellopez.circularimageview.CircularImageView
 
 import com.potados.geomms.R
-import com.potados.geomms.activity.ConversationActivity
 import com.potados.geomms.data.ShortMessage
+import com.potados.geomms.data.SmsThread
 import com.potados.geomms.util.ContactHelper
 import com.potados.geomms.util.ShortDate
 
@@ -26,7 +21,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class MessageListRecyclerViewAdapter(
-    private val conversationHeads: List<ShortMessage>,
+    private val conversations: List<SmsThread>,
     private val listener: ConversationClickListener
 ) : RecyclerView.Adapter<MessageListRecyclerViewAdapter.ViewHolder>(), KoinComponent {
 
@@ -43,16 +38,18 @@ class MessageListRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val smsItem = conversationHeads[position]
+        val threadItem = conversations[position]
 
         with (holder) {
-            senderTextView.text = ContactHelper.getContactName(resolver, smsItem.address.trim(' ')) ?: smsItem.address.trim(' ')
-            bodyTextView.text = smsItem.body.trim(' ')
-            timeTextView.text = ShortDate.of(smsItem.date)
+            senderTextView.text =
+                ContactHelper.getContactNameByRecipientId(resolver, threadItem.getRecipientIds()[0])
+                    ?: ContactHelper.getPhoneNumberByRecipientId(resolver, threadItem.getRecipientIds()[0])
+            bodyTextView.text = threadItem.snippet.trim(' ')
+            timeTextView.text = ShortDate.of(threadItem.date)
             // TODO: 더미 이미지 교체.
             avatarImageView.setImageResource(R.drawable.avatar_default)
 
-            if (smsItem.isNotRead()) {
+            if (threadItem.isNotAllRead()) {
                 unreadIconView.visibility = View.VISIBLE
                 bodyTextView.setTypeface(bodyTextView.typeface, Typeface.BOLD)
                 bodyTextView.setTextColor(Color.BLACK)
@@ -61,15 +58,15 @@ class MessageListRecyclerViewAdapter(
 
         with(holder.view) {
             setOnClickListener {
-                listener.onConversationClicked(smsItem)
+                listener.onConversationClicked(threadItem)
             }
         }
     }
 
-    override fun getItemCount(): Int = conversationHeads.size
+    override fun getItemCount(): Int = conversations.size
 
     interface ConversationClickListener {
-        fun onConversationClicked(conversationHead: ShortMessage)
+        fun onConversationClicked(conversationHead: SmsThread)
     }
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
