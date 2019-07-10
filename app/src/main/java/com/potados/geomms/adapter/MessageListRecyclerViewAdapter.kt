@@ -25,7 +25,7 @@ class MessageListRecyclerViewAdapter(
     private val listener: ConversationClickListener
 ) : RecyclerView.Adapter<MessageListRecyclerViewAdapter.ViewHolder>(), KoinComponent {
 
-    val resolver: ContentResolver by inject()
+    private val resolver: ContentResolver by inject()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)

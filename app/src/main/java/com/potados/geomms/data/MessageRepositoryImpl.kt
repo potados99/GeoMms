@@ -13,28 +13,31 @@ class MessageRepositoryImpl(
 
     override fun getSmsThreads(): List<SmsThread> =
         QueryHelper.queryToCollection(
-            resolver,
-            queryRepo.getConversationsUri(),
-            queryRepo.getThreadsColumns(),
-            queryRepo.getConversationsQuerySelection(),
-            queryRepo.getConversationsQueryOrder()
+            resolver,                                                           /* 컨텐츠 리졸버. */
+            queryRepo.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
+            queryRepo.getThreadsColumns(),                                      /* threads 테이블 중 사용할 column. */
+            queryRepo.getConversationsQuerySelection().getSelection(),          /* 선택 조건문. */
+            queryRepo.getConversationsQuerySelection().getSelectionArgs(),      /* 선택 조건문에 쓰일 값들. */
+            queryRepo.getConversationsQueryOrder()                              /* 정렬 조건. */
         )
 
     override fun getSmsThreadById(id: Long): SmsThread =
         QueryHelper.queryToCollection<Collection<SmsThread>>(
-            resolver,
-            queryRepo.getConversationsUri(),
-            queryRepo.getThreadsColumns(),
-            queryRepo.getConversationsQuerySelection(id),
-            queryRepo.getConversationsQueryOrder()
-        ).first()
+            resolver,                                                           /* 컨텐츠 리졸버. */
+            queryRepo.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
+            queryRepo.getThreadsColumns(),                                      /* threads 테이블 중 사용할 column. */
+            queryRepo.getConversationsQuerySelection(id).getSelection(),        /* 특정 id인 대화방만 가져옴. */
+            queryRepo.getConversationsQuerySelection(id).getSelectionArgs(),    /* 그 특정 id가 이 배열에 들어있을 것임. */
+            queryRepo.getConversationsQueryOrder()                              /* 정렬 조건 */
+        ).first() /* 어차피 결과는 하나만 나올 것. 없으면 NoSuchElementException 유발. */
 
     override fun getMessagesFromSmsThread(thread: SmsThread): List<ShortMessage> =
         QueryHelper.queryToCollection(
-            resolver,
-            queryRepo.getMessagesUriOfThread(thread.id),
-            queryRepo.getSmsColumns(),
-            queryRepo.getMessagesQuerySelection(),
-            queryRepo.getMessageQueryOrder()
+            resolver,                                                           /* 컨텐츠 리졸버. */
+            queryRepo.getMessagesUriOfThread(thread.id),                        /* 특정 대화방에 해당하는 메시지들이 모여있는 uri. */
+            queryRepo.getSmsColumns(),                                          /* 사용할 sms 테이블 column. */
+            queryRepo.getMessagesQuerySelection().getSelection(),               /* 메시지 선택 조건문. */
+            queryRepo.getMessagesQuerySelection().getSelectionArgs(),           /* 조건문에 쓰일 값들. */
+            queryRepo.getMessageQueryOrder()                                    /* 정렬 조건. */
         )
 }
