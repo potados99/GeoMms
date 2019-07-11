@@ -4,26 +4,20 @@ import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
 import com.google.gson.Gson
+import java.lang.RuntimeException
 
 class QueryHelper {
     companion object {
         /**
          * resolver에서 query한 결과를 컬렉션에 집어넣어 반환합니다.
          */
-        inline fun <reified T> queryToCollection(
+        inline fun <reified T: Collection<*>> queryToCollection(
             resolver: ContentResolver,
             uri: Uri,
             projection: Array<String>?,
             selection: String? = null,
             selectionArgs: Array<String>? = null,
             order: String? = null): T {
-
-            /**
-             * 0. Collection만 허용합니다.
-             */
-            if (Types.typeOf<T>() is Collection<*>) {
-                throw IllegalThreadStateException("Wrong generic type: not a collection.")
-            }
 
             /**
              * 1. 쿼리
@@ -33,7 +27,7 @@ class QueryHelper {
                 projection,
                 selection,
                 selectionArgs,
-                order)
+                order) ?: throw RuntimeException("Cursor of query result is null.")
 
             /**
              * 2. json으로 변환
