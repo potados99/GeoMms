@@ -76,8 +76,8 @@ class ConversationListFragment : Fragment(), MessageListRecyclerViewAdapter.Conv
 
 
     private fun setupAndBindViewWithViewModel(view: View) {
-        val toolbar: Toolbar = view.toolbar
-        val messageListRecyclerView: RecyclerView = view.fragment_message_list_recyclerview
+        val toolbar: Toolbar = view.conversation_list_toolbar
+        val messageListRecyclerView: RecyclerView = view.conversation_list_recyclerview
 
         setupToolbar(toolbar)
 

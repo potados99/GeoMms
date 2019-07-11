@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         tools:context=".activity.ConversationActivity">
 
-    <!--툴바 레이아웃-->
+    <!--앱 바 레이아웃-->
     <com.google.android.material.appbar.AppBarLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
