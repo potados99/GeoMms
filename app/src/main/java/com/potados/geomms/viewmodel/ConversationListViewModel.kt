@@ -9,8 +9,8 @@ import com.potados.geomms.data.SmsThread
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class MessageListViewModel : ViewModel(), KoinComponent {
-    val messageRepo: MessageRepository by inject()
+class ConversationListViewModel : ViewModel(), KoinComponent {
+    private val messageRepo: MessageRepository by inject()
 
     private val conversations: MutableList<SmsThread> = mutableListOf()
     private val liveDataOfConversations = MutableLiveData<List<SmsThread>>()

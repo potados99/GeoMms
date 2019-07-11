@@ -5,7 +5,6 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.Telephony
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -13,9 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.fragment.MapFragment
-import com.potados.geomms.fragment.MessageListFragment
+import com.potados.geomms.fragment.ConversationListFragment
 import com.potados.geomms.R
-import com.potados.geomms.data.MessageRepositoryImpl
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
 import com.potados.geomms.util.QueryHelper
@@ -26,7 +24,7 @@ import kotlin.system.exitProcess
 /**
  * MainActivity
  * 권한 획득과 프래그먼트간 전환을 담당합니다.
- * MessageListFragment(메시지 리스트), MapFragment(지도) 두 프래그먼트를 사용합니다.
+ * ConversationListFragment(메시지 리스트), MapFragment(지도) 두 프래그먼트를 사용합니다.
  *
  * 루틴 호출 순서는 다음과 같습니다:
  * onCreate -> requirePermission -> onRequestPermissionsResult -> onPermission[Success|Fail]
@@ -36,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * 대화방 목록을 보여주는 프래그먼트
      */
-    private val messageListFragment = MessageListFragment()
+    private val messageListFragment = ConversationListFragment()
 
     /**
      * 지도와 친구 목록을 보여주는 프래그먼트
@@ -251,8 +249,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun dumpThread() {
 
-        val c = contentResolver.query(Uri.parse("content://mms-sms/conversations?simple=true"), null, null, null, "_id DESC")
+        val c = contentResolver.query(Uri.parse("content://mms-sms/conversations?simple=true"), null, null, null, "_id DESC") ?: throw RuntimeException()
         val dump = QueryHelper.dumpCursor(c)
+        c.close()
 
         val p = Popup(this).withTitle("thread table dump:")
 

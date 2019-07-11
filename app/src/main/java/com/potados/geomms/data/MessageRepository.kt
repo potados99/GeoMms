@@ -4,7 +4,8 @@ package com.potados.geomms.data
  * 메시지와 관련된 데이터를 공급해주는 저장소.
  * ContentResolver를 가지고 있는 유일한 repository입니다.
  *
- * Reactive한 것들은 각 액티비티 또는 프래그먼트의 뷰모델에 맡깁니다.
+ * Repository 계층에서의 caching은 없습니다. 호출할 때마다 resolver에 query를 날립니다.
+ * 하지만 resolver가 caching을 해줍니다. (ContentResolver.query 문서)
  */
 interface MessageRepository {
 

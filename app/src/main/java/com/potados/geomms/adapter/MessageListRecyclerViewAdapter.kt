@@ -11,12 +11,11 @@ import android.widget.TextView
 import com.mikhaellopez.circularimageview.CircularImageView
 
 import com.potados.geomms.R
-import com.potados.geomms.data.ShortMessage
 import com.potados.geomms.data.SmsThread
 import com.potados.geomms.util.ContactHelper
 import com.potados.geomms.util.ShortDate
 
-import kotlinx.android.synthetic.main.fragment_message_list_item.view.*
+import kotlinx.android.synthetic.main.fragment_conversation_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -33,7 +32,7 @@ class MessageListRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_message_list_item, parent, false)
+            .inflate(R.layout.fragment_conversation_list_item, parent, false)
         return ViewHolder(view)
     }
 

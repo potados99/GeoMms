@@ -14,27 +14,25 @@ import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.R
 import com.potados.geomms.activity.ConversationActivity
 import com.potados.geomms.adapter.MessageListRecyclerViewAdapter
-import com.potados.geomms.data.ShortMessage
 import com.potados.geomms.data.SmsThread
 import com.potados.geomms.util.ContactHelper
-import com.potados.geomms.util.Notify
-import com.potados.geomms.viewmodel.MessageListViewModel
-import kotlinx.android.synthetic.main.fragment_message_list.view.*
+import com.potados.geomms.viewmodel.ConversationListViewModel
+import kotlinx.android.synthetic.main.fragment_conversation_list.view.*
 
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
  */
-class MessageListFragment : Fragment(), MessageListRecyclerViewAdapter.ConversationClickListener {
+class ConversationListFragment : Fragment(), MessageListRecyclerViewAdapter.ConversationClickListener {
 
     /**
      * 데이터와 마짱을 뜨려면 이친구만 있으면 됩니다. ㅎㅎ
      */
-    private lateinit var viewmodel: MessageListViewModel
+    private lateinit var viewmodel: ConversationListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewmodel = ViewModelProviders.of(this).get(MessageListViewModel::class.java)
+        viewmodel = ViewModelProviders.of(this).get(ConversationListViewModel::class.java)
     }
 
     override fun onResume() {
@@ -52,7 +50,7 @@ class MessageListFragment : Fragment(), MessageListRecyclerViewAdapter.Conversat
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_message_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_conversation_list, container, false)
 
         setupAndBindViewWithViewModel(view)
 
@@ -61,7 +59,7 @@ class MessageListFragment : Fragment(), MessageListRecyclerViewAdapter.Conversat
 
     override fun onConversationClicked(conversationHead: SmsThread) {
         startActivity(Intent(context, ConversationActivity::class.java).apply {
-            putExtra(ConversationActivity.ARG_ADDRESS, ContactHelper.getPhoneNumberByRecipientId(this@MessageListFragment.context!!.contentResolver, conversationHead.getRecipientIds()[0]))
+            putExtra(ConversationActivity.ARG_ADDRESS, ContactHelper.getPhoneNumberByRecipientId(this@ConversationListFragment.context!!.contentResolver, conversationHead.getRecipientIds()[0]))
             putExtra(ConversationActivity.ARG_THREAD_ID, conversationHead.id)
         })
     }
@@ -86,13 +84,13 @@ class MessageListFragment : Fragment(), MessageListRecyclerViewAdapter.Conversat
         with(messageListRecyclerView) {
             layoutManager = LinearLayoutManager(context)
 
-            viewmodel.getConversations().observe(this@MessageListFragment, object: Observer<List<SmsThread>> {
+            viewmodel.getConversations().observe(this@ConversationListFragment, object: Observer<List<SmsThread>> {
                 override fun onChanged(t: List<SmsThread>?) {
                     t?.also {
                         /**
                          * TODO: RecyclerView.notify****Changed로 변경할 것.
                          */
-                        adapter = MessageListRecyclerViewAdapter(t, this@MessageListFragment)
+                        adapter = MessageListRecyclerViewAdapter(t, this@ConversationListFragment)
                     }
                 }
             })
