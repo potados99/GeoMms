@@ -23,7 +23,6 @@ class QueryInfoRepositoryImpl : QueryInfoRepository {
         return ContentUris.withAppendedId(getConversationsUri(), threadId)
     }
 
-
     override fun getThreadsColumns(): Array<String> {
         return arrayOf(
             Telephony.ThreadsColumns._ID,
@@ -41,7 +40,6 @@ class QueryInfoRepositoryImpl : QueryInfoRepository {
             Telephony.ThreadsColumns.SNIPPET_CHARSET
         )
     }
-
 
     override fun getSmsColumns(): Array<String> {
         return arrayOf(
@@ -70,16 +68,9 @@ class QueryInfoRepositoryImpl : QueryInfoRepository {
     }
 
     override fun getMessagesQuerySelection(): QueryHelper.Selection {
-        val a = QueryHelper()
+        return QueryHelper()
             .Selection()
             .of(Telephony.Sms.BODY, "<> ''")
-
-        Log.d("HEYYyyyyyyyy", a.getSelection())
-        a.getSelectionArgs()?.forEach {
-            Log.d("Hhhhhhhgh", it)
-        }
-
-        return a
     }
 
     override fun getConversationsQueryOrder(): String {

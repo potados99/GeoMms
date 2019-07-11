@@ -60,12 +60,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity: onCreate", "created.")
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-
-        Log.d("MainActivity: onSaveInstanceState", "bundle is. ${if (outState == null) "null" else "not null"}")
-    }
-
     /**
      * 앱 사용 권한을 얻어냅니다.
      * 모든 권한이 허용되어 있다면 onPermissionSuccess를 직접 호출하고,
