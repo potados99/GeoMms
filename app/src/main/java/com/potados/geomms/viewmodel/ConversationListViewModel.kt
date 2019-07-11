@@ -16,8 +16,9 @@ import org.koin.core.inject
  * 이를 직접 설정하지는 않고, updateConversations() 메소드를 통해 re-query를 유발합니다.
  */
 class ConversationListViewModel : ViewModel(), KoinComponent {
+
     /**
-     * 메시지를 가져오려면 필요합니다.
+     * 메시지를 가져올 때에 사용.
      */
     private val messageRepo: MessageRepository by inject()
 

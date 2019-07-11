@@ -26,6 +26,7 @@ class ConversationViewModel : ViewModel(), KoinComponent {
     private val contactRepo: ContactRepository by inject()
 
 
+
     /***********************************************************************
      * 여기 smsThread는 이 뷰모델을 대표하는 데이터입니다.
      * smsThread가 바뀌면 다른 모든 데이터도 바뀝니다.
@@ -94,4 +95,18 @@ class ConversationViewModel : ViewModel(), KoinComponent {
      * 상대방에 대한 정보를 담은 문자열입니다.
      */
     fun getRecipients(): String = smsThread.value?.getRecipientString(contactRepo) ?: ""
+
+
+
+    /***********************************************************************
+     * 이것들은 뷰의 상태를 잠시 저장해놓기 위함입니다.
+     * Observe는 필요하지 않습니다.
+     ***********************************************************************/
+
+    /**
+     * 리사이클러뷰가 최하단에 도달했는지 여부.
+     * 초기값은 참.
+     */
+    var recyclerViewReachedItsEnd: Boolean = true
+
 }

@@ -1,16 +1,21 @@
 package com.potados.geomms.activity
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.adapter.ConversationRecyclerViewAdapter
 import com.potados.geomms.data.ShortMessage
 import com.potados.geomms.data.SmsThread
+import com.potados.geomms.util.Blur
 import com.potados.geomms.viewmodel.ConversationViewModel
 import kotlinx.android.synthetic.main.activity_conversation.*
 
@@ -85,7 +90,7 @@ class ConversationActivity : AppCompatActivity() {
                 /**
                  * 툴바 타이틀 설정.
                  */
-                activity_conversation_toolbar_title.text = viewModel.getRecipients()
+                conversation_toolbar_title.text = viewModel.getRecipients()
 
                 /**
                  * 메시지 목록을 여기서 변경하지는 않는다.
@@ -103,13 +108,13 @@ class ConversationActivity : AppCompatActivity() {
             override fun onChanged(t: List<ShortMessage>?) {
                 if (t == null) return
 
-                activity_conversation_recyclerview.adapter = ConversationRecyclerViewAdapter(t)
+                conversation_recyclerview.adapter = ConversationRecyclerViewAdapter(t)
 
                 /**
                  * 항상 최하단으로 스크롤할 필요는 없다.
                  * TODO: 조건 부여하기.
                  */
-                activity_conversation_recyclerview.scrollToPosition(t.size - 1)
+                scrollToBottom(false)
             }
         })
 
@@ -131,18 +136,71 @@ class ConversationActivity : AppCompatActivity() {
         /**
          * 리사이클러뷰 외관 설정하기.
          */
-        activity_conversation_recyclerview.layoutManager = LinearLayoutManager(this@ConversationActivity)
+        conversation_recyclerview.layoutManager = LinearLayoutManager(this@ConversationActivity)
 
         /**
          * 액션바 설정하기.
          */
-        setSupportActionBar(activity_conversation_toolbar)
+        setSupportActionBar(conversation_toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
         }
+
+        /**
+         * 메시지 작성하는 editText 레이아웃 배경 블러 채우기.
+         */
+        // val drawable = ColorDrawable(Color.parseColor("#FAFAFA"))
+        // conversation_bottom_layout.background = Blur.applyBlur(drawable, this).apply { alpha = 200 }
+
+        /**
+         * 하단의 메시지 작성 레이아웃이 recyclerView의 컨텐츠를 가리지 않도록
+         * 레이아웃 변화에 맞추어 recyclerView의 패딩을 설정해줍니다.
+         */
+        conversation_bottom_layout.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
+            conversation_recyclerview.apply {
+                setPadding(paddingLeft, paddingTop, paddingRight, bottom - top)
+
+                if (viewModel.recyclerViewReachedItsEnd) {
+                    scrollToBottom()
+                }
+            }
+         }
+
+        /**
+         * 메시지 목록의 스크롤 상태에 따라 특정 상황에서 맨 밑으로 스크롤할지 여부가 달라집니다.
+         * 스크롤 상태가 바뀔때마다 현재 바닥에 도달했는지 여부를 저장합니다.
+         */
+        conversation_recyclerview.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                /**
+                 * direction -1은 위, 1은 아래입니다.
+                 * 아래로 스크롤할 수 없다면 바닥에 도달한 것입니다.
+                 */
+                viewModel.recyclerViewReachedItsEnd = !conversation_recyclerview.canScrollVertically(1)
+            }
+        })
     }
 
+    /**
+     * 메시지 목록 recyclerView를 최하단으로 스크롤합니다.
+     */
+    private fun scrollToBottom(smooth: Boolean = true) {
+        conversation_recyclerview.adapter?.let {
+            Log.d("ConversationActivity: scrollToBottom()", "scrolling to bottom.")
+
+            if (smooth) {
+                conversation_recyclerview.smoothScrollToPosition(it.itemCount - 1)
+            }
+            else {
+                conversation_recyclerview.scrollToPosition(it.itemCount - 1)
+            }
+
+            viewModel.recyclerViewReachedItsEnd = true
+        }
+    }
 
     companion object {
         const val ARG_SMS_THREAD = "arg_sms_thread"
