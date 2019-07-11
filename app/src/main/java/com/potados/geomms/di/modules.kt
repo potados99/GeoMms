@@ -1,9 +1,6 @@
 package com.potados.geomms.di
 
-import com.potados.geomms.data.MessageRepository
-import com.potados.geomms.data.MessageRepositoryImpl
-import com.potados.geomms.data.QueryInfoRepository
-import com.potados.geomms.data.QueryInfoRepositoryImpl
+import com.potados.geomms.data.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -14,6 +11,13 @@ val myModules = module {
          * 안드로이드 컨텐츠 제공자
          */
         androidContext().contentResolver
+    }
+
+    single {
+        /**
+         * 연락처에 접근하기 위한 저장소
+         */
+        ContactRepositoryImpl(androidContext().contentResolver) as ContactRepository
     }
 
     single {

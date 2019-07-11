@@ -1,8 +1,7 @@
 package com.potados.geomms.data
 
 /**
- * 메시지와 관련된 데이터를 공급해주는 저장소.
- * ContentResolver를 가지고 있는 유일한 repository입니다.
+ * 메시지와 관련된 데이터를 공급해주는 저장소입니다.
  *
  * Repository 계층에서의 caching은 없습니다. 호출할 때마다 resolver에 query를 날립니다.
  * 하지만 resolver가 caching을 해줍니다. (ContentResolver.query 문서)

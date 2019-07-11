@@ -13,16 +13,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.R
 import com.potados.geomms.activity.ConversationActivity
-import com.potados.geomms.adapter.MessageListRecyclerViewAdapter
+import com.potados.geomms.adapter.ConversationListRecyclerViewAdapter
 import com.potados.geomms.data.SmsThread
-import com.potados.geomms.util.ContactHelper
+import com.potados.geomms.util.SerializableContainer
 import com.potados.geomms.viewmodel.ConversationListViewModel
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.*
 
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
  */
-class ConversationListFragment : Fragment(), MessageListRecyclerViewAdapter.ConversationClickListener {
+class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter.ConversationClickListener {
 
     /**
      * 데이터와 마짱을 뜨려면 이친구만 있으면 됩니다. ㅎㅎ
@@ -57,10 +57,14 @@ class ConversationListFragment : Fragment(), MessageListRecyclerViewAdapter.Conv
         return view
     }
 
-    override fun onConversationClicked(conversationHead: SmsThread) {
+    override fun onConversationClicked(conversation: SmsThread) {
         startActivity(Intent(context, ConversationActivity::class.java).apply {
-            putExtra(ConversationActivity.ARG_ADDRESS, ContactHelper.getPhoneNumberByRecipientId(this@ConversationListFragment.context!!.contentResolver, conversationHead.getRecipientIds()[0]))
-            putExtra(ConversationActivity.ARG_THREAD_ID, conversationHead.id)
+            /**
+             * 직접 객체를 집어넣습니다.
+             * id만 넘긴 후 다시 query하는것보다 이게 낫다고 판단.
+             * SmsThread는 Serializable 합니다.
+             */
+            putExtra(ConversationActivity.ARG_SMS_THREAD, conversation)
         })
     }
 
@@ -86,12 +90,12 @@ class ConversationListFragment : Fragment(), MessageListRecyclerViewAdapter.Conv
 
             viewmodel.getConversations().observe(this@ConversationListFragment, object: Observer<List<SmsThread>> {
                 override fun onChanged(t: List<SmsThread>?) {
-                    t?.also {
-                        /**
-                         * TODO: RecyclerView.notify****Changed로 변경할 것.
-                         */
-                        adapter = MessageListRecyclerViewAdapter(t, this@ConversationListFragment)
-                    }
+                    if (t == null) return
+
+                    /**
+                     * TODO: RecyclerView.notify****Changed로 변경할 것.
+                     */
+                    adapter = ConversationListRecyclerViewAdapter(t, this@ConversationListFragment)
                 }
             })
         }

@@ -1,6 +1,5 @@
 package com.potados.geomms.adapter
 
-import android.content.ContentResolver
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.recyclerview.widget.RecyclerView
@@ -11,20 +10,20 @@ import android.widget.TextView
 import com.mikhaellopez.circularimageview.CircularImageView
 
 import com.potados.geomms.R
+import com.potados.geomms.data.ContactRepository
 import com.potados.geomms.data.SmsThread
-import com.potados.geomms.util.ContactHelper
 import com.potados.geomms.util.ShortDate
 
 import kotlinx.android.synthetic.main.fragment_conversation_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class MessageListRecyclerViewAdapter(
+class ConversationListRecyclerViewAdapter(
     private val conversations: List<SmsThread>,
     private val listener: ConversationClickListener
-) : RecyclerView.Adapter<MessageListRecyclerViewAdapter.ViewHolder>(), KoinComponent {
+) : RecyclerView.Adapter<ConversationListRecyclerViewAdapter.ViewHolder>(), KoinComponent {
 
-    private val resolver: ContentResolver by inject()
+    private val contactRepo: ContactRepository by inject()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -40,11 +39,10 @@ class MessageListRecyclerViewAdapter(
         val threadItem = conversations[position]
 
         with (holder) {
-            senderTextView.text =
-                ContactHelper.getContactNameByRecipientId(resolver, threadItem.getRecipientIds()[0])
-                    ?: ContactHelper.getPhoneNumberByRecipientId(resolver, threadItem.getRecipientIds()[0])
-            bodyTextView.text = threadItem.snippet.trim(' ')
+            senderTextView.text = threadItem.getRecipientString(contactRepo)
+            bodyTextView.text = threadItem.snippet
             timeTextView.text = ShortDate.of(threadItem.date)
+
             // TODO: 더미 이미지 교체.
             avatarImageView.setImageResource(R.drawable.avatar_default)
 
@@ -65,7 +63,7 @@ class MessageListRecyclerViewAdapter(
     override fun getItemCount(): Int = conversations.size
 
     interface ConversationClickListener {
-        fun onConversationClicked(conversationHead: SmsThread)
+        fun onConversationClicked(conversation: SmsThread)
     }
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {

@@ -24,12 +24,4 @@ class MainViewModel : ViewModel() {
         return true
     }
 
-
-    /**
-     * 메인 액티비티의 onCleared와 함께 호출됩니다.
-     */
-    override fun onCleared() {
-        super.onCleared()
-    }
-
 }

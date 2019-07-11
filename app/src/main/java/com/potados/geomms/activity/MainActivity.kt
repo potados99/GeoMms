@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * 뷰모델
      */
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var viewModel: MainViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 메시지가 먼저이니까 메시지 탭 선택해줍니다.
          */
-        mainViewModel.setSelectedTabMenuItemId(R.id.menu_item_navigation_message)
+        viewModel.setSelectedTabMenuItemId(R.id.menu_item_navigation_message)
     }
 
     /**
@@ -187,10 +187,12 @@ class MainActivity : AppCompatActivity() {
      * 뷰모델을 얻어온 뒤, 이를 뷰와 연결합니다. (binding)
      */
     private fun setupViewModelAndUI() {
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        mainViewModel.getSelectedTabMenuItemId().observe(this, object: Observer<Int> {
-            override fun onChanged(t: Int) {
+        viewModel.getSelectedTabMenuItemId().observe(this, object: Observer<Int> {
+            override fun onChanged(t: Int?) {
+                if (t == null) return
+
                 switchFragmentByNavigationItemId(t)
 
 
@@ -207,7 +209,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         nav_view.setOnNavigationItemSelectedListener { item ->
-            mainViewModel.setSelectedTabMenuItemId(item.itemId)
+            viewModel.setSelectedTabMenuItemId(item.itemId)
         }
 
     }
