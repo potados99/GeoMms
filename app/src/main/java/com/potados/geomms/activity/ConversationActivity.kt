@@ -11,7 +11,6 @@ import com.potados.geomms.R
 import com.potados.geomms.adapter.ConversationRecyclerViewAdapter
 import com.potados.geomms.data.ShortMessage
 import com.potados.geomms.data.SmsThread
-import com.potados.geomms.util.SerializableContainer
 import com.potados.geomms.viewmodel.ConversationViewModel
 import kotlinx.android.synthetic.main.activity_conversation.*
 
@@ -20,8 +19,16 @@ import kotlinx.android.synthetic.main.activity_conversation.*
  */
 class ConversationActivity : AppCompatActivity() {
 
+    /**
+     * 뷰모델입니다.
+     */
     private lateinit var viewModel: ConversationViewModel
 
+    /**
+     * 시작점입니다.
+     * 하나만 instantiate 하도록 보장하고,
+     * 뷰모델을 가져온 뒤 나머지 UI를 설정합니다.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         if (isInstantiated()) finish()
         instantiated = true
@@ -29,18 +36,30 @@ class ConversationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversation)
 
-        setUpViewModelAndUi()
+        viewModel = ViewModelProviders.of(this).get(ConversationViewModel::class.java)
+        bindUi()
+
+        setUpUi()
     }
 
+    /**
+     * 객체가 소멸될 때에 이를 알립니다.
+     */
     override fun onDestroy() {
         super.onDestroy()
         instantiated = false
     }
 
+    /**
+     * 옵션 메뉴를 달아줍니다.
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         return super.onCreateOptionsMenu(menu)
     }
 
+    /**
+     * 옵션 버튼이 눌릴 때에 반응합니다.
+     */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             android.R.id.home -> {
@@ -51,11 +70,10 @@ class ConversationActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setUpViewModelAndUi() {
-        /**
-         * 뷰모델 가져오기
-         */
-        viewModel = ViewModelProviders.of(this).get(ConversationViewModel::class.java)
+    /**
+     * UI를 뷰모델과 이어줍니다.
+     */
+    private fun bindUi() {
 
         /**
          * smsThread가 변경되었을 때에 할 일들
@@ -64,7 +82,10 @@ class ConversationActivity : AppCompatActivity() {
             override fun onChanged(t: SmsThread?) {
                 if (t == null) return
 
-                setToolbarTitle(viewModel.getRecipients())
+                /**
+                 * 툴바 타이틀 설정.
+                 */
+                activity_conversation_toolbar_title.text = viewModel.getRecipients()
 
                 /**
                  * 메시지 목록을 여기서 변경하지는 않는다.
@@ -93,30 +114,33 @@ class ConversationActivity : AppCompatActivity() {
         })
 
         /**
-         * 리사이클러뷰 외관 설정하기
+         * ConversationListFragment에서 집어넣은 SmsThread 꺼냅니다.
+         */
+        val smsThread = intent.getSerializableExtra(ARG_SMS_THREAD) as SmsThread
+
+        /**
+         * 가즈아
+         */
+        viewModel.setSmsThread(smsThread)
+    }
+
+    /**
+     * 기타 UI 설정 중 동적으로 해야 하는 것들.
+     */
+    private fun setUpUi() {
+        /**
+         * 리사이클러뷰 외관 설정하기.
          */
         activity_conversation_recyclerview.layoutManager = LinearLayoutManager(this@ConversationActivity)
 
         /**
-         * 액션바 설정하기
+         * 액션바 설정하기.
          */
         setSupportActionBar(activity_conversation_toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
         }
-
-        /**
-         * ConversationListFragment에서 집어넣은 SmsThread 꺼냅니다.
-         * 가즈아
-         */
-        val smsThread = intent.getSerializableExtra(ARG_SMS_THREAD) as SmsThread
-        viewModel.setSmsThread(smsThread)
-    }
-
-
-    private fun setToolbarTitle(title: String) {
-        activity_conversation_toolbar_title.text = title
     }
 
 

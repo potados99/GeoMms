@@ -5,17 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.R
 import com.potados.geomms.activity.ConversationActivity
 import com.potados.geomms.adapter.ConversationListRecyclerViewAdapter
 import com.potados.geomms.data.SmsThread
-import com.potados.geomms.util.SerializableContainer
 import com.potados.geomms.viewmodel.ConversationListViewModel
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.*
 
@@ -25,38 +22,61 @@ import kotlinx.android.synthetic.main.fragment_conversation_list.view.*
 class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter.ConversationClickListener {
 
     /**
-     * 데이터와 마짱을 뜨려면 이친구만 있으면 됩니다. ㅎㅎ
+     * 뷰모델입니다.
      */
-    private lateinit var viewmodel: ConversationListViewModel
+    private lateinit var viewModel: ConversationListViewModel
 
+    /**
+     * 제일 먼저 실행됩니다.
+     * 뷰모델을 가져옵니다.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewmodel = ViewModelProviders.of(this).get(ConversationListViewModel::class.java)
+        /**
+         * 뷰모델 가져오기
+         */
+        viewModel = ViewModelProviders.of(this).get(ConversationListViewModel::class.java)
     }
 
+    /**
+     * 액티비티가 재개될 때 실행됩니다.
+     */
     override fun onResume() {
         super.onResume()
 
-        viewmodel.updateConversations()
+        /**
+         * 나갔다오면 대화 목록 업데이트
+         */
+        viewModel.updateConversations()
     }
 
+    /**
+     * 옵션 메뉴를 만들어줍니다.
+     */
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.toobar_menu, menu)
     }
 
+    /**
+     * 뷰가 만들어질 때에 실행됩니다.
+     * 뷰를 찾아서 뷰모델과 연결해줍니다.
+     * 뷰 설정도 해줍니다. (programmatically)
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_conversation_list, container, false)
-
-        setupAndBindViewWithViewModel(view)
-
-        return view
+        return inflater.inflate(R.layout.fragment_conversation_list, container, false).also {
+            bindUi(it)
+            setUpUi(it)
+        }
     }
 
+    /**
+     * 대화방을 눌렀을 때에 반응합니다.
+     */
     override fun onConversationClicked(conversation: SmsThread) {
         startActivity(Intent(context, ConversationActivity::class.java).apply {
             /**
@@ -68,7 +88,6 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
         })
     }
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
     }
@@ -77,37 +96,44 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
         super.onDetach()
     }
 
+    /**
+     * UI를 뷰모델과 이어줍니다.
+     */
+    private fun bindUi(view: View) {
 
+        /**
+         * 대화 목록이 바뀔 때에 해야 할 일들.
+         */
+        viewModel.getConversations().observe(this, object: Observer<List<SmsThread>> {
+            override fun onChanged(t: List<SmsThread>?) {
+                if (t == null) return
 
-    private fun setupAndBindViewWithViewModel(view: View) {
-        val toolbar: Toolbar = view.conversation_list_toolbar
-        val messageListRecyclerView: RecyclerView = view.conversation_list_recyclerview
+                view.conversation_list_recyclerview.adapter = ConversationListRecyclerViewAdapter(
+                    t, this@ConversationListFragment
+                )
+            }
+        })
 
-        setupToolbar(toolbar)
-
-        with(messageListRecyclerView) {
-            layoutManager = LinearLayoutManager(context)
-
-            viewmodel.getConversations().observe(this@ConversationListFragment, object: Observer<List<SmsThread>> {
-                override fun onChanged(t: List<SmsThread>?) {
-                    if (t == null) return
-
-                    /**
-                     * TODO: RecyclerView.notify****Changed로 변경할 것.
-                     */
-                    adapter = ConversationListRecyclerViewAdapter(t, this@ConversationListFragment)
-                }
-            })
-        }
     }
 
     /**
-     * 시스템의 기본 AppBar를 사용하지 않고 (manifest에서 NoActionBar 사용)
-     * 프래그먼트 내의 view에서 Toolbar를 사용했기 때문에, 이 Toolbar를 supportActionBar로 등록해주어야 합니다.
+     * 동적 UI 설정.
      */
-    private fun setupToolbar(bar: Toolbar) {
-        (activity as AppCompatActivity).setSupportActionBar(bar)
+    private fun setUpUi(view: View) {
+
+        /**
+         * 리사이클러뷰 외관 설정
+         */
+        view.conversation_list_recyclerview.layoutManager = LinearLayoutManager(context)
+
+        /**
+         * 액션바 설정하기.
+         *
+         * 시스템의 기본 AppBar를 사용하지 않고 (manifest에서 NoActionBar 사용)
+         * 프래그먼트 내의 view에서 Toolbar를 사용했기 때문에,
+         * 이 Toolbar를 supportActionBar로 등록.
+         */
+        (activity as AppCompatActivity).setSupportActionBar(view.conversation_list_toolbar)
         setHasOptionsMenu(true)
     }
-
 }
