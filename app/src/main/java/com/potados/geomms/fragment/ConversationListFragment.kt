@@ -49,17 +49,7 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
     override fun onResume() {
         super.onResume()
 
-        /**
-         * 나갔다오면 대화 목록 업데이트
-         */
-        //viewModel.updateConversations()
-
-        /**
-         * 스크롤 위치 복구.
-         */
-        //setPosition(viewModel.lastSavedScrollPosition)
-
-        Log.d("ConversationListFragment: onResume", "scroll position resotred: ${viewModel.lastSavedScrollPosition}")
+        Log.d("ConversationListFragment: onResume", "resumed.")
     }
 
     /**
@@ -68,12 +58,7 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
     override fun onPause() {
         super.onPause()
 
-        /**
-         * 스크롤 위치 저장.
-         */
-        viewModel.lastSavedScrollPosition = getPosition()
-
-        Log.d("ConversationListFragment: onPause", "scroll position saved: ${viewModel.lastSavedScrollPosition}")
+        Log.d("ConversationListFragment: onPause", "paused.")
     }
 
     override fun onDestroy() {
@@ -169,28 +154,5 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
          */
         (activity as AppCompatActivity).setSupportActionBar(view.conversation_list_toolbar)
         setHasOptionsMenu(true)
-    }
-
-    private fun getPosition(): Int {
-        val position =
-            ((view
-                ?.conversation_list_recyclerview
-                ?.layoutManager as? LinearLayoutManager)
-                ?: return -1)
-                .findFirstCompletelyVisibleItemPosition()
-
-        Log.d("ConversationListFragment: getPosition", "current position is: $position")
-
-        return position
-    }
-
-    private fun setPosition(position: Int) {
-        if (position != -1) {
-            view
-                ?.conversation_list_recyclerview
-                ?.scrollToPosition(position)
-
-            Log.d("ConversationListFragment: setPosition", "scroll position set to: $position")
-        }
     }
 }
