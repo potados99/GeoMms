@@ -13,7 +13,7 @@ class QueryHelper {
         inline fun <reified T> queryToCollection(
             resolver: ContentResolver,
             uri: Uri,
-            projection: Array<String>,
+            projection: Array<String>?,
             selection: String? = null,
             selectionArgs: Array<String>? = null,
             order: String? = null): T {
