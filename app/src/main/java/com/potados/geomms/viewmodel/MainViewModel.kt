@@ -13,6 +13,7 @@ class MainViewModel : ViewModel() {
      * 현재는 탭이 두 개밖에 없습니다.
      */
     private val selectedTabMenuItemId =  MutableLiveData<Int>()
+
     fun getSelectedTabMenuItemId(): LiveData<Int> = selectedTabMenuItemId
     fun setSelectedTabMenuItemId(id: Int): Boolean {
         if (id !in MainActivity.TAB_IDS) {
@@ -23,5 +24,4 @@ class MainViewModel : ViewModel() {
 
         return true
     }
-
 }

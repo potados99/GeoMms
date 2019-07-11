@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -32,27 +33,37 @@ import kotlin.system.exitProcess
 class MainActivity : AppCompatActivity() {
 
     /**
-     * 대화방 목록을 보여주는 프래그먼트
+     * 대화방 목록을 보여주는 프래그먼트.
      */
     private val messageListFragment = ConversationListFragment()
 
     /**
-     * 지도와 친구 목록을 보여주는 프래그먼트
+     * 지도와 친구 목록을 보여주는 프래그먼트.
      */
     private val mapFragment = MapFragment()
 
     /**
-     * 뷰모델
+     * 뷰모델.
      */
     private lateinit var viewModel: MainViewModel
 
-
+    /**
+     * 진입점입니다.
+     * 권한을 요청하는 것으로 시작합니다.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         requirePermissions(PERMISSIONS_OF_THIS_APP)
-        // dumpThread()
+
+        Log.d("MainActivity: onCreate", "created.")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        Log.d("MainActivity: onSaveInstanceState", "bundle is. ${if (outState == null) "null" else "not null"}")
     }
 
     /**
@@ -159,7 +170,11 @@ class MainActivity : AppCompatActivity() {
      * 실질적인 진입점입니다.
      */
     private fun onPermissionSuccess() {
-        setupViewModelAndUI()
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+
+        bindUi()
+
+        setUpUi()
 
         /**
          * 메시지가 먼저이니까 메시지 탭 선택해줍니다.
@@ -184,34 +199,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 뷰모델을 얻어온 뒤, 이를 뷰와 연결합니다. (binding)
+     * 뷰모델을 뷰와 연결합니다. (binding)
      */
-    private fun setupViewModelAndUI() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
+    private fun bindUi() {
         viewModel.getSelectedTabMenuItemId().observe(this, object: Observer<Int> {
             override fun onChanged(t: Int?) {
                 if (t == null) return
 
                 switchFragmentByNavigationItemId(t)
-
-
-                when (t) {
-                    R.id.menu_item_navigation_message -> {
-
-                    }
-
-                    R.id.menu_item_navigation_map -> {
-
-                    }
-                }
             }
         })
+    }
 
+    /**
+     * 기타 뷰 설정.
+     */
+    private fun setUpUi() {
         nav_view.setOnNavigationItemSelectedListener { item ->
             viewModel.setSelectedTabMenuItemId(item.itemId)
         }
-
     }
 
     /**

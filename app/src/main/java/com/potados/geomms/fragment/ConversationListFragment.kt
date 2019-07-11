@@ -3,6 +3,7 @@ package com.potados.geomms.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import com.potados.geomms.adapter.ConversationListRecyclerViewAdapter
 import com.potados.geomms.data.SmsThread
 import com.potados.geomms.viewmodel.ConversationListViewModel
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.*
+import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversation_list_recyclerview
 
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
@@ -36,11 +38,13 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
         /**
          * 뷰모델 가져오기
          */
-        viewModel = ViewModelProviders.of(this).get(ConversationListViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity ?: throw RuntimeException("activity is null.")).get(ConversationListViewModel::class.java)
+
+        Log.d("ConversationListFragment: onCreate", "created.")
     }
 
     /**
-     * 액티비티가 재개될 때 실행됩니다.
+     * 재개될 때 실행됩니다.
      */
     override fun onResume() {
         super.onResume()
@@ -48,7 +52,33 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
         /**
          * 나갔다오면 대화 목록 업데이트
          */
-        viewModel.updateConversations()
+        //viewModel.updateConversations()
+
+        /**
+         * 스크롤 위치 복구.
+         */
+        //setPosition(viewModel.lastSavedScrollPosition)
+
+        Log.d("ConversationListFragment: onResume", "scroll position resotred: ${viewModel.lastSavedScrollPosition}")
+    }
+
+    /**
+     * 멈출 때 실행됩니다.
+     */
+    override fun onPause() {
+        super.onPause()
+
+        /**
+         * 스크롤 위치 저장.
+         */
+        viewModel.lastSavedScrollPosition = getPosition()
+
+        Log.d("ConversationListFragment: onPause", "scroll position saved: ${viewModel.lastSavedScrollPosition}")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("ConversationListFragment: onDestroy", "destroyed.")
     }
 
     /**
@@ -71,6 +101,8 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
         return inflater.inflate(R.layout.fragment_conversation_list, container, false).also {
             bindUi(it)
             setUpUi(it)
+
+            Log.d("ConversationListFragment: onCreateView", "view created.")
         }
     }
 
@@ -90,10 +122,12 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        Log.d("ConversationListFragment: onAttach", "attached.")
     }
 
     override fun onDetach() {
         super.onDetach()
+        Log.d("ConversationListFragment: onDetach", "detached.")
     }
 
     /**
@@ -135,5 +169,28 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
          */
         (activity as AppCompatActivity).setSupportActionBar(view.conversation_list_toolbar)
         setHasOptionsMenu(true)
+    }
+
+    private fun getPosition(): Int {
+        val position =
+            ((view
+                ?.conversation_list_recyclerview
+                ?.layoutManager as? LinearLayoutManager)
+                ?: return -1)
+                .findFirstCompletelyVisibleItemPosition()
+
+        Log.d("ConversationListFragment: getPosition", "current position is: $position")
+
+        return position
+    }
+
+    private fun setPosition(position: Int) {
+        if (position != -1) {
+            view
+                ?.conversation_list_recyclerview
+                ?.scrollToPosition(position)
+
+            Log.d("ConversationListFragment: setPosition", "scroll position set to: $position")
+        }
     }
 }

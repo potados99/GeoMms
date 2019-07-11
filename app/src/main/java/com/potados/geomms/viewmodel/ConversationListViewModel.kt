@@ -52,4 +52,10 @@ class ConversationListViewModel : ViewModel(), KoinComponent {
 
         liveDataOfConversations.value = conversations
     }
+
+
+    /**
+     * 프래그먼트가 재개될 때에 사용할 이전 스크롤 위치입니다.
+     */
+    var lastSavedScrollPosition: Int = -1
 }

@@ -33,17 +33,17 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!--컨텐츠 레이아웃-->
-    <androidx.core.widget.NestedScrollView
+    <!--androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"-->
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/conversation_list_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layoutManager="LinearLayoutManager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/conversation_list_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="LinearLayoutManager"/>
-
-    </androidx.core.widget.NestedScrollView>
+    <!--/androidx.core.widget.NestedScrollView-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
