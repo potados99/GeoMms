@@ -32,7 +32,7 @@ class LocationSupportManagerImpl(private val smsManager: SmsManager) : LocationS
     }
 
     override fun acceptNewConnection(person: LocationSupportPerson, reqPacket: LocationSupportPacket) {
-        
+
     }
 
     override fun deleteConnection(connection: LocationSupportConnection) {

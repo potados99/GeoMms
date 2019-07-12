@@ -1,12 +1,15 @@
 package com.potados.geomms.viewmodel
 
+import android.telephony.SmsMessage
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.potados.geomms.data.repository.MessageRepository
 import com.potados.geomms.data.entity.SmsThread
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import java.util.*
 
 /**
  * ConversationListFragment를 보조할 뷰모델입니다.
@@ -50,6 +53,16 @@ class ConversationListViewModel : ViewModel(), KoinComponent {
         conversations.addAll(messageRepo.getSmsThreads())
 
         liveDataOfConversations.value = conversations
+    }
+
+
+    private val smsQueue = MediatorLiveData<PriorityQueue<SmsMessage>>()
+    fun getSmsQueue(): LiveData<PriorityQueue<SmsMessage>> = smsQueue
+    fun addSmsQueueDataSource(source: LiveData<PriorityQueue<SmsMessage>>) {
+        smsQueue.addSource(source, smsQueue::setValue)
+    }
+    fun removeSmsQueueDataSource(source:LiveData<PriorityQueue<SmsMessage>>) {
+        smsQueue.removeSource(source)
     }
 
 

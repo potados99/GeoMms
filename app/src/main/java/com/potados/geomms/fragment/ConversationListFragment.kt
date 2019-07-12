@@ -1,8 +1,10 @@
 package com.potados.geomms.fragment
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.telephony.SmsMessage
 import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
@@ -12,11 +14,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.R
 import com.potados.geomms.activity.ConversationActivity
+import com.potados.geomms.activity.MainActivity
 import com.potados.geomms.adapter.ConversationListRecyclerViewAdapter
 import com.potados.geomms.data.entity.SmsThread
+import com.potados.geomms.receiver.SmsReceiver
+import com.potados.geomms.util.Notify
 import com.potados.geomms.viewmodel.ConversationListViewModel
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.*
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversation_list_recyclerview
+import java.util.*
 
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
@@ -52,7 +58,6 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
 
         Log.i("ConversationListFragment: onCreate", "created.")
     }
-
     /**
      * 뷰가 만들어질 때에 실행됩니다.
      * 뷰를 찾아서 뷰모델과 연결해줍니다.
@@ -68,6 +73,13 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
 
             Log.i("ConversationListFragment: onCreateView", "view created.")
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (activity == null) return
+        viewModel.addSmsQueueDataSource((activity as MainActivity).smsReceiver.getMessageQueue())
     }
 
     /**
@@ -86,6 +98,13 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
         super.onPause()
 
         Log.i("ConversationListFragment: onPause", "paused.")
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        if (activity == null) return
+        viewModel.removeSmsQueueDataSource((activity as MainActivity).smsReceiver.getMessageQueue())
     }
 
     /**
@@ -141,6 +160,12 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
                 view.conversation_list_recyclerview.adapter = ConversationListRecyclerViewAdapter(
                     t, this@ConversationListFragment
                 )
+            }
+        })
+
+        viewModel.getSmsQueue().observe(this, object: Observer<PriorityQueue<SmsMessage>> {
+            override fun onChanged(t: PriorityQueue<SmsMessage>?) {
+                Notify(context!!).short("message received.")
             }
         })
 

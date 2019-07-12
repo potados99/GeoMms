@@ -1,12 +1,16 @@
 package com.potados.geomms.activity
 
 import android.Manifest
+import android.app.Activity
 import android.content.DialogInterface
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.PersistableBundle
+import android.provider.Telephony
 import android.util.Log
 import android.util.SparseArray
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +22,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.fragment.MapFragment
 import com.potados.geomms.fragment.ConversationListFragment
 import com.potados.geomms.R
+import com.potados.geomms.receiver.SmsReceiver
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
 import com.potados.geomms.util.QueryHelper
@@ -48,6 +53,9 @@ class MainActivity : AppCompatActivity() {
      */
     private lateinit var viewModel: MainViewModel
 
+    lateinit var smsReceiver: SmsReceiver
+
+
     /**
      * 진입점입니다.
      * 권한을 요청하는 것으로 시작합니다.
@@ -58,7 +66,24 @@ class MainActivity : AppCompatActivity() {
 
         requirePermissions(PERMISSIONS_OF_THIS_APP)
 
+        smsReceiver = SmsReceiver()
+
         Log.d("MainActivity: onCreate", "created.")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        registerReceiver(smsReceiver,
+            IntentFilter().apply{
+                addAction("android.provider.Telephony.SMS_DELIVER")
+            }
+        )
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        unregisterReceiver(smsReceiver)
     }
 
     /**
@@ -172,6 +197,10 @@ class MainActivity : AppCompatActivity() {
         setUpUi()
 
         viewModel.setSelectedTabMenuItemId(R.id.menu_item_navigation_message)
+
+        if (!isDefaultSmsApp()) {
+            changeDefaultSmsApp(this.packageName)
+        }
     }
 
     /**
@@ -260,6 +289,35 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    /**
+     * 이 앱이 기본 메시징 앱인지 확인합니다.
+     */
+    private fun isDefaultSmsApp(): Boolean {
+        return Telephony.Sms.getDefaultSmsPackage(this) == this.packageName
+    }
+
+    /**
+     * 기본 메시징 앱을 변경합니다.
+     */
+    private fun changeDefaultSmsApp(appName: String) {
+        val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+
+        intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, appName)
+        startActivityForResult(intent, CHANGE_SMS_APP_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CHANGE_SMS_APP_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Notify(this).short("Got it.")
+            }
+            else {
+
+            }
+        }
+    }
 
     /**
      * TODO: 출시할 때에는 없애기
@@ -316,12 +374,15 @@ class MainActivity : AppCompatActivity() {
          * 권한 요청할때 식별자로 사용합니다.
          */
         private const val PERMISSION_REQUEST_CODE = 99
+        private const val CHANGE_SMS_APP_REQUEST_CODE = 999
 
         /**
          * 이 앱에서 필요한 권한들.
          */
         private val PERMISSIONS_OF_THIS_APP = arrayOf(
             Manifest.permission.READ_SMS,
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.SEND_SMS,
             Manifest.permission.READ_CONTACTS
         )
     }
