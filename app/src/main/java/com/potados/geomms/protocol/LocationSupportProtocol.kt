@@ -68,11 +68,19 @@ class LocationSupportProtocol {
             ),
 
             /**
-             * 데이터 지금 당장 보내라고 보채는 패킷
+             * 데이터 지금 당장 보내라고 보채는 패킷.
              */
             REQUEST_DATA(4, arrayOf(
                 LocationSupportProtocol.Companion.Field.TYPE,
                 LocationSupportProtocol.Companion.Field.ID
+            )),
+
+            /**
+             * 연결 종료를 요청하는 패킷.
+             */
+            REQUEST_DISCONNECT(5, arrayOf(
+            LocationSupportProtocol.Companion.Field.TYPE,
+            LocationSupportProtocol.Companion.Field.ID
             ))
         }
 
@@ -309,5 +317,10 @@ class LocationSupportProtocol {
         fun createRequestDataPacket(id: Int): LocationSupportPacket =
             LocationSupportPacket(PacketType.REQUEST_DATA.number, id, DEFAULT_LONG, DEFAULT_DOUBLE, DEFAULT_DOUBLE)
 
+        /**
+         * 연결 종료 요청 패킷을 생성합니다.
+         */
+        fun createRequestDisconnectPacket(id: Int): LocationSupportPacket =
+            LocationSupportPacket(PacketType.REQUEST_DISCONNECT.number, id, DEFAULT_LONG, DEFAULT_DOUBLE, DEFAULT_DOUBLE)
     }
 }

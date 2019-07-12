@@ -21,13 +21,19 @@ class LocationSupportManagerImpl(private val smsManager: SmsManager) : LocationS
 
     private val connections = mutableListOf<LocationSupportConnection>()
 
-    override fun createNewConnection(person: LocationSupportPerson) {
+    override fun onPacketReceived(packet: LocationSupportPacket) {
+
+    }
+
+    override fun requestNewConnection(person: LocationSupportPerson) {
         connections.add(
             LocationSupportConnection(person, DateTimeHelper.getTimeStamp())
         )
     }
 
-
+    override fun acceptNewConnection(person: LocationSupportPerson, reqPacket: LocationSupportPacket) {
+        
+    }
 
     override fun deleteConnection(connection: LocationSupportConnection) {
 

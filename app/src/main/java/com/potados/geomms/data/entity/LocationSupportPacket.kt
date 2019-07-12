@@ -12,5 +12,4 @@ data class LocationSupportPacket(
     val span: Long,
     val latitude: Double,
     val longitude: Double
-) {
-}
+)

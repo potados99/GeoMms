@@ -1,17 +1,28 @@
 package com.potados.geomms.protocol
 
 import com.potados.geomms.data.entity.LocationSupportConnection
+import com.potados.geomms.data.entity.LocationSupportPacket
 import com.potados.geomms.data.entity.LocationSupportPerson
 
 interface LocationSupportManager {
 
     /**
-     * 새 연결을 생성합니다.
+     * LocationSupport 패킷이 도착했을 때의 동작을 지정합니다.
      */
-    fun createNewConnection(person: LocationSupportPerson)
+    fun onPacketReceived(packet: LocationSupportPacket)
 
     /**
-     * 연결 종료하기.
+     * 새 연결을 생성하는 요청을 날립니다.
+     */
+    fun requestNewConnection(person: LocationSupportPerson)
+
+    /**
+     * 새 연결 요청을 수락합니다.
+     */
+    fun acceptNewConnection(person: LocationSupportPerson, reqPacket: LocationSupportPacket)
+
+    /**
+     * 연결을 종료합니다.
      */
     fun deleteConnection(connection: LocationSupportConnection)
 
