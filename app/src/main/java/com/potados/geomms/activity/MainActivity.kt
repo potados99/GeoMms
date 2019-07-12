@@ -53,9 +53,6 @@ class MainActivity : AppCompatActivity() {
      */
     private lateinit var viewModel: MainViewModel
 
-    lateinit var smsReceiver: SmsReceiver
-
-
     /**
      * 진입점입니다.
      * 권한을 요청하는 것으로 시작합니다.
@@ -66,24 +63,16 @@ class MainActivity : AppCompatActivity() {
 
         requirePermissions(PERMISSIONS_OF_THIS_APP)
 
-        smsReceiver = SmsReceiver()
 
         Log.d("MainActivity: onCreate", "created.")
     }
 
     override fun onStart() {
         super.onStart()
-        registerReceiver(smsReceiver,
-            IntentFilter().apply{
-                addAction("android.provider.Telephony.SMS_DELIVER")
-            }
-        )
     }
 
     override fun onStop() {
         super.onStop()
-
-        unregisterReceiver(smsReceiver)
     }
 
     /**

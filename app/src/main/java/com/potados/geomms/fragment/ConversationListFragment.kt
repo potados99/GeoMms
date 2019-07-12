@@ -3,6 +3,7 @@ package com.potados.geomms.fragment
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.telephony.SmsMessage
 import android.util.Log
@@ -33,6 +34,14 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
      * 뷰모델입니다.
      */
     private lateinit var viewModel: ConversationListViewModel
+
+    private val receiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            viewModel.updateConversations()
+        }
+    }
+    private val filter = IntentFilter("com.potados.geomms.SMS_DELIVER")
+
 
     /**
      * 프래그먼트가 액티비티에 붙을 때에 실행됩니다.
@@ -78,8 +87,7 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
     override fun onStart() {
         super.onStart()
 
-        if (activity == null) return
-        viewModel.addSmsQueueDataSource((activity as MainActivity).smsReceiver.getMessageQueue())
+        context?.registerReceiver(receiver, filter)
     }
 
     /**
@@ -103,8 +111,7 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
     override fun onStop() {
         super.onStop()
 
-        if (activity == null) return
-        viewModel.removeSmsQueueDataSource((activity as MainActivity).smsReceiver.getMessageQueue())
+        context?.unregisterReceiver(receiver)
     }
 
     /**
