@@ -1,9 +1,10 @@
-package com.potados.geomms.data
+package com.potados.geomms.data.implementation
 
 import android.content.ContentResolver
-import android.content.ContentUris
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.potados.geomms.data.entity.ShortMessage
+import com.potados.geomms.data.entity.SmsThread
+import com.potados.geomms.data.repository.MessageRepository
+import com.potados.geomms.data.repository.QueryInfoRepository
 import com.potados.geomms.util.QueryHelper
 
 class MessageRepositoryImpl(

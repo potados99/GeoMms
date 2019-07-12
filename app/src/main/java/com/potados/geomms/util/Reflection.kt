@@ -1,10 +1,6 @@
 package com.potados.geomms.util
 
-import com.google.gson.annotations.SerializedName
-import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 
 class Reflection {

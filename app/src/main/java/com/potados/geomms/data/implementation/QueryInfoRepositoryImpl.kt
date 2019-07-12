@@ -1,10 +1,9 @@
-package com.potados.geomms.data
+package com.potados.geomms.data.implementation
 
 import android.content.ContentUris
-import android.content.Context
 import android.net.Uri
 import android.provider.Telephony
-import android.util.Log
+import com.potados.geomms.data.repository.QueryInfoRepository
 import com.potados.geomms.util.QueryHelper
 
 class QueryInfoRepositoryImpl : QueryInfoRepository {

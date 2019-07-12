@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.R
 import com.potados.geomms.activity.ConversationActivity
 import com.potados.geomms.adapter.ConversationListRecyclerViewAdapter
-import com.potados.geomms.data.SmsThread
+import com.potados.geomms.data.entity.SmsThread
 import com.potados.geomms.viewmodel.ConversationListViewModel
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.*
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversation_list_recyclerview
@@ -29,6 +29,14 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
     private lateinit var viewModel: ConversationListViewModel
 
     /**
+     * 프래그먼트가 액티비티에 붙을 때에 실행됩니다.
+     */
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.i("ConversationListFragment: onAttach", "attached.")
+    }
+
+    /**
      * 제일 먼저 실행됩니다.
      * 뷰모델을 가져옵니다.
      */
@@ -38,40 +46,11 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
         /**
          * 뷰모델 가져오기
          */
-        viewModel = ViewModelProviders.of(activity ?: throw RuntimeException("activity is null.")).get(ConversationListViewModel::class.java)
+        viewModel = ViewModelProviders
+            .of(activity ?: throw RuntimeException("activity is null."))
+            .get(ConversationListViewModel::class.java)
 
-        Log.d("ConversationListFragment: onCreate", "created.")
-    }
-
-    /**
-     * 재개될 때 실행됩니다.
-     */
-    override fun onResume() {
-        super.onResume()
-
-        Log.d("ConversationListFragment: onResume", "resumed.")
-    }
-
-    /**
-     * 멈출 때 실행됩니다.
-     */
-    override fun onPause() {
-        super.onPause()
-
-        Log.d("ConversationListFragment: onPause", "paused.")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("ConversationListFragment: onDestroy", "destroyed.")
-    }
-
-    /**
-     * 옵션 메뉴를 만들어줍니다.
-     */
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.toobar_menu, menu)
+        Log.i("ConversationListFragment: onCreate", "created.")
     }
 
     /**
@@ -87,8 +66,50 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
             bindUi(it)
             setUpUi(it)
 
-            Log.d("ConversationListFragment: onCreateView", "view created.")
+            Log.i("ConversationListFragment: onCreateView", "view created.")
         }
+    }
+
+    /**
+     * 재개될 때 실행됩니다.
+     */
+    override fun onResume() {
+        super.onResume()
+
+        Log.i("ConversationListFragment: onResume", "resumed.")
+    }
+
+    /**
+     * 멈출 때 실행됩니다.
+     */
+    override fun onPause() {
+        super.onPause()
+
+        Log.i("ConversationListFragment: onPause", "paused.")
+    }
+
+    /**
+     * 생명주기 종료입니다.
+     */
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("ConversationListFragment: onDestroy", "destroyed.")
+    }
+
+    /**
+     * 프래그먼트가 액티비티에서 떨어질 때에 실행됩니다.
+     */
+    override fun onDetach() {
+        super.onDetach()
+        Log.i("ConversationListFragment: onDetach", "detached.")
+    }
+
+    /**
+     * 옵션 메뉴를 만들어줍니다.
+     */
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.toobar_menu, menu)
     }
 
     /**
@@ -103,16 +124,6 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
              */
             putExtra(ConversationActivity.ARG_SMS_THREAD, conversation)
         })
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.d("ConversationListFragment: onAttach", "attached.")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Log.d("ConversationListFragment: onDetach", "detached.")
     }
 
     /**

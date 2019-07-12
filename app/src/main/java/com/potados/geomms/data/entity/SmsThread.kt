@@ -1,9 +1,8 @@
-package com.potados.geomms.data
+package com.potados.geomms.data.entity
 
-import android.content.ContentResolver
 import android.provider.Telephony
 import com.google.gson.annotations.SerializedName
-import org.koin.core.KoinComponent
+import com.potados.geomms.data.repository.ContactRepository
 import java.io.Serializable
 
 /**

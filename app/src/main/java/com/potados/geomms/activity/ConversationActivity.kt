@@ -1,7 +1,5 @@
 package com.potados.geomms.activity
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -13,9 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.adapter.ConversationRecyclerViewAdapter
-import com.potados.geomms.data.ShortMessage
-import com.potados.geomms.data.SmsThread
-import com.potados.geomms.util.Blur
+import com.potados.geomms.data.entity.ShortMessage
+import com.potados.geomms.data.entity.SmsThread
 import com.potados.geomms.viewmodel.ConversationViewModel
 import kotlinx.android.synthetic.main.activity_conversation.*
 

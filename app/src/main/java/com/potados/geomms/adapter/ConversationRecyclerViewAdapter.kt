@@ -7,8 +7,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
-import com.potados.geomms.data.ShortMessage
-import com.potados.geomms.data.SmsThread
+import com.potados.geomms.data.entity.ShortMessage
 import com.potados.geomms.util.ShortDate
 import kotlinx.android.synthetic.main.activity_conversation_message_item.view.*
 import java.lang.RuntimeException

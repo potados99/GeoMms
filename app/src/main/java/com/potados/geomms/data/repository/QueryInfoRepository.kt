@@ -1,4 +1,4 @@
-package com.potados.geomms.data
+package com.potados.geomms.data.repository
 
 import android.net.Uri
 import com.potados.geomms.util.QueryHelper

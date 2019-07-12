@@ -10,8 +10,8 @@ import android.widget.TextView
 import com.mikhaellopez.circularimageview.CircularImageView
 
 import com.potados.geomms.R
-import com.potados.geomms.data.ContactRepository
-import com.potados.geomms.data.SmsThread
+import com.potados.geomms.data.repository.ContactRepository
+import com.potados.geomms.data.entity.SmsThread
 import com.potados.geomms.util.ShortDate
 
 import kotlinx.android.synthetic.main.fragment_conversation_list_item.view.*

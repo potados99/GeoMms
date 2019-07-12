@@ -19,12 +19,14 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
 import com.potados.geomms.adapter.FriendsRecyclerViewAdapter
 import com.potados.geomms.dummy.DummyContent
+import com.potados.geomms.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlinx.android.synthetic.main.fragment_map_friends_list.view.*
@@ -34,46 +36,142 @@ import kotlinx.android.synthetic.main.fragment_map_friends_list.view.*
  */
 class MapFragment : Fragment(), OnMapReadyCallback {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    /**
+     * 뷰모델
+     */
+    private lateinit var viewModel: MapViewModel
+
+    /**
+     * 프래그먼트가 액티비티에 붙을 때에 실행됩니다.
+     */
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.i("MapFragment: onAttach", "attached.")
     }
 
+    /**
+     * 프래그먼트가 생성될 때에 실행됩니다.
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProviders
+            .of(activity ?: throw RuntimeException("activity is null."))
+            .get(MapViewModel::class.java)
+
+        Log.i("MapFragment: onCreate", "created.")
+    }
+
+    /**
+     * 프래그먼트에 뷰가 붙을 무렵에 실행됩니다.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        return inflater.inflate(R.layout.fragment_map, container, false).also {
+            bindUi(it)
+            setUpUi(it)
 
-        (activity as AppCompatActivity).window.statusBarColor = Color.TRANSPARENT /* 효과없음 */
+            getMapReady(it.map_view, savedInstanceState)
 
-        val view = inflater.inflate(R.layout.fragment_map, container, false)
+            Log.i("MapFragment: onCreateView", "view created.")
+        }
+    }
+
+    /**
+     * 프래그먼트가 재개될 때에 실행됩니다.
+     */
+    override fun onResume() {
+        super.onResume()
+        Log.i("MapFragment: onResume", "resumed.")
+    }
+
+    /**
+     * 프래그먼트가 멈출 때에 실행됩니다.
+     */
+    override fun onPause() {
+        super.onPause()
+        Log.i("MapFragment: onPause", "paused.")
+    }
+
+    /**
+     * 프래그먼트가 종료될 무렵에 실행됩니다.
+     */
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("MapFragment: onDestroy", "destroyed.")
+    }
+
+    /**
+     * 프래그먼트가 액티비티에서 떨어질 때에 실행됩니다.
+     */
+    override fun onDetach() {
+        super.onDetach()
+        Log.i("MapFragment: onDetach", "detached.")
+    }
+
+    /**
+     * 지도가 준비되었을 때에 실행됩니다.
+     */
+    override fun onMapReady(map: GoogleMap?) {
+        val seoul = LatLng(37.56, 126.97)
+
+        map?.addMarker(MarkerOptions().apply {
+            position(seoul)
+            title("Seoul")
+            snippet("Capital of korea")
+        })
+
+        activity?.let {
+            MapsInitializer.initialize(it)
+        }
+
+        map?.moveCamera(CameraUpdateFactory.newLatLng(seoul))
+        map?.animateCamera(CameraUpdateFactory.zoomTo(10.0f))
+
+        Log.d("MapFragment: onMapReady", "map is ready!")
+    }
+
+    /**
+     * 지도를 준비시킵니다.
+     * 준비 끝나면 onMapReady 호출됩니다.
+     */
+    private fun getMapReady(map: MapView, savedInstanceState: Bundle?) {
 
         /**
          * 지도 설정.
          */
-        with(view.map_view) {
+        with(map) {
             onCreate(savedInstanceState)
             getMapAsync(this@MapFragment) /* 준비 끝나면 onMapReady 호출됨. */
         }
 
+    }
+
+    /**
+     * UI를 뷰모델과 이어줍니다.
+     */
+    private fun bindUi(view: View) {
+        with(view.friends_list_recyclerview) {
+            adapter = FriendsRecyclerViewAdapter(DummyContent.ITEMS)
+        }
+    }
+
+    /**
+     * UI를 설정해줍니다.
+     */
+    private fun setUpUi(view: View) {
         /**
-         * 친구 목록 리사이클러뷰 설정.
+         * 친구 목록 리사이클러뷰 외관 설정.
          */
         with(view.friends_list_recyclerview) {
             /**
              * 아이템 사이에 선을 그어줍니다.
              */
-            addItemDecoration(
-                DividerItemDecoration(
-                    activity,
-                    DividerItemDecoration.VERTICAL
-                )
-            )
+            addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
 
-            /**
-             * 어댑터 설정해줍니다.
-             */
             layoutManager = LinearLayoutManager(context)
-            adapter = FriendsRecyclerViewAdapter(DummyContent.ITEMS)
 
             /**
              * 스크롤 이벤트가 리사이클러뷰에게 도착할 수 있게 해줍니다.
@@ -83,7 +181,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         /**
          * 친구 목록 레이아웃에 대한 클릭 리스너 설정.
-         * Bottom Sheet 위쪽을 누르면 토글되도록 해줌.
+         * Bottom Sheet 위쪽을 누르면 토글되도록 해줍니다.
          */
         with(view.friends_list_root_layout) {
             /**
@@ -103,37 +201,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         else -> BottomSheetBehavior.STATE_EXPANDED
                     }
                 }
-
             }
         }
-
-        return view
-    }
-
-    override fun onMapReady(map: GoogleMap?) {
-        val seoul = LatLng(37.56, 126.97)
-
-        Log.d("MapFragment: onMapReady", "map is ready!")
-
-        map?.addMarker(MarkerOptions().apply {
-            position(seoul)
-            title("Seoul")
-            snippet("Capital of korea")
-        })
-
-        activity?.let {
-            MapsInitializer.initialize(it)
-        }
-
-        map?.moveCamera(CameraUpdateFactory.newLatLng(seoul))
-        map?.animateCamera(CameraUpdateFactory.zoomTo(10.0f))
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
     }
 }

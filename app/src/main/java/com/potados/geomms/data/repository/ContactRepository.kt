@@ -1,4 +1,4 @@
-package com.potados.geomms.data
+package com.potados.geomms.data.repository
 
 import android.content.ContentResolver
 

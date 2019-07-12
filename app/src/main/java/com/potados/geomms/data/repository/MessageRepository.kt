@@ -1,4 +1,7 @@
-package com.potados.geomms.data
+package com.potados.geomms.data.repository
+
+import com.potados.geomms.data.entity.ShortMessage
+import com.potados.geomms.data.entity.SmsThread
 
 /**
  * 메시지와 관련된 데이터를 공급해주는 저장소입니다.

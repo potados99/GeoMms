@@ -1,9 +1,10 @@
-package com.potados.geomms.data
+package com.potados.geomms.data.implementation
 
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.ContactsContract
+import com.potados.geomms.data.repository.ContactRepository
 import java.lang.IllegalArgumentException
 
 class ContactRepositoryImpl(

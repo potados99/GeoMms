@@ -4,13 +4,9 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
-import com.google.gson.annotations.SerializedName
-import com.potados.geomms.data.LocationData
+import com.potados.geomms.data.entity.LocationSupportData
 import com.potados.geomms.util.Reflection
 import com.potados.geomms.util.Types
-import java.lang.reflect.Type
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.memberProperties
 
 /**
  * Location 메시지
@@ -64,7 +60,12 @@ class LocationSupport {
             );
         }
 
-        fun parse(body: String): LocationData? {
+        /**
+         * 메시지를 읽어서 LocationSupportData 객체로 만들어줍니다.
+         *
+         * @return 접두어가 없거나, 이상하거나, 포맷이 안 맞으면 null을 반환합니다.
+         */
+        fun parse(body: String): LocationSupportData? {
             /**
              * 예외처리
              */
@@ -113,10 +114,10 @@ class LocationSupport {
             }
 
             /**
-             * LocationData 객체 확보.
+             * LocationSupportData 객체 확보.
              */
             return try {
-                Gson().fromJson(json, Types.typeOf<LocationData>())
+                Gson().fromJson(json, Types.typeOf<LocationSupportData>())
             }
             catch (e: Exception) {
                 when (e) {
@@ -142,7 +143,11 @@ class LocationSupport {
             return true
         }
 
-        fun serialize(locationData: LocationData): String? {
+        /**
+         * LocationSupportData 객체를 SMS로 보낼 수 있게 직렬화해줍니다.
+         * toString()의 기능을 한다고 볼 수 있습니다.
+         */
+        fun serialize(locationData: LocationSupportData): String? {
 
             val builder = StringBuilder().append(GEO_MMS_PREFIX)
 
@@ -165,5 +170,4 @@ class LocationSupport {
             return builder.toString()
         }
     }
-
 }

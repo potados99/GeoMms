@@ -10,7 +10,7 @@ class MyApplication : Application() {
 
         startKoin {
             androidContext(this@MyApplication)
-            modules(com.potados.geomms.di.myModules)
+            modules(com.potados.geomms.injection.myModules)
         }
     }
 }

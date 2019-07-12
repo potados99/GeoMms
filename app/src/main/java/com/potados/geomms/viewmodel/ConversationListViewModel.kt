@@ -3,9 +3,8 @@ package com.potados.geomms.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.potados.geomms.data.MessageRepository
-import com.potados.geomms.data.ShortMessage
-import com.potados.geomms.data.SmsThread
+import com.potados.geomms.data.repository.MessageRepository
+import com.potados.geomms.data.entity.SmsThread
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

@@ -1,6 +1,9 @@
-package com.potados.geomms.di
+package com.potados.geomms.injection
 
-import com.potados.geomms.data.*
+import com.potados.geomms.data.implementation.ContactRepositoryImpl
+import com.potados.geomms.data.implementation.MessageRepositoryImpl
+import com.potados.geomms.data.implementation.QueryInfoRepositoryImpl
+import com.potados.geomms.data.repository.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -31,6 +34,9 @@ val myModules = module {
         /**
          * 메시지 저장소
          */
-        MessageRepositoryImpl(androidContext().contentResolver, get()) as MessageRepository /* 타입캐스팅 필쑤!! */
+        MessageRepositoryImpl(
+            androidContext().contentResolver,
+            get()
+        ) as MessageRepository /* 타입캐스팅 필쑤!! */
     }
 }
