@@ -5,11 +5,14 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.PersistableBundle
 import android.util.Log
+import android.util.SparseArray
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.fragment.MapFragment
@@ -33,14 +36,12 @@ import kotlin.system.exitProcess
 class MainActivity : AppCompatActivity() {
 
     /**
-     * 대화방 목록을 보여주는 프래그먼트.
+     * 네비게이션 아이템 id에 맞는 프래그먼트들
      */
-    private val messageListFragment = ConversationListFragment()
-
-    /**
-     * 지도와 친구 목록을 보여주는 프래그먼트.
-     */
-    private val mapFragment = MapFragment()
+    private val fragments = SparseArray<Fragment>().apply {
+        append(R.id.menu_item_navigation_message, ConversationListFragment())
+        append(R.id.menu_item_navigation_map, MapFragment())
+    }
 
     /**
      * 뷰모델.
@@ -170,9 +171,6 @@ class MainActivity : AppCompatActivity() {
 
         setUpUi()
 
-        /**
-         * 메시지가 먼저이니까 메시지 탭 선택해줍니다.
-         */
         viewModel.setSelectedTabMenuItemId(R.id.menu_item_navigation_message)
     }
 
@@ -224,22 +222,40 @@ class MainActivity : AppCompatActivity() {
      * @return 위 두 id가 아닌 것이 인자로 들어오면 false를 반환. 그렇지 않으면 true.
      */
     private fun switchFragmentByNavigationItemId(navigationItemId: Int): Boolean {
-        val fragment = when (navigationItemId) {
 
-            R.id.menu_item_navigation_message -> {
-                messageListFragment
-            }
-            R.id.menu_item_navigation_map -> {
-                mapFragment
-            }
+        /**
+         * 트랜잭션 열기.
+         */
+        val transaction = supportFragmentManager.beginTransaction()
 
-            else -> return false
+        /**
+         * 초기 작업.
+         * 프래그먼트를 다 더해줌.
+         */
+        if (supportFragmentManager.fragments.isEmpty()) {
+            TAB_IDS.forEach { id ->
+                transaction.add(R.id.fragment_container, fragments[id])
+            }
         }
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+        /**
+         * 인자로 넘어온 id에 해당하는 프래그먼트만 show하고 나머지는 hide함.
+         */
+        TAB_IDS.forEach { id ->
+            if (id == navigationItemId) {
+                transaction.show(fragments[id])
+            }
+            else {
+                transaction.hide(fragments[id])
+            }
+        }
+
+        /**
+         * 트랜젝션 닫기.
+         */
+        transaction.commit()
+
+        Log.d("MainActivity: switchFragmentByNavigationItemId", "fragment switched.")
 
         return true
     }
@@ -286,7 +302,6 @@ class MainActivity : AppCompatActivity() {
         p.show()
     }
 
-
     companion object {
         /**
          * 메뉴 아이템의 id를 식별자로 직접 사용합니다.
@@ -298,7 +313,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         /**
-         * 권한 요청할때 식별자로 사용합니다. 제가 99라는 숫자를 좋아해서 99입니다.
+         * 권한 요청할때 식별자로 사용합니다.
          */
         private const val PERMISSION_REQUEST_CODE = 99
 
