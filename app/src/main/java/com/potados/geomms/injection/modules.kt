@@ -1,9 +1,12 @@
 package com.potados.geomms.injection
 
+import android.telephony.SmsManager
 import com.potados.geomms.data.implementation.ContactRepositoryImpl
 import com.potados.geomms.data.implementation.MessageRepositoryImpl
 import com.potados.geomms.data.implementation.QueryInfoRepositoryImpl
 import com.potados.geomms.data.repository.*
+import com.potados.geomms.protocol.LocationSupportManager
+import com.potados.geomms.protocol.LocationSupportManagerImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -38,5 +41,12 @@ val myModules = module {
             androidContext().contentResolver,
             get()
         ) as MessageRepository /* 타입캐스팅 필쑤!! */
+    }
+
+    single {
+        /**
+         * LocationSupportManager 객체
+         */
+        LocationSupportManagerImpl(SmsManager.getDefault()) as LocationSupportManager
     }
 }

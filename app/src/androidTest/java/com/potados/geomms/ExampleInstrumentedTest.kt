@@ -3,7 +3,7 @@ package com.potados.geomms
 import android.util.Log
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import com.potados.geomms.protocol.LocationSupport
+import com.potados.geomms.protocol.LocationSupportManagerImpl
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,7 +28,7 @@ class ExampleInstrumentedTest {
     fun locationSupportTest() {
         val message = "[GEOMMS]127.24524:37.523414:235971849"
 
-        val locationData = LocationSupport.parse(message)
+        val locationData = LocationSupportManagerImpl.parse(message)
 
         locationData?.let {
             Log.d("locationSupportTest", "lat: ${locationData.latitude}")
@@ -41,7 +41,7 @@ class ExampleInstrumentedTest {
 
         if (locationData == null) return
 
-        val serialized = LocationSupport.serialize(locationData)
+        val serialized = LocationSupportManagerImpl.serialize(locationData)
 
         Log.d("locationSupportTest", "serialized: $serialized")
     }

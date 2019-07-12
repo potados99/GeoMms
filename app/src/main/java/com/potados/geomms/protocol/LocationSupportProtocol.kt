@@ -4,22 +4,18 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
-import com.potados.geomms.data.entity.LocationSupportData
+import com.potados.geomms.data.entity.LocationSupportPacket
 import com.potados.geomms.util.Reflection
 import com.potados.geomms.util.Types
 
-/**
- * Location 메시지
- */
-class LocationSupport {
+class LocationSupportProtocol {
 
     companion object {
 
         /**
          * 메시지 구성 요소:
-         * - 위도
-         * - 경도
-         * - 생성 시각
+         * - 타입
+         * - 페이로드
          *
          * 포맷:
          * [GEOMMS]37.xxxx:127.xxxx:1245135180
@@ -61,11 +57,20 @@ class LocationSupport {
         }
 
         /**
-         * 메시지를 읽어서 LocationSupportData 객체로 만들어줍니다.
+         * 메시지 타입입니다.
+         */
+        private enum class MessageType(
+            val fields: Array<Field>
+        ) {
+
+        }
+
+        /**
+         * 메시지를 읽어서 LocationSupportPacket 객체로 만들어줍니다.
          *
          * @return 접두어가 없거나, 이상하거나, 포맷이 안 맞으면 null을 반환합니다.
          */
-        fun parse(body: String): LocationSupportData? {
+        fun parse(body: String): LocationSupportPacket? {
             /**
              * 예외처리
              */
@@ -77,7 +82,7 @@ class LocationSupport {
             val payload = body.removePrefix(GEO_MMS_PREFIX)
             val payloadFields = payload.split(FIELD_SPLITTER).also {
                 if (it.size != Field.values().size) {
-                    Log.d("LocationSupport: parseMessage", "failed to parse message: $body")
+                    Log.d("LocationSupportManagerImpl: parseMessage", "failed to parse message: $body")
                     return null
                 }
             }
@@ -98,11 +103,11 @@ class LocationSupport {
                 catch (e: Exception) {
                     when (e) {
                         is NumberFormatException -> { /* toDouble이나 toLong에서 문제가 생긴 경우 */
-                            Log.d("LocationSupport: parseMessage",
+                            Log.d("LocationSupportManagerImpl: parseMessage",
                                 "parse error at payload field ${it.positionInPayload}: ${payloadFields[it.positionInPayload]}")
                         }
                         else -> { /* 그렇지 않은 경우 */
-                            Log.d("LocationSupport: parseMessage",
+                            Log.d("LocationSupportManagerImpl: parseMessage",
                                 "unknown error occurred while adding parsed number to json object.")
                         }
                     }
@@ -114,18 +119,18 @@ class LocationSupport {
             }
 
             /**
-             * LocationSupportData 객체 확보.
+             * LocationSupportPacket 객체 확보.
              */
             return try {
-                Gson().fromJson(json, Types.typeOf<LocationSupportData>())
+                Gson().fromJson(json, Types.typeOf<LocationSupportPacket>())
             }
             catch (e: Exception) {
                 when (e) {
                     is JsonSyntaxException -> {
-                        Log.d("LocationSupport: parseMessage", "error while parsing json. json syntax incorrect.")
+                        Log.d("LocationSupportManagerImpl: parseMessage", "error while parsing json. json syntax incorrect.")
                     }
                     else -> {
-                        Log.d("LocationSupport: parseMessage", "unknown error occurred while parsing json.")
+                        Log.d("LocationSupportManagerImpl: parseMessage", "unknown error occurred while parsing json.")
                     }
                 }
                 return null
@@ -133,7 +138,7 @@ class LocationSupport {
         }
 
         /**
-         * 메시지가 LocationSupport 메시지인지 확인합니다.
+         * 메시지가 LocationSupportManagerImpl 메시지인지 확인합니다.
          * 판단 기준은, 앞에 GEO_MMS_PREFIX 접두어가 붙었는가 입니다.
          */
         fun isLocationSupportMessage(body: String): Boolean {
@@ -144,19 +149,19 @@ class LocationSupport {
         }
 
         /**
-         * LocationSupportData 객체를 SMS로 보낼 수 있게 직렬화해줍니다.
+         * LocationSupportPacket 객체를 SMS로 보낼 수 있게 직렬화해줍니다.
          * toString()의 기능을 한다고 볼 수 있습니다.
          */
-        fun serialize(locationData: LocationSupportData): String? {
+        fun serialize(locationPacket: LocationSupportPacket): String? {
 
             val builder = StringBuilder().append(GEO_MMS_PREFIX)
 
             Field.values().forEach {
                 val value = try {
-                    Reflection.readInstanceProperty<Any>(locationData, it.fieldName).toString()
+                    Reflection.readInstanceProperty<Any>(locationPacket, it.fieldName).toString()
                 }
                 catch (e: Exception) {
-                    Log.d("LocationSupport: serialize", "error occurred while accessing property.")
+                    Log.d("LocationSupportManagerImpl: serialize", "error occurred while accessing property.")
                     e.printStackTrace()
                     return null
                 }
