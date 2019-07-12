@@ -16,7 +16,7 @@ class ExampleUnitTest {
     fun locationSupportTest() {
         val message = "[GEOMMS]127.24524:37.523414:235971849"
 
-        val locationData = LocationSupport.parseMessasge(message)
+        val locationData = LocationSupport.parse(message)
 
         locationData?.let {
             println("lat: ${locationData.latitude}")

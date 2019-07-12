@@ -26,18 +26,24 @@ class ExampleInstrumentedTest {
 
     @Test
     fun locationSupportTest() {
-        val message = "[GEOMMS]12j7.24524:37.523414:235971849"
+        val message = "[GEOMMS]127.24524:37.523414:235971849"
 
-        val locationData = LocationSupport.parseMessasge(message)
+        val locationData = LocationSupport.parse(message)
 
         locationData?.let {
             Log.d("locationSupportTest", "lat: ${locationData.latitude}")
             Log.d("locationSupportTest", "long: ${locationData.longitude}")
-            Log.d("locationSupportTest", "date: ${locationData.createDate}")
+            Log.d("locationSupportTest", "date: ${locationData.date}")
 
         } ?: Log.d("locationSupportTest", "failed to parse.")
 
         assertNotNull(locationData)
+
+        if (locationData == null) return
+
+        val serialized = LocationSupport.serialize(locationData)
+
+        Log.d("locationSupportTest", "serialized: $serialized")
     }
 
 }

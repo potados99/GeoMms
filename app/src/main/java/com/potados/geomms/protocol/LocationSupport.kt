@@ -4,8 +4,13 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
+import com.google.gson.annotations.SerializedName
 import com.potados.geomms.data.LocationData
+import com.potados.geomms.util.Reflection
 import com.potados.geomms.util.Types
+import java.lang.reflect.Type
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.memberProperties
 
 /**
  * Location 메시지
@@ -40,12 +45,26 @@ class LocationSupport {
             val fieldName: String,              /* 해당 필드의 이름. */
             val convert: (String) -> Number     /* 해당 필드를 숫자로 바꾸기 위한 람다식. */
         ) {
-            LATITUDE(0, "latitude", {str -> str.toDouble()}),
-            LOGITUDE(1, "longitude", {str -> str.toDouble()}),
-            DATE(2, "date", {str -> str.toLong()});
+            LATITUDE(
+                0,
+                "latitude",
+                {str -> str.toDouble()}
+            ),
+
+            LOGITUDE(
+                1,
+                "longitude",
+                {str -> str.toDouble()}
+            ),
+
+            DATE(
+                2,
+                "date",
+                {str -> str.toLong()}
+            );
         }
 
-        fun parseMessasge(body: String): LocationData? {
+        fun parse(body: String): LocationData? {
             /**
              * 예외처리
              */
@@ -121,6 +140,29 @@ class LocationSupport {
             if (!body.startsWith(GEO_MMS_PREFIX))   return false   /* 무관한 메시지 */
 
             return true
+        }
+
+        fun serialize(locationData: LocationData): String? {
+
+            val builder = StringBuilder().append(GEO_MMS_PREFIX)
+
+            Field.values().forEach {
+                val value = try {
+                    Reflection.readInstanceProperty<Any>(locationData, it.fieldName).toString()
+                }
+                catch (e: Exception) {
+                    Log.d("LocationSupport: serialize", "error occurred while accessing property.")
+                    e.printStackTrace()
+                    return null
+                }
+
+                builder.append(value)
+                builder.append(FIELD_SPLITTER)
+            }
+
+            builder.trim(FIELD_SPLITTER)
+
+            return builder.toString()
         }
     }
 

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 data class LocationData(
     @SerializedName("latitude")     val latitude: Double,
     @SerializedName("longitude")    val longitude: Double,
-    @SerializedName("date")         val createDate: Long
+    @SerializedName("date")         val date: Long
 ) {
 
     companion object {
