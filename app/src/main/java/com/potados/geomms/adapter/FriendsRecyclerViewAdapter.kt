@@ -8,13 +8,11 @@ import android.widget.TextView
 
 import com.potados.geomms.R
 import com.potados.geomms.data.entity.LocationSupportConnection
-import com.potados.geomms.data.entity.LocationSupportPerson
-import com.potados.geomms.dummy.DummyContent.DummyItem
 
 import kotlinx.android.synthetic.main.fragment_map_friends_list_item.view.*
 
 class FriendsRecyclerViewAdapter(
-    private val mValues: List<DummyItem>,
+    private val connections: List<LocationSupportConnection>,
     private val listener: FriendClickListener
 ) : RecyclerView.Adapter<FriendsRecyclerViewAdapter.ViewHolder>() {
 
@@ -25,11 +23,12 @@ class FriendsRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
+        val item = connections[position]
 
         with (holder) {
-            nameTextView.text = item.name
-            timeTextView.text = item.elapse
+            nameTextView.text = item.person.name
+            distanceTextVeiw.text = item.lastSeenDistance?.toShortenString() ?: "-"
+            lastUpdateTextView.text = item.lastReceivedTime?.durationUntilNow()?.toShortenString() ?: "-"
         }
 
         with(holder.view) {
@@ -44,7 +43,7 @@ class FriendsRecyclerViewAdapter(
 
     }
 
-    override fun getItemCount(): Int = mValues.size
+    override fun getItemCount(): Int = connections.size
 
     interface FriendClickListener {
         fun onFriendClicked()
@@ -52,12 +51,9 @@ class FriendsRecyclerViewAdapter(
         fun onFriendRequestUpdateClicked()
     }
 
-    inner class ViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
-        val nameTextView: TextView = view.friends_list_item_name
-        val timeTextView: TextView = view.friends_list_item_last_update
-
-        override fun toString(): String {
-            return super.toString() + " '" + nameTextView.text + "'"
-        }
+    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        val nameTextView: TextView = view.friends_list_item_name_textview
+        val distanceTextVeiw: TextView = view.friends_list_item_distance_textview
+        val lastUpdateTextView: TextView = view.friends_list_item_last_update_textview
     }
 }
