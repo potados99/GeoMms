@@ -7,7 +7,7 @@ import android.widget.Toast
  * Toast의 wrapper입니다.
  * 객체를 만들어서 써도 되고, 그러지 않아도 됩니다.
  */
-class Notify(private val context: Context) {
+class Notify(private val context: Context?) {
 
     fun short(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -18,10 +18,10 @@ class Notify(private val context: Context) {
     }
 
     companion object {
-        fun short(context: Context, message: String) {
+        fun short(context: Context?, message: String) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
-        fun long(context: Context, message: String) {
+        fun long(context: Context?, message: String) {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
     }

@@ -54,20 +54,4 @@ class ConversationListViewModel : ViewModel(), KoinComponent {
 
         liveDataOfConversations.value = conversations
     }
-
-
-    private val smsQueue = MediatorLiveData<PriorityQueue<SmsMessage>>()
-    fun getSmsQueue(): LiveData<PriorityQueue<SmsMessage>> = smsQueue
-    fun addSmsQueueDataSource(source: LiveData<PriorityQueue<SmsMessage>>) {
-        smsQueue.addSource(source, smsQueue::setValue)
-    }
-    fun removeSmsQueueDataSource(source:LiveData<PriorityQueue<SmsMessage>>) {
-        smsQueue.removeSource(source)
-    }
-
-
-    /**
-     * 프래그먼트가 재개될 때에 사용할 이전 스크롤 위치입니다.
-     */
-    var lastSavedScrollPosition: Int = -1
 }

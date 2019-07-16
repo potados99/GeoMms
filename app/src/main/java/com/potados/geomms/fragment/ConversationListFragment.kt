@@ -169,13 +169,6 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
                 )
             }
         })
-
-        viewModel.getSmsQueue().observe(this, object: Observer<PriorityQueue<SmsMessage>> {
-            override fun onChanged(t: PriorityQueue<SmsMessage>?) {
-                Notify(context!!).short("message received.")
-            }
-        })
-
     }
 
     /**

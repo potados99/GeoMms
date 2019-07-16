@@ -25,7 +25,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
 import com.potados.geomms.adapter.FriendsRecyclerViewAdapter
+import com.potados.geomms.data.entity.LocationSupportConnection
 import com.potados.geomms.dummy.DummyContent
+import com.potados.geomms.util.Notify
 import com.potados.geomms.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
@@ -34,7 +36,9 @@ import kotlinx.android.synthetic.main.fragment_map_friends_list.view.*
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
  */
-class MapFragment : Fragment(), OnMapReadyCallback {
+class MapFragment : Fragment(),
+    OnMapReadyCallback,
+    FriendsRecyclerViewAdapter.FriendClickListener {
 
     /**
      * 뷰모델
@@ -154,7 +158,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
      */
     private fun bindUi(view: View) {
         with(view.friends_list_recyclerview) {
-            adapter = FriendsRecyclerViewAdapter(DummyContent.ITEMS)
+            adapter = FriendsRecyclerViewAdapter(DummyContent.ITEMS, this@MapFragment)
         }
     }
 
@@ -203,5 +207,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         }
+    }
+
+    /**
+     * 친구 목록중 하나가 클릭되었을 때에 반응합니다.
+     */
+    override fun onFriendClicked() {
+        Notify(context!!).short("clicked")
+    }
+
+    override fun onFriendCallClicked() {
+        Notify(context!!).short("call clicked")
+    }
+
+    override fun onFriendRequestUpdateClicked() {
+        Notify(context!!).short("update clicked")
     }
 }

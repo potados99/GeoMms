@@ -41,7 +41,6 @@
             android:id="@+id/conversation_list_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <!--/androidx.core.widget.NestedScrollView-->
