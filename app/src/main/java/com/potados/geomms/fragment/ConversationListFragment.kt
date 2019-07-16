@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.telephony.SmsMessage
 import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
@@ -15,15 +14,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.R
 import com.potados.geomms.activity.ConversationActivity
-import com.potados.geomms.activity.MainActivity
 import com.potados.geomms.adapter.ConversationListRecyclerViewAdapter
 import com.potados.geomms.data.entity.SmsThread
 import com.potados.geomms.receiver.SmsReceiver
-import com.potados.geomms.util.Notify
 import com.potados.geomms.viewmodel.ConversationListViewModel
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.*
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversation_list_recyclerview
-import java.util.*
 
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
@@ -35,12 +31,19 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
      */
     private lateinit var viewModel: ConversationListViewModel
 
+    /**
+     * SMS 수신 처리할 receiver입니다.
+     */
     private val receiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             viewModel.updateConversations()
         }
     }
-    private val filter = IntentFilter("com.potados.geomms.SMS_DELIVER")
+
+    /**
+     * SMS 수신 인텐트만 걸러낼 필터입니다.
+     */
+    private val filter = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
 
 
     /**
@@ -108,6 +111,9 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
         Log.i("ConversationListFragment: onPause", "paused.")
     }
 
+    /**
+     * 정지할 때에 실행됩니다.
+     */
     override fun onStop() {
         super.onStop()
 

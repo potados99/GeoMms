@@ -29,8 +29,8 @@ class Metric(private val meter: Long) {
             return Metric(kiloMeter * 1000)
         }
 
-        fun fromDistanceBetween(here: Location, there: Location): Double {
-            return here.bearingTo(there).toDouble()
+        fun fromDistanceBetween(here: Location, there: Location): Metric {
+            return Metric(here.distanceTo(there).toLong())
         }
     }
 }

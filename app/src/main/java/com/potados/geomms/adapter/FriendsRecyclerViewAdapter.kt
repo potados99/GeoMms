@@ -45,6 +45,13 @@ class FriendsRecyclerViewAdapter(
 
     override fun getItemCount(): Int = connections.size
 
+    fun updateItems() {
+        for (i in 0 until itemCount) {
+
+        }
+    }
+
+
     interface FriendClickListener {
         fun onFriendClicked()
         fun onFriendCallClicked()

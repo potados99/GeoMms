@@ -3,6 +3,7 @@ package com.potados.geomms.fragment
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -46,6 +47,16 @@ class MapFragment : Fragment(),
      * 뷰모델
      */
     private lateinit var viewModel: MapViewModel
+
+    private val handler = Handler()
+
+    private val onEverySeconds = object: Runnable {
+        override fun run() {
+            (view?.friends_list_recyclerview?.adapter as? FriendsRecyclerViewAdapter)?.updateItems()
+
+            handler.postDelayed(this, 1000)
+        }
+    }
 
     /**
      * 프래그먼트가 액티비티에 붙을 때에 실행됩니다.
@@ -161,6 +172,7 @@ class MapFragment : Fragment(),
     private fun bindUi(view: View) {
         with(view.friends_list_recyclerview) {
             adapter = FriendsRecyclerViewAdapter(DummyContent.getLocationSupportConnectionDummy(), this@MapFragment)
+            this@MapFragment.handler.post(onEverySeconds)
         }
     }
 
@@ -207,6 +219,19 @@ class MapFragment : Fragment(),
     }
 
     /**
+     * Bottom sheet가 완전히 열려있으면 닫고,
+     * 그렇지 않으면 열어줍니다.
+     */
+    private fun toggleBottomSheet(sheet: View) {
+        BottomSheetBehavior.from(sheet).apply {
+            state = when (state) {
+                BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_COLLAPSED
+                else -> BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+    }
+
+    /**
      * Bottom sheet를 열어줍니다.
      */
     private fun openBottomSheet(sheet: View) {
@@ -218,19 +243,6 @@ class MapFragment : Fragment(),
      */
     private fun closeBottomSheet(sheet: View) {
         BottomSheetBehavior.from(sheet).state = BottomSheetBehavior.STATE_COLLAPSED
-    }
-
-    /**
-     * Bottom sheet가 완전히 열려있으면 닫고,
-     * 그렇지 않으면 열어줍니다.
-     */
-    private fun toggleBottomSheet(sheet: View) {
-        BottomSheetBehavior.from(sheet).apply {
-            state = when (state) {
-                BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_COLLAPSED
-                else -> BottomSheetBehavior.STATE_EXPANDED
-            }
-        }
     }
 
     /**

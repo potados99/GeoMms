@@ -4,15 +4,10 @@ import android.content.BroadcastReceiver
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.provider.Telephony
 import android.telephony.SmsMessage
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.potados.geomms.activity.MainActivity
 import com.potados.geomms.protocol.LocationSupportProtocol
 import com.potados.geomms.util.Notify
-import java.util.*
 
 /**
  * SMS를 수신했을 때에 작동합니다.
@@ -53,7 +48,7 @@ class SmsReceiver : BroadcastReceiver() {
          * 그리고 메시지가 도착하였다고 알립니다.
          */
         context.sendBroadcast(Intent().apply {
-            action = SMS_DELIVER
+            action = SMS_DELIVER_ACTION
             putExtra(Telephony.Sms.ADDRESS, message.originatingAddress)
             putExtra(Telephony.Sms.BODY, message.messageBody)
             putExtra(Telephony.Sms.DATE, message.timestampMillis)
@@ -91,6 +86,6 @@ class SmsReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val SMS_DELIVER = "com.potados.geomms.SMS_DELIVER"
+        const val SMS_DELIVER_ACTION = "com.potados.geomms.SMS_DELIVER"
     }
 }
