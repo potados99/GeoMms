@@ -26,7 +26,7 @@ class FriendsRecyclerViewAdapter(
         val item = connections[position]
 
         with (holder) {
-            nameTextView.text = item.person.name
+            nameTextView.text = item.person.displayName
             distanceTextVeiw.text = item.lastSeenDistance?.toShortenString() ?: "-"
             lastUpdateTextView.text = item.lastReceivedTime?.durationUntilNow()?.toShortenString() ?: "-"
         }

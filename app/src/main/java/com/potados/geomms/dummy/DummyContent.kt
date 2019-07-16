@@ -14,24 +14,5 @@ import java.util.HashMap
  */
 object DummyContent {
 
-        fun getLocationSupportConnectionDummy(): List<LocationSupportConnection> {
-            return listOf(
-                LocationSupportConnection(
-                    LocationSupportPerson("하늘이"),
-                    DateTime.getCurrentTimeStamp() - 15000)
-                    .apply {
-                        lastSeenDistance = Metric(120)
-                        lastReceivedTime = DateTime(DateTime.getCurrentTimeStamp() - 12000)
-                    },
-
-                LocationSupportConnection(
-                    LocationSupportPerson("지은이"),
-                    DateTime.getCurrentTimeStamp() - 9000)
-                    .apply {
-                        lastSeenDistance = Metric(350)
-                        lastReceivedTime = DateTime(DateTime.getCurrentTimeStamp() - 62000)
-                    }
-            )
-        }
 
 }

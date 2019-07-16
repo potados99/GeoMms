@@ -1,6 +1,7 @@
 package com.potados.geomms.data.entity
 
 data class LocationSupportPerson(
-    var name: String
+    val displayName: String,
+    val address: String
 ) {
 }

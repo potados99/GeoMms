@@ -1,5 +1,7 @@
 package com.potados.geomms.injection
 
+import android.content.Context
+import android.location.LocationManager
 import android.telephony.SmsManager
 import com.potados.geomms.data.implementation.ContactRepositoryImpl
 import com.potados.geomms.data.implementation.MessageRepositoryImpl
@@ -47,6 +49,10 @@ val myModules = module {
         /**
          * LocationSupportManager 객체
          */
-        LocationSupportManagerImpl(SmsManager.getDefault()) as LocationSupportManager
+        LocationSupportManagerImpl(
+            androidContext(),
+            SmsManager.getDefault(),
+            androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            ) as LocationSupportManager
     }
 }
