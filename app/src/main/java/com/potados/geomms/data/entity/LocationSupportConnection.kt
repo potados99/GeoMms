@@ -8,7 +8,7 @@ import com.potados.geomms.core.util.Metric
  */
 data class LocationSupportConnection(
     val person: LocationSupportPerson,
-    val establishedTime: Long
+    var establishedTime: Long
 ) {
 
     /**

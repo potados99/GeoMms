@@ -9,15 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.data.entity.ShortMessage
 import com.potados.geomms.core.util.ShortDate
+import com.potados.geomms.data.entity.SmsThread
 import kotlinx.android.synthetic.main.activity_conversation_message_item.view.*
 import java.lang.RuntimeException
+import kotlin.properties.Delegates
 
-class ConversationRecyclerViewAdapter(
-    private val messages: List<ShortMessage>
-) : RecyclerView.Adapter<ConversationRecyclerViewAdapter.ViewHolder>() {
+class ConversationRecyclerViewAdapter: RecyclerView.Adapter<ConversationRecyclerViewAdapter.ViewHolder>() {
 
+    internal var collection: List<ShortMessage> by Delegates.observable(emptyList()) {
+            _, _, _ -> notifyDataSetChanged()
+    }
 
-    override fun getItemCount(): Int = messages.size
+    override fun getItemCount(): Int = collection.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -31,7 +34,7 @@ class ConversationRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val message = messages[position]
+        val message = collection[position]
 
         if (position == 0) {
             holder.dateLayout.visibility = View.VISIBLE
@@ -59,7 +62,7 @@ class ConversationRecyclerViewAdapter(
     }
 
     override fun getItemViewType(position: Int): Int =
-        if (messages[position].isSent()) TYPE_MESSAGE_SENT
+        if (collection[position].isSent()) TYPE_MESSAGE_SENT
         else TYPE_MESSAGE_RECEIVED
 
 

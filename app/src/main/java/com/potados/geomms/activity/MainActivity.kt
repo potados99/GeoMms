@@ -370,7 +370,8 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.SEND_SMS,
             Manifest.permission.READ_CONTACTS,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.INTERNET
+            Manifest.permission.INTERNET,
+            Manifest.permission.READ_PHONE_STATE
         )
     }
 }

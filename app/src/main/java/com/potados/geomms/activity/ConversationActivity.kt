@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.adapter.ConversationRecyclerViewAdapter
+import com.potados.geomms.core.extension.observe
+import com.potados.geomms.core.extension.viewModel
 import com.potados.geomms.data.entity.ShortMessage
 import com.potados.geomms.data.entity.SmsThread
 import com.potados.geomms.viewmodel.ConversationViewModel
@@ -27,8 +29,12 @@ class ConversationActivity : AppCompatActivity() {
     private lateinit var viewModel: ConversationViewModel
 
     /**
+     * 어댑터입니다.
+     */
+    private val adapter = ConversationRecyclerViewAdapter()
+
+    /**
      * 시작점입니다.
-     * 하나만 instantiate 하도록 보장하고,
      * 뷰모델을 가져온 뒤 나머지 UI를 설정합니다.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,8 +44,12 @@ class ConversationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conversation)
 
-        viewModel = ViewModelProviders.of(this).get(ConversationViewModel::class.java)
-        bindUi()
+        viewModel = viewModel {
+            observe(getSmsThread(), ::handleSmsThreadChange)
+            observe(getMessages(), ::renderMessages)
+
+            setSmsThread(intent.getSerializableExtra(ARG_SMS_THREAD) as SmsThread)
+        }
 
         setUpUi()
     }
@@ -73,57 +83,18 @@ class ConversationActivity : AppCompatActivity() {
     }
 
     /**
-     * UI를 뷰모델과 이어줍니다.
+     * SmsThread가 변경되었을 때에 할 일들.
      */
-    private fun bindUi() {
+    private fun handleSmsThreadChange(thread: SmsThread?) {
+        conversation_toolbar_title.text = viewModel.getRecipients()
+    }
 
-        /**
-         * smsThread가 변경되었을 때에 할 일들
-         */
-        viewModel.getSmsThread().observe(this, object: Observer<SmsThread> {
-            override fun onChanged(t: SmsThread?) {
-                if (t == null) return
-
-                /**
-                 * 툴바 타이틀 설정.
-                 */
-                conversation_toolbar_title.text = viewModel.getRecipients()
-
-                /**
-                 * 메시지 목록을 여기서 변경하지는 않는다.
-                 * 뷰모델에 변화를 가하는 행동은 여기에 기술되면 안된다.
-                 * 대신 뷰모델의 setSmsThread()에 배치한다.
-                 */
-            }
-        })
-
-        /**
-         * 메시지 목록이 변경되었을 때에 할 일들.
-         * (smsThread가 변경되면 이것도 자동으로 변경됨.)
-         */
-        viewModel.getMessages().observe(this, object: Observer<List<ShortMessage>> {
-            override fun onChanged(t: List<ShortMessage>?) {
-                if (t == null) return
-
-                conversation_recyclerview.adapter = ConversationRecyclerViewAdapter(t)
-
-                /**
-                 * 항상 최하단으로 스크롤할 필요는 없다.
-                 * TODO: 조건 부여하기.
-                 */
-                scrollToBottom(false)
-            }
-        })
-
-        /**
-         * ConversationListFragment에서 집어넣은 SmsThread 꺼냅니다.
-         */
-        val smsThread = intent.getSerializableExtra(ARG_SMS_THREAD) as SmsThread
-
-        /**
-         * 가즈아
-         */
-        viewModel.setSmsThread(smsThread)
+    /**
+     * 메시지 목록이 변경되었을 때에 할 일들.
+     * (smsThread가 변경되면 이것도 자동으로 변경됨.)
+     */
+    private fun renderMessages(messages: List<ShortMessage>?) {
+        adapter.collection = messages.orEmpty()
     }
 
     /**
@@ -134,6 +105,11 @@ class ConversationActivity : AppCompatActivity() {
          * 리사이클러뷰 외관 설정하기.
          */
         conversation_recyclerview.layoutManager = LinearLayoutManager(this@ConversationActivity)
+
+        /**
+         * 어댑터 설정하기.
+         */
+        conversation_recyclerview.adapter = adapter
 
         /**
          * 액션바 설정하기.

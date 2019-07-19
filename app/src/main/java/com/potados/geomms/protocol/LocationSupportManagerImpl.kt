@@ -6,6 +6,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.telephony.SmsManager
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.data.entity.LocationSupportConnection
@@ -14,6 +15,8 @@ import com.potados.geomms.data.entity.LocationSupportPerson
 import com.potados.geomms.core.util.DateTime
 import com.potados.geomms.core.util.Metric
 import com.potados.geomms.core.util.Notify
+import com.potados.geomms.protocol.LocationSupportProtocol.Companion.findType
+import kotlin.random.Random
 
 /**
  * LocationSupport 시스템입니다.
@@ -27,6 +30,11 @@ class LocationSupportManagerImpl(
 ) : LocationSupportManager, LocationListener {
 
     private var currentLocation: Location? = null
+
+    private val connections = mutableListOf<LocationSupportConnection>()
+    private val liveConnections = MutableLiveData<List<LocationSupportConnection>>()
+
+    private val connectionsWaitingForAccept = mutableListOf<LocationSupportConnection>()
 
     init {
         try {
@@ -50,26 +58,60 @@ class LocationSupportManagerImpl(
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
     }
 
-
-    private val connections = mutableListOf<LocationSupportConnection>()
-    private val liveConnections = MutableLiveData<List<LocationSupportConnection>>()
-
     override fun onPacketReceived(packet: LocationSupportPacket, address: String) {
-        //...
 
-        val connection = connections.find {
-            it.person.address == address
-        } ?: return
+        when (findType(packet.type)) {
+            LocationSupportProtocol.Companion.PacketType.ACCEPT_CONNECT -> {
+                Log.d("LocationSupportManagerImpl:onPacketReceived", "ACCEPT_CONNECT packet.")
+                val waiting = connectionsWaitingForAccept.find {
+                    it.person.address == address
+                }
 
-        updateConnectionWithReceivedPacket(connection, packet)
+                waiting?.let {
+                    it.establishedTime = DateTime.getCurrentTimeStamp()
+                    connections.add(it)
+                    liveConnections.value = connections
+
+                    Log.d("LocationSupportManagerImpl:onPacketReceived", "connection established.")
+                }
+            }
+
+            LocationSupportProtocol.Companion.PacketType.DATA -> {
+                val connection = connections.find {
+                    it.person.address == address
+                }
+
+                connection?.let {
+                    updateConnectionWithReceivedPacket(connection, packet)
+                }
+            }
+
+            else -> {
+                /**/
+            }
+        }
     }
 
     override fun requestNewConnection(person: LocationSupportPerson) {
-        connections.add(
-            LocationSupportConnection(person, DateTime.getCurrentTimeStamp())
+        // TODO: id 바꾸기
+        val packet = LocationSupportProtocol.createRequestConnectPacket(
+            4096, 1800000 /* 30분 */
         )
 
-        liveConnections.value = connections
+        val payload = LocationSupportProtocol.serialize(packet) ?: return
+
+        smsManager.sendTextMessage(
+            person.address,
+            null,
+            payload,
+            null,
+            null)
+
+        connectionsWaitingForAccept.add(
+            LocationSupportConnection(person, 0)
+        )
+
+        Log.d("GEOMMS", payload)
     }
 
     override fun acceptNewConnection(person: LocationSupportPerson, reqPacket: LocationSupportPacket) {

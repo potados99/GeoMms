@@ -1,8 +1,11 @@
 package com.potados.geomms.fragment
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Handler
+import android.provider.Telephony
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.fragment.app.Fragment
 import androidx.core.view.ViewCompat
@@ -12,51 +15,61 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
-import com.potados.geomms.adapter.FriendsRecyclerViewAdapter
+import com.potados.geomms.adapter.LocationSupportConnectionRecyclerViewAdapter
 import com.potados.geomms.core.extension.observe
 import com.potados.geomms.core.extension.viewModel
 import com.potados.geomms.data.entity.LocationSupportConnection
-import com.potados.geomms.data.entity.LocationSupportPerson
-import com.potados.geomms.protocol.LocationSupportManager
-import com.potados.geomms.protocol.LocationSupportProtocol
 import com.potados.geomms.core.util.Notify
+import com.potados.geomms.receiver.SmsReceiver
 import com.potados.geomms.viewmodel.MapViewModel
 import kotlinx.android.synthetic.main.fragment_map.view.*
+import kotlinx.android.synthetic.main.fragment_map_friends_list.*
 import kotlinx.android.synthetic.main.fragment_map_friends_list.view.*
-import org.koin.android.ext.android.inject
+import kotlinx.android.synthetic.main.fragment_map_friends_list.view.friends_list_add_button
 
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
  */
 class MapFragment : Fragment(),
     OnMapReadyCallback,
-    FriendsRecyclerViewAdapter.FriendClickListener {
-
-    /**
-     * LocationSupport 매니저
-     */
-    private val locationSupportManager: LocationSupportManager by inject()
-
+    LocationSupportConnectionRecyclerViewAdapter.FriendClickListener {
 
     /**
      * 뷰모델
      */
     private lateinit var viewModel: MapViewModel
 
-    private val handler = Handler()
+    /**
+     * 어댑터
+     */
+    private val adapter = LocationSupportConnectionRecyclerViewAdapter(this)
 
-    private val onEverySeconds = object: Runnable {
-        override fun run() {
-            locationSupportManager.onEverySecondUpdate()
-            handler.postDelayed(this, 1000)
+    /**
+     * SMS 수신 처리할 receiver입니다.
+     */
+    private val receiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (context == null) return
+            if (intent == null) return
+
+            val address = intent.getStringExtra(Telephony.Sms.ADDRESS)
+            val body = intent.getStringExtra(Telephony.Sms.BODY)
+            // val date = intent.getLongExtra(Telephony.Sms.DATE, 0)
+
+            viewModel.onMessageReceived(
+                address, body
+            )
         }
     }
+
+    /**
+     * SMS 수신 인텐트만 걸러낼 필터입니다.
+     */
+    private val filter = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
 
 
     /**
@@ -74,7 +87,7 @@ class MapFragment : Fragment(),
         super.onCreate(savedInstanceState)
 
         viewModel = viewModel {
-            // observe()
+            observe(getConnections(), ::renderConnections)
         }
 
         Log.i("MapFragment: onCreate", "created.")
@@ -88,7 +101,6 @@ class MapFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_map, container, false).also {
-            bindUi(it)
             setUpUi(it)
 
             getMapReady(it.map_view, savedInstanceState)
@@ -97,14 +109,17 @@ class MapFragment : Fragment(),
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        context?.registerReceiver(receiver, filter)
+    }
+
     /**
      * 프래그먼트가 재개될 때에 실행됩니다.
      */
     override fun onResume() {
         super.onResume()
-
-        locationSupportManager.requestNewConnection(LocationSupportPerson("지은이", "1234"))
-        locationSupportManager.requestNewConnection(LocationSupportPerson("하늘이", "4321"))
 
         Log.i("MapFragment: onResume", "resumed.")
     }
@@ -115,6 +130,12 @@ class MapFragment : Fragment(),
     override fun onPause() {
         super.onPause()
         Log.i("MapFragment: onPause", "paused.")
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        context?.unregisterReceiver(receiver)
     }
 
     /**
@@ -171,27 +192,12 @@ class MapFragment : Fragment(),
 
     }
 
-    /**
-     * UI를 뷰모델과 이어줍니다.
-     */
-    private fun bindUi(view: View) {
+    private fun renderConnections(connections: List<LocationSupportConnection>?) {
+        adapter.collection = connections.orEmpty()
 
-        locationSupportManager.getConnections().observe(this, object: Observer<List<LocationSupportConnection>> {
-            override fun onChanged(t: List<LocationSupportConnection>?) {
-                if (t == null) return
+        friends_list_recyclerview.adapter = adapter
 
-                view.friends_list_recyclerview.adapter = FriendsRecyclerViewAdapter(t, this@MapFragment)
-            }
-        })
-
-        this@MapFragment.handler.post(onEverySeconds)
-
-
-        /*
-        with(view.friends_list_recyclerview) {
-            adapter = FriendsRecyclerViewAdapter(DummyContent.getLocationSupportConnectionDummy(), this@MapFragment)
-        }
-        */
+        Log.d("MapFragment:renderConnections", "rendered: ${connections?.get(0)?.establishedTime}")
     }
 
     /**
@@ -208,6 +214,8 @@ class MapFragment : Fragment(),
             addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
 
             layoutManager = LinearLayoutManager(context)
+
+            adapter = this.adapter
 
             /**
              * 스크롤 이벤트가 리사이클러뷰에게 도착할 수 있게 해줍니다.
@@ -234,6 +242,11 @@ class MapFragment : Fragment(),
                 toggleBottomSheet(view.fragment_map_bottom_sheet_view)
             }
         }
+
+        view.friends_list_add_button.setOnClickListener {
+            // TODO: 연결 추가 과정 구현
+            viewModel.requestNewConnection("1234")
+        }
     }
 
     /**
@@ -247,10 +260,6 @@ class MapFragment : Fragment(),
                 else -> BottomSheetBehavior.STATE_EXPANDED
             }
         }
-
-        locationSupportManager.onPacketReceived(LocationSupportProtocol.createDataPacket(1, 127.12345, 37.12345), "1234")
-        locationSupportManager.onPacketReceived(LocationSupportProtocol.createDataPacket(2, 128.12345, 37.12345), "4321")
-
     }
 
     /**

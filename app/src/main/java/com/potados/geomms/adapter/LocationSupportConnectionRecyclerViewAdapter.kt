@@ -5,16 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 
 import com.potados.geomms.R
 import com.potados.geomms.data.entity.LocationSupportConnection
 
 import kotlinx.android.synthetic.main.fragment_map_friends_list_item.view.*
+import java.util.*
+import kotlin.properties.Delegates
 
-class FriendsRecyclerViewAdapter(
-    private val connections: List<LocationSupportConnection>,
+class LocationSupportConnectionRecyclerViewAdapter(
     private val listener: FriendClickListener
-) : RecyclerView.Adapter<FriendsRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<LocationSupportConnectionRecyclerViewAdapter.ViewHolder>() {
+
+    internal var collection: List<LocationSupportConnection> by Delegates.observable(emptyList()) {
+            _, _, _ -> notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -23,12 +29,21 @@ class FriendsRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = connections[position]
+        val item = collection[position]
 
         with (holder) {
             nameTextView.text = item.person.displayName
             distanceTextVeiw.text = item.lastSeenDistance?.toShortenString() ?: "-"
-            lastUpdateTextView.text = item.lastReceivedTime?.durationUntilNow()?.toShortenString() ?: "-"
+
+            val timerTask = object: TimerTask() {
+                override fun run() {
+                    (listener as Fragment).activity?.runOnUiThread {
+                        lastUpdateTextView.text = item.lastReceivedTime?.durationUntilNow()?.toShortenString() ?: "-"
+                    }
+                }
+            }
+
+            Timer().schedule(timerTask, 0, 1000)
         }
 
         with(holder.view) {
@@ -43,7 +58,7 @@ class FriendsRecyclerViewAdapter(
 
     }
 
-    override fun getItemCount(): Int = connections.size
+    override fun getItemCount(): Int = collection.size
 
     fun updateItems() {
         for (i in 0 until itemCount) {
