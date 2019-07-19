@@ -12,18 +12,22 @@ import com.mikhaellopez.circularimageview.CircularImageView
 import com.potados.geomms.R
 import com.potados.geomms.data.repository.ContactRepository
 import com.potados.geomms.data.entity.SmsThread
-import com.potados.geomms.util.ShortDate
+import com.potados.geomms.core.util.ShortDate
 
 import kotlinx.android.synthetic.main.fragment_conversation_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import kotlin.properties.Delegates
 
 class ConversationListRecyclerViewAdapter(
-    private val conversations: List<SmsThread>,
     private val listener: ConversationClickListener
 ) : RecyclerView.Adapter<ConversationListRecyclerViewAdapter.ViewHolder>(), KoinComponent {
 
     private val contactRepo: ContactRepository by inject()
+
+    internal var collection: List<SmsThread> by Delegates.observable(emptyList()) {
+        _, _, _ -> notifyDataSetChanged()
+    }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -36,7 +40,7 @@ class ConversationListRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val threadItem = conversations[position]
+        val threadItem = collection[position]
 
         with (holder) {
             senderTextView.text = threadItem.getRecipientString(contactRepo)
@@ -60,7 +64,7 @@ class ConversationListRecyclerViewAdapter(
         }
     }
 
-    override fun getItemCount(): Int = conversations.size
+    override fun getItemCount(): Int = collection.size
 
     interface ConversationClickListener {
         fun onConversationClicked(conversation: SmsThread)

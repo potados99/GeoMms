@@ -188,11 +188,13 @@ class ConversationActivity : AppCompatActivity() {
         conversation_recyclerview.adapter?.let {
             Log.d("ConversationActivity: scrollToBottom()", "scrolling to bottom.")
 
+            val position =  if (it.itemCount > 0) it.itemCount - 1 else 0
+
             if (smooth) {
-                conversation_recyclerview.smoothScrollToPosition(it.itemCount - 1)
+                conversation_recyclerview.smoothScrollToPosition(position)
             }
             else {
-                conversation_recyclerview.scrollToPosition(it.itemCount - 1)
+                conversation_recyclerview.scrollToPosition(position)
             }
 
             viewModel.recyclerViewReachedItsEnd = true

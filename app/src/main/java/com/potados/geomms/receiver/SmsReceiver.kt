@@ -7,7 +7,7 @@ import android.content.Intent
 import android.provider.Telephony
 import android.telephony.SmsMessage
 import com.potados.geomms.protocol.LocationSupportProtocol
-import com.potados.geomms.util.Notify
+import com.potados.geomms.core.util.Notify
 
 /**
  * SMS를 수신했을 때에 작동합니다.

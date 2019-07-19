@@ -5,8 +5,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.potados.geomms.data.entity.LocationSupportPacket
-import com.potados.geomms.util.Reflection
-import com.potados.geomms.util.Types
+import com.potados.geomms.core.util.Reflection
+import com.potados.geomms.core.util.Types
 
 /**
  * LocationSupport 프로토콜에 관한 static 메소드를 제공합니다.

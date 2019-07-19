@@ -1,11 +1,9 @@
-package com.potados.geomms.util
+package com.potados.geomms.core.util
 
 import android.database.Cursor
 import android.util.Log
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import org.json.JSONObject
-import org.json.JSONArray
 
 class JsonHelper {
     companion object {

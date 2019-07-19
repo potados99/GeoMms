@@ -4,12 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.PersistableBundle
 import android.provider.Telephony
 import android.util.Log
 import android.util.SparseArray
@@ -22,10 +19,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.fragment.MapFragment
 import com.potados.geomms.fragment.ConversationListFragment
 import com.potados.geomms.R
-import com.potados.geomms.receiver.SmsReceiver
-import com.potados.geomms.util.Notify
-import com.potados.geomms.util.Popup
-import com.potados.geomms.util.QueryHelper
+import com.potados.geomms.core.util.Notify
+import com.potados.geomms.core.util.Popup
+import com.potados.geomms.core.util.QueryHelper
 import com.potados.geomms.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.system.exitProcess
@@ -62,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         requirePermissions(PERMISSIONS_OF_THIS_APP)
-
+        // dumpThread()
 
         Log.d("MainActivity: onCreate", "created.")
     }

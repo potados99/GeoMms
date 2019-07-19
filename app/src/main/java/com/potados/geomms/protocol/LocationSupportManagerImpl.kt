@@ -11,9 +11,9 @@ import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.data.entity.LocationSupportConnection
 import com.potados.geomms.data.entity.LocationSupportPacket
 import com.potados.geomms.data.entity.LocationSupportPerson
-import com.potados.geomms.util.DateTime
-import com.potados.geomms.util.Metric
-import com.potados.geomms.util.Notify
+import com.potados.geomms.core.util.DateTime
+import com.potados.geomms.core.util.Metric
+import com.potados.geomms.core.util.Notify
 
 /**
  * LocationSupport 시스템입니다.

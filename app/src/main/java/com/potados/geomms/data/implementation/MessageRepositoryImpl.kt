@@ -5,7 +5,7 @@ import com.potados.geomms.data.entity.ShortMessage
 import com.potados.geomms.data.entity.SmsThread
 import com.potados.geomms.data.repository.MessageRepository
 import com.potados.geomms.data.repository.QueryInfoRepository
-import com.potados.geomms.util.QueryHelper
+import com.potados.geomms.core.util.QueryHelper
 
 class MessageRepositoryImpl(
     private val resolver: ContentResolver,

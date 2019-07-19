@@ -1,4 +1,4 @@
-package com.potados.geomms.util
+package com.potados.geomms.core.util
 
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties

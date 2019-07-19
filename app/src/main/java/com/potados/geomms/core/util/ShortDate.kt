@@ -1,9 +1,6 @@
-package com.potados.geomms.util
+package com.potados.geomms.core.util
 
 import java.text.SimpleDateFormat
-import java.time.Duration
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 class ShortDate {

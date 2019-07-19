@@ -15,9 +15,12 @@ import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.R
 import com.potados.geomms.activity.ConversationActivity
 import com.potados.geomms.adapter.ConversationListRecyclerViewAdapter
+import com.potados.geomms.core.extension.observe
+import com.potados.geomms.core.extension.viewModel
 import com.potados.geomms.data.entity.SmsThread
 import com.potados.geomms.receiver.SmsReceiver
 import com.potados.geomms.viewmodel.ConversationListViewModel
+import kotlinx.android.synthetic.main.fragment_conversation_list.*
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.*
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversation_list_recyclerview
 
@@ -30,6 +33,11 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
      * 뷰모델입니다.
      */
     private lateinit var viewModel: ConversationListViewModel
+
+    /**
+     * 리사이클러뷰 어댑터입니다.
+     */
+    private val adapter = ConversationListRecyclerViewAdapter(this)
 
     /**
      * SMS 수신 처리할 receiver입니다.
@@ -64,12 +72,13 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
         /**
          * 뷰모델 가져오기
          */
-        viewModel = ViewModelProviders
-            .of(activity ?: throw RuntimeException("activity is null."))
-            .get(ConversationListViewModel::class.java)
+        viewModel = viewModel {
+            observe(getConversations(), ::renderConversations)
+        }
 
         Log.i("ConversationListFragment: onCreate", "created.")
     }
+
     /**
      * 뷰가 만들어질 때에 실행됩니다.
      * 뷰를 찾아서 뷰모델과 연결해줍니다.
@@ -80,7 +89,6 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_conversation_list, container, false).also {
-            bindUi(it)
             setUpUi(it)
 
             Log.i("ConversationListFragment: onCreateView", "view created.")
@@ -159,22 +167,10 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
     }
 
     /**
-     * UI를 뷰모델과 이어줍니다.
+     * 대화 목록을 표시합니다.
      */
-    private fun bindUi(view: View) {
-
-        /**
-         * 대화 목록이 바뀔 때에 해야 할 일들.
-         */
-        viewModel.getConversations().observe(this, object: Observer<List<SmsThread>> {
-            override fun onChanged(t: List<SmsThread>?) {
-                if (t == null) return
-
-                view.conversation_list_recyclerview.adapter = ConversationListRecyclerViewAdapter(
-                    t, this@ConversationListFragment
-                )
-            }
-        })
+    private fun renderConversations(threadList: List<SmsThread>?) {
+            adapter.collection = threadList.orEmpty()
     }
 
     /**
@@ -186,6 +182,11 @@ class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter
          * 리사이클러뷰 외관 설정
          */
         view.conversation_list_recyclerview.layoutManager = LinearLayoutManager(context)
+
+        /**
+         * 어댑터도 설정
+         */
+        view.conversation_list_recyclerview.adapter = adapter
 
         /**
          * 액션바 설정하기.

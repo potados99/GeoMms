@@ -4,7 +4,7 @@ import android.content.ContentUris
 import android.net.Uri
 import android.provider.Telephony
 import com.potados.geomms.data.repository.QueryInfoRepository
-import com.potados.geomms.util.QueryHelper
+import com.potados.geomms.core.util.QueryHelper
 
 class QueryInfoRepositoryImpl : QueryInfoRepository {
 
@@ -57,7 +57,9 @@ class QueryInfoRepositoryImpl : QueryInfoRepository {
     }
 
     override fun getConversationsQuerySelection(): QueryHelper.Selection {
-        return QueryHelper().Selection()
+        return QueryHelper()
+            .Selection()
+            .of(Telephony.Threads.SNIPPET, "<> ''")
     }
 
     override fun getConversationsQuerySelection(id: Long): QueryHelper.Selection {

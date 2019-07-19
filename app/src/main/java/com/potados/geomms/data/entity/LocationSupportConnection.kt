@@ -1,11 +1,7 @@
 package com.potados.geomms.data.entity
 
-import android.location.Location
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.potados.geomms.util.DateTime
-import com.potados.geomms.util.Metric
-import java.util.*
+import com.potados.geomms.core.util.DateTime
+import com.potados.geomms.core.util.Metric
 
 /**
  * LocationSupportManagerImpl 시스템의 연결 정보를 표현합니다.

@@ -1,4 +1,4 @@
-package com.potados.geomms.util
+package com.potados.geomms.core.util
 
 import java.text.SimpleDateFormat
 import java.util.*

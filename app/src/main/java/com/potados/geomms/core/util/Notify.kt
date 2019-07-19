@@ -1,4 +1,4 @@
-package com.potados.geomms.util
+package com.potados.geomms.core.util
 
 import android.content.Context
 import android.widget.Toast

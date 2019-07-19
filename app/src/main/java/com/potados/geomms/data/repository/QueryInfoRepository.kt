@@ -1,7 +1,7 @@
 package com.potados.geomms.data.repository
 
 import android.net.Uri
-import com.potados.geomms.util.QueryHelper
+import com.potados.geomms.core.util.QueryHelper
 
 /**
  * ContentResolver의 query에 사용할 uri 저장소입니다.
