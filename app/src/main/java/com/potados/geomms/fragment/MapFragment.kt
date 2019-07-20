@@ -26,7 +26,9 @@ import com.potados.geomms.data.entity.LocationSupportConnection
 import com.potados.geomms.core.util.Notify
 import com.potados.geomms.receiver.SmsReceiver
 import com.potados.geomms.viewmodel.MapViewModel
+import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
+import kotlinx.android.synthetic.main.fragment_map.view.map_view
 import kotlinx.android.synthetic.main.fragment_map_friends_list.*
 import kotlinx.android.synthetic.main.fragment_map_friends_list.view.*
 import kotlinx.android.synthetic.main.fragment_map_friends_list.view.friends_list_add_button
@@ -47,6 +49,11 @@ class MapFragment : Fragment(),
      * 어댑터
      */
     private val adapter = LocationSupportConnectionRecyclerViewAdapter(this)
+
+    /**
+     * 구글지도
+     */
+    private var map: GoogleMap? = null
 
     /**
      * SMS 수신 처리할 receiver입니다.
@@ -158,6 +165,8 @@ class MapFragment : Fragment(),
      * 지도가 준비되었을 때에 실행됩니다.
      */
     override fun onMapReady(map: GoogleMap?) {
+        this.map = map
+
         val seoul = LatLng(37.56, 126.97)
 
         map?.addMarker(MarkerOptions().apply {
@@ -196,6 +205,29 @@ class MapFragment : Fragment(),
         adapter.collection = connections.orEmpty()
 
         friends_list_recyclerview.adapter = adapter
+
+        connections?.forEach { connection ->
+            val lastPacket = connection.lastReceivedPacket
+
+            if (lastPacket != null) {
+                val point = LatLng(lastPacket.latitude, lastPacket.longitude)
+
+                map?.let {
+                    it.addMarker(MarkerOptions().apply {
+                        position(point)
+                        title(connection.person.displayName)
+                        snippet(connection.lastReceivedTime?.toShortenString())
+                    })
+
+                    it.moveCamera(CameraUpdateFactory.newLatLng(point))
+                    it.animateCamera(CameraUpdateFactory.zoomTo(10.0f))
+
+                    Log.d("MapFragment:renderConnections", "marker added.")
+                }
+
+
+            }
+        }
 
         Log.d("MapFragment:renderConnections", "rendered: ${connections?.get(0)?.establishedTime}")
     }
