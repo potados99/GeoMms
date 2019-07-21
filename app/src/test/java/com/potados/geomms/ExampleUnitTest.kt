@@ -1,6 +1,6 @@
 package com.potados.geomms
 
-import com.potados.geomms.protocol.LocationSupportManagerImpl
+import com.potados.geomms.feature.protocol.LocationSupportManagerImpl
 import org.junit.Test
 
 import org.junit.Assert.*
