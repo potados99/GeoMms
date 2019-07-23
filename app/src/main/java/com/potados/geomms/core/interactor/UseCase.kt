@@ -25,4 +25,6 @@ abstract class UseCase<out Type: Any, in Params> {
             onResult(withContext(GlobalScope.coroutineContext) { run(params) })
         }
     }
+
+    class None
 }

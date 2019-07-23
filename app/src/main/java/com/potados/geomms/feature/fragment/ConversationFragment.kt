@@ -22,15 +22,15 @@ import kotlinx.android.synthetic.main.fragment_conversation.*
 
 class ConversationFragment : BaseFragment() {
 
+    private lateinit var viewModel: ConversationViewModel
+    private val adapter = ConversationRecyclerViewAdapter()
+
     /**
      * BaseFragment 설정들.
      */
     override fun layoutId(): Int = R.layout.fragment_conversation
     override fun toolbarId(): Int? = R.id.conversation_toolbar
     override fun toolbarMenuId(): Int? = null
-
-    private lateinit var viewModel: ConversationViewModel
-    private val adapter = ConversationRecyclerViewAdapter()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

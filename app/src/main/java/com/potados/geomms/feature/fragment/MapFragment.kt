@@ -37,6 +37,10 @@ class MapFragment : NavigationBasedFragment(),
     OnMapReadyCallback,
     LocationSupportConnectionRecyclerViewAdapter.FriendClickListener {
 
+    private lateinit var viewModel: MapViewModel
+    private val adapter = LocationSupportConnectionRecyclerViewAdapter(this)
+    private var map: GoogleMap? = null
+
     /**
      * NavigationBasedFragment 설정들.
      */
@@ -48,11 +52,6 @@ class MapFragment : NavigationBasedFragment(),
         viewModel.onMessageReceived(address, body)
     }
     override fun intentFilter(): IntentFilter? = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
-
-    private lateinit var viewModel: MapViewModel
-    private val adapter = LocationSupportConnectionRecyclerViewAdapter(this)
-    private var map: GoogleMap? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

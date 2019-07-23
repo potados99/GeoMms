@@ -26,6 +26,11 @@ import org.koin.android.ext.android.inject
 class ConversationListFragment : NavigationBasedFragment(),
     ConversationListRecyclerViewAdapter.ConversationClickListener {
 
+    private val navigator: Navigator by inject()
+
+    private lateinit var viewModel: ConversationListViewModel
+    private val adapter = ConversationListRecyclerViewAdapter(this)
+
     /**
      * NavigationBasedFragment 설정들.
      */
@@ -37,11 +42,6 @@ class ConversationListFragment : NavigationBasedFragment(),
         viewModel.updateConversations()
     }
     override fun intentFilter(): IntentFilter? = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
-
-    private val navigator: Navigator by inject()
-
-    private lateinit var viewModel: ConversationListViewModel
-    private val adapter = ConversationListRecyclerViewAdapter(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
