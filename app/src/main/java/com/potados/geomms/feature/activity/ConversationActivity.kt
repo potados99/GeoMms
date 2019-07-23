@@ -1,5 +1,7 @@
 package com.potados.geomms.feature.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -177,6 +179,8 @@ class ConversationActivity : AppCompatActivity() {
     }
 
     companion object {
+        fun callingIntent(context: Context) = Intent(context, ConversationActivity::class.java)
+
         const val ARG_SMS_THREAD = "arg_sms_thread"
 
         /**

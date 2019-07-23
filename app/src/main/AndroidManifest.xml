@@ -20,20 +20,34 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
 
-        <!-- 메인 액티비티 -->
+        <!-- 시작 액티비티 -->
         <activity
-                android:name="com.potados.geomms.feature.activity.MainActivity"
-                android:label="@string/app_name">
+                android:name="com.potados.geomms.core.navigation.RouteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
+        <!-- 권한 요구 액티비티 -->
+        <activity
+                android:name="com.potados.geomms.feature.activity.GiveMePermissionActivity">
+        </activity>
+
+        <!-- SMS 기본 앱 요구 액티비티 -->
+        <activity
+                android:name="com.potados.geomms.feature.activity.MakeMeDefaultAppActivity">
+        </activity>
+
+        <!-- 메인 액티비티 -->
+        <activity
+                android:name="com.potados.geomms.feature.activity.MainActivity"
+                android:label="@string/app_name">
+        </activity>
+
         <!-- 메시지 작성 액티비티 -->
         <activity
                 android:name="com.potados.geomms.feature.activity.ConversationActivity"
-                android:label="@string/title_activity_conversation"
                 android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>

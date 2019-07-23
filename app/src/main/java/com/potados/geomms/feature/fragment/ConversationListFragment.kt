@@ -26,26 +26,24 @@ import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversati
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
  */
-class ConversationListFragment : NavigationBasedFragment(), ConversationListRecyclerViewAdapter.ConversationClickListener {
+class ConversationListFragment : NavigationBasedFragment(),
+    ConversationListRecyclerViewAdapter.ConversationClickListener {
 
-
+    /**
+     * NavigationBasedFragment 설정들.
+     */
+    override fun layoutId(): Int = R.layout.fragment_conversation_list
     override fun toolbar(): Toolbar? = conversation_list_toolbar
     override fun toolbarMenuId(): Int? = 1
     override fun menuItemId(): Int = R.id.menu_item_navigation_message
 
-    /**
-     * 뷰모델입니다.
-     */
+    /** 뷰모델. onCreate에서 대입됨. */
     private lateinit var viewModel: ConversationListViewModel
 
-    /**
-     * 리사이클러뷰 어댑터입니다.
-     */
+    /** 대화방 목록 표시할 리사이클러뷰의 어댑터. */
     private val adapter = ConversationListRecyclerViewAdapter(this)
 
-    /**
-     * SMS 수신 처리할 receiver입니다.
-     */
+    /** SMS 수신 처리할 receiver. */
     private val receiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             viewModel.updateConversations()
@@ -57,14 +55,6 @@ class ConversationListFragment : NavigationBasedFragment(), ConversationListRecy
      */
     private val filter = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
 
-
-    /**
-     * 프래그먼트가 액티비티에 붙을 때에 실행됩니다.
-     */
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.i("ConversationListFragment: onAttach", "attached.")
-    }
 
     /**
      * 제일 먼저 실행됩니다.

@@ -1,8 +1,11 @@
-package com.potados.geomms.feature.injection
+package com.potados.geomms.core.di
 
+import android.Manifest
 import android.content.Context
 import android.location.LocationManager
 import android.telephony.SmsManager
+import com.potados.geomms.core.navigation.Navigator
+import com.potados.geomms.core.util.PermissionChecker
 import com.potados.geomms.feature.data.implementation.ContactRepositoryImpl
 import com.potados.geomms.feature.data.implementation.MessageRepositoryImpl
 import com.potados.geomms.feature.data.implementation.QueryInfoRepositoryImpl
@@ -12,6 +15,16 @@ import com.potados.geomms.feature.protocol.LocationSupportManagerImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
+val permissions = arrayOf(
+    Manifest.permission.READ_SMS,
+    Manifest.permission.RECEIVE_SMS,
+    Manifest.permission.SEND_SMS,
+    Manifest.permission.READ_CONTACTS,
+    Manifest.permission.ACCESS_FINE_LOCATION,
+    Manifest.permission.INTERNET,
+    Manifest.permission.READ_PHONE_STATE
+)
+
 val myModules = module {
 
     single {
@@ -19,6 +32,20 @@ val myModules = module {
          * 안드로이드 컨텐츠 제공자
          */
         androidContext().contentResolver
+    }
+
+    single {
+        /**
+         * 권한 checker
+         */
+        PermissionChecker(androidContext(), permissions)
+    }
+
+    single {
+        /**
+         * 네비게이터
+         */
+        Navigator(get())
     }
 
     single {

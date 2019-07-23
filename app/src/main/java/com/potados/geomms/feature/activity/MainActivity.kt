@@ -2,6 +2,7 @@ package com.potados.geomms.feature.activity
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,6 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.potados.geomms.feature.fragment.MapFragment
 import com.potados.geomms.feature.fragment.ConversationListFragment
 import com.potados.geomms.R
@@ -22,296 +24,26 @@ import com.potados.geomms.core.util.Notify
 import com.potados.geomms.core.util.Popup
 import com.potados.geomms.core.util.QueryHelper
 import com.potados.geomms.feature.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.system.exitProcess
 
 /**
- * MainActivity
- * 권한 획득과 프래그먼트간 전환을 담당합니다.
- * ConversationListFragment(메시지 리스트), MapFragment(지도) 두 프래그먼트를 사용합니다.
- *
- * 루틴 호출 순서는 다음과 같습니다:
- * onCreate -> requirePermission -> onRequestPermissionsResult -> onPermission[Success|Fail]
+ * 권한 획득과 기본 앱 설정 후 나타나는 주 액티비티입니다.
  */
 class MainActivity : NavigationBasedActivity() {
 
     /**
-     * 네비게이션 아이템 id에 맞는 프래그먼트들
+     * NavigationBasedActivity 설정들.
      */
-    private val fragments = listOf(ConversationListFragment(), MapFragment())
+    override fun layoutId(): Int = R.layout.activity_main
+    override fun toolbar(): Toolbar? = null
+    override fun toolbarMenuId(): Int? = null
+    override fun fragments(): Collection<BaseFragment> = mFragments
+    override fun navigationMenu(): BottomNavigationView = nav_view
+    override fun navigationMenuId(): Int = R.menu.bottom_nav_menu
 
-    override fun navigationMenuResId(): Int = R.menu.bottom_nav_menu
-
-    override fun fragments(): Collection<BaseFragment> = fragments
-
-    /**
-     * 이 액티비티에는 툴바가 없다.
-     */
-    override fun toolBar(): Toolbar? = null
-    override fun toolBarMenuId(): Int? = null
-
-    /**
-     * 뷰모델.
-     */
-    private lateinit var viewModel: MainViewModel
-
-    /**
-     * 진입점입니다.
-     * 권한을 요청하는 것으로 시작합니다.
-     */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // setContentView(R.layout.activity_main)
-
-        requirePermissions(PERMISSIONS_OF_THIS_APP)
-        // dumpThread()
-
-        Log.d("MainActivity: onCreate", "created.")
-    }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    /**
-     * 앱 사용 권한을 얻어냅니다.
-     * 모든 권한이 허용되어 있다면 onPermissionSuccess를 직접 호출하고,
-     * 그렇지 않으면 시스템에 권한을 요청하며, 이에 의해 onRequestPermissionsResult 콜백이 실행됩니다.
-     */
-    private fun requirePermissions(permissions: Array<String>) {
-
-        val notGrantedPermissions = mutableListOf<String>()
-
-        // 필요한 권한 하나씩 돌아가며 확인하는데
-        permissions.forEach {
-
-            val permissionCheckResult = ContextCompat.checkSelfPermission(this@MainActivity, it)
-
-            val isGranted = (permissionCheckResult == PackageManager.PERMISSION_GRANTED)
-            val isDeniedByUser = ActivityCompat.shouldShowRequestPermissionRationale(this, it)
-
-            // 권한을 획득하지 못한 경우에는
-            if (isGranted.not()) {
-                Log.d("MainActivity:requirePermissions", "permission \"$it\" is not granted.")
-
-                // 이를 기억해줍니다.
-                notGrantedPermissions.add(it)
-
-                // 사용자에 의해 거절당한 경우라면 설명을 내보냅니다.
-                if (isDeniedByUser) {
-                    Log.d("MainActivity:requirePermissions", "hey user! we need $it")
-
-                    explainUserWhyWeNeedThisPermission(it)
-                }
-
-            }
-            else {
-                Log.d("MainActivity:requirePermissions", "permission \"$it\" is granted.")
-            }
-
-        }
-
-        // 획득하지 못한 권한이 없다면
-        if (notGrantedPermissions.isEmpty()) {
-            // onPermissionSuccess 호출로 넘어가고
-
-            Log.d("MainActivity:requirePermissions", "all permissions granted.")
-            onPermissionSuccess()
-        }
-        else {
-            // 그렇지 않다면 시스템에 권한을 요청합니다.
-
-            Log.d("MainActivity:requirePermissions", "asking for ${notGrantedPermissions.size} permissions.")
-
-            ActivityCompat.requestPermissions(
-                this@MainActivity,
-                notGrantedPermissions.toTypedArray(),
-                PERMISSION_REQUEST_CODE
-            )
-        }
-    }
-
-    /**
-     * 이 앱이 왜 이 권한을 가져야 하는지 설명합니다.
-     */
-    private fun explainUserWhyWeNeedThisPermission(permission: String) {
-        // TODO: 제대로 만들기
-        Notify(this).short("Please give me $permission")
-    }
-
-    /**
-     * 시스템에 권한을 요청한 뒤 결과를 넘겨받는 콜백입니다.
-     */
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        /**
-         * 다음에 이어질 행동을 수행하려면
-         * 1. 요청 코드가 PERMISSION_REQUEST_CODE이어야 하며,
-         * 2. 요청한 권한들(permissions)이 존재해야 하며
-         * 3. 그 결과 (grantResults) 또한 존재해야 합니다.
-         */
-        if (requestCode != PERMISSION_REQUEST_CODE) return
-        if (permissions.isEmpty()) return
-        if (grantResults.isEmpty()) return
-
-        // 결과가 전부 성공이면
-        if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-            // 다음으로 넘어가고
-
-            Log.d("MainActivity:onRequestPermissionsResult", "all permission secured :)")
-
-            onPermissionSuccess()
-        }
-        else {
-            // 그렇지 않다면 잘 처리해줍니다..
-
-            Log.d("MainActivity:onRequestPermissionsResult", "request failed :(")
-
-            onPermissionFail()
-        }
-    }
-
-    /**
-     * 모든 권한을 확보했을 때에 수행할 행동을 정의합니다.
-     * 실질적인 진입점입니다.
-     */
-    private fun onPermissionSuccess() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
-        bindUi()
-
-        setUpUi()
-
-        viewModel.setSelectedTabMenuItemId(R.id.menu_item_navigation_message)
-
-        if (!isDefaultSmsApp()) {
-            changeDefaultSmsApp(this.packageName)
-        }
-    }
-
-    /**
-     * 권한을 하나라도 얻지 못했을 때에 수행할 행동을 정의합니다.
-     */
-    private fun onPermissionFail() {
-
-        Popup(this)
-            .withTitle("Alert")
-            .withMessage("Failed to get permission.")
-            .withPositiveButton("OK", object: DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    exitProcess(1)
-                }
-            })
-            .show()
-    }
-
-    /**
-     * 뷰모델을 뷰와 연결합니다. (binding)
-     */
-    private fun bindUi() {
-        /*
-        viewModel.getSelectedTabMenuItemId().observe(this, object: Observer<Int> {
-            override fun onChanged(t: Int?) {
-                if (t == null) return
-
-                switchFragmentByNavigationItemId(t)
-            }
-        })
-        */
-    }
-
-    /**
-     * 기타 뷰 설정.
-     */
-    private fun setUpUi() {
-        /*
-        nav_view.setOnNavigationItemSelectedListener { item ->
-            viewModel.setSelectedTabMenuItemId(item.itemId)
-        }
-        */
-    }
-
-    /**
-     * 네비게이션 아이템의 id에 맞는 프래그먼트로 교체합니다.
-     * id는
-     * R.id.menu_item_navigation_message(-> messageListFragment),
-     * R.id.menu_item_navigation_map(-> mapFragment)
-     * 중 하나입니다.
-     *
-     * @return 위 두 id가 아닌 것이 인자로 들어오면 false를 반환. 그렇지 않으면 true.
-     */
-    private fun switchFragmentByNavigationItemId(navigationItemId: Int): Boolean {
-
-        /**
-         * 트랜잭션 열기.
-         */
-        val transaction = supportFragmentManager.beginTransaction()
-
-        /**
-         * 초기 작업.
-         * 프래그먼트를 다 더해줌.
-         */
-        if (supportFragmentManager.fragments.isEmpty()) {
-            TAB_IDS.forEach { id ->
-                transaction.add(R.id.fragment_container, fragments[id])
-            }
-        }
-
-        /**
-         * 인자로 넘어온 id에 해당하는 프래그먼트만 show하고 나머지는 hide함.
-         */
-        TAB_IDS.forEach { id ->
-            if (id == navigationItemId) {
-                transaction.show(fragments[id])
-            }
-            else {
-                transaction.hide(fragments[id])
-            }
-        }
-
-        /**
-         * 트랜젝션 닫기.
-         */
-        transaction.commit()
-
-        Log.d("MainActivity: switchFragmentByNavigationItemId", "fragment switched.")
-
-        return true
-    }
-
-    /**
-     * 이 앱이 기본 메시징 앱인지 확인합니다.
-     */
-    private fun isDefaultSmsApp(): Boolean {
-        return Telephony.Sms.getDefaultSmsPackage(this) == this.packageName
-    }
-
-    /**
-     * 기본 메시징 앱을 변경합니다.
-     */
-    private fun changeDefaultSmsApp(appName: String) {
-        val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
-
-        intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, appName)
-        startActivityForResult(intent, CHANGE_SMS_APP_REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == CHANGE_SMS_APP_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                Notify(this).short("Got it.")
-            }
-            else {
-
-            }
-        }
-    }
+    /** 사용할 프래그먼트들 */
+    private val mFragments = listOf(ConversationListFragment(), MapFragment())
 
     /**
      * TODO: 출시할 때에는 없애기
@@ -354,33 +86,9 @@ class MainActivity : NavigationBasedActivity() {
         p.show()
     }
 
+
     companion object {
-        /**
-         * 메뉴 아이템의 id를 식별자로 직접 사용합니다.
-         * TAB_IDS는 이러한 식별자들의 전체 집합입니다.
-         */
-        val TAB_IDS = arrayOf(
-            R.id.menu_item_navigation_message,
-            R.id.menu_item_navigation_map
-        )
-
-        /**
-         * 권한 요청할때 식별자로 사용합니다.
-         */
-        private const val PERMISSION_REQUEST_CODE = 99
-        private const val CHANGE_SMS_APP_REQUEST_CODE = 999
-
-        /**
-         * 이 앱에서 필요한 권한들.
-         */
-        private val PERMISSIONS_OF_THIS_APP = arrayOf(
-            Manifest.permission.READ_SMS,
-            Manifest.permission.RECEIVE_SMS,
-            Manifest.permission.SEND_SMS,
-            Manifest.permission.READ_CONTACTS,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.INTERNET,
-            Manifest.permission.READ_PHONE_STATE
-        )
+        fun callingIntent(context: Context) = Intent(context, MainActivity::class.java)
     }
 }
+

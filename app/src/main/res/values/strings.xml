@@ -6,5 +6,8 @@
     <string name="tab_label_title_map">Map</string>
     <string name="btn_lable_refresh">refresh</string>
     <string name="btn_label_call">call</string>
-    <string name="title_activity_conversation">ConversationActivity</string>
+    <string name="make_me_default_app">Please allow this app to a default SMS app :)</string>
+    <string name="change_default_app">Change Default SMS App</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

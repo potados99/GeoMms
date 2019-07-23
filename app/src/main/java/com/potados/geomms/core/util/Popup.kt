@@ -41,8 +41,13 @@ class Popup(private val context: Context) {
         return this
     }
 
-    fun withPositiveButton(text: String, listener: DialogInterface.OnClickListener?): Popup {
+    fun withPositiveButton(text: String, listener: (dialog: DialogInterface, which: Int) -> Unit): Popup {
         dialogBuilder.setPositiveButton(text, listener)
+        return this
+    }
+
+    fun withNegativeButton(text: String, listener: (dialog: DialogInterface, which: Int) -> Unit): Popup {
+        dialogBuilder.setNegativeButton(text, listener)
         return this
     }
 

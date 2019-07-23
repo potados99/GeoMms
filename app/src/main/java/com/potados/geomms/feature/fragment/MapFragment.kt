@@ -40,29 +40,24 @@ class MapFragment : NavigationBasedFragment(),
     OnMapReadyCallback,
     LocationSupportConnectionRecyclerViewAdapter.FriendClickListener {
 
-    override fun toolBar(): Toolbar? = null
-    override fun toolBarMenuId(): Int? = null
-
+    /**
+     * NavigationBasedFragment 설정들.
+     */
+    override fun layoutId(): Int = R.layout.fragment_map
+    override fun toolbar(): Toolbar? = null
+    override fun toolbarMenuId(): Int? = null
     override fun menuItemId(): Int = R.id.menu_item_navigation_map
 
-    /**
-     * 뷰모델
-     */
+    /** 이 프래그먼트에서 쓸 뷰모델. onCreate에서 대입됨. */
     private lateinit var viewModel: MapViewModel
 
-    /**
-     * 어댑터
-     */
+    /** 연결 목록을 표시할 리사이클러뷰의 어댑터. */
     private val adapter = LocationSupportConnectionRecyclerViewAdapter(this)
 
-    /**
-     * 구글지도
-     */
+    /** 준비 끝난 Google Map을 담을 레퍼런스. */
     private var map: GoogleMap? = null
 
-    /**
-     * SMS 수신 처리할 receiver입니다.
-     */
+    /** SMS 수신 처리할 receiver. */
     private val receiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (context == null) return
@@ -78,23 +73,10 @@ class MapFragment : NavigationBasedFragment(),
         }
     }
 
-    /**
-     * SMS 수신 인텐트만 걸러낼 필터입니다.
-     */
+    /** SMS 수신 인텐트만 걸러낼 필터. */
     private val filter = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
 
 
-    /**
-     * 프래그먼트가 액티비티에 붙을 때에 실행됩니다.
-     */
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.i("MapFragment: onAttach", "attached.")
-    }
-
-    /**
-     * 프래그먼트가 생성될 때에 실행됩니다.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -105,20 +87,11 @@ class MapFragment : NavigationBasedFragment(),
         Log.i("MapFragment: onCreate", "created.")
     }
 
-    /**
-     * 프래그먼트에 뷰가 붙을 무렵에 실행됩니다.
-     */
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_map, container, false).also {
-            setUpUi(it)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-            getMapReady(it.map_view, savedInstanceState)
-
-            Log.i("MapFragment: onCreateView", "view created.")
-        }
+        initializeView(view)
+        getMapReady(view.map_view, savedInstanceState)
     }
 
     override fun onStart() {
@@ -127,48 +100,12 @@ class MapFragment : NavigationBasedFragment(),
         context?.registerReceiver(receiver, filter)
     }
 
-    /**
-     * 프래그먼트가 재개될 때에 실행됩니다.
-     */
-    override fun onResume() {
-        super.onResume()
-
-        Log.i("MapFragment: onResume", "resumed.")
-    }
-
-    /**
-     * 프래그먼트가 멈출 때에 실행됩니다.
-     */
-    override fun onPause() {
-        super.onPause()
-        Log.i("MapFragment: onPause", "paused.")
-    }
-
     override fun onStop() {
         super.onStop()
 
         context?.unregisterReceiver(receiver)
     }
 
-    /**
-     * 프래그먼트가 종료될 무렵에 실행됩니다.
-     */
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.i("MapFragment: onDestroy", "destroyed.")
-    }
-
-    /**
-     * 프래그먼트가 액티비티에서 떨어질 때에 실행됩니다.
-     */
-    override fun onDetach() {
-        super.onDetach()
-        Log.i("MapFragment: onDetach", "detached.")
-    }
-
-    /**
-     * 지도가 준비되었을 때에 실행됩니다.
-     */
     override fun onMapReady(map: GoogleMap?) {
         this.map = map
 
@@ -190,21 +127,6 @@ class MapFragment : NavigationBasedFragment(),
         Log.d("MapFragment: onMapReady", "map is ready!")
     }
 
-    /**
-     * 지도를 준비시킵니다.
-     * 준비 끝나면 onMapReady 호출됩니다.
-     */
-    private fun getMapReady(map: MapView, savedInstanceState: Bundle?) {
-
-        /**
-         * 지도 설정.
-         */
-        with(map) {
-            onCreate(savedInstanceState)
-            getMapAsync(this@MapFragment) /* 준비 끝나면 onMapReady 호출됨. */
-        }
-
-    }
 
     private fun renderConnections(connections: List<LocationSupportConnection>?) {
         adapter.collection = connections.orEmpty()
@@ -237,10 +159,7 @@ class MapFragment : NavigationBasedFragment(),
         Log.d("MapFragment:renderConnections", "rendered: ${connections?.get(0)?.establishedTime}")
     }
 
-    /**
-     * UI를 설정해줍니다.
-     */
-    private fun setUpUi(view: View) {
+    private fun initializeView(view: View) {
         /**
          * 친구 목록 리사이클러뷰 외관 설정.
          */
@@ -286,10 +205,14 @@ class MapFragment : NavigationBasedFragment(),
         }
     }
 
-    /**
-     * Bottom sheet가 완전히 열려있으면 닫고,
-     * 그렇지 않으면 열어줍니다.
-     */
+    private fun getMapReady(map: MapView, savedInstanceState: Bundle?) {
+        with(map) {
+            onCreate(savedInstanceState)
+            getMapAsync(this@MapFragment) /* 준비 끝나면 onMapReady 호출됨. */
+        }
+    }
+
+
     private fun toggleBottomSheet(sheet: View) {
         BottomSheetBehavior.from(sheet).apply {
             state = when (state) {
@@ -299,19 +222,14 @@ class MapFragment : NavigationBasedFragment(),
         }
     }
 
-    /**
-     * Bottom sheet를 열어줍니다.
-     */
     private fun openBottomSheet(sheet: View) {
         BottomSheetBehavior.from(sheet).state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    /**
-     * Bottom sheet를 닫습니다.
-     */
     private fun closeBottomSheet(sheet: View) {
         BottomSheetBehavior.from(sheet).state = BottomSheetBehavior.STATE_COLLAPSED
     }
+
 
     /**
      * 친구 목록중 하나가 클릭되었을 때에 반응합니다.

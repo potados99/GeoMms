@@ -7,4 +7,8 @@
     <string name="title_setting">설정</string>
     <string name="btn_lable_refresh">새로고침</string>
     <string name="btn_label_call">전화</string>
+    <string name="make_me_default_app">이 앱을 기본 SMS 앱으로 변경해 주세요 :)</string>
+    <string name="change_default_app">기본 SMS 앱 변경</string>
+    <string name="ok">확인</string>
+    <string name="cancel">취소</string>
 </resources>
