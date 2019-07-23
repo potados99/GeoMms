@@ -1,5 +1,7 @@
 package com.potados.geomms.feature.data.repository
 
+import com.potados.geomms.core.exception.Failure
+import com.potados.geomms.core.functional.Either
 import com.potados.geomms.feature.data.entity.ShortMessage
 import com.potados.geomms.feature.data.entity.SmsThread
 
@@ -14,15 +16,15 @@ interface MessageRepository {
     /**
      * 기기에 존재하는 모든 대화방 정보를 불러옵니다.
      */
-    fun getSmsThreads(): List<SmsThread>
+    fun getSmsThreads(): Either<Failure, List<SmsThread>>
 
     /**
      * 대화방 id를 이용해 특정 대화방을 찾아냅니다.
      */
-    fun getSmsThreadById(id: Long): SmsThread
+    fun getSmsThreadById(id: Long): Either<Failure, SmsThread>
 
     /**
      * 특정 대화방에 속하는 모든 메시지를 가져옵니다. (sms 한정)
      */
-    fun getMessagesFromSmsThread(thread: SmsThread): List<ShortMessage>
+    fun getMessagesFromSmsThread(thread: SmsThread): Either<Failure, List<ShortMessage>>
 }
