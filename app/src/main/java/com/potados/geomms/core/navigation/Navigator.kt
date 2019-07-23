@@ -23,9 +23,7 @@ class Navigator (private val permissionChecker: PermissionChecker){
     fun showConversationActivity(context: Context, smsThread: SmsThread) {
         whenPossible(context) {
             it.startActivity(
-                ConversationActivity.callingIntent(it).apply {
-                    putExtra(ConversationActivity.ARG_SMS_THREAD, smsThread)
-                }
+                ConversationActivity.callingIntent(it, smsThread)
             )
         }
     }

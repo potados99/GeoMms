@@ -50,14 +50,14 @@ fun FragmentTransaction.addAll(@IdRes containerViewId: Int, fragments: Collectio
 }
 
 /**
- * Get ViewModel of the fragment with ViewModelFactory.
+ * Get ViewModel of the fragment with SingleUseCaseViewModelFactory.
  */
 inline fun <reified T : ViewModel> Fragment.getViewModel(factory: Factory, body: T.() -> Unit): T {
     return ViewModelProviders.of(this, factory).get(T::class.java).apply(body)
 }
 
 /**
- * Get ViewModel of the fragment without ViewModelFactory.
+ * Get ViewModel of the fragment without SingleUseCaseViewModelFactory.
  */
 inline fun <reified T : ViewModel> Fragment.getViewModel(body: T.() -> Unit): T {
     return ViewModelProviders.of(this).get(T::class.java).apply(body)
@@ -65,7 +65,7 @@ inline fun <reified T : ViewModel> Fragment.getViewModel(body: T.() -> Unit): T 
 
 /**
  * For Activity.
- * Get ViewModel of the fragment with ViewModelFactory.
+ * Get ViewModel of the fragment with SingleUseCaseViewModelFactory.
  */
 inline fun <reified T : ViewModel> FragmentActivity.getViewModel(factory: Factory, body: T.() -> Unit): T {
     return ViewModelProviders.of(this, factory).get(T::class.java).apply(body)
@@ -73,7 +73,7 @@ inline fun <reified T : ViewModel> FragmentActivity.getViewModel(factory: Factor
 
 /**
  * For Activity
- * Get ViewModel of the fragment without ViewModelFactory.
+ * Get ViewModel of the fragment without SingleUseCaseViewModelFactory.
  */
 inline fun <reified T : ViewModel> FragmentActivity.getViewModel(body: T.() -> Unit): T {
     return ViewModelProviders.of(this).get(T::class.java).apply(body)

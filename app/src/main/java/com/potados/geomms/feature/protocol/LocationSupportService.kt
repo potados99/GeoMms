@@ -5,7 +5,7 @@ import com.potados.geomms.feature.data.entity.LocationSupportConnection
 import com.potados.geomms.feature.data.entity.LocationSupportPacket
 import com.potados.geomms.feature.data.entity.LocationSupportPerson
 
-interface LocationSupportManager {
+interface LocationSupportService {
 
     /**
      * LocationSupport 패킷이 도착했을 때의 동작을 지정합니다.

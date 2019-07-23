@@ -1,6 +1,6 @@
 package com.potados.geomms
 
-import com.potados.geomms.feature.protocol.LocationSupportManagerImpl
+import com.potados.geomms.feature.protocol.LocationSupportServiceImpl
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -15,7 +15,7 @@ class ExampleUnitTest {
     fun locationSupportTest() {
         val message = "[GEOMMS]127.24524:37.523414:235971849"
 
-        val locationData = LocationSupportManagerImpl.parse(message)
+        val locationData = LocationSupportServiceImpl.parse(message)
 
         locationData?.let {
             println("lat: ${locationData.latitude}")

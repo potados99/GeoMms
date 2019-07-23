@@ -4,7 +4,7 @@ import com.potados.geomms.core.util.DateTime
 import com.potados.geomms.core.util.Metric
 
 /**
- * LocationSupportManagerImpl 시스템의 연결 정보를 표현합니다.
+ * LocationSupportServiceImpl 시스템의 연결 정보를 표현합니다.
  */
 data class LocationSupportConnection(
     val person: LocationSupportPerson,

@@ -65,7 +65,7 @@
 
         </activity>
 
-        <!-- SMS 브로드캐스트 수신자 -->
+        <!-- SMS 수신자 -->
         <receiver
                 android:name="com.potados.geomms.feature.receiver.SmsReceiver"
                 android:permission="android.permission.BROADCAST_SMS">
@@ -76,7 +76,21 @@
 
         </receiver>
 
-        <!-- MMS 브로드캐스트 수신자 -->
+        <!-- SMS 발송 결과 수신자 -->
+        <receiver android:name="com.potados.geomms.feature.receiver.SmsSentReceiver">
+            <intent-filter>
+                <action android:name="com.potados.SMS_SENT"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- SMS 전달 결과 수신자 -->
+        <receiver android:name="com.potados.geomms.feature.receiver.SmsDeliveredReceiver">
+            <intent-filter>
+                <action android:name="com.potados.SMS_DELIVERED"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- MMS 수신자 -->
         <receiver
                 android:name="com.potados.geomms.feature.receiver.MmsReceiver"
                 android:permission="android.permission.BROADCAST_WAP_PUSH">

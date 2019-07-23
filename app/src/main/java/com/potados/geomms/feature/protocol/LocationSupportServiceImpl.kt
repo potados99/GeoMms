@@ -1,6 +1,9 @@
 package com.potados.geomms.feature.protocol
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -15,18 +18,21 @@ import com.potados.geomms.feature.data.entity.LocationSupportPerson
 import com.potados.geomms.core.util.DateTime
 import com.potados.geomms.core.util.Metric
 import com.potados.geomms.core.util.Notify
+import com.potados.geomms.feature.data.entity.SmsEntity
 import com.potados.geomms.feature.protocol.LocationSupportProtocol.Companion.findType
+import com.potados.geomms.feature.usecases.SendSms
+import com.potados.geomms.feature.usecases.SendSms.Companion.SMS_SENT
 
 /**
  * LocationSupport 시스템입니다.
  *
  * 연결과 관련된 비즈니스 로직을 포함합니다.
  */
-class LocationSupportManagerImpl(
+class LocationSupportServiceImpl(
     private val context: Context,
-    private val smsManager: SmsManager,
+    private val sendSms: SendSms,
     private val locationManager: LocationManager
-) : LocationSupportManager, LocationListener {
+) : LocationSupportService, LocationListener {
 
     private var currentLocation: Location? = null
 
@@ -42,6 +48,12 @@ class LocationSupportManagerImpl(
         catch (e: SecurityException) {
             Notify.short(context, "Cannot get location.")
         }
+
+        context.registerReceiver(object: BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+
+            }
+        }, IntentFilter(SMS_SENT))
     }
 
     override fun onLocationChanged(location: Location?) {
@@ -61,7 +73,7 @@ class LocationSupportManagerImpl(
 
         when (findType(packet.type)) {
             LocationSupportProtocol.Companion.PacketType.ACCEPT_CONNECT -> {
-                Log.d("LocationSupportManagerImpl:onPacketReceived", "ACCEPT_CONNECT packet.")
+                Log.d("LocationSupportServiceImpl:onPacketReceived", "ACCEPT_CONNECT packet.")
                 val waiting = connectionsWaitingForAccept.find {
                     it.person.address == address
                 }
@@ -71,7 +83,7 @@ class LocationSupportManagerImpl(
                     connections.add(it)
                     liveConnections.value = connections
 
-                    Log.d("LocationSupportManagerImpl:onPacketReceived", "connection established.")
+                    Log.d("LocationSupportServiceImpl:onPacketReceived", "connection established.")
                 }
             }
 
@@ -98,13 +110,9 @@ class LocationSupportManagerImpl(
         )
 
         val payload = LocationSupportProtocol.serialize(packet) ?: return
+        val sms = SmsEntity().address(person.address).body(payload)
 
-        smsManager.sendTextMessage(
-            person.address,
-            null,
-            payload,
-            null,
-            null)
+        sendSms(sms)
 
         connectionsWaitingForAccept.add(
             LocationSupportConnection(person, 0)

@@ -8,13 +8,16 @@ import android.os.Bundle
 import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.potados.geomms.R
+import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.extension.baseActivity
+import com.potados.geomms.core.extension.failure
 import com.potados.geomms.core.extension.getViewModel
 import com.potados.geomms.core.extension.observe
 import com.potados.geomms.core.navigation.Navigator
 import com.potados.geomms.core.platform.NavigationBasedFragment
 import com.potados.geomms.feature.adapter.ConversationListRecyclerViewAdapter
 import com.potados.geomms.feature.data.entity.SmsThread
+import com.potados.geomms.feature.failure.MessageFailure
 import com.potados.geomms.feature.receiver.SmsReceiver
 import com.potados.geomms.feature.viewmodel.ConversationListViewModel
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversation_list_recyclerview
@@ -39,7 +42,7 @@ class ConversationListFragment : NavigationBasedFragment(),
     override fun toolbarMenuId(): Int? = R.menu.toolbar_menu
     override fun menuItemId(): Int = R.id.menu_item_navigation_message
     override fun smsReceivedBehavior() = { _: String, _: String, _: Long ->
-        viewModel.updateConversations()
+        viewModel.loadConversations()
     }
     override fun intentFilter(): IntentFilter? = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
 
@@ -48,12 +51,16 @@ class ConversationListFragment : NavigationBasedFragment(),
         super.onCreate(savedInstanceState)
 
         viewModel = getViewModel {
-            observe(getConversations(), ::renderConversations)
+            observe(conversations, ::renderConversations)
+            failure(failure, ::handleFailure)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         initializeView(view)
+        viewModel.loadConversations()
     }
 
     override fun onConversationClicked(conversation: SmsThread) {
@@ -67,5 +74,15 @@ class ConversationListFragment : NavigationBasedFragment(),
     private fun initializeView(view: View) {
         view.conversation_list_recyclerview.layoutManager = LinearLayoutManager(context)
         view.conversation_list_recyclerview.adapter = adapter
+    }
+
+    private fun handleFailure(failure: Failure?) {
+        when(failure) {
+            is MessageFailure.QueryFailure -> {
+                notifyWithAction(R.string.failure_query, R.string.retry) {
+                    viewModel.loadConversations()
+                }
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.potados.geomms.feature.data.entity.LocationSupportConnection
 import com.potados.geomms.feature.data.entity.LocationSupportPerson
 import com.potados.geomms.feature.data.repository.ContactRepository
-import com.potados.geomms.feature.protocol.LocationSupportManager
+import com.potados.geomms.feature.protocol.LocationSupportService
 import com.potados.geomms.feature.protocol.LocationSupportProtocol
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -20,7 +20,7 @@ class MapViewModel : ViewModel(), KoinComponent {
     /**
      * LocationSupport 매니저
      */
-    private val locationSupportManager: LocationSupportManager by inject()
+    private val locationSupportManager: LocationSupportService by inject()
 
     private val contactRepo: ContactRepository by inject()
 

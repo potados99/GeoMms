@@ -242,7 +242,7 @@ class LocationSupportProtocol {
         }
 
         /**
-         * 메시지가 LocationSupportManagerImpl 메시지인지 확인합니다.
+         * 메시지가 LocationSupportServiceImpl 메시지인지 확인합니다.
          * 판단 기준은, 앞에 GEO_MMS_PREFIX 접두어가 붙었는가 입니다.
          */
         fun isLocationSupportMessage(body: String): Boolean {

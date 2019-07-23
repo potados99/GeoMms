@@ -10,8 +10,11 @@ import com.potados.geomms.feature.data.implementation.ContactRepositoryImpl
 import com.potados.geomms.feature.data.implementation.MessageRepositoryImpl
 import com.potados.geomms.feature.data.implementation.QueryInfoRepositoryImpl
 import com.potados.geomms.feature.data.repository.*
-import com.potados.geomms.feature.protocol.LocationSupportManager
-import com.potados.geomms.feature.protocol.LocationSupportManagerImpl
+import com.potados.geomms.feature.protocol.LocationSupportService
+import com.potados.geomms.feature.protocol.LocationSupportServiceImpl
+import com.potados.geomms.feature.usecases.GetConversations
+import com.potados.geomms.feature.usecases.GetMessages
+import com.potados.geomms.feature.usecases.SendSms
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -27,59 +30,39 @@ val permissions = arrayOf(
 
 val myModules = module {
 
-    single {
-        /**
-         * 안드로이드 컨텐츠 제공자
-         */
-        androidContext().contentResolver
-    }
+    /** 안드로이드 컨텐츠 제공자 */
+    single { androidContext().contentResolver }
 
-    single {
-        /**
-         * 권한 checker
-         */
-        PermissionChecker(androidContext(), permissions)
-    }
+    /** 권한 checker */
+    single { PermissionChecker(androidContext(), permissions) }
 
-    single {
-        /**
-         * 네비게이터
-         */
-        Navigator(get())
-    }
+    /** 네비게이터 */
+    single { Navigator(get()) }
 
-    single {
-        /**
-         * 연락처에 접근하기 위한 저장소
-         */
-        ContactRepositoryImpl(androidContext().contentResolver) as ContactRepository
-    }
+    /** 연락처 저장소 */
+    single { ContactRepositoryImpl(get()) as ContactRepository }
 
-    single {
-        /**
-         * 쿼리와 관련된 uri 또는 기타 옵션이 담긴 저장소
-         */
-        QueryInfoRepositoryImpl() as QueryInfoRepository
-    }
+    /** 쿼리 저장소 */
+    single { QueryInfoRepositoryImpl() as QueryInfoRepository }
 
-    single {
-        /**
-         * 메시지 저장소
-         */
-        MessageRepositoryImpl(
-            androidContext().contentResolver,
-            get()
-        ) as MessageRepository /* 타입캐스팅 필쑤!! */
-    }
+    /** 메시지 저장소 */
+    single { MessageRepositoryImpl(get(), get()) as MessageRepository }
 
+    /** 대화목록 가져오는 use case */
+    single { GetConversations(get()) }
+
+    /** 대화방 메시지 가져오는 use case */
+    single { GetMessages(get()) }
+
+    /** SMS 보내는 use case */
+    single { SendSms(androidContext(), SmsManager.getDefault()) }
+
+    /** LocationSupportService 객체 */
     single {
-        /**
-         * LocationSupportManager 객체
-         */
-        LocationSupportManagerImpl(
+        LocationSupportServiceImpl(
             androidContext(),
-            SmsManager.getDefault(),
+            get(),
             androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            ) as LocationSupportManager
+            ) as LocationSupportService
     }
 }

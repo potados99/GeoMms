@@ -18,12 +18,6 @@ class SmsReceiver : BroadcastReceiver() {
         if (context == null) return
         if (intent == null) return
 
-        /** 수신된 action이 SMS 수신일 때에만 작동합니다. */
-        if (intent.action != Telephony.Sms.Intents.SMS_DELIVER_ACTION) return
-
-        /**
-         * 인텐트로부터 메시지들을 끄집어내서 하나씩 처리합니다.
-         */
         Telephony.Sms.Intents.getMessagesFromIntent(intent).forEach {
             processMessage(context, it)
         }
@@ -71,7 +65,7 @@ class SmsReceiver : BroadcastReceiver() {
     private fun onPlaneSmsArrived(context: Context, message: SmsMessage) {
 
         /**
-         * Telephony.Sms.ADDRESS와 Telephony.Sms.BODY만 채워서
+         * Telephony.SmsEntity.ADDRESS와 Telephony.SmsEntity.BODY만 채워서
          * content://sms/inbox에 넣어줍니다.
          */
         context.contentResolver.insert(

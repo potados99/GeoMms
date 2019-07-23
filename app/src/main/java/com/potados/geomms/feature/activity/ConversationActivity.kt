@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import com.potados.geomms.core.platform.BaseActivity
 import com.potados.geomms.core.platform.BaseFragment
+import com.potados.geomms.feature.data.entity.SmsThread
 import com.potados.geomms.feature.fragment.ConversationFragment
 
 /**
@@ -13,15 +14,18 @@ import com.potados.geomms.feature.fragment.ConversationFragment
  */
 class ConversationActivity : BaseActivity() {
 
+    private val fragment by lazy {
+        ConversationFragment.ofConversation(
+            intent.getSerializableExtra(INTENT_PARAM_CONVERSATION) as SmsThread
+        )
+    }
+
     /**
      * BaseActivity 설정들.
      */
     override fun toolbarId(): Int? = null
     override fun toolbarMenuId(): Int?  = null
-    override fun fragments(): Collection<BaseFragment> = listOf(mFragment)
-
-    /** 사용할 프래그먼트 */
-    private val mFragment = ConversationFragment()
+    override fun fragments(): Collection<BaseFragment> = listOf(fragment)
 
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -40,13 +44,13 @@ class ConversationActivity : BaseActivity() {
 
 
     companion object {
-        fun callingIntent(context: Context) = Intent(context, ConversationActivity::class.java)
+        private const val INTENT_PARAM_CONVERSATION = "com.potados.INTENT_PARAM_CONVERSATION"
 
-        const val ARG_SMS_THREAD = "arg_sms_thread"
+        fun callingIntent(context: Context, conversation: SmsThread) =
+            Intent(context, ConversationActivity::class.java).apply {
+                putExtra(INTENT_PARAM_CONVERSATION, conversation)
+            }
 
-        /**
-         * 나만 건드릴 수 있지
-         */
         private var instantiated = false
         fun isInstantiated() = instantiated
     }
