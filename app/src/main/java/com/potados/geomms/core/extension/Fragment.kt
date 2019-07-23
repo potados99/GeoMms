@@ -26,6 +26,19 @@ inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Fragmen
     beginTransaction().func().commit()
 
 /**
+ * Show only one fragment.
+ */
+inline fun FragmentManager.showOnly(predicate: (Fragment) -> Boolean): Boolean  {
+    inTransaction {
+        fragments.forEach { hide(it) }
+        fragments.find(predicate)?.let(::show) ?: return false
+    }
+
+    return true
+}
+
+
+/**
  * Get ViewModel of the fragment with ViewModelFactory.
  */
 inline fun <reified T : ViewModel> Fragment.getViewModel(factory: Factory, body: T.() -> Unit): T {

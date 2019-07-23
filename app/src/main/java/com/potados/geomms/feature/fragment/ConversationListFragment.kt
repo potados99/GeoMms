@@ -8,23 +8,30 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.potados.geomms.R
 import com.potados.geomms.core.extension.getViewModel
 import com.potados.geomms.core.extension.observe
+import com.potados.geomms.core.platform.NavigationBasedFragment
 import com.potados.geomms.feature.activity.ConversationActivity
 import com.potados.geomms.feature.adapter.ConversationListRecyclerViewAdapter
 import com.potados.geomms.feature.data.entity.SmsThread
 import com.potados.geomms.feature.receiver.SmsReceiver
 import com.potados.geomms.feature.viewmodel.ConversationListViewModel
-import kotlinx.android.synthetic.main.fragment_conversation_list.view.*
+import kotlinx.android.synthetic.main.fragment_conversation_list.*
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversation_list_recyclerview
+import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversation_list_toolbar
 
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
  */
-class ConversationListFragment : Fragment(), ConversationListRecyclerViewAdapter.ConversationClickListener {
+class ConversationListFragment : NavigationBasedFragment(), ConversationListRecyclerViewAdapter.ConversationClickListener {
+
+
+    override fun toolbar(): Toolbar? = conversation_list_toolbar
+    override fun toolbarMenuId(): Int? = 1
+    override fun menuItemId(): Int = R.id.menu_item_navigation_message
 
     /**
      * 뷰모델입니다.

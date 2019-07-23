@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.provider.Telephony
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import androidx.fragment.app.Fragment
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,12 +14,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
 import com.potados.geomms.core.extension.getViewModel
 import com.potados.geomms.core.extension.observe
+import com.potados.geomms.core.platform.NavigationBasedFragment
 import com.potados.geomms.feature.adapter.LocationSupportConnectionRecyclerViewAdapter
 import com.potados.geomms.feature.data.entity.LocationSupportConnection
 import com.potados.geomms.core.util.Notify
@@ -35,9 +36,14 @@ import kotlinx.android.synthetic.main.fragment_map_friends_list.view.friends_lis
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
  */
-class MapFragment : Fragment(),
+class MapFragment : NavigationBasedFragment(),
     OnMapReadyCallback,
     LocationSupportConnectionRecyclerViewAdapter.FriendClickListener {
+
+    override fun toolBar(): Toolbar? = null
+    override fun toolBarMenuId(): Int? = null
+
+    override fun menuItemId(): Int = R.id.menu_item_navigation_map
 
     /**
      * 뷰모델

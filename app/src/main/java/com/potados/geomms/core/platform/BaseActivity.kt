@@ -7,22 +7,31 @@
 package com.potados.geomms.core.platform
 
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import com.potados.geomms.R
 import com.potados.geomms.core.extension.inTransaction
 
-abstract class BaseActivity : AppCompatActivity() {
-
-    abstract fun toolBar(): Toolbar?
+abstract class BaseActivity : AppCompatActivity(), HasToolbar {
 
     abstract fun fragments(): Collection<BaseFragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.base_activity_layout)
-        setSupportActionBar(toolBar())
+        toolbar()?.let { setSupportActionBar(it) }
         addFragments(savedInstanceState)
+    }
+
+    /**
+     * Create option menu for Toolbar if it exists.
+     */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return toolbarMenuId()?.let {
+            menuInflater.inflate(it, menu)
+            true
+        } ?: super.onCreateOptionsMenu(menu)
     }
 
     private fun addFragments(savedInstanceState: Bundle?) =
@@ -33,4 +42,8 @@ abstract class BaseActivity : AppCompatActivity() {
             }
             this
         }
+
+
+
+
 }

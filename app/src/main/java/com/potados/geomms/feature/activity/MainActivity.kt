@@ -9,21 +9,19 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Telephony
 import android.util.Log
-import android.util.SparseArray
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.feature.fragment.MapFragment
 import com.potados.geomms.feature.fragment.ConversationListFragment
 import com.potados.geomms.R
+import com.potados.geomms.core.platform.BaseFragment
+import com.potados.geomms.core.platform.NavigationBasedActivity
 import com.potados.geomms.core.util.Notify
 import com.potados.geomms.core.util.Popup
 import com.potados.geomms.core.util.QueryHelper
 import com.potados.geomms.feature.viewmodel.MainViewModel
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.system.exitProcess
 
 /**
@@ -34,15 +32,22 @@ import kotlin.system.exitProcess
  * 루틴 호출 순서는 다음과 같습니다:
  * onCreate -> requirePermission -> onRequestPermissionsResult -> onPermission[Success|Fail]
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : NavigationBasedActivity() {
 
     /**
      * 네비게이션 아이템 id에 맞는 프래그먼트들
      */
-    private val fragments = SparseArray<Fragment>().apply {
-        append(R.id.menu_item_navigation_message, ConversationListFragment())
-        append(R.id.menu_item_navigation_map, MapFragment())
-    }
+    private val fragments = listOf(ConversationListFragment(), MapFragment())
+
+    override fun navigationMenuResId(): Int = R.menu.bottom_nav_menu
+
+    override fun fragments(): Collection<BaseFragment> = fragments
+
+    /**
+     * 이 액티비티에는 툴바가 없다.
+     */
+    override fun toolBar(): Toolbar? = null
+    override fun toolBarMenuId(): Int? = null
 
     /**
      * 뷰모델.
@@ -55,7 +60,7 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        // setContentView(R.layout.activity_main)
 
         requirePermissions(PERMISSIONS_OF_THIS_APP)
         // dumpThread()
@@ -208,6 +213,7 @@ class MainActivity : AppCompatActivity() {
      * 뷰모델을 뷰와 연결합니다. (binding)
      */
     private fun bindUi() {
+        /*
         viewModel.getSelectedTabMenuItemId().observe(this, object: Observer<Int> {
             override fun onChanged(t: Int?) {
                 if (t == null) return
@@ -215,15 +221,18 @@ class MainActivity : AppCompatActivity() {
                 switchFragmentByNavigationItemId(t)
             }
         })
+        */
     }
 
     /**
      * 기타 뷰 설정.
      */
     private fun setUpUi() {
+        /*
         nav_view.setOnNavigationItemSelectedListener { item ->
             viewModel.setSelectedTabMenuItemId(item.itemId)
         }
+        */
     }
 
     /**

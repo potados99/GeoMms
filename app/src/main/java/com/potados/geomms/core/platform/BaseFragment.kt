@@ -6,7 +6,11 @@
  */
 package com.potados.geomms.core.platform
 
+import android.os.Bundle
+import android.view.*
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
@@ -14,7 +18,30 @@ import com.potados.geomms.R
 import com.potados.geomms.core.extension.appContext
 import com.potados.geomms.core.extension.viewContainer
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment(), HasToolbar {
+
+    abstract fun layoutId(): Int
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        toolbar()?.let { (activity as AppCompatActivity).setSupportActionBar(it) }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(layoutId(), container, false)
+    }
+
+    /**
+     * Create option menu for Toolbar if it exists.
+     */
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        toolbarMenuId()?.let {
+            inflater?.inflate(it, menu)
+        }
+    }
 
     internal fun notify(@StringRes message: Int) =
         Snackbar.make(viewContainer, message, Snackbar.LENGTH_SHORT).show()
