@@ -1,4 +1,4 @@
-package com.potados.geomms.core.platform
+package com.potados.geomms.core.platform.interfaces
 
 import androidx.appcompat.widget.Toolbar
 

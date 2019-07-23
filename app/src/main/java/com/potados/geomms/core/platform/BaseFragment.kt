@@ -10,13 +10,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.potados.geomms.R
 import com.potados.geomms.core.extension.appContext
 import com.potados.geomms.core.extension.viewContainer
+import com.potados.geomms.core.platform.interfaces.HasToolbar
 
 abstract class BaseFragment : Fragment(), HasToolbar {
 

@@ -8,6 +8,7 @@ package com.potados.geomms.core.extension
 
 import android.content.Context
 import android.view.View
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -37,6 +38,14 @@ inline fun FragmentManager.showOnly(predicate: (Fragment) -> Boolean): Boolean  
     return true
 }
 
+/**
+ * Add multiple fragments.
+ */
+fun FragmentTransaction.addAll(@IdRes containerViewId: Int, fragments: Collection<Fragment>) {
+    fragments.forEach {
+        add(containerViewId, it)
+    }
+}
 
 /**
  * Get ViewModel of the fragment with ViewModelFactory.
