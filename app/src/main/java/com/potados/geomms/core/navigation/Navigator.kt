@@ -45,7 +45,7 @@ class Navigator (private val permissionChecker: PermissionChecker){
              */
             showGiveMePermission(context)
         }
-        else if (Telephony.Sms.getDefaultSmsPackage(context) == context.packageName) {
+        else if (Telephony.Sms.getDefaultSmsPackage(context) != context.packageName) {
             /**
              * if this app is not a default messaging app.
              */

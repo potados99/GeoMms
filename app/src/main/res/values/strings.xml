@@ -10,4 +10,9 @@
     <string name="change_default_app">Change Default SMS App</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="need_permission">Permissions Required</string>
+    <string name="please_allow_permissions">This app requires these permissions: ...</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

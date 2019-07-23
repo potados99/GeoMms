@@ -9,6 +9,8 @@ package com.potados.geomms.core.extension
 import android.content.Context
 import android.view.View
 import androidx.annotation.IdRes
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -77,5 +79,9 @@ inline fun <reified T : ViewModel> FragmentActivity.getViewModel(body: T.() -> U
     return ViewModelProviders.of(this).get(T::class.java).apply(body)
 }
 
+val BaseFragment.baseActivity: BaseActivity get() = (activity as BaseActivity)
 val BaseFragment.viewContainer: View get() = (activity as BaseActivity).fragment_container
-val BaseFragment.appContext: Context get() = activity?.applicationContext!! /* if activity exists, also the context. */
+val BaseFragment.appContext: Context get() = activity?.applicationContext!!
+
+val BaseFragment.supportActionBar: ActionBar? get() = (activity as BaseActivity).supportActionBar
+fun BaseFragment.setSupportActionBar(toolbar: Toolbar) = (activity as BaseActivity).setSupportActionBar(toolbar)

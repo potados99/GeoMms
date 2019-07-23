@@ -8,6 +8,7 @@ package com.potados.geomms.core.platform
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.R
 import com.potados.geomms.core.extension.addAll
@@ -33,10 +34,7 @@ abstract class BaseActivity : AppCompatActivity(),
         setContentView(layoutId())
         addFragments(savedInstanceState)
 
-        /**
-         * Toolbar is not necessary.
-         */
-        toolbar()?.let(::setSupportActionBar)
+        toolbarId()?.let { setSupportActionBar(findViewById(it)) }
     }
 
     /**

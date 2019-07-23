@@ -12,7 +12,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/fragment_container">
+            android:id="@+id/fragment_container" app:layout_constraintBottom_toBottomOf="parent"
+    >
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

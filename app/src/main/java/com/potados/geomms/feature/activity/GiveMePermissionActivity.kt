@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.potados.geomms.R
 import com.potados.geomms.core.navigation.Navigator
 import com.potados.geomms.core.navigation.RouteActivity
 import com.potados.geomms.core.util.Notify
@@ -17,10 +19,34 @@ import com.potados.geomms.core.util.Popup
 import org.koin.android.ext.android.inject
 import kotlin.system.exitProcess
 
+/**
+ * Explain user why we need these permissions.
+ * After that, make a permission request to system.
+ */
 class GiveMePermissionActivity: AppCompatActivity() {
 
     private val navigator: Navigator by inject()
     private val permissionChecker: PermissionChecker by inject()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (permissionChecker.isAllGranted()) {
+            navigator.showMain(this)
+            this.finish()
+        }
+
+        Popup(this)
+            .withTitle(getString(R.string.need_permission))
+            .withMessage(getString(R.string.please_allow_permissions))
+            .withPositiveButton(getString(R.string.ok)) { _, _ ->
+                requirePermissions(permissionChecker.ungrantedPermissions())
+            }
+            .withNegativeButton(getString(R.string.cancel)) { _, _ ->
+                Notify(this).short("why... :(")
+            }
+            .show()
+    }
 
     private fun requirePermissions(permissions: Array<String>) {
 
@@ -39,12 +65,6 @@ class GiveMePermissionActivity: AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        /**
-         * 다음에 이어질 행동을 수행하려면
-         * 1. 요청 코드가 PERMISSION_REQUEST_CODE이어야 하며,
-         * 2. 요청한 권한들(permissions)이 존재해야 하며
-         * 3. 그 결과 (grantResults) 또한 존재해야 합니다.
-         */
         if (requestCode != PERMISSION_REQUEST_CODE) return
         if (permissions.isEmpty()) return
         if (grantResults.isEmpty()) return
@@ -74,20 +94,15 @@ class GiveMePermissionActivity: AppCompatActivity() {
         Popup(this)
             .withTitle("Alert")
             .withMessage("Failed to get permission.")
-            .withPositiveButton("OK", object: DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    exitProcess(1)
-                }
-            })
+            .withPositiveButton("OK") { _, _ ->
+                exitProcess(1)
+            }
             .show()
     }
-
 
     companion object {
         fun callingIntent(context: Context) = Intent(context, GiveMePermissionActivity::class.java)
 
         private const val PERMISSION_REQUEST_CODE = 99
-        private const val CHANGE_SMS_APP_REQUEST_CODE = 999
-
     }
 }

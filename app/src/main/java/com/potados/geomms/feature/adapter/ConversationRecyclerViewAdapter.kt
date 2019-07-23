@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.feature.data.entity.ShortMessage
 import com.potados.geomms.core.util.ShortDate
-import kotlinx.android.synthetic.main.activity_conversation_message_item.view.*
+import kotlinx.android.synthetic.main.conversation_message_item.view.*
 import java.lang.RuntimeException
 import kotlin.properties.Delegates
 
@@ -23,7 +23,7 @@ class ConversationRecyclerViewAdapter: RecyclerView.Adapter<ConversationRecycler
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.activity_conversation_message_item, parent, false)
+            .inflate(R.layout.conversation_message_item, parent, false)
 
         return when (viewType) {
             TYPE_MESSAGE_RECEIVED -> ReceivedViewHolder(view)

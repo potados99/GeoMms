@@ -11,10 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -44,37 +41,17 @@ class MapFragment : NavigationBasedFragment(),
      * NavigationBasedFragment 설정들.
      */
     override fun layoutId(): Int = R.layout.fragment_map
-    override fun toolbar(): Toolbar? = null
+    override fun toolbarId(): Int? = null
     override fun toolbarMenuId(): Int? = null
     override fun menuItemId(): Int = R.id.menu_item_navigation_map
-
-    /** 이 프래그먼트에서 쓸 뷰모델. onCreate에서 대입됨. */
-    private lateinit var viewModel: MapViewModel
-
-    /** 연결 목록을 표시할 리사이클러뷰의 어댑터. */
-    private val adapter = LocationSupportConnectionRecyclerViewAdapter(this)
-
-    /** 준비 끝난 Google Map을 담을 레퍼런스. */
-    private var map: GoogleMap? = null
-
-    /** SMS 수신 처리할 receiver. */
-    private val receiver = object: BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (context == null) return
-            if (intent == null) return
-
-            val address = intent.getStringExtra(Telephony.Sms.ADDRESS)
-            val body = intent.getStringExtra(Telephony.Sms.BODY)
-            // val date = intent.getLongExtra(Telephony.Sms.DATE, 0)
-
-            viewModel.onMessageReceived(
-                address, body
-            )
-        }
+    override fun smsReceivedBehavior() = { address: String, body: String, date: Long ->
+        viewModel.onMessageReceived(address, body)
     }
+    override fun intentFilter(): IntentFilter? = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
 
-    /** SMS 수신 인텐트만 걸러낼 필터. */
-    private val filter = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
+    private lateinit var viewModel: MapViewModel
+    private val adapter = LocationSupportConnectionRecyclerViewAdapter(this)
+    private var map: GoogleMap? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,18 +69,6 @@ class MapFragment : NavigationBasedFragment(),
 
         initializeView(view)
         getMapReady(view.map_view, savedInstanceState)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        context?.registerReceiver(receiver, filter)
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-        context?.unregisterReceiver(receiver)
     }
 
     override fun onMapReady(map: GoogleMap?) {
@@ -126,7 +91,6 @@ class MapFragment : NavigationBasedFragment(),
 
         Log.d("MapFragment: onMapReady", "map is ready!")
     }
-
 
     private fun renderConnections(connections: List<LocationSupportConnection>?) {
         adapter.collection = connections.orEmpty()
@@ -245,4 +209,11 @@ class MapFragment : NavigationBasedFragment(),
     override fun onFriendRequestUpdateClicked() {
         Notify(context!!).short("update clicked")
     }
+
+
+
+
+
+
+
 }

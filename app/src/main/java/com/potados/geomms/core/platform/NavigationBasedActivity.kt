@@ -2,10 +2,10 @@ package com.potados.geomms.core.platform
 
 import android.os.Bundle
 import android.view.MenuItem
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.potados.geomms.R
 import com.potados.geomms.core.extension.showOnly
 import com.potados.geomms.core.platform.interfaces.HasBottomNavigation
-import kotlinx.android.synthetic.main.navigation_activity_layout.*
 
 /**
  * Base class for Activity with Bottom Navigation View.
@@ -42,7 +42,7 @@ abstract class NavigationBasedActivity : BaseActivity(),
      * Inflate Navigation menu and set listener.
      */
     private fun setNavigationView() {
-        with(navigationMenu()) {
+        with(findViewById<BottomNavigationView>(navigationId())) {
             inflateMenu(navigationMenuId())
 
             if (fragments().isNotEmpty()) {
