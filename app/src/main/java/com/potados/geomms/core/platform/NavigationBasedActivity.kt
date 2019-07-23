@@ -4,18 +4,16 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.potados.geomms.R
 import com.potados.geomms.core.extension.showOnly
+import com.potados.geomms.core.platform.interfaces.HasBottomNavigation
 import kotlinx.android.synthetic.main.navigation_activity_layout.*
 
 /**
  * Base class for Activity with Bottom Navigation View.
  * Handle Fragment switch when the menu item is selected.
  */
-abstract class NavigationBasedActivity : BaseActivity() {
+abstract class NavigationBasedActivity : BaseActivity(), HasBottomNavigation {
 
-    /**
-     * Id of Navigation Menu to inflate.
-     */
-    abstract fun navigationMenuResId(): Int
+    override fun layoutId(): Int? = R.layout.navigation_activity_layout
 
     /**
      * Switch fragment by only showing the selected one.
@@ -33,7 +31,6 @@ abstract class NavigationBasedActivity : BaseActivity() {
 
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.navigation_activity_layout)
         setNavigationView()
     }
 
@@ -41,10 +38,15 @@ abstract class NavigationBasedActivity : BaseActivity() {
      * Inflate Navigation menu and set listener.
      */
     private fun setNavigationView() {
-        nav_view.inflateMenu(navigationMenuResId())
+        with(navigationMenu()) {
+            inflateMenu(navigationMenuId())
 
-        if (fragments().isNotEmpty()) {
-            nav_view.setOnNavigationItemSelectedListener(onNavigationItemChanged)
+            if (fragments().isNotEmpty()) {
+                /**
+                 * listener is useless without fragments.
+                 */
+                setOnNavigationItemSelectedListener(onNavigationItemChanged)
+            }
         }
     }
 }

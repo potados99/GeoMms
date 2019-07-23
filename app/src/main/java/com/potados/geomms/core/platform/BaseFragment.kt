@@ -16,11 +16,13 @@ import com.google.android.material.snackbar.Snackbar
 import com.potados.geomms.R
 import com.potados.geomms.core.extension.appContext
 import com.potados.geomms.core.extension.viewContainer
+import com.potados.geomms.core.platform.interfaces.HasLayout
 import com.potados.geomms.core.platform.interfaces.HasToolbar
 
-abstract class BaseFragment : Fragment(), HasToolbar {
-
-    abstract fun layoutId(): Int
+abstract class BaseFragment : Fragment(),
+    HasLayout,  /* layoutId() */
+    HasToolbar /* toolbar(), toolbarMenuId() */
+{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,27 +30,23 @@ abstract class BaseFragment : Fragment(), HasToolbar {
         toolbar()?.let { (activity as AppCompatActivity).setSupportActionBar(it) }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layoutId(), container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(layoutId(), container, false)
 
     /**
      * Create option menu for Toolbar if it exists.
      */
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) =
         toolbarMenuId()?.let {
             inflater?.inflate(it, menu)
-        }
-    }
+        } ?: super.onCreateOptionsMenu(menu, inflater)
 
     internal fun notify(@StringRes message: Int) =
         Snackbar.make(viewContainer, message, Snackbar.LENGTH_SHORT).show()
 
     internal fun notifyWithAction(@StringRes message: Int, @StringRes actionText: Int, action: () -> Any) {
         val snackBar = Snackbar.make(viewContainer, message, Snackbar.LENGTH_INDEFINITE)
-        snackBar.setAction(actionText) { _ -> action.invoke() }
+        snackBar.setAction(actionText) { action.invoke() }
         snackBar.setActionTextColor(ContextCompat.getColor(appContext, R.color.colorPrimary))
         snackBar.show()
     }

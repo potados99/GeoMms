@@ -1,12 +1,10 @@
 package com.potados.geomms.core.platform
 
+import com.potados.geomms.core.platform.interfaces.IsNavigationMember
+
 /**
  * Base class for Fragment which is a member of [NavigationBasedActivity].
  */
-abstract class NavigationBasedFragment : BaseFragment() {
+abstract class NavigationBasedFragment : BaseFragment(), IsNavigationMember {
 
-    /**
-     * Id of menu item where this Fragment is mapped.
-     */
-    abstract fun menuItemId(): Int
 }

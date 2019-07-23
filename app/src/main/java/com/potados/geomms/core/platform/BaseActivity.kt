@@ -13,15 +13,30 @@ import com.potados.geomms.R
 import com.potados.geomms.core.extension.addAll
 import com.potados.geomms.core.extension.inTransaction
 import com.potados.geomms.core.platform.interfaces.HasFragments
+import com.potados.geomms.core.platform.interfaces.HasLayout
 import com.potados.geomms.core.platform.interfaces.HasToolbar
 
-abstract class BaseActivity : AppCompatActivity(), HasToolbar, HasFragments {
+abstract class BaseActivity : AppCompatActivity(),
+    HasLayout,      /* layoutId() */
+    HasToolbar,     /* toolbar(), toolbarMenuId() */
+    HasFragments    /* fragments() */
+{
+
+    /**
+     * Default layout for [BaseActivity].
+     */
+    override fun layoutId(): Int = R.layout.base_activity_layout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.base_activity_layout)
+        setContentView(layoutId())
         addFragments(savedInstanceState)
+
+        /**
+         * Toolbar is not necessary.
+         */
+        toolbar()?.let(::setSupportActionBar)
     }
 
     /**
@@ -35,13 +50,6 @@ abstract class BaseActivity : AppCompatActivity(), HasToolbar, HasFragments {
     }
 
     /**
-     * Set toolbar if exist.
-     */
-    private fun setToolbar() {
-        toolbar()?.let { setSupportActionBar(it) }
-    }
-
-    /**
      * Add all fragments to [supportFragmentManager].
      */
     private fun addFragments(savedInstanceState: Bundle?) =
@@ -50,8 +58,5 @@ abstract class BaseActivity : AppCompatActivity(), HasToolbar, HasFragments {
             addAll(R.id.fragment_container, fragments())
             this
         }
-
-
-
 
 }
