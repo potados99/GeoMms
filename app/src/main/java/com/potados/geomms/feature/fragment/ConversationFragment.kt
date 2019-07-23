@@ -56,14 +56,16 @@ class ConversationFragment : BaseFragment() {
      * 옵션 버튼이 눌릴 때에 반응합니다.
      */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        Notify(baseActivity).short("yeah")
-
         when(item?.itemId) {
             android.R.id.home -> {
                 baseActivity.finish()
                 return true
             }
+            else -> {
+                // 낫띵..
+            }
         }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -87,19 +89,10 @@ class ConversationFragment : BaseFragment() {
      */
     private fun initializeView(view: View) {
         with(view) {
-            /**
-             * 리사이클러뷰 외관 설정하기.
-             */
-            conversation_recyclerview.layoutManager = LinearLayoutManager(context)
 
-            /**
-             * 어댑터 설정하기.
-             */
+            conversation_recyclerview.layoutManager = LinearLayoutManager(context)
             conversation_recyclerview.adapter = adapter
 
-            /**
-             * 액션바 설정하기.
-             */
             supportActionBar?.apply {
                 setDisplayShowTitleEnabled(false)
                 setDisplayHomeAsUpEnabled(true)
@@ -134,7 +127,6 @@ class ConversationFragment : BaseFragment() {
                     viewModel.recyclerViewReachedItsEnd = !conversation_recyclerview.canScrollVertically(1)
                 }
             })
-
         }
     }
 

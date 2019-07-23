@@ -64,6 +64,7 @@ class ExampleInstrumentedTest {
      * TODO: 출시할 때에는 없애기
      * 실험용 함수입니다.
      */
+    /*
     private fun dumpThread() {
 
         val c = contentResolver.query(Uri.parse("content://mms-sms/conversations?simple=true"), null, null, null, "_id DESC") ?: throw RuntimeException()
@@ -100,5 +101,5 @@ class ExampleInstrumentedTest {
 
         p.show()
     }
-
+    */
 }
