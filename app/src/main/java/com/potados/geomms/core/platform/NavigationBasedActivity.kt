@@ -11,9 +11,13 @@ import kotlinx.android.synthetic.main.navigation_activity_layout.*
  * Base class for Activity with Bottom Navigation View.
  * Handle Fragment switch when the menu item is selected.
  */
-abstract class NavigationBasedActivity : BaseActivity(), HasBottomNavigation {
-
-    override fun layoutId(): Int? = R.layout.navigation_activity_layout
+abstract class NavigationBasedActivity : BaseActivity(),
+    HasBottomNavigation /* navigationMenu(), navigationMenuId() */
+{
+    /**
+     * Default layout for [NavigationBasedActivity].
+     */
+    override fun layoutId(): Int = R.layout.navigation_activity_layout
 
     /**
      * Switch fragment by only showing the selected one.
