@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.location
+package com.potados.geomms.feature.location.data
 
 /**
  * LocationSupportServiceImpl 시스템의 정보 전달 단위입니다.

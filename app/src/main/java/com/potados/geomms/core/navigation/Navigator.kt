@@ -7,7 +7,7 @@ import com.potados.geomms.feature.message.ConversationActivity
 import com.potados.geomms.feature.common.GiveMePermissionActivity
 import com.potados.geomms.feature.common.MainActivity
 import com.potados.geomms.feature.message.MakeMeDefaultAppActivity
-import com.potados.geomms.feature.message.SmsThread
+import com.potados.geomms.feature.message.data.SmsThread
 
 /**
  * Global activity navigator.

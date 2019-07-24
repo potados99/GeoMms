@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.location
+package com.potados.geomms.feature.location.data
 
 data class LocationSupportPerson(
     val displayName: String,

@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.message
+package com.potados.geomms.feature.message.data
 
 import android.net.Uri
 import com.potados.geomms.core.util.QueryHelper

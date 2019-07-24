@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.message
+package com.potados.geomms.feature.message.data
 
 import android.provider.Telephony
 import com.google.gson.annotations.SerializedName

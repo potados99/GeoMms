@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.potados.geomms.core.platform.BaseActivity
 import com.potados.geomms.core.platform.BaseFragment
+import com.potados.geomms.feature.message.data.SmsThread
 
 /**
  * 대화방 액티비티입니다.

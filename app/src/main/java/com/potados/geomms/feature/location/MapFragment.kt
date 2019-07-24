@@ -17,6 +17,7 @@ import com.potados.geomms.core.extension.observe
 import com.potados.geomms.core.platform.NavigationBasedFragment
 import com.potados.geomms.core.util.Notify
 import com.potados.geomms.feature.common.SmsReceiver
+import com.potados.geomms.feature.location.data.LocationSupportConnection
 import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlinx.android.synthetic.main.fragment_map.view.map_view
 import kotlinx.android.synthetic.main.fragment_map_friends_list.*

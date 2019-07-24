@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.message
+package com.potados.geomms.feature.message.data
 
 class SmsEntity {
     var body: String = ""

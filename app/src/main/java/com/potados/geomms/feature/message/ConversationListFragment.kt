@@ -14,6 +14,7 @@ import com.potados.geomms.core.navigation.Navigator
 import com.potados.geomms.core.platform.NavigationBasedFragment
 import com.potados.geomms.core.util.Notify
 import com.potados.geomms.feature.common.SmsReceiver
+import com.potados.geomms.feature.message.data.SmsThread
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversation_list_recyclerview
 import org.koin.android.ext.android.inject
 

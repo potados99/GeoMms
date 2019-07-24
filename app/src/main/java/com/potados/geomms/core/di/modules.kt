@@ -10,7 +10,11 @@ import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.common.ContactRepositoryImpl
 import com.potados.geomms.feature.location.LocationSupportService
 import com.potados.geomms.feature.location.LocationSupportServiceImpl
-import com.potados.geomms.feature.message.*
+import com.potados.geomms.feature.message.data.*
+import com.potados.geomms.feature.message.usecase.GetConversations
+import com.potados.geomms.feature.message.usecase.GetMessages
+import com.potados.geomms.feature.message.usecase.ReadConversation
+import com.potados.geomms.feature.message.usecase.SendSms
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

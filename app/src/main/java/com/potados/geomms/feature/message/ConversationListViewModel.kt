@@ -3,6 +3,8 @@ package com.potados.geomms.feature.message
 import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.core.interactor.UseCase
 import com.potados.geomms.core.platform.BaseViewModel
+import com.potados.geomms.feature.message.data.SmsThread
+import com.potados.geomms.feature.message.usecase.GetConversations
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.location
+package com.potados.geomms.feature.location.data
 
 import com.potados.geomms.core.util.DateTime
 import com.potados.geomms.core.util.Metric

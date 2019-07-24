@@ -13,6 +13,8 @@ import com.potados.geomms.core.extension.*
 import com.potados.geomms.core.platform.BaseFragment
 import com.potados.geomms.core.util.Notify
 import com.potados.geomms.feature.common.SmsReceiver
+import com.potados.geomms.feature.message.data.ShortMessage
+import com.potados.geomms.feature.message.data.SmsThread
 import kotlinx.android.synthetic.main.fragment_conversation.*
 
 class ConversationFragment : BaseFragment() {

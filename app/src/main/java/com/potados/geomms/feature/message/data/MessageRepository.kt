@@ -1,11 +1,8 @@
-package com.potados.geomms.feature.message
+package com.potados.geomms.feature.message.data
 
 import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.functional.Either
 import com.potados.geomms.core.interactor.UseCase
-import com.potados.geomms.feature.message.ShortMessage
-import com.potados.geomms.feature.message.SmsEntity
-import com.potados.geomms.feature.message.SmsThread
 
 /**
  * 메시지와 관련된 데이터를 공급해주는 저장소입니다.

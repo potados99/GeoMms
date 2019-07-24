@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.message
+package com.potados.geomms.feature.message.data
 
 import android.app.PendingIntent
 import android.provider.Telephony
@@ -14,6 +14,7 @@ import android.telephony.SmsManager
 import android.util.Log
 import com.potados.geomms.feature.common.SmsDeliveredReceiver.Companion.SMS_DELIVERED
 import com.potados.geomms.feature.common.SmsSentReceiver.Companion.SMS_SENT
+import com.potados.geomms.feature.message.MessageFailure
 
 class MessageRepositoryImpl(
     private val context: Context,

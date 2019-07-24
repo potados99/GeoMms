@@ -11,9 +11,12 @@ import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.core.util.DateTime
 import com.potados.geomms.core.util.Metric
 import com.potados.geomms.core.util.Notify
-import com.potados.geomms.feature.message.SmsEntity
+import com.potados.geomms.feature.message.data.SmsEntity
 import com.potados.geomms.feature.location.LocationSupportProtocol.Companion.findType
-import com.potados.geomms.feature.message.SendSms
+import com.potados.geomms.feature.location.data.LocationSupportConnection
+import com.potados.geomms.feature.location.data.LocationSupportPacket
+import com.potados.geomms.feature.location.data.LocationSupportPerson
+import com.potados.geomms.feature.message.usecase.SendSms
 
 /**
  * LocationSupport 시스템입니다.

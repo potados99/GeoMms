@@ -12,6 +12,7 @@ import com.mikhaellopez.circularimageview.CircularImageView
 import com.potados.geomms.R
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.core.util.ShortDate
+import com.potados.geomms.feature.message.data.SmsThread
 
 import kotlinx.android.synthetic.main.conversation_list_item.view.*
 import org.koin.core.KoinComponent

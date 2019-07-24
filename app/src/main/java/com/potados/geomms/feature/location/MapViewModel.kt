@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.potados.geomms.feature.common.ContactRepository
+import com.potados.geomms.feature.location.data.LocationSupportConnection
+import com.potados.geomms.feature.location.data.LocationSupportPerson
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

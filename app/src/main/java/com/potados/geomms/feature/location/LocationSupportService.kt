@@ -1,6 +1,9 @@
 package com.potados.geomms.feature.location
 
 import androidx.lifecycle.LiveData
+import com.potados.geomms.feature.location.data.LocationSupportConnection
+import com.potados.geomms.feature.location.data.LocationSupportPacket
+import com.potados.geomms.feature.location.data.LocationSupportPerson
 
 interface LocationSupportService {
 
