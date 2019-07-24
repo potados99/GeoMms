@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+    <item
+            android:id="@+id/search"
+            android:title="search"
+            android:icon="@android:drawable/ic_menu_search"
+            app:showAsAction="ifRoom"/>
+
+    <item
+            android:id="@+id/add"
+            android:title="new"
+            android:icon="@android:drawable/ic_menu_send"
+            app:showAsAction="ifRoom"/>
+
+    <item
+            android:id="@+id/edit"
+            android:title="edit"
+            app:showAsAction="ifRoom"/>
+</menu>

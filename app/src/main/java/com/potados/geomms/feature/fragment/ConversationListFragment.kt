@@ -1,8 +1,5 @@
 package com.potados.geomms.feature.fragment
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.*
@@ -40,7 +37,7 @@ class ConversationListFragment : NavigationBasedFragment(),
      */
     override fun layoutId(): Int = R.layout.fragment_conversation_list
     override fun toolbarId(): Int? = R.id.conversation_list_toolbar
-    override fun toolbarMenuId(): Int? = R.menu.toolbar_menu
+    override fun toolbarMenuId(): Int? = R.menu.message_toolbar_menu
     override fun menuItemId(): Int = R.id.menu_item_navigation_message
     override fun smsReceivedBehavior() = { _: String, _: String, _: Long ->
         viewModel.loadConversations()
