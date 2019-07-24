@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.potados.geomms.core.util.Notify
 
 class SmsSentReceiver : BroadcastReceiver() {
@@ -13,12 +14,14 @@ class SmsSentReceiver : BroadcastReceiver() {
 
         when (resultCode) {
             Activity.RESULT_OK -> {
+                Log.d("SmsSentReceiver:onReceive", "SMS send success.")
+
                 /**
                  * OKAY
                  */
             }
             else -> {
-                Notify(context).short("SMS sent failed.")
+                Log.d("SmsSentReceiver:onReceive", "SMS send failed.")
             }
         }
     }

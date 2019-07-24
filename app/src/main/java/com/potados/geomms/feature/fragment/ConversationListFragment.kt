@@ -1,7 +1,9 @@
 package com.potados.geomms.feature.fragment
 
+import android.content.ContentValues
 import android.content.IntentFilter
 import android.os.Bundle
+import android.provider.Telephony
 import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.potados.geomms.R
@@ -58,18 +60,19 @@ class ConversationListFragment : NavigationBasedFragment(),
         super.onViewCreated(view, savedInstanceState)
 
         initializeView(view)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         viewModel.loadConversations()
     }
 
     override fun onConversationClicked(conversation: SmsThread) {
-        viewModel.setAsRead(conversation)
-        viewModel.loadConversations()
         navigator.showConversationActivity(baseActivity, conversation)
     }
 
     private fun renderConversations(threadList: List<SmsThread>?) {
-
-
         adapter.collection = threadList.orEmpty()
     }
 

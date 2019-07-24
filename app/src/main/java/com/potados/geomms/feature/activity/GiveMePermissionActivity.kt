@@ -88,6 +88,7 @@ class GiveMePermissionActivity: AppCompatActivity() {
 
     private fun onPermissionSuccess() {
         navigator.showMain(this)
+        this.finish()
     }
 
     private fun onPermissionFail() {

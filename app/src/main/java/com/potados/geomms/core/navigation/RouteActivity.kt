@@ -15,5 +15,6 @@ class RouteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         navigator.showMain(this)
+        this.finish()
     }
 }

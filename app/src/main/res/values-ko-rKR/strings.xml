@@ -15,4 +15,5 @@
     <string name="please_allow_permissions">이 애플리케이션에서는 다음 권한이 필요합니다.</string>
     <string name="failure_query">메시지를 불러오는 데에 실패했습니다.</string>
     <string name="retry">다시 시도</string>
+    <string name="cannot_send_message">메시지를 보내는 데에 실패했습니다.</string>
 </resources>

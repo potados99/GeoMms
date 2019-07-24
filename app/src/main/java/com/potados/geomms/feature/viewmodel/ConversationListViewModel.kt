@@ -21,7 +21,6 @@ class ConversationListViewModel : BaseViewModel(), KoinComponent {
      * UseCase
      ***********************************************************/
     private val getConversations: GetConversations by inject()
-    private val readConversation: ReadConversation by inject()
 
 
     val conversations = MutableLiveData<List<SmsThread>>()
@@ -33,8 +32,4 @@ class ConversationListViewModel : BaseViewModel(), KoinComponent {
     private fun handleConversationList(conversations: List<SmsThread>) {
         this.conversations.value = conversations
     }
-
-    fun setAsRead(conversation: SmsThread) = readConversation(conversation) {
-            it.either(::handleFailure) { /* 성공하면 할게 없다. */ }
-        }
 }
