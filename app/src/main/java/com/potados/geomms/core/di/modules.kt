@@ -6,16 +6,11 @@ import android.location.LocationManager
 import android.telephony.SmsManager
 import com.potados.geomms.core.navigation.Navigator
 import com.potados.geomms.core.util.PermissionChecker
-import com.potados.geomms.feature.data.implementation.ContactRepositoryImpl
-import com.potados.geomms.feature.data.implementation.MessageRepositoryImpl
-import com.potados.geomms.feature.data.implementation.QueryInfoRepositoryImpl
-import com.potados.geomms.feature.data.repository.*
-import com.potados.geomms.feature.protocol.LocationSupportService
-import com.potados.geomms.feature.protocol.LocationSupportServiceImpl
-import com.potados.geomms.feature.usecase.GetConversations
-import com.potados.geomms.feature.usecase.GetMessages
-import com.potados.geomms.feature.usecase.ReadConversation
-import com.potados.geomms.feature.usecase.SendSms
+import com.potados.geomms.feature.common.ContactRepository
+import com.potados.geomms.feature.common.ContactRepositoryImpl
+import com.potados.geomms.feature.location.LocationSupportService
+import com.potados.geomms.feature.location.LocationSupportServiceImpl
+import com.potados.geomms.feature.message.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -44,7 +39,12 @@ val myModules = module {
     single { QueryInfoRepositoryImpl() as QueryInfoRepository }
 
     /** 메시지 저장소 */
-    single { MessageRepositoryImpl(get(), get(), SmsManager.getDefault()) as MessageRepository }
+    single { MessageRepositoryImpl(
+        get(),
+        get(),
+        SmsManager.getDefault()
+    ) as MessageRepository
+    }
 
     /** 대화목록 가져오는 use case */
     single { GetConversations(get()) }
@@ -64,6 +64,6 @@ val myModules = module {
             androidContext(),
             get(),
             androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            ) as LocationSupportService
+        ) as LocationSupportService
     }
 }

@@ -3,11 +3,11 @@ package com.potados.geomms.core.navigation
 import android.content.Context
 import android.provider.Telephony
 import com.potados.geomms.core.util.PermissionChecker
-import com.potados.geomms.feature.activity.ConversationActivity
-import com.potados.geomms.feature.activity.GiveMePermissionActivity
-import com.potados.geomms.feature.activity.MainActivity
-import com.potados.geomms.feature.activity.MakeMeDefaultAppActivity
-import com.potados.geomms.feature.data.entity.SmsThread
+import com.potados.geomms.feature.message.ConversationActivity
+import com.potados.geomms.feature.common.GiveMePermissionActivity
+import com.potados.geomms.feature.common.MainActivity
+import com.potados.geomms.feature.message.MakeMeDefaultAppActivity
+import com.potados.geomms.feature.message.SmsThread
 
 /**
  * Global activity navigator.

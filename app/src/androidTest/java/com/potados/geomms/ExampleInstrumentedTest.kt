@@ -1,12 +1,9 @@
 package com.potados.geomms
 
-import android.net.Uri
 import android.util.Log
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import com.potados.geomms.core.util.Popup
-import com.potados.geomms.core.util.QueryHelper
-import com.potados.geomms.feature.protocol.LocationSupportProtocol
+import com.potados.geomms.feature.location.LocationSupportProtocol
 
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".feature.activity.ConversationActivity">
+        tools:context=".feature.message.ConversationActivity">
 
     <!--앱 바 레이아웃-->
     <com.google.android.material.appbar.AppBarLayout
