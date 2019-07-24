@@ -53,6 +53,12 @@ class ConversationFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initializeView(view)
+        viewModel.setAsRead()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         viewModel.loadMessages()
     }
 
@@ -72,8 +78,10 @@ class ConversationFragment : BaseFragment() {
 
 
     private fun renderMessages(messages: List<ShortMessage>?) {
+        val wasEmpty = adapter.collection.isEmpty()
+
         adapter.collection = messages.orEmpty()
-        scrollToBottom()
+        scrollToBottom(!wasEmpty)
     }
 
     private fun handleFailure(failure: Failure?) {

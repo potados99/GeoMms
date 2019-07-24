@@ -2,13 +2,14 @@ package com.potados.geomms.feature.data.implementation
 
 import android.content.ContentResolver
 import android.content.ContentUris
+import android.content.Context
 import android.net.Uri
 import android.provider.ContactsContract
 import com.potados.geomms.feature.data.repository.ContactRepository
 import java.lang.IllegalArgumentException
 
 class ContactRepositoryImpl(
-    private val resolver: ContentResolver
+    private val context: Context
 ) : ContactRepository {
 
     override fun getContactNameByRecipientId(recipientId: Long): String? {
@@ -23,7 +24,7 @@ class ContactRepositoryImpl(
 
         var phoneNumber: String? = null
 
-        resolver.query(uri, null, null, null, null)?.apply {
+        context.contentResolver.query(uri, null, null, null, null)?.apply {
 
             if (moveToFirst()) {
                 phoneNumber = getString(0)
@@ -43,7 +44,7 @@ class ContactRepositoryImpl(
         )
         var contactName: String? = null
 
-        resolver.query(uri, arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME), null, null, null)?.apply {
+        context.contentResolver.query(uri, arrayOf(ContactsContract.PhoneLookup.DISPLAY_NAME), null, null, null)?.apply {
             if (moveToFirst()) {
                 contactName = getString(getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME))
             }

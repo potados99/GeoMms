@@ -31,9 +31,6 @@ val permissions = arrayOf(
 
 val myModules = module {
 
-    /** 안드로이드 컨텐츠 제공자 */
-    single { androidContext().contentResolver }
-
     /** 권한 checker */
     single { PermissionChecker(androidContext(), permissions) }
 
@@ -47,7 +44,7 @@ val myModules = module {
     single { QueryInfoRepositoryImpl() as QueryInfoRepository }
 
     /** 메시지 저장소 */
-    single { MessageRepositoryImpl(get(), get()) as MessageRepository }
+    single { MessageRepositoryImpl(get(), get(), SmsManager.getDefault()) as MessageRepository }
 
     /** 대화목록 가져오는 use case */
     single { GetConversations(get()) }
@@ -56,7 +53,7 @@ val myModules = module {
     single { GetMessages(get()) }
 
     /** SMS 보내는 use case */
-    single { SendSms(androidContext(), SmsManager.getDefault()) }
+    single { SendSms(get()) }
 
     /** 대화 읽는 use case */
     single { ReadConversation(get()) }

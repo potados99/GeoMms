@@ -20,7 +20,6 @@ import com.potados.geomms.core.util.Notify
 import com.potados.geomms.feature.data.entity.SmsEntity
 import com.potados.geomms.feature.protocol.LocationSupportProtocol.Companion.findType
 import com.potados.geomms.feature.usecase.SendSms
-import com.potados.geomms.feature.usecase.SendSms.Companion.SMS_SENT
 
 /**
  * LocationSupport 시스템입니다.
@@ -47,12 +46,6 @@ class LocationSupportServiceImpl(
         catch (e: SecurityException) {
             Notify.short(context, "Cannot get location.")
         }
-
-        context.registerReceiver(object: BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-
-            }
-        }, IntentFilter(SMS_SENT))
     }
 
     override fun onLocationChanged(location: Location?) {

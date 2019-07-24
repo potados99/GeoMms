@@ -4,6 +4,7 @@ import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.functional.Either
 import com.potados.geomms.core.interactor.UseCase
 import com.potados.geomms.feature.data.entity.ShortMessage
+import com.potados.geomms.feature.data.entity.SmsEntity
 import com.potados.geomms.feature.data.entity.SmsThread
 
 /**
@@ -33,4 +34,9 @@ interface MessageRepository {
      * 대화방의 모든 메시지를 읽음 처리합니다.
      */
     fun readConversation(thread: SmsThread): Either<Failure, UseCase.None>
+
+    /**
+     * SMS를 전송합니다.
+     */
+    fun sendSms(sms: SmsEntity, save: Boolean = true): Either<Failure, UseCase.None>
 }

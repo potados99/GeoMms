@@ -25,4 +25,8 @@ class SmsSentReceiver : BroadcastReceiver() {
             }
         }
     }
+
+    companion object {
+        const val SMS_SENT = "com.potados.SMS_SENT"
+    }
 }
