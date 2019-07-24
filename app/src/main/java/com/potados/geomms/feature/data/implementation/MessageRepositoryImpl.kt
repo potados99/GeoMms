@@ -69,8 +69,11 @@ class MessageRepositoryImpl(
         }
 
 
-    override fun readConversation(thread: SmsThread): Either<Failure, UseCase.None> =
-        try {
+    override fun readConversation(thread: SmsThread): Either<Failure, UseCase.None> {
+        if (thread.isAllRead()) return Either.Right(UseCase.None())
+        if (thread.messageCount == 0L) return Either.Right(UseCase.None())
+
+        return try {
             val numberOfUpdatedRows = resolver.update(
                 queryRepo.getMessagesUriOfThread(thread.id),
                 ContentValues().apply { put(Telephony.Sms.READ, true) },
@@ -78,7 +81,7 @@ class MessageRepositoryImpl(
                 queryRepo.getUnreadMessagesQuerySelection().selectionArgs()
             )
 
-            val success = (thread.isAllRead() || numberOfUpdatedRows != 0)
+            val success = (numberOfUpdatedRows != 0)
 
             if (success) Either.Right(UseCase.None())
             else Either.Left(MessageFailure.UpdateFailure())
@@ -86,4 +89,6 @@ class MessageRepositoryImpl(
         } catch (e: Exception) {
             Either.Left(MessageFailure.UpdateFailure())
         }
+    }
+
 }

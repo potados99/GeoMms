@@ -2,6 +2,7 @@ package com.potados.geomms.feature.activity
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import com.potados.geomms.feature.fragment.MapFragment
 import com.potados.geomms.feature.fragment.ConversationListFragment
 import com.potados.geomms.R
@@ -19,12 +20,15 @@ class MainActivity : NavigationBasedActivity() {
      */
     override fun toolbarId(): Int? = null
     override fun toolbarMenuId(): Int? = null
-    override fun fragments(): Collection<BaseFragment> = mFragments
+    override fun fragments(): Array<out BaseFragment> = mFragments
     override fun navigationId(): Int = R.id.nav_view
     override fun navigationMenuId(): Int = R.menu.bottom_nav_menu
+    override fun defaultNavigationItemId(): Int? = R.id.menu_item_navigation_message
 
     /** 사용할 프래그먼트들 */
-    private val mFragments = listOf(ConversationListFragment(), MapFragment())
+    private val mFragments by lazy{
+        arrayOf(ConversationListFragment(), MapFragment())
+    }
 
     companion object {
         fun callingIntent(context: Context) = Intent(context, MainActivity::class.java)

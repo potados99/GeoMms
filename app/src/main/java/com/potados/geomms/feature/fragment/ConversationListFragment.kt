@@ -71,7 +71,9 @@ class ConversationListFragment : NavigationBasedFragment(),
     }
 
     private fun renderConversations(threadList: List<SmsThread>?) {
-            adapter.collection = threadList.orEmpty()
+
+
+        adapter.collection = threadList.orEmpty()
     }
 
     private fun initializeView(view: View) {

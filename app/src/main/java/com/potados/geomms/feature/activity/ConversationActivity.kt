@@ -25,16 +25,15 @@ class ConversationActivity : BaseActivity() {
      */
     override fun toolbarId(): Int? = null
     override fun toolbarMenuId(): Int?  = null
-    override fun fragments(): Collection<BaseFragment> = listOf(fragment)
+    override fun fragments(): Array<out BaseFragment> = arrayOf(fragment)
 
-
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         if (isInstantiated()) {
             this.finish()
         }
         instantiated = true
 
-        super.onCreate(savedInstanceState, persistentState)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onDestroy() {

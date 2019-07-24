@@ -50,6 +50,11 @@ abstract class NavigationBasedActivity : BaseActivity(),
                  * listener is useless without fragments.
                  */
                 setOnNavigationItemSelectedListener(onNavigationItemChanged)
+
+                /**
+                 * Set default selected menu.
+                 */
+                defaultNavigationItemId()?.let(::setSelectedItemId)
             }
         }
     }

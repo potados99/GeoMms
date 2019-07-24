@@ -29,6 +29,12 @@ inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Fragmen
     beginTransaction().func().commit()
 
 /**
+ * Do something in the middle of beginTransaction() and commitNow().
+ */
+inline fun FragmentManager.inImmediateTransaction(func: FragmentTransaction.() -> FragmentTransaction) =
+    beginTransaction().func().commitNow()
+
+/**
  * Show only one fragment.
  */
 inline fun FragmentManager.showOnly(predicate: (Fragment) -> Boolean): Boolean  {
@@ -41,9 +47,18 @@ inline fun FragmentManager.showOnly(predicate: (Fragment) -> Boolean): Boolean  
 }
 
 /**
- * Add multiple fragments.
+ * Add multiple fragments. (Collection)
  */
 fun FragmentTransaction.addAll(@IdRes containerViewId: Int, fragments: Collection<Fragment>) {
+    fragments.forEach {
+        add(containerViewId, it)
+    }
+}
+
+/**
+ * Add multiple fragments. (Array)
+ */
+fun FragmentTransaction.addAll(@IdRes containerViewId: Int, fragments: Array<out Fragment>) {
     fragments.forEach {
         add(containerViewId, it)
     }

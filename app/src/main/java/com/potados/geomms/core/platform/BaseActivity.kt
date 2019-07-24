@@ -12,6 +12,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.R
 import com.potados.geomms.core.extension.addAll
+import com.potados.geomms.core.extension.inImmediateTransaction
 import com.potados.geomms.core.extension.inTransaction
 import com.potados.geomms.core.platform.interfaces.HasFragments
 import com.potados.geomms.core.platform.interfaces.HasLayout
@@ -52,7 +53,7 @@ abstract class BaseActivity : AppCompatActivity(),
      */
     private fun addFragments(savedInstanceState: Bundle?) =
         savedInstanceState ?:
-        supportFragmentManager.inTransaction {
+        supportFragmentManager.inImmediateTransaction {
             addAll(R.id.fragment_container, fragments())
             this
         }
