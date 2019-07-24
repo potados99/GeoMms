@@ -1,14 +1,11 @@
 package com.potados.geomms.feature.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.potados.geomms.core.platform.BaseViewModel
 import com.potados.geomms.feature.data.repository.ContactRepository
-import com.potados.geomms.feature.data.repository.MessageRepository
 import com.potados.geomms.feature.data.entity.ShortMessage
 import com.potados.geomms.feature.data.entity.SmsThread
-import com.potados.geomms.feature.usecases.GetMessages
+import com.potados.geomms.feature.usecase.GetMessages
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

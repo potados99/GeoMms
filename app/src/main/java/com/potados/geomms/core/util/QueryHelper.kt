@@ -74,11 +74,11 @@ class QueryHelper {
         private val selection: StringBuilder = StringBuilder()
         private val selectionArgs: MutableList<String> = mutableListOf()
 
-        fun getSelection(): String? {
+        fun selection(): String? {
             return if (selection.isBlank()) null else selection.toString()
         }
 
-        fun getSelectionArgs(): Array<String>? {
+        fun selectionArgs(): Array<String>? {
             return if (selectionArgs.isEmpty()) null else selectionArgs.toTypedArray()
         }
 

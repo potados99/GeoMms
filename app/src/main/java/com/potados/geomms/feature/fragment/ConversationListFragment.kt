@@ -15,6 +15,7 @@ import com.potados.geomms.core.extension.getViewModel
 import com.potados.geomms.core.extension.observe
 import com.potados.geomms.core.navigation.Navigator
 import com.potados.geomms.core.platform.NavigationBasedFragment
+import com.potados.geomms.core.util.Notify
 import com.potados.geomms.feature.adapter.ConversationListRecyclerViewAdapter
 import com.potados.geomms.feature.data.entity.SmsThread
 import com.potados.geomms.feature.failure.MessageFailure
@@ -64,6 +65,8 @@ class ConversationListFragment : NavigationBasedFragment(),
     }
 
     override fun onConversationClicked(conversation: SmsThread) {
+        viewModel.setAsRead(conversation)
+        viewModel.loadConversations()
         navigator.showConversationActivity(baseActivity, conversation)
     }
 
@@ -82,6 +85,9 @@ class ConversationListFragment : NavigationBasedFragment(),
                 notifyWithAction(R.string.failure_query, R.string.retry) {
                     viewModel.loadConversations()
                 }
+            }
+            else -> {
+                Notify(activity).short("what??")
             }
         }
     }

@@ -8,7 +8,6 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
-import android.telephony.SmsManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,8 +19,8 @@ import com.potados.geomms.core.util.Metric
 import com.potados.geomms.core.util.Notify
 import com.potados.geomms.feature.data.entity.SmsEntity
 import com.potados.geomms.feature.protocol.LocationSupportProtocol.Companion.findType
-import com.potados.geomms.feature.usecases.SendSms
-import com.potados.geomms.feature.usecases.SendSms.Companion.SMS_SENT
+import com.potados.geomms.feature.usecase.SendSms
+import com.potados.geomms.feature.usecase.SendSms.Companion.SMS_SENT
 
 /**
  * LocationSupport 시스템입니다.

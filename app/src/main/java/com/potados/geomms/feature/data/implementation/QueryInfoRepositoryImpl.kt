@@ -12,7 +12,7 @@ class QueryInfoRepositoryImpl : QueryInfoRepository {
         /**
          * "?simple=true"가 따라붙어야 Telephony.ThreadsColumns에 존재하는 column들과 매치됩니다.
          */
-        return Telephony.Threads.CONTENT_URI
+        return Telephony.MmsSms.CONTENT_CONVERSATIONS_URI
             .buildUpon()
             .appendQueryParameter("simple", "true")
             .build()
@@ -68,14 +68,20 @@ class QueryInfoRepositoryImpl : QueryInfoRepository {
             .of(Telephony.ThreadsColumns._ID, "=", id)
     }
 
+    override fun getConversationsQueryOrder(): String {
+        return "date DESC"
+    }
+
     override fun getMessagesQuerySelection(): QueryHelper.Selection {
         return QueryHelper()
             .Selection()
             .of(Telephony.Sms.BODY, "<> ''")
     }
 
-    override fun getConversationsQueryOrder(): String {
-        return "date DESC"
+    override fun getUnreadMessagesQuerySelection(): QueryHelper.Selection {
+        return QueryHelper()
+            .Selection()
+            .of(Telephony.Sms.READ, "=", 0)
     }
 
     override fun getMessageQueryOrder(): String {

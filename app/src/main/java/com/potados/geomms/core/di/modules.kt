@@ -12,9 +12,10 @@ import com.potados.geomms.feature.data.implementation.QueryInfoRepositoryImpl
 import com.potados.geomms.feature.data.repository.*
 import com.potados.geomms.feature.protocol.LocationSupportService
 import com.potados.geomms.feature.protocol.LocationSupportServiceImpl
-import com.potados.geomms.feature.usecases.GetConversations
-import com.potados.geomms.feature.usecases.GetMessages
-import com.potados.geomms.feature.usecases.SendSms
+import com.potados.geomms.feature.usecase.GetConversations
+import com.potados.geomms.feature.usecase.GetMessages
+import com.potados.geomms.feature.usecase.ReadConversation
+import com.potados.geomms.feature.usecase.SendSms
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -56,6 +57,9 @@ val myModules = module {
 
     /** SMS 보내는 use case */
     single { SendSms(androidContext(), SmsManager.getDefault()) }
+
+    /** 대화 읽는 use case */
+    single { ReadConversation(get()) }
 
     /** LocationSupportService 객체 */
     single {

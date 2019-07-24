@@ -1,14 +1,13 @@
 package com.potados.geomms.feature.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.potados.geomms.core.exception.Failure
+import com.potados.geomms.core.functional.Either
 import com.potados.geomms.core.interactor.UseCase
 import com.potados.geomms.core.platform.BaseViewModel
-import com.potados.geomms.feature.data.repository.MessageRepository
 import com.potados.geomms.feature.data.entity.SmsThread
-import com.potados.geomms.feature.usecases.GetConversations
-import com.potados.geomms.feature.usecases.GetMessages
+import com.potados.geomms.feature.usecase.GetConversations
+import com.potados.geomms.feature.usecase.ReadConversation
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -22,15 +21,20 @@ class ConversationListViewModel : BaseViewModel(), KoinComponent {
      * UseCase
      ***********************************************************/
     private val getConversations: GetConversations by inject()
+    private val readConversation: ReadConversation by inject()
 
 
     val conversations = MutableLiveData<List<SmsThread>>()
 
-    fun loadConversations() =  getConversations(UseCase.None()) {
+    fun loadConversations() = getConversations(UseCase.None()) {
         it.either(::handleFailure, ::handleConversationList)
     }
 
     private fun handleConversationList(conversations: List<SmsThread>) {
         this.conversations.value = conversations
     }
+
+    fun setAsRead(conversation: SmsThread) = readConversation(conversation) {
+            it.either(::handleFailure) { /* 성공하면 할게 없다. */ }
+        }
 }

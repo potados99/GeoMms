@@ -1,11 +1,8 @@
-package com.potados.geomms.feature.usecases
+package com.potados.geomms.feature.usecase
 
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.provider.Telephony
 import android.telephony.SmsManager
 import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.functional.Either
