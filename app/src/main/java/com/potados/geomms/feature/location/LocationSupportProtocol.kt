@@ -104,10 +104,10 @@ class LocationSupportProtocol {
                 {str -> str.toInt()}
             ),
 
-            /** 연결 id. */
+            /** 연결 connectionId. */
             ID(
                 1,
-                "id",
+                "connectionId",
                 {str -> str.toInt()}
             ),
 
@@ -119,7 +119,7 @@ class LocationSupportProtocol {
             /** 연결 요청할 때에 사용할 연결시간. */
             SPAN(
                 2,
-                "span",
+                "lifeSpan",
                 {str -> str.toLong()}
             ),
 

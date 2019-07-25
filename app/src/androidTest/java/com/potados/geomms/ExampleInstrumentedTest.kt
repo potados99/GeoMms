@@ -47,9 +47,9 @@ class ExampleInstrumentedTest {
 
         parsed.let {
             Log.d("locationSupportTest", "type: ${it.type}")
-            Log.d("locationSupportTest", "id: ${it.id}")
+            Log.d("locationSupportTest", "connectionId: ${it.connectionId}")
 
-            Log.d("locationSupportTest", "span: ${it.span}")
+            Log.d("locationSupportTest", "lifeSpan: ${it.lifeSpan}")
             Log.d("locationSupportTest", "lat: ${it.latitude}")
             Log.d("locationSupportTest", "long: ${it.longitude}")
         }

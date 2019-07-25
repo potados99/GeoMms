@@ -31,7 +31,7 @@ interface QueryInfoRepository {
      * 대화방 목록을 가져올 때에 where 조건으로 사용할 Selection 객체입니다.
      * util.QueryHelper.Selection 참고하세요!
      *
-     * 특정 대화방만 가져오기 위해서 id 조건을 넘겨줄 수 있습니다.
+     * 특정 대화방만 가져오기 위해서 connectionId 조건을 넘겨줄 수 있습니다.
      */
     fun getConversationsQuerySelection(): QueryHelper.Selection
     fun getConversationsQuerySelection(id: Long): QueryHelper.Selection

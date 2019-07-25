@@ -51,7 +51,7 @@ class MapFragment : NavigationBasedFragment(),
         super.onCreate(savedInstanceState)
 
         viewModel = getViewModel {
-            observe(getConnections(), ::renderConnections)
+            observe(connections, ::renderConnections)
         }
 
         Log.i("MapFragment: onCreate", "created.")
@@ -158,7 +158,7 @@ class MapFragment : NavigationBasedFragment(),
 
         view.friends_list_add_button.setOnClickListener {
             // TODO: 연결 추가 과정 구현
-            viewModel.requestNewConnection("1234")
+            viewModel.requestNewConnection("1234", 1800000)
         }
     }
 

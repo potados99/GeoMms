@@ -6,8 +6,11 @@ package com.potados.geomms.feature.location.data
  */
 data class LocationSupportPacket(
     val type: Int,
-    val id: Int,
-    val span: Long,
+    val connectionId: Int,
+
+    val lifeSpan: Long,
     val latitude: Double,
     val longitude: Double
-)
+) {
+    lateinit var parentConnection: LocationSupportConnection
+}

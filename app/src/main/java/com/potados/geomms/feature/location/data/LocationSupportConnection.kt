@@ -7,35 +7,16 @@ import com.potados.geomms.core.util.Metric
  * LocationSupportServiceImpl 시스템의 연결 정보를 표현합니다.
  */
 data class LocationSupportConnection(
+    val id: Long,
     val person: LocationSupportPerson,
-    var establishedTime: Long
+    val lifeSpan: Long,
+    val establishedTime: Long
 ) {
 
-    /**
-     * 연결 id.
-     */
-    var connectionId: Int =
-        generateConnectionId()
-
-    /**
-     * 마지막 발신 패킷.
-     */
     var lastSentPacket: LocationSupportPacket? = null
-
-    /**
-     * 마지막 수신 패킷.
-     */
     var lastReceivedPacket: LocationSupportPacket? = null
 
-    /**
-     * 마지막 발신 시간.
-     * lastSentPacket에 의존적임.
-     */
     var lastSentTime: DateTime? = null
-
-    /**
-     * 마지막 수신 시간.
-     */
     var lastReceivedTime: DateTime? = null
 
     /**
@@ -44,12 +25,13 @@ data class LocationSupportConnection(
      */
     var lastSeenDistance: Metric? = null
 
-    init {
-
-    }
-
     companion object {
-        private fun generateConnectionId(): Int = 1
-
+        fun fromAcceptedRequest(request: LocationSupportRequest, time: Long? = null) =
+            LocationSupportConnection(
+                request.id,
+                request.person,
+                request.lifeSpan,
+                time ?: DateTime.getCurrentTimeStamp()
+            )
     }
 }

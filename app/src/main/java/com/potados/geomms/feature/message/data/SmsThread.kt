@@ -38,7 +38,7 @@ data class SmsThread(
     /**
      * 대화 상대들을 사람이 식별할 수 있는 정보로 바꾸어 하나의 문자열로 합칩니다.
      *
-     * 안드로이드 threads 테이블의 recipients_id column은 상대방(들)의 연락처를 canonical id 형태로 표현합니다.
+     * 안드로이드 threads 테이블의 recipients_id column은 상대방(들)의 연락처를 canonical connectionId 형태로 표현합니다.
      * 이를 전화번호로 변환하여야 하며, (이것은 실패해서는 안됨.)
      * 그 전화번호가 연락처에 존재하는 경우 다시 연락처 이름으로 바꾸어야 합니다.
      *
@@ -47,7 +47,7 @@ data class SmsThread(
     fun getRecipientString(contactRepo: ContactRepository): String = StringBuilder().apply {
             getRecipientIds().forEach { id ->
 
-                val phoneNumberString = contactRepo.getPhoneNumberByRecipientId(id) ?: throw IllegalArgumentException("Wrong recipient id: $id")
+                val phoneNumberString = contactRepo.getPhoneNumberByRecipientId(id) ?: throw IllegalArgumentException("Wrong recipient connectionId: $id")
                 val nameString = contactRepo.getContactNameByPhoneNumber(phoneNumberString)
 
                 /*

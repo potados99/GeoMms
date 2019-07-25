@@ -9,7 +9,9 @@ import com.potados.geomms.core.util.PermissionChecker
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.common.ContactRepositoryImpl
 import com.potados.geomms.feature.location.LocationSupportService
-import com.potados.geomms.feature.location.LocationSupportServiceImpl
+import com.potados.geomms.feature.location.data.LocationSupportRepository
+import com.potados.geomms.feature.location.data.LocationSupportRepositoryImpl
+import com.potados.geomms.feature.location.usecase.*
 import com.potados.geomms.feature.message.data.*
 import com.potados.geomms.feature.message.usecase.GetConversations
 import com.potados.geomms.feature.message.usecase.GetMessages
@@ -18,7 +20,7 @@ import com.potados.geomms.feature.message.usecase.SendSms
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-val permissions = arrayOf(
+private val permissions = arrayOf(
     Manifest.permission.READ_SMS,
     Manifest.permission.RECEIVE_SMS,
     Manifest.permission.SEND_SMS,
@@ -30,7 +32,11 @@ val permissions = arrayOf(
 
 val myModules = module {
 
-    /** 권한 checker */
+    /**********************************************************
+     * 공통
+     **********************************************************/
+
+    /** 권한 확인 */
     single { PermissionChecker(androidContext(), permissions) }
 
     /** 네비게이터 */
@@ -39,16 +45,17 @@ val myModules = module {
     /** 연락처 저장소 */
     single { ContactRepositoryImpl(get()) as ContactRepository }
 
+
+
+    /**********************************************************
+     * 메시지
+     **********************************************************/
+
     /** 쿼리 저장소 */
     single { QueryInfoRepositoryImpl() as QueryInfoRepository }
 
     /** 메시지 저장소 */
-    single { MessageRepositoryImpl(
-        get(),
-        get(),
-        SmsManager.getDefault()
-    ) as MessageRepository
-    }
+    single { MessageRepositoryImpl(get(), get(), SmsManager.getDefault()) as MessageRepository }
 
     /** 대화목록 가져오는 use case */
     single { GetConversations(get()) }
@@ -62,12 +69,39 @@ val myModules = module {
     /** 대화 읽는 use case */
     single { ReadConversation(get()) }
 
-    /** LocationSupportService 객체 */
-    single {
-        LocationSupportServiceImpl(
-            androidContext(),
-            get(),
-            androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        ) as LocationSupportService
-    }
+
+
+    /**********************************************************
+     * 위치공유
+     **********************************************************/
+
+    /** 위치공유서비스 */
+    // single {}
+
+    /** 위치공유서비스 정보 저장소 */
+    single { LocationSupportRepositoryImpl(get()) as LocationSupportRepository }
+
+    /** USE CASE 1 */
+    single { HandleLocationMessage(get()) }
+
+    /** USE CASE 2 */
+    single { RequestConnection(get()) }
+
+    /** USE CASE 3 */
+    single { AcceptRequest(get()) }
+
+    /** USE CASE 4 */
+    single { RequestLocation(get()) }
+
+    /** USE CASE 5 */
+    single { SendLocation(get()) }
+
+    /** USE CASE 6 */
+    single { GetPendingRequests(get()) }
+
+    /** USE CASE 7 */
+    single { GetIncommingRequests(get()) }
+
+    /** USE CASE 8 */
+    single { GetConnections(get()) }
 }
