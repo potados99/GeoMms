@@ -6,10 +6,18 @@ import com.potados.geomms.feature.location.data.LocationSupportPacket
 import com.potados.geomms.feature.location.data.LocationSupportPerson
 import com.potados.geomms.feature.location.data.LocationSupportRequest
 
+/**
+ * SMS 통신을 하며 위치정보를 주고받습니다.
+ *
+ * 이 자체로는 SMS를 수신하지 못하기 때문에 최상단(Fragment)에서
+ * Use Case 호출을 통해 onPacketReceived를 실행합니다.
+ * 그 결과는 다시 getConnections 등을 통해 최상단까지 전파됩니다.
+ */
 interface LocationSupportService {
 
     /**
      * LocationSupport 패킷이 도착했을 때의 동작을 지정합니다.
+     * 패킷이 도착했을 때에 이 메소드가 호출되어야 그에 맞는 행동이 수행됩니다.
      */
     fun onPacketReceived(packet: LocationSupportPacket, address: String)
 
