@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   android:id="@+id/friends_list_root_layout">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/friends_list_root_layout">
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/friends_list_content_layout"
             android:layout_width="0dp"
@@ -21,8 +24,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="8dp" android:layout_width="0dp" android:layout_height="0dp"
-                tools:visibility="gone" android:visibility="visible">
+                android:layout_marginStart="8dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+        >
         </androidx.recyclerview.widget.RecyclerView>
 
         <TextView
@@ -33,7 +38,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="친구가 없어요 :(\n추가해주세요" android:textSize="24sp" android:visibility="visible"/>
+                android:textSize="24sp"
+                android:text="@string/no_friends"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -71,6 +77,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/small_rounded"
             android:layout_marginTop="8dp"/>
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,12 +87,13 @@
             android:src="@android:drawable/ic_input_add"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:textColor="@color/colorPrimaryDark"
             android:text="추가하기"
             android:textSize="14sp"
             android:padding="0dp"
-            android:textColor="@color/colorPrimaryDark"
-            app:iconTint="@color/colorPrimary"
-            app:rippleColor="@color/colorPrimary"/>
+            android:clickable="true"
+            android:focusable="true"
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

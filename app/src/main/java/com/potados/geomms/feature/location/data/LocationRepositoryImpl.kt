@@ -4,6 +4,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 
 class LocationRepositoryImpl(
     locationManager: LocationManager,
@@ -28,6 +29,7 @@ class LocationRepositoryImpl(
 
     override fun onLocationChanged(location: Location?) {
         currentLocation = location
+        Log.d("YEAH", "YEAH")
     }
 
     override fun onProviderDisabled(provider: String?) {

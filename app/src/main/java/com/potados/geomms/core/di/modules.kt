@@ -116,7 +116,4 @@ val myModules = module {
 
     /** USE CASE 8 */
     single { GetConnections(get()) }
-
-    /** USE CASE 9 */
-    single { GetLocation(get()) }
 }

@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
 import com.potados.geomms.core.exception.Failure
+import com.potados.geomms.core.extension.baseActivity
 import com.potados.geomms.core.extension.failure
 import com.potados.geomms.core.extension.getViewModel
 import com.potados.geomms.core.extension.observe
@@ -60,7 +61,6 @@ class MapFragment : NavigationBasedFragment(),
         viewModel = getViewModel {
             observe(connections, ::renderConnections)
             observe(incomingRequests, ::handleIncomingRequest)
-            observe(currentLocation, ::handleLocation)
             failure(failure, ::handleFailure)
         }
     }
@@ -91,28 +91,43 @@ class MapFragment : NavigationBasedFragment(),
     }
 
     override fun onMapReady(map: GoogleMap?) {
-        this.map = map
+        this.map = map?.apply {
+            val seoul = LatLng(37.56, 126.97)
 
-        val seoul = LatLng(37.56, 126.97)
+            MapsInitializer.initialize(context)
 
-        map?.addMarker(MarkerOptions().apply {
-            position(seoul)
-            title("Seoul")
-            snippet("Capital of korea")
-        })
+            addMarker(MarkerOptions().apply {
+                position(seoul)
+                title("Seoul")
+                snippet("Capital of korea")
+            })
 
-        activity?.let {
-            MapsInitializer.initialize(it)
+            moveCamera(CameraUpdateFactory.newLatLng(seoul))
+            animateCamera(CameraUpdateFactory.zoomTo(10.0f))
+
+            try {
+                isMyLocationEnabled = true
+
+                uiSettings.isCompassEnabled = true
+                uiSettings.isMyLocationButtonEnabled = true
+            } catch (e: SecurityException) {
+                throw RuntimeException("THIS IS IMPOSSIBLE. CHECK PERMISSION.")
+            }
         }
-
-        map?.moveCamera(CameraUpdateFactory.newLatLng(seoul))
-        map?.animateCamera(CameraUpdateFactory.zoomTo(10.0f))
 
         Log.d("MapFragment: onMapReady", "map is ready!")
     }
 
     private fun renderConnections(connections: List<LocationSupportConnection>?) {
-        adapter.collection = connections.orEmpty()
+        if (connections.isNullOrEmpty()) {
+            friends_list_no_one_textview.visibility = View.VISIBLE
+            friends_list_recyclerview.visibility = View.GONE
+        }
+        else {
+            friends_list_no_one_textview.visibility = View.GONE
+            friends_list_recyclerview.visibility = View.VISIBLE
+            adapter.collection = connections.orEmpty()
+        }
     }
 
     private fun handleIncomingRequest(requests: List<LocationSupportRequest>?) {
@@ -122,14 +137,6 @@ class MapFragment : NavigationBasedFragment(),
 
         notifyWithAction("Have new request from ${req.person.address} for ${Duration(req.lifeSpan).toShortenString()}.", "Accept") {
             viewModel.acceptRequest(req)
-        }
-    }
-
-    private fun handleLocation(location: Location?) {
-        try {
-            map?.isMyLocationEnabled = true
-        } catch (e: SecurityException) {
-            throw e
         }
     }
 
@@ -193,14 +200,6 @@ class MapFragment : NavigationBasedFragment(),
                 }
             }
 
-            /**
-             * 현재 위치 표시 버튼 리스너 설정.
-             */
-            with(show_current_location_button) {
-                setOnClickListener {
-                    viewModel.loadLocation()
-                }
-            }
         }
     }
 

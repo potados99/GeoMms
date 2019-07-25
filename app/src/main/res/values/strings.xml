@@ -15,6 +15,7 @@
     <string name="failure_query">Failed to load messages.</string>
     <string name="retry">Retry</string>
     <string name="cannot_send_message">Failed to send message.</string>
+    <string name="no_friends">No friends :(</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

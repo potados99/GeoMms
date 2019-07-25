@@ -16,4 +16,5 @@
     <string name="failure_query">메시지를 불러오는 데에 실패했습니다.</string>
     <string name="retry">다시 시도</string>
     <string name="cannot_send_message">메시지를 보내는 데에 실패했습니다.</string>
+    <string name="no_friends">친구가 없어요 :(</string>
 </resources>

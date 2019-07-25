@@ -30,13 +30,11 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     private val getReqOut: GetPendingRequests by inject()
     private val getReqIn: GetIncommingRequests by inject()
     private val getConnections: GetConnections by inject()
-    private val getLocation: GetLocation by inject()
 
     private val contactRepo: ContactRepository by inject()
 
     val connections = MutableLiveData<List<LocationSupportConnection>>()
     val incomingRequests = MutableLiveData<List<LocationSupportRequest>>()
-    val currentLocation = MutableLiveData<Location>()
 
     fun onMessageReceived(address: String, body: String) =
         handlePacket(Pair(address, body)) {
@@ -114,13 +112,6 @@ class MapViewModel : BaseViewModel(), KoinComponent {
         getReqIn(UseCase.None()) {
             it.either(::handleFailure) { right ->
                 incomingRequests.apply { value = right }
-            }
-        }
-
-    fun loadLocation() =
-        getLocation(UseCase.None()) {
-            it.either(::handleFailure) {
-                currentLocation.apply { value = it }
             }
         }
 
