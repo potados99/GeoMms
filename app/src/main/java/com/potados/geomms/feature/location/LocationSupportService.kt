@@ -18,8 +18,8 @@ interface LocationSupportService {
     /**
      * LocationSupport 패킷이 도착했을 때의 동작을 지정합니다.
      * 패킷이 도착했을 때에 이 메소드가 호출되어야 그에 맞는 행동이 수행됩니다.
-     */ 
-    fun onPacketReceived(packet: LocationSupportPacket, address: String)
+     */
+    fun onPacketReceived(address: String, packet: LocationSupportPacket)
 
     /**
      * 새 연결을 생성하는 요청을 날립니다.

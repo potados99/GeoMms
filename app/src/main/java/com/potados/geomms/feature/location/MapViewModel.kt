@@ -52,13 +52,13 @@ class MapViewModel : BaseViewModel(), KoinComponent {
                  * 따라서 새로 들어오는 요청이 있는지 [loadIncommingRequests]를 통해 확인합니다.
                  */
                 when (findType(validPacket.type)) {
-                    LocationSupportProtocol.Companion.PacketType.REQUEST_CONNECT ->
+                    LocationSupportPacket.Companion.PacketType.REQUEST_CONNECT ->
                         loadIncommingRequests()
 
-                    LocationSupportProtocol.Companion.PacketType.ACCEPT_CONNECT ->
+                    LocationSupportPacket.Companion.PacketType.ACCEPT_CONNECT ->
                         loadConnections()
 
-                    LocationSupportProtocol.Companion.PacketType.DATA ->
+                    LocationSupportPacket.Companion.PacketType.DATA ->
                         loadConnections()
 
                     else -> {
@@ -73,7 +73,7 @@ class MapViewModel : BaseViewModel(), KoinComponent {
             LocationSupportRequest
                 .builder()
                 .setAsOutBound()
-                .setPerson(contactRepo.getContactNameByPhoneNumber(address) ?: address, address)
+                .setPerson(address)
                 .setLifeSpan(lifeSpan)
                 .build()
         ) {
@@ -117,4 +117,6 @@ class MapViewModel : BaseViewModel(), KoinComponent {
                 incomingRequests.apply { value = right }
             }
         }
+
+    fun getName(address: String) = contactRepo.getContactNameByPhoneNumber(address)
 }

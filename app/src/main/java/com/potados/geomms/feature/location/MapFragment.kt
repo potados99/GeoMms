@@ -12,12 +12,15 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
+import com.potados.geomms.core.exception.Failure
+import com.potados.geomms.core.extension.failure
 import com.potados.geomms.core.extension.getViewModel
 import com.potados.geomms.core.extension.observe
 import com.potados.geomms.core.platform.NavigationBasedFragment
 import com.potados.geomms.core.util.Notify
 import com.potados.geomms.feature.common.SmsReceiver
 import com.potados.geomms.feature.location.data.LocationSupportConnection
+import com.potados.geomms.feature.location.data.LocationSupportRequest
 import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlinx.android.synthetic.main.fragment_map.view.map_view
 import kotlinx.android.synthetic.main.fragment_map_friends_list.*
@@ -52,6 +55,8 @@ class MapFragment : NavigationBasedFragment(),
 
         viewModel = getViewModel {
             observe(connections, ::renderConnections)
+            observe(incomingRequests, ::handleIncomingRequest)
+            failure(failure, ::handleFailure)
         }
 
         Log.i("MapFragment: onCreate", "created.")
@@ -87,33 +92,12 @@ class MapFragment : NavigationBasedFragment(),
 
     private fun renderConnections(connections: List<LocationSupportConnection>?) {
         adapter.collection = connections.orEmpty()
+    }
 
-        friends_list_recyclerview.adapter = adapter
+    private fun handleIncomingRequest(requests: List<LocationSupportRequest>?) {
+        if (requests.isNullOrEmpty()) return
 
-        connections?.forEach { connection ->
-            val lastPacket = connection.lastReceivedPacket
-
-            if (lastPacket != null) {
-                val point = LatLng(lastPacket.latitude, lastPacket.longitude)
-
-                map?.let {
-                    it.addMarker(MarkerOptions().apply {
-                        position(point)
-                        title(connection.person.displayName)
-                        snippet(connection.lastReceivedTime?.toShortenString())
-                    })
-
-                    it.moveCamera(CameraUpdateFactory.newLatLng(point))
-                    it.animateCamera(CameraUpdateFactory.zoomTo(10.0f))
-
-                    Log.d("MapFragment:renderConnections", "marker added.")
-                }
-
-
-            }
-        }
-
-        Log.d("MapFragment:renderConnections", "rendered: ${connections?.get(0)?.establishedTime}")
+        notify("Have new request from ${requests.first().person.address}")
     }
 
     private fun initializeView(view: View) {
@@ -169,6 +153,11 @@ class MapFragment : NavigationBasedFragment(),
         }
     }
 
+    private fun handleFailure(failure: Failure?) {
+        failure?.let {
+            notify(it::class.java.name)
+        }
+    }
 
     private fun toggleBottomSheet(sheet: View) {
         BottomSheetBehavior.from(sheet).apply {

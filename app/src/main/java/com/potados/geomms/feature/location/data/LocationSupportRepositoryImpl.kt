@@ -20,7 +20,7 @@ class LocationSupportRepositoryImpl(
                 Either.Left(LocationSupportFailure.PacketParseError())
             }
             else {
-                service.onPacketReceived(parsed, address)
+                service.onPacketReceived(address, parsed)
 
                 Either.Right(parsed)
             }

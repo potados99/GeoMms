@@ -10,5 +10,7 @@ class LocationSupportFailure {
     class InvalidConnectionError: Failure.FeatureFailure()
     class RequestFailure : Failure.FeatureFailure()
     class SendPacketFailure : Failure.FeatureFailure()
-    class LocalDataFailure: Failure.FeatureFailure()
+    class LocalDataFailure : Failure.FeatureFailure()
+    class SendFailure : Failure.FeatureFailure()
+    class SerializeError : Failure.FeatureFailure()
 }

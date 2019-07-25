@@ -9,6 +9,7 @@ import com.potados.geomms.core.util.PermissionChecker
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.common.ContactRepositoryImpl
 import com.potados.geomms.feature.location.LocationSupportService
+import com.potados.geomms.feature.location.LocationSupportServiceImpl
 import com.potados.geomms.feature.location.data.LocationSupportRepository
 import com.potados.geomms.feature.location.data.LocationSupportRepositoryImpl
 import com.potados.geomms.feature.location.usecase.*
@@ -76,7 +77,13 @@ val myModules = module {
      **********************************************************/
 
     /** 위치공유서비스 */
-    // single {}
+    single {
+        LocationSupportServiceImpl(
+            androidContext()
+                .getSystemService(Context.LOCATION_SERVICE)
+                    as LocationManager
+        ) as LocationSupportService
+    }
 
     /** 위치공유서비스 정보 저장소 */
     single { LocationSupportRepositoryImpl(get()) as LocationSupportRepository }

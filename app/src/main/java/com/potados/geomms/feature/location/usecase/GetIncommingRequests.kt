@@ -11,5 +11,5 @@ class GetIncommingRequests(
 ) : UseCase<List<LocationSupportRequest>, UseCase.None>() {
 
     override suspend fun run(params: None): Either<Failure, List<LocationSupportRequest>> =
-        lsRepository.getIncommingRequests()
+        lsRepository.getIncomingRequests()
 }

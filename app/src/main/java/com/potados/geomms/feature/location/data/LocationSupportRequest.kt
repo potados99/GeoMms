@@ -7,23 +7,26 @@ import kotlin.random.Random
  * 연결을 위한 하나의 요청을 나타냄.
  */
 data class LocationSupportRequest(
-    val id: Long,
+    val id: Int,
     val person: LocationSupportPerson,
     val lifeSpan: Long,
     val isOutBound: Boolean
 ) {
 
     class Builder {
-        private val id: Long = Random(0).nextLong(1, 99999)
+        private var id: Int = Random(0).nextInt(1, 99999)
         private var person: LocationSupportPerson? = null
         private var lifeSpan: Long = 1800000 /* 30분이 기본 */
         private var isOutBound: Boolean = true
 
+        fun setId(id: Int) =
+            this.apply { this.id = id }
+
         fun setPerson(person: LocationSupportPerson) =
             this.apply { this.person = person }
 
-        fun setPerson(displayName: String, address: String) =
-            this.apply { this.person = LocationSupportPerson(displayName, address) }
+        fun setPerson(address: String) =
+            this.apply { this.person = LocationSupportPerson(address) }
 
         fun setLifeSpan(lifeSpan: Long) =
             this.apply { this.lifeSpan = lifeSpan }
@@ -50,5 +53,13 @@ data class LocationSupportRequest(
 
     companion object {
         fun builder() = Builder()
+
+        fun fromIncomingRequestPacket(address: String, packet: LocationSupportPacket) =
+            builder()
+                .setAsInBound()
+                .setId(packet.connectionId)
+                .setPerson(address)
+                .setLifeSpan(packet.lifeSpan)
+                .build()
     }
 }

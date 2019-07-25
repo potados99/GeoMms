@@ -7,7 +7,7 @@ import com.potados.geomms.core.util.Metric
  * LocationSupportServiceImpl 시스템의 연결 정보를 표현합니다.
  */
 data class LocationSupportConnection(
-    val id: Long,
+    val id: Int,
     val person: LocationSupportPerson,
     val lifeSpan: Long,
     val establishedTime: Long
