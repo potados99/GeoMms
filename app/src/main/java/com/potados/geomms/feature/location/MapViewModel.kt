@@ -44,6 +44,7 @@ class MapViewModel : BaseViewModel(), KoinComponent {
         handlePacket(Pair(address, body)) {
             it.either(::handleFailure) { validPacket ->
 
+
                 /**
                  * 이 루틴은 패킷이 적절하게 처리되었을 때에만 수행됩니다.
                  * 패킷의 유형에 따라 변경된 데이터를 선택적으로 새로 불러옵니다.
@@ -107,7 +108,8 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     fun loadConnections() =
         getConnections(UseCase.None()) {
             it.either(::handleFailure) { right ->
-                connections.apply { value = right }
+                connections.value = right
+                1
             }
         }
 

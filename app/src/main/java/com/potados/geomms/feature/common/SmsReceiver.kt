@@ -55,7 +55,7 @@ class SmsReceiver : BroadcastReceiver() {
      */
     private fun onLocationSupportMessageArrived(context: Context, message: SmsMessage) {
         // TODO: 푸시알림 설치하기
-        Notify(context).short("Open Geo MMS!")
+        // Notify(context).short("Open Geo MMS!")
     }
 
     /**

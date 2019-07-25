@@ -21,8 +21,10 @@ abstract class UseCase<out Type: Any, in Params> {
      * Execute [run] in Global Scope co-routine and launch onResult on Main thread.
      */
     operator fun invoke(params: Params, onResult: (Either<Failure, Type>) -> Unit = {}) {
+        val job = GlobalScope.async { run(params) }
+
         MainScope().launch {
-            onResult(withContext(GlobalScope.coroutineContext) { run(params) })
+            onResult(job.await())
         }
     }
 

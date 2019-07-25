@@ -10,7 +10,7 @@ import android.content.DialogInterface
  * 메소드 체인으로 Dialog를 만들어서 띄울 수 있습니다.
  * 아니면 static 메소드를 사용하여 바로 띄울 수도 있습니다.
  */
-class Popup(private val context: Context) {
+class Popup(private val context: Context?) {
 
     private val dialogBuilder = AlertDialog.Builder(context).apply {
         setPositiveButton("OK", null)

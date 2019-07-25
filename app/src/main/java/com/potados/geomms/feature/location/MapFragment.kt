@@ -17,7 +17,9 @@ import com.potados.geomms.core.extension.failure
 import com.potados.geomms.core.extension.getViewModel
 import com.potados.geomms.core.extension.observe
 import com.potados.geomms.core.platform.NavigationBasedFragment
+import com.potados.geomms.core.util.Duration
 import com.potados.geomms.core.util.Notify
+import com.potados.geomms.core.util.Popup
 import com.potados.geomms.feature.common.SmsReceiver
 import com.potados.geomms.feature.location.data.LocationSupportConnection
 import com.potados.geomms.feature.location.data.LocationSupportRequest
@@ -97,52 +99,60 @@ class MapFragment : NavigationBasedFragment(),
     private fun handleIncomingRequest(requests: List<LocationSupportRequest>?) {
         if (requests.isNullOrEmpty()) return
 
-        notify("Have new request from ${requests.first().person.address}")
+        val req = requests.first()
+
+        notifyWithAction("Have new request from ${req.person.address} for ${Duration(req.lifeSpan).toShortenString()}.", "Accept") {
+            viewModel.acceptRequest(req)
+        }
     }
 
     private fun initializeView(view: View) {
-        /**
-         * 친구 목록 리사이클러뷰 외관 설정.
-         */
-        with(view.friends_list_recyclerview) {
-            /**
-             * 아이템 사이에 선을 그어줍니다.
-             */
-            addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
-
-            layoutManager = LinearLayoutManager(context)
-
-            adapter = this.adapter
+        with(view) {
 
             /**
-             * 스크롤 이벤트가 리사이클러뷰에게 도착할 수 있게 해줍니다.
+             * 친구 목록 리사이클러뷰 외관 설정.
              */
-            ViewCompat.setNestedScrollingEnabled(this, true)
-        }
+            with(friends_list_recyclerview) {
+                /**
+                 * 아이템 사이에 선을 그어줍니다.
+                 */
+                addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
 
-        /**
-         * 친구 목록 레이아웃에 대한 클릭 리스너 설정.
-         * Bottom Sheet 위쪽을 누르면 토글되도록 해줍니다.
-         */
-        with(view.friends_list_root_layout) {
-            /**
-             * friendsListRoot는 친구 목록을 보여주는 Bottom Sheet의 루트 레이아웃입니다.
-             * 리스트 이외의 영역을 터치하면 Sheet가 올라가거나 내려가도록 리스너를 등록해줍니다.
-             */
-            setOnClickListener {
+                layoutManager = LinearLayoutManager(context)
+
+                adapter = this@MapFragment.adapter
 
                 /**
-                 * 현재 최대 확장 상태일 때를 제외하면 사용자가 친구 목록을 자세히 보려는 의도로 해석합니다.
-                 * 따라서 STATE_EXPANDED 상태일 때에는 STATE_COLLAPSED 상태로 바꾸고,
-                 * 그 이외에는 STATE_EXPANDED로 설정합니다.
+                 * 스크롤 이벤트가 리사이클러뷰에게 도착할 수 있게 해줍니다.
                  */
-                toggleBottomSheet(view.fragment_map_bottom_sheet_view)
+                ViewCompat.setNestedScrollingEnabled(this, true)
             }
-        }
 
-        view.friends_list_add_button.setOnClickListener {
-            // TODO: 연결 추가 과정 구현
-            viewModel.requestNewConnection("1234", 1800000)
+            /**
+             * 친구 목록 레이아웃에 대한 클릭 리스너 설정.
+             * Bottom Sheet 위쪽을 누르면 토글되도록 해줍니다.
+             */
+            with(friends_list_root_layout) {
+                /**
+                 * friendsListRoot는 친구 목록을 보여주는 Bottom Sheet의 루트 레이아웃입니다.
+                 * 리스트 이외의 영역을 터치하면 Sheet가 올라가거나 내려가도록 리스너를 등록해줍니다.
+                 */
+                setOnClickListener {
+
+                    /**
+                     * 현재 최대 확장 상태일 때를 제외하면 사용자가 친구 목록을 자세히 보려는 의도로 해석합니다.
+                     * 따라서 STATE_EXPANDED 상태일 때에는 STATE_COLLAPSED 상태로 바꾸고,
+                     * 그 이외에는 STATE_EXPANDED로 설정합니다.
+                     */
+                    toggleBottomSheet(view.fragment_map_bottom_sheet_view)
+                }
+            }
+
+            friends_list_add_button.setOnClickListener {
+                // TODO: 연결 추가 과정 구현
+                viewModel.requestNewConnection("1234", 1800000)
+            }
+
         }
     }
 

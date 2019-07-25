@@ -1,5 +1,7 @@
 package com.potados.geomms.feature.location.data
 
+import android.os.Looper
+import android.util.Log
 import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.functional.Either
 import com.potados.geomms.core.interactor.UseCase
