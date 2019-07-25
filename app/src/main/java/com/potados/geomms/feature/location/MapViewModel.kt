@@ -1,17 +1,13 @@
 package com.potados.geomms.feature.location
 
-import android.util.Log
-import androidx.lifecycle.LiveData
+import android.location.Location
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.interactor.UseCase
 import com.potados.geomms.core.platform.BaseViewModel
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.location.LocationSupportProtocol.Companion.findType
 import com.potados.geomms.feature.location.data.LocationSupportConnection
 import com.potados.geomms.feature.location.data.LocationSupportPacket
-import com.potados.geomms.feature.location.data.LocationSupportPerson
 import com.potados.geomms.feature.location.data.LocationSupportRequest
 import com.potados.geomms.feature.location.usecase.*
 import org.koin.core.KoinComponent
@@ -34,16 +30,17 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     private val getReqOut: GetPendingRequests by inject()
     private val getReqIn: GetIncommingRequests by inject()
     private val getConnections: GetConnections by inject()
+    private val getLocation: GetLocation by inject()
 
     private val contactRepo: ContactRepository by inject()
 
     val connections = MutableLiveData<List<LocationSupportConnection>>()
     val incomingRequests = MutableLiveData<List<LocationSupportRequest>>()
+    val currentLocation = MutableLiveData<Location>()
 
     fun onMessageReceived(address: String, body: String) =
         handlePacket(Pair(address, body)) {
             it.either(::handleFailure) { validPacket ->
-
 
                 /**
                  * 이 루틴은 패킷이 적절하게 처리되었을 때에만 수행됩니다.
@@ -119,6 +116,14 @@ class MapViewModel : BaseViewModel(), KoinComponent {
                 incomingRequests.apply { value = right }
             }
         }
+
+    fun loadLocation() =
+        getLocation(UseCase.None()) {
+            it.either(::handleFailure) {
+                currentLocation.apply { value = it }
+            }
+        }
+
 
     fun getName(address: String) = contactRepo.getContactNameByPhoneNumber(address)
 }

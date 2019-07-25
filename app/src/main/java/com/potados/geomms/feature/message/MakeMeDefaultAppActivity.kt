@@ -22,6 +22,7 @@ class MakeMeDefaultAppActivity : AppCompatActivity() {
         if (Telephony.Sms.getDefaultSmsPackage(this) == this.packageName) {
             navigator.showMain(this)
             this.finish()
+            return
         }
 
         Popup(this)
@@ -50,6 +51,7 @@ class MakeMeDefaultAppActivity : AppCompatActivity() {
 
         if (requestCode == CHANGE_SMS_APP_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
+                navigator.showMain(this)
             }
             else {
                 Notify(this).short("Got it.")

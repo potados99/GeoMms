@@ -13,4 +13,5 @@ class LocationSupportFailure {
     class LocalDataFailure : Failure.FeatureFailure()
     class SendFailure : Failure.FeatureFailure()
     class SerializeError : Failure.FeatureFailure()
+    class LocationFailure : Failure.FeatureFailure()
 }

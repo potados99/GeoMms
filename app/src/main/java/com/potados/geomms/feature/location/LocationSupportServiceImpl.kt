@@ -11,6 +11,7 @@ import com.potados.geomms.core.extension.toLatLng
 import com.potados.geomms.core.functional.Either
 import com.potados.geomms.core.util.DateTime
 import com.potados.geomms.core.util.Metric
+import com.potados.geomms.feature.location.data.LocationRepository
 import com.potados.geomms.feature.location.data.LocationSupportConnection
 import com.potados.geomms.feature.location.data.LocationSupportPacket
 import com.potados.geomms.feature.location.data.LocationSupportRequest
@@ -20,8 +21,8 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class LocationSupportServiceImpl(
-    private val locationManager: LocationManager
-) : LocationSupportService, LocationListener, KoinComponent {
+    private val locationRepository: LocationRepository
+) : LocationSupportService, KoinComponent {
 
     private val connections = mutableListOf<LocationSupportConnection>()
 
@@ -30,17 +31,8 @@ class LocationSupportServiceImpl(
 
     private val messageRepository: MessageRepository by inject()
 
-    private lateinit var currentLocation: Location
-
     init {
         restore()
-
-        try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5.0f, this)
-        }
-        catch (e: SecurityException) {
-            // ...
-        }
     }
 
     override fun onPacketReceived(address: String, packet: LocationSupportPacket) {
@@ -119,7 +111,10 @@ class LocationSupportServiceImpl(
 
     override fun sendUpdate(connection: LocationSupportConnection) {
         val address = connection.person.address
-        val packetToSend = LocationSupportPacket.ofSendingData(connection, currentLocation)
+        val packetToSend = LocationSupportPacket.ofSendingData(
+            connection,
+            locationRepository.getCurrentLocation() ?: throw IllegalStateException()
+        )
 
         sendPacket(address, packetToSend)
 
@@ -173,7 +168,10 @@ class LocationSupportServiceImpl(
                 longitude = packet.longitude
             }
 
-            lastSeenDistance = Metric.fromDistanceBetween(currentLocation, personLocation)
+            lastSeenDistance = Metric.fromDistanceBetween(
+                locationRepository.getCurrentLocation() ?: throw IllegalStateException()
+                , personLocation
+            )
         }
     }
 
@@ -182,18 +180,5 @@ class LocationSupportServiceImpl(
             lastSentTime = DateTime.now()
             lastSentPacket = packet
         }
-    }
-
-    override fun onLocationChanged(location: Location?) {
-        location?.let{ currentLocation = location }
-    }
-
-    override fun onProviderDisabled(provider: String?) {
-    }
-
-    override fun onProviderEnabled(provider: String?) {
-    }
-
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
     }
 }

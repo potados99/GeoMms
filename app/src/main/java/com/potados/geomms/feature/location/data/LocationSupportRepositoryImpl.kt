@@ -31,6 +31,9 @@ class LocationSupportRepositoryImpl(
                 is IllegalArgumentException -> {
                     Either.Left(LocationSupportFailure.InvalidPacketError())
                 }
+                is IllegalStateException -> {
+                    Either.Left(LocationSupportFailure.LocationFailure())
+                }
                 else -> {
                     Either.Left(LocationSupportFailure.HandleIncomingPacketFailure())
                 }
@@ -94,6 +97,9 @@ class LocationSupportRepositoryImpl(
             when (e) {
                 is IllegalArgumentException -> {
                     Either.Left(LocationSupportFailure.InvalidConnectionError())
+                }
+                is IllegalStateException -> {
+                    Either.Left(LocationSupportFailure.LocationFailure())
                 }
                 else -> {
                     Either.Left(LocationSupportFailure.SendPacketFailure())

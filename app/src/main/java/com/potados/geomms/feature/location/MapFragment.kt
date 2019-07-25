@@ -1,6 +1,7 @@
 package com.potados.geomms.feature.location
 
 import android.content.IntentFilter
+import android.location.Location
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.core.view.ViewCompat
@@ -23,6 +24,7 @@ import com.potados.geomms.core.util.Popup
 import com.potados.geomms.feature.common.SmsReceiver
 import com.potados.geomms.feature.location.data.LocationSupportConnection
 import com.potados.geomms.feature.location.data.LocationSupportRequest
+import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlinx.android.synthetic.main.fragment_map.view.map_view
 import kotlinx.android.synthetic.main.fragment_map_friends_list.*
@@ -58,17 +60,34 @@ class MapFragment : NavigationBasedFragment(),
         viewModel = getViewModel {
             observe(connections, ::renderConnections)
             observe(incomingRequests, ::handleIncomingRequest)
+            observe(currentLocation, ::handleLocation)
             failure(failure, ::handleFailure)
         }
-
-        Log.i("MapFragment: onCreate", "created.")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initializeView(view, savedInstanceState)
+    }
 
-        initializeView(view)
-        getMapReady(view.map_view, savedInstanceState)
+    override fun onResume() {
+        super.onResume()
+        map_view.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        map_view.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        map_view.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        map_view.onLowMemory()
     }
 
     override fun onMapReady(map: GoogleMap?) {
@@ -106,8 +125,24 @@ class MapFragment : NavigationBasedFragment(),
         }
     }
 
-    private fun initializeView(view: View) {
+    private fun handleLocation(location: Location?) {
+        try {
+            map?.isMyLocationEnabled = true
+        } catch (e: SecurityException) {
+            throw e
+        }
+    }
+
+    private fun initializeView(view: View, savedInstanceState: Bundle?) {
         with(view) {
+
+            /**
+             * 지도 설정
+             */
+            with(map_view) {
+                onCreate(savedInstanceState)
+                getMapAsync(this@MapFragment) /* 준비 끝나면 onMapReady 호출됨. */
+            }
 
             /**
              * 친구 목록 리사이클러뷰 외관 설정.
@@ -148,18 +183,24 @@ class MapFragment : NavigationBasedFragment(),
                 }
             }
 
-            friends_list_add_button.setOnClickListener {
-                // TODO: 연결 추가 과정 구현
-                viewModel.requestNewConnection("1234", 1800000)
+            /**
+             * 친구 추가 버튼 리스너 설정.
+             */
+            with(friends_list_add_button) {
+                setOnClickListener {
+                    // TODO: 연결 추가 과정 구현
+                    viewModel.requestNewConnection("1234", 1800000)
+                }
             }
 
-        }
-    }
-
-    private fun getMapReady(map: MapView, savedInstanceState: Bundle?) {
-        with(map) {
-            onCreate(savedInstanceState)
-            getMapAsync(this@MapFragment) /* 준비 끝나면 onMapReady 호출됨. */
+            /**
+             * 현재 위치 표시 버튼 리스너 설정.
+             */
+            with(show_current_location_button) {
+                setOnClickListener {
+                    viewModel.loadLocation()
+                }
+            }
         }
     }
 

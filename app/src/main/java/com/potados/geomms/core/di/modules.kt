@@ -10,6 +10,8 @@ import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.common.ContactRepositoryImpl
 import com.potados.geomms.feature.location.LocationSupportService
 import com.potados.geomms.feature.location.LocationSupportServiceImpl
+import com.potados.geomms.feature.location.data.LocationRepository
+import com.potados.geomms.feature.location.data.LocationRepositoryImpl
 import com.potados.geomms.feature.location.data.LocationSupportRepository
 import com.potados.geomms.feature.location.data.LocationSupportRepositoryImpl
 import com.potados.geomms.feature.location.usecase.*
@@ -76,14 +78,17 @@ val myModules = module {
      * 위치공유
      **********************************************************/
 
-    /** 위치공유서비스 */
+    /** 현재 위치 저장소 */
     single {
-        LocationSupportServiceImpl(
-            androidContext()
-                .getSystemService(Context.LOCATION_SERVICE)
-                    as LocationManager
-        ) as LocationSupportService
+        LocationRepositoryImpl(
+            androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager,
+            5000,
+            5.0f
+        ) as LocationRepository
     }
+
+    /** 위치공유서비스 */
+    single { LocationSupportServiceImpl(get()) as LocationSupportService }
 
     /** 위치공유서비스 정보 저장소 */
     single { LocationSupportRepositoryImpl(get()) as LocationSupportRepository }
@@ -111,4 +116,7 @@ val myModules = module {
 
     /** USE CASE 8 */
     single { GetConnections(get()) }
+
+    /** USE CASE 9 */
+    single { GetLocation(get()) }
 }

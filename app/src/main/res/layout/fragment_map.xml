@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                     xmlns:tools="http://schemas.android.com/tools"
-                                                     android:layout_width="match_parent"
-                                                     android:layout_height="match_parent"
-                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                     tools:context=".feature.location.MapFragment">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".feature.location.MapFragment">
+
     <com.google.android.gms.maps.MapView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -25,5 +27,18 @@
 
     </FrameLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:src="@android:drawable/ic_menu_mylocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/show_current_location_button"
+            android:tint="@android:color/black"
+            android:backgroundTint="@android:color/white"
+            app:layout_anchor="@id/fragment_map_bottom_sheet_view"
+            app:layout_insetEdge="bottom"
+            app:layout_anchorGravity="end"
+            app:backgroundTint="@android:color/white"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -34,11 +34,9 @@ class ConversationViewModel : BaseViewModel(), KoinComponent {
     val messages = MutableLiveData<List<ShortMessage>>()
 
     fun loadMessages() = getMessages(thread) {
-        it.either(::handleFailure, ::handleMessages)
-    }
-
-    private fun handleMessages(messages: List<ShortMessage>) {
-        this.messages.value = messages
+        it.either(::handleFailure) {
+            messages.apply { value = it }
+        }
     }
 
     fun sendMessage(body: String) =
