@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/bottom_sheet_root_layout">
+
+    <!--앱 바 레이아웃-->
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/friends_content_app_bar_layout"
+            android:layout_height="110dp"
+            android:layout_width="match_parent"
+            android:background="?android:colorBackground"
+            android:fitsSystemWindows="true">
+
+        <!--손잡이-->
+        <View
+                android:layout_width="40dp"
+                android:layout_height="5dp"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/friends_content_grip"
+                android:background="@drawable/small_rounded"
+                android:layout_marginTop="8dp"/>
+
+        <!--타이틀-->
+        <TextView
+                android:text="@string/friend_content_title_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/friends_list_title_textview"
+                android:layout_marginStart="18dp"
+                android:textSize="24sp"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"/>
+
+        <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:scrollbars="none">
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="18dp"
+                    android:paddingEnd="18dp">
+
+                <Button
+                        android:text="Recent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                <Button
+                        android:text="Notification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                <Button
+                        android:text="Contact"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                <Button
+                        android:text="Alert"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+                <Button
+                        android:text="Settings"
+                        android:id="@+id/settings_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!--실제 컨텐츠-->
+    <include layout="@layout/bottom_sheet_content"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

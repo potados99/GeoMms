@@ -28,6 +28,7 @@ abstract class BaseActivity : AppCompatActivity(),
      * Default layout for [BaseActivity].
      */
     override fun layoutId(): Int = R.layout.base_activity_layout
+    override fun fragmentContainerId(): Int = R.id.fragment_container
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +55,7 @@ abstract class BaseActivity : AppCompatActivity(),
     private fun addFragments(savedInstanceState: Bundle?) =
         savedInstanceState ?:
         supportFragmentManager.inImmediateTransaction {
-            addAll(R.id.fragment_container, fragments())
+            addAll(fragmentContainerId(), fragments())
             this
         }
 

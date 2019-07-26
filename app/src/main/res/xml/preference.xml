@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+
+    <Preference
+            app:key="settings"
+            app:title="설정 화면입니다."
+            app:summary="김수한무 거북이와 두루미 삼천갑자"/>
+
+    <PreferenceCategory
+            app:title="위치공유">
+
+        <SwitchPreference
+                app:key="switch_preference"
+                app:title="위치공유 요청 수신"
+                app:summary="위치 공유를 요청하는 메시지를 수신합니다." />
+
+        <DropDownPreference
+                app:key="dropdown_preference"
+                app:title="위치공유 연결 시간"
+                app:summary="위치공유 연결의 지속 시간입니다."
+                app:entries="@array/entries_connection_duration"
+                app:entryValues="@array/entryvalues_connection_duration" />
+
+    </PreferenceCategory>
+
+
+
+</androidx.preference.PreferenceScreen>

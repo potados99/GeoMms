@@ -3,11 +3,11 @@ package com.potados.geomms.feature.location
 import android.content.IntentFilter
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import android.util.Log
+import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.util.Log
-import android.view.View
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -17,15 +17,16 @@ import com.potados.geomms.core.extension.*
 import com.potados.geomms.core.platform.NavigationBasedFragment
 import com.potados.geomms.core.util.Duration
 import com.potados.geomms.core.util.Notify
+import com.potados.geomms.feature.common.SettingsActivity
+import com.potados.geomms.feature.common.SettingsFragment
 import com.potados.geomms.feature.common.SmsReceiver
 import com.potados.geomms.feature.location.data.LocationSupportConnection
 import com.potados.geomms.feature.location.data.LocationSupportRequest
+import kotlinx.android.synthetic.main.bottom_sheet_content.*
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlinx.android.synthetic.main.fragment_map.view.map_view
-import kotlinx.android.synthetic.main.fragment_map_friends_list.*
-import kotlinx.android.synthetic.main.fragment_map_friends_list.view.*
-import kotlinx.android.synthetic.main.fragment_map_friends_list.view.friends_list_add_button
+import kotlinx.android.synthetic.main.fragment_map_bottom_sheet.view.*
 
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
@@ -127,7 +128,7 @@ class MapFragment : NavigationBasedFragment(),
 
     private fun renderConnections(connections: List<LocationSupportConnection>?) {
         if (connections.isNullOrEmpty()) {
-            showNoFriends()
+
         }
         else {
             adapter.collection = connections.orEmpty()
@@ -149,8 +150,6 @@ class MapFragment : NavigationBasedFragment(),
                     }
                 }
             }
-
-            showConnections()
         }
     }
 
@@ -198,7 +197,7 @@ class MapFragment : NavigationBasedFragment(),
              * 친구 목록 레이아웃에 대한 클릭 리스너 설정.
              * Bottom Sheet 위쪽을 누르면 토글되도록 해줍니다.
              */
-            with(friends_list_root_layout) {
+            with(bottom_sheet_root_layout) {
                 /**
                  * friendsListRoot는 친구 목록을 보여주는 Bottom Sheet의 루트 레이아웃입니다.
                  * 리스트 이외의 영역을 터치하면 Sheet가 올라가거나 내려가도록 리스너를 등록해줍니다.
@@ -214,15 +213,6 @@ class MapFragment : NavigationBasedFragment(),
                 }
             }
 
-            /**
-             * 친구 추가 버튼 리스너 설정.
-             */
-            with(friends_list_add_button) {
-                setOnClickListener {
-                    // TODO: 연결 추가 과정 구현
-                    viewModel.requestNewConnection("1234", 1800000)
-                }
-            }
 
             /**
              * 친구 목록 보이기 버튼
@@ -234,15 +224,25 @@ class MapFragment : NavigationBasedFragment(),
                 }
             }
 
+            /**
+             * 바텀 시트
+             */
             with(fragment_map_bottom_sheet_view) {
                 collapseSheet()
 
                 bottomSheetBehavior().setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        when (newState) {
+                            BottomSheetBehavior.STATE_EXPANDED -> {
+                                view.friends_content_grip.alpha = 0f
+                            }
+                            else -> {
+                                view.friends_content_grip.alpha = 1f
+                            }
+                        }
                     }
 
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                        Log.d("YEAH", slideOffset.toString())
                         if (slideOffset in (-1f..0f)) {
                             /**
                              * between hidden and collapsed states.
@@ -258,9 +258,27 @@ class MapFragment : NavigationBasedFragment(),
                             with(view.show_list_button) {
                                 scale(0f)
                             }
+                            with(view.friends_content_grip) {
+                                if (slideOffset > 0.9) {
+                                    alpha = (1.0f - slideOffset) * 10
+                                }
+                            }
                         }
                     }
                 })
+
+                friends_content_app_bar_layout.setOnClickListener {
+                    toggleSheet()
+                }
+            }
+
+            /**
+             * 설정 버튼
+             */
+            with(settings_button) {
+                setOnClickListener {
+                    context.startActivity(SettingsActivity.callingIntent(context))
+                }
             }
         }
     }
@@ -285,7 +303,7 @@ class MapFragment : NavigationBasedFragment(),
 
             marker.showInfoWindow()
 
-            fragment_map_bottom_sheet_view.hideSheet()
+            fragment_map_bottom_sheet_view.collapseSheet()
         }
     }
 
@@ -297,14 +315,5 @@ class MapFragment : NavigationBasedFragment(),
         Notify(context!!).short("update clicked")
     }
 
-    private fun showNoFriends() {
-        friends_list_no_one_textview.visibility = View.VISIBLE
-        friends_list_recyclerview.visibility = View.GONE
-    }
-
-    private fun showConnections() {
-        friends_list_no_one_textview.visibility = View.GONE
-        friends_list_recyclerview.visibility = View.VISIBLE
-    }
 
 }
