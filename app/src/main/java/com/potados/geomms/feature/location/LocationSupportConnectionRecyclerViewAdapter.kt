@@ -49,7 +49,7 @@ class LocationSupportConnectionRecyclerViewAdapter(
         with(holder.view) {
             tag = item
             setOnClickListener {
-                listener.onFriendClicked()
+                listener.onFriendClicked(item)
             }
             friends_list_item_call_button.setOnClickListener {
                 listener.onFriendCallClicked()
@@ -68,7 +68,7 @@ class LocationSupportConnectionRecyclerViewAdapter(
 
 
     interface FriendClickListener {
-        fun onFriendClicked()
+        fun onFriendClicked(connection: LocationSupportConnection)
         fun onFriendCallClicked()
         fun onFriendRequestUpdateClicked()
     }

@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
 import com.potados.geomms.core.exception.Failure
@@ -96,12 +97,6 @@ class MapFragment : NavigationBasedFragment(),
 
             MapsInitializer.initialize(context)
 
-            addMarker(MarkerOptions().apply {
-                position(seoul)
-                title("Seoul")
-                snippet("Capital of korea")
-            })
-
             moveCamera(CameraUpdateFactory.newLatLng(seoul))
             animateCamera(CameraUpdateFactory.zoomTo(10.0f))
 
@@ -120,13 +115,30 @@ class MapFragment : NavigationBasedFragment(),
 
     private fun renderConnections(connections: List<LocationSupportConnection>?) {
         if (connections.isNullOrEmpty()) {
-            friends_list_no_one_textview.visibility = View.VISIBLE
-            friends_list_recyclerview.visibility = View.GONE
+            showNoFriends()
         }
         else {
-            friends_list_no_one_textview.visibility = View.GONE
-            friends_list_recyclerview.visibility = View.VISIBLE
             adapter.collection = connections.orEmpty()
+
+            viewModel.markers.map { it.remove() }
+            viewModel.markers.clear()
+
+            connections.forEach { connection ->
+
+                connection.lastReceivedPacket?.let { packet ->
+                    map?.addMarker(
+                        MarkerOptions().apply {
+                            position(LatLng(packet.latitude, packet.longitude))
+                            title(connection.person.address)
+                            snippet("Last seen location")
+                        }
+                    )?.let {
+                        viewModel.markers.add(it.apply { tag = connection.person.address })
+                    }
+                }
+            }
+
+            showConnections()
         }
     }
 
@@ -230,8 +242,19 @@ class MapFragment : NavigationBasedFragment(),
     /**
      * 친구 목록중 하나가 클릭되었을 때에 반응합니다.
      */
-    override fun onFriendClicked() {
-        Notify(context!!).short("clicked")
+    override fun onFriendClicked(connection: LocationSupportConnection) {
+        val marker = viewModel.markers.find {
+            (it.tag as String) == connection.person.address
+        } ?: return
+
+        map?.apply {
+            moveCamera(CameraUpdateFactory.newLatLng(marker.position))
+            animateCamera(CameraUpdateFactory.zoomTo(15.0f))
+
+            marker.showInfoWindow()
+
+            closeBottomSheet(fragment_map_bottom_sheet_view)
+        }
     }
 
     override fun onFriendCallClicked() {
@@ -242,6 +265,15 @@ class MapFragment : NavigationBasedFragment(),
         Notify(context!!).short("update clicked")
     }
 
+    private fun showNoFriends() {
+        friends_list_no_one_textview.visibility = View.VISIBLE
+        friends_list_recyclerview.visibility = View.GONE
+    }
+
+    private fun showConnections() {
+        friends_list_no_one_textview.visibility = View.GONE
+        friends_list_recyclerview.visibility = View.VISIBLE
+    }
 
 
 

@@ -2,6 +2,7 @@ package com.potados.geomms.feature.location
 
 import android.location.Location
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.maps.model.Marker
 import com.potados.geomms.core.interactor.UseCase
 import com.potados.geomms.core.platform.BaseViewModel
 import com.potados.geomms.feature.common.ContactRepository
@@ -35,6 +36,8 @@ class MapViewModel : BaseViewModel(), KoinComponent {
 
     val connections = MutableLiveData<List<LocationSupportConnection>>()
     val incomingRequests = MutableLiveData<List<LocationSupportRequest>>()
+
+    val markers = mutableListOf<Marker>()
 
     fun onMessageReceived(address: String, body: String) =
         handlePacket(Pair(address, body)) {
