@@ -1,7 +1,6 @@
 package com.potados.geomms.feature.location
 
 import android.content.IntentFilter
-import android.location.Location
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import androidx.core.view.ViewCompat
@@ -11,18 +10,13 @@ import android.util.Log
 import android.view.View
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
 import com.potados.geomms.core.exception.Failure
-import com.potados.geomms.core.extension.baseActivity
-import com.potados.geomms.core.extension.failure
-import com.potados.geomms.core.extension.getViewModel
-import com.potados.geomms.core.extension.observe
+import com.potados.geomms.core.extension.*
 import com.potados.geomms.core.platform.NavigationBasedFragment
 import com.potados.geomms.core.util.Duration
 import com.potados.geomms.core.util.Notify
-import com.potados.geomms.core.util.Popup
 import com.potados.geomms.feature.common.SmsReceiver
 import com.potados.geomms.feature.location.data.LocationSupportConnection
 import com.potados.geomms.feature.location.data.LocationSupportRequest
@@ -38,7 +32,8 @@ import kotlinx.android.synthetic.main.fragment_map_friends_list.view.friends_lis
  */
 class MapFragment : NavigationBasedFragment(),
     OnMapReadyCallback,
-    LocationSupportConnectionRecyclerViewAdapter.FriendClickListener {
+    LocationSupportConnectionRecyclerViewAdapter.FriendClickListener
+{
 
     private lateinit var viewModel: MapViewModel
     private val adapter = LocationSupportConnectionRecyclerViewAdapter(this)
@@ -107,6 +102,23 @@ class MapFragment : NavigationBasedFragment(),
                 uiSettings.isMyLocationButtonEnabled = true
             } catch (e: SecurityException) {
                 throw RuntimeException("THIS IS IMPOSSIBLE. CHECK PERMISSION.")
+            }
+
+            setOnCameraMoveStartedListener {
+                if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                    with(fragment_map_bottom_sheet_view) {
+                        if (sheetState() == BottomSheetBehavior.STATE_HIDDEN) {
+                            //
+                        }
+                        else {
+                            collapseSheet()
+                        }
+                    }
+                }
+            }
+
+            setOnCameraMoveListener {
+
             }
         }
 
@@ -198,7 +210,7 @@ class MapFragment : NavigationBasedFragment(),
                      * 따라서 STATE_EXPANDED 상태일 때에는 STATE_COLLAPSED 상태로 바꾸고,
                      * 그 이외에는 STATE_EXPANDED로 설정합니다.
                      */
-                    toggleBottomSheet(view.fragment_map_bottom_sheet_view)
+                    view.fragment_map_bottom_sheet_view.toggleSheet()
                 }
             }
 
@@ -212,6 +224,44 @@ class MapFragment : NavigationBasedFragment(),
                 }
             }
 
+            /**
+             * 친구 목록 보이기 버튼
+             */
+            with(show_list_button) {
+                scale(0f)
+                setOnClickListener {
+                    view.fragment_map_bottom_sheet_view.collapseSheet()
+                }
+            }
+
+            with(fragment_map_bottom_sheet_view) {
+                collapseSheet()
+
+                bottomSheetBehavior().setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    }
+
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                        Log.d("YEAH", slideOffset.toString())
+                        if (slideOffset in (-1f..0f)) {
+                            /**
+                             * between hidden and collapsed states.
+                             */
+                            with(view.show_list_button) {
+                                scale(slideOffset.unaryMinus())
+                            }
+                        }
+                        else {
+                            /**
+                             * between collapsed and expanded states
+                             */
+                            with(view.show_list_button) {
+                                scale(0f)
+                            }
+                        }
+                    }
+                })
+            }
         }
     }
 
@@ -220,24 +270,6 @@ class MapFragment : NavigationBasedFragment(),
             notify(it::class.java.name)
         }
     }
-
-    private fun toggleBottomSheet(sheet: View) {
-        BottomSheetBehavior.from(sheet).apply {
-            state = when (state) {
-                BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_COLLAPSED
-                else -> BottomSheetBehavior.STATE_EXPANDED
-            }
-        }
-    }
-
-    private fun openBottomSheet(sheet: View) {
-        BottomSheetBehavior.from(sheet).state = BottomSheetBehavior.STATE_EXPANDED
-    }
-
-    private fun closeBottomSheet(sheet: View) {
-        BottomSheetBehavior.from(sheet).state = BottomSheetBehavior.STATE_COLLAPSED
-    }
-
 
     /**
      * 친구 목록중 하나가 클릭되었을 때에 반응합니다.
@@ -253,7 +285,7 @@ class MapFragment : NavigationBasedFragment(),
 
             marker.showInfoWindow()
 
-            closeBottomSheet(fragment_map_bottom_sheet_view)
+            fragment_map_bottom_sheet_view.hideSheet()
         }
     }
 
@@ -274,10 +306,5 @@ class MapFragment : NavigationBasedFragment(),
         friends_list_no_one_textview.visibility = View.GONE
         friends_list_recyclerview.visibility = View.VISIBLE
     }
-
-
-
-
-
 
 }
