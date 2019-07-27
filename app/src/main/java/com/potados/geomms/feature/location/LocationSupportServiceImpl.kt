@@ -168,10 +168,12 @@ class LocationSupportServiceImpl(
                 longitude = packet.longitude
             }
 
-            lastSeenDistance = Metric.fromDistanceBetween(
+            /*
+            currentDistance = Metric.fromDistanceBetween(
                 locationRepository.getCurrentLocation() ?: throw IllegalStateException()
                 , personLocation
             )
+            */
         }
     }
 

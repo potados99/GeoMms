@@ -21,12 +21,15 @@ class LocationRepositoryImpl(
             )
         }
         catch (e: SecurityException) {
+            Log.e("LocationRepositoryImpl:init", "NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
             throw e
         }
     }
 
-    override fun getCurrentLocation(): Location? = currentLocation
-
+    override fun getCurrentLocation(): Location? {
+        Log.i("LocationRepositoryImpl:getLocation", "location is ${if (currentLocation != null) "not null" else "null"}")
+        return currentLocation
+    }
     override fun onLocationChanged(location: Location?) {
         currentLocation = location
         Log.d("YEAH", "YEAH")
@@ -40,4 +43,5 @@ class LocationRepositoryImpl(
 
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
     }
+
 }

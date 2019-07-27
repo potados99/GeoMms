@@ -6,7 +6,7 @@ class LocationSupportFailure {
     class HandleIncomingPacketFailure : Failure.FeatureFailure()
     class PacketParseError: Failure.FeatureFailure()
     class InvalidPacketError : Failure.FeatureFailure()
-    class InvalidRequestError : Failure.FeatureFailure()
+    class InvalidRequestError : Failure.FeatureFailure() // TODO: rename
     class InvalidConnectionError: Failure.FeatureFailure()
     class RequestFailure : Failure.FeatureFailure()
     class SendPacketFailure : Failure.FeatureFailure()

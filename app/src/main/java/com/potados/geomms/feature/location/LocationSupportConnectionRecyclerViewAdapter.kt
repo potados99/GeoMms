@@ -33,7 +33,7 @@ class LocationSupportConnectionRecyclerViewAdapter(
 
         with (holder) {
             nameTextView.text = item.person.address
-            distanceTextVeiw.text = item.lastSeenDistance?.toShortenString() ?: "-"
+            distanceTextVeiw.text = item.currentDistance?.toShortenString() ?: "-"
 
             val timerTask = object: TimerTask() {
                 override fun run() {

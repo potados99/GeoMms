@@ -23,7 +23,7 @@ data class LocationSupportConnection(
      * 상대방 마지막 거리.
      * 단위: m(미터)
      */
-    var lastSeenDistance: Metric? = null
+    var currentDistance: Metric? = null
 
     companion object {
         fun fromAcceptedRequest(request: LocationSupportRequest, time: Long? = null) =
