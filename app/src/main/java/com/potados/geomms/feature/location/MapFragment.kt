@@ -69,22 +69,22 @@ class MapFragment : NavigationBasedFragment(),
 
     override fun onResume() {
         super.onResume()
-        map_view.onResume()
+        map_view?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        map_view.onPause()
+        map_view?.onPause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        map_view.onDestroy()
+        map_view?.onDestroy()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        map_view.onLowMemory()
+        map_view?.onLowMemory()
     }
 
     override fun onMapReady(map: GoogleMap?) {
