@@ -114,7 +114,7 @@ class ConversationFragment : BaseFragment() {
             /**
              * Toolbar 타이틀을 상대방 이름으로 설정.
              */
-            conversation_toolbar_title.text = viewModel.recipients()
+            conversation_toolbar_title.text = viewModel.contactNames().serialize()
 
             /**
              * 하단의 메시지 작성 레이아웃이 recyclerView의 컨텐츠를 가리지 않도록

@@ -40,7 +40,7 @@ class ConversationViewModel : BaseViewModel(), KoinComponent {
     }
 
     fun sendMessage(body: String) =
-        sendSms(SmsEntity().address(firstRecipient()).body(body)) {
+        sendSms(SmsEntity().address(addresses().first()).body(body)) {
             it.either(::handleFailure) {
                 loadMessages()
             }
@@ -50,9 +50,8 @@ class ConversationViewModel : BaseViewModel(), KoinComponent {
         it.either(::handleFailure) { /* 성공하면 할게 없다. */ }
     }
 
-    fun recipients(): String = thread.getRecipientString(contactRepo)
-
-    fun firstRecipient(): String = recipients().split(',')[0].trim(' ')
+    fun addresses() = thread.recipientAddresses(contactRepo)
+    fun contactNames() = thread.recipientNames(contactRepo)
 
     /**
      * 리사이클러뷰가 최하단에 도달했는지 여부.

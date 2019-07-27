@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.mikhaellopez.circularimageview.CircularImageView
 
 import com.potados.geomms.R
+import com.potados.geomms.core.extension.serialize
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.core.util.ShortDate
 import com.potados.geomms.feature.message.data.SmsThread
@@ -52,7 +53,7 @@ class ConversationListRecyclerViewAdapter(
         private val unreadIconView: CircularImageView = view.message_list_item_unread
 
         fun bind(item: SmsThread) {
-            senderTextView.text = item.getRecipientString(contactRepo)
+            senderTextView.text = item.recipientNames(contactRepo).serialize()
             bodyTextView.text = item.snippet
             timeTextView.text = ShortDate.of(item.date)
 

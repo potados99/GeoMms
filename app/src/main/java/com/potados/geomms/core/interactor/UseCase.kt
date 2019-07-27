@@ -9,7 +9,7 @@ package com.potados.geomms.core.interactor
 import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.functional.Either
 import kotlinx.coroutines.*
-dks
+
 /**
  * Abstract class for Use Case (Interactor in terms of Clean Architecture).
  * Any use case in this application should implement this.

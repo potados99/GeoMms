@@ -33,32 +33,21 @@ data class SmsThread(
     /**
      * 대화 상대방의 canonical id를 모두 가져옵니다. 여러개일 수 있습니다.
      */
-    fun getRecipientIds(): List<Long> = recipientIds.split(' ').map { it.toLong() }
+    fun recipientIds(): List<Long> = recipientIds.split(' ').map { it.toLong() }
 
     /**
-     * 대화 상대들을 사람이 식별할 수 있는 정보로 바꾸어 하나의 문자열로 합칩니다.
-     *
-     * 안드로이드 threads 테이블의 recipients_id column은 상대방(들)의 연락처를 canonical connectionId 형태로 표현합니다.
-     * 이를 전화번호로 변환하여야 하며, (이것은 실패해서는 안됨.)
-     * 그 전화번호가 연락처에 존재하는 경우 다시 연락처 이름으로 바꾸어야 합니다.
-     *
-     * @param contactRepo 그냥은 연락처에 접근할 수 없습니다. ContactRepository를 통해야 합니다.
+     * 대화 상대방들의 주소를 가져옵니다.
      */
-    fun getRecipientString(contactRepo: ContactRepository): String = StringBuilder().apply {
-            getRecipientIds().forEach { id ->
+    fun recipientAddresses(contactRepo: ContactRepository) = recipientIds().map {
+        contactRepo.getPhoneNumberByRecipientId(it) ?: throw NullPointerException()
+    }
 
-                val phoneNumberString = contactRepo.getPhoneNumberByRecipientId(id) ?: throw IllegalArgumentException("Wrong recipient connectionId: $id")
-                val nameString = contactRepo.getContactNameByPhoneNumber(phoneNumberString)
-
-                /*
-                 * 이름이 확인될 경우 이를 사용하고, 그렇지 않을 경우 전화번호를 사용합니다.
-                 * 각 연락처들 사이에 쉼표를 추가해줍니다.
-                 */
-                append(nameString ?: phoneNumberString)
-                append(", ")
-            }
-
-        }.trim(',', ' ').toString()
+    /**
+     * 대화 상대방들의 이름을 가져옵니다.
+     */
+    fun recipientNames(contactRepo: ContactRepository) = recipientIds().map {
+        contactRepo.getContactNameByRecipientId(it)
+    }
 
     companion object {
         private const val READ_TRUE = 1L

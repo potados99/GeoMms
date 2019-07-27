@@ -122,7 +122,7 @@ class MessageRepositoryImpl(
                 )
             }
 
-            Log.i("MessageRepositoryImpl:sendSms", "try to send message.")
+            Log.i("MessageRepositoryImpl:sendSms", "try to send message: {address: ${sms.address}, body: ${sms.body}}")
 
             Either.Right(UseCase.None())
         } catch (e: Exception) {
