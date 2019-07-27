@@ -46,7 +46,7 @@ data class SmsThread(
      * 대화 상대방들의 이름을 가져옵니다.
      */
     fun recipientNames(contactRepo: ContactRepository) = recipientIds().map {
-        contactRepo.getContactNameByRecipientId(it)
+        contactRepo.getContactNameByRecipientId(it) ?: contactRepo.getPhoneNumberByRecipientId(it)
     }
 
     companion object {

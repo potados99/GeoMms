@@ -1,7 +1,11 @@
 package com.potados.geomms.core.extension
 
-fun List<*>.serialize() = StringBuilder().apply {
+fun List<*>.serialize(): String {
+    val builder = StringBuilder()
+
     this.forEach {
-        append("$it, ")
+        builder.append("${it.toString()}, ")
     }
-}.trim(',', ' ').toString()
+
+    return builder.trim(',', ' ').toString()
+}
