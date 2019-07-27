@@ -52,6 +52,7 @@ class MakeMeDefaultAppActivity : AppCompatActivity() {
         if (requestCode == CHANGE_SMS_APP_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 navigator.showMain(this)
+                this.finish()
             }
             else {
                 Notify(this).short("Got it.")
