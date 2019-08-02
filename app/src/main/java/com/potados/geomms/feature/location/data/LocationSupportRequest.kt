@@ -1,6 +1,9 @@
 package com.potados.geomms.feature.location.data
 
 import com.potados.geomms.core.util.DateTime
+import com.potados.geomms.feature.common.ContactRepository
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import kotlin.random.Random
 
 /**
@@ -13,11 +16,13 @@ data class LocationSupportRequest(
     val isOutBound: Boolean
 ) {
 
-    class Builder {
+    class Builder : KoinComponent {
         private var id: Int = Random(0).nextInt(1, 99999)
         private var person: LocationSupportPerson? = null
         private var lifeSpan: Long = 1800000 /* 30분이 기본 */
         private var isOutBound: Boolean = true
+
+        private val contactRepository: ContactRepository by inject()
 
         fun setId(id: Int) =
             this.apply { this.id = id }
@@ -26,7 +31,12 @@ data class LocationSupportRequest(
             this.apply { this.person = person }
 
         fun setPerson(address: String) =
-            this.apply { this.person = LocationSupportPerson(address) }
+            this.apply {
+                this.person = LocationSupportPerson(
+                    address,
+                    contactRepository.getContactNameByPhoneNumber(address) ?: address
+                    )
+            }
 
         fun setLifeSpan(lifeSpan: Long) =
             this.apply { this.lifeSpan = lifeSpan }

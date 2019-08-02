@@ -3,12 +3,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="55dp"
         android:background="?attr/selectableItemBackground">
 
     <com.mikhaellopez.circularimageview.CircularImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:src="@drawable/avatar_default"
             android:id="@+id/friends_list_item_pic_imageview"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,17 +28,9 @@
             app:layout_constraintStart_toEndOf="@+id/friends_list_item_pic_imageview"
             android:textColor="@android:color/black"
             android:textSize="18sp" android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/friends_list_item_distance_textview" android:layout_marginTop="16dp"/>
+            app:layout_constraintBottom_toTopOf="@+id/friends_list_item_status_textview"
+            android:layout_marginTop="8dp"/>
 
-    <TextView
-            android:text="20s ago"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/friends_list_item_last_update_textview"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
     <Button
             android:text="@string/btn_label_call"
             android:layout_width="60dp"
@@ -46,8 +38,6 @@
             android:id="@+id/friends_list_item_call_button"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/friends_list_item_last_update_textview"
-            android:layout_marginEnd="8dp"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:insetTop="0dp"
             android:insetBottom="0dp"
@@ -55,15 +45,15 @@
             android:textSize="14sp"
             android:textColor="#43A047"
             app:iconTint="#A5D6A7"
-            app:rippleColor="#A5D6A7"/>
+            app:rippleColor="#A5D6A7" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"/>
     <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/friends_list_item_distance_textview"
+            android:id="@+id/friends_list_item_status_textview"
             app:layout_constraintTop_toBottomOf="@+id/friends_list_item_name_textview"
             android:layout_marginStart="15dp"
             app:layout_constraintStart_toEndOf="@+id/friends_list_item_pic_imageview"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"/>
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

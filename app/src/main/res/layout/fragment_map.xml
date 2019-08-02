@@ -18,7 +18,7 @@
             android:fillViewport="true"
             android:id="@+id/fragment_map_bottom_sheet_view"
             app:layout_behavior="@string/bottom_sheet_behavior"
-            app:behavior_hideable="true"
+            app:behavior_hideable="false"
             app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
             app:behavior_fitToContents="false"
             android:elevation="16dp"
@@ -27,18 +27,5 @@
         <include layout="@layout/fragment_map_bottom_sheet"/>
 
     </FrameLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:src="@android:drawable/ic_menu_upload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:id="@+id/show_list_button"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            app:backgroundTint="@android:color/white"
-    />
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -29,43 +29,10 @@ class LocationSupportConnectionRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = collection[position]
-
-        with (holder) {
-            nameTextView.text = item.person.address
-            distanceTextVeiw.text = item.currentDistance?.toShortenString() ?: "-"
-
-            val timerTask = object: TimerTask() {
-                override fun run() {
-                    (listener as Fragment).activity?.runOnUiThread {
-                        lastUpdateTextView.text = item.lastReceivedTime?.durationUntilNow()?.toShortenString() ?: "-"
-                    }
-                }
-            }
-
-            Timer().schedule(timerTask, 0, 1000)
-        }
-
-        with(holder.view) {
-            tag = item
-            setOnClickListener {
-                listener.onFriendClicked(item)
-            }
-            friends_list_item_call_button.setOnClickListener {
-                listener.onFriendCallClicked()
-            }
-        }
-
+        holder.bind(collection[position])
     }
 
     override fun getItemCount(): Int = collection.size
-
-    fun updateItems() {
-        for (i in 0 until itemCount) {
-
-        }
-    }
-
 
     interface FriendClickListener {
         fun onFriendClicked(connection: LocationSupportConnection)
@@ -74,8 +41,33 @@ class LocationSupportConnectionRecyclerViewAdapter(
     }
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val nameTextView: TextView = view.friends_list_item_name_textview
-        val distanceTextVeiw: TextView = view.friends_list_item_distance_textview
-        val lastUpdateTextView: TextView = view.friends_list_item_last_update_textview
+        private val nameTextView: TextView = view.friends_list_item_name_textview
+        private val statusTextView: TextView = view.friends_list_item_status_textview
+
+        fun bind(item: LocationSupportConnection) {
+            nameTextView.text = item.person.name
+            statusTextView.text = item.currentDistance?.toShortenString() ?: "-"
+
+            val timerTask = object: TimerTask() {
+                override fun run() {
+                    (listener as Fragment).activity?.runOnUiThread {
+                        statusTextView.text = item.lastReceivedTime?.durationUntilNow()?.toShortenString() ?: "-"
+                    }
+                }
+            }
+
+            java.util.Timer().schedule(timerTask, 0, 1000)
+
+            with(view) {
+                tag = item
+                setOnClickListener {
+                    listener.onFriendClicked(item)
+                }
+                friends_list_item_call_button.setOnClickListener {
+                    listener.onFriendCallClicked()
+                }
+            }
+
+        }
     }
 }

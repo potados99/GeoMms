@@ -11,6 +11,7 @@ import com.potados.geomms.core.extension.toLatLng
 import com.potados.geomms.core.functional.Either
 import com.potados.geomms.core.util.DateTime
 import com.potados.geomms.core.util.Metric
+import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.location.data.LocationRepository
 import com.potados.geomms.feature.location.data.LocationSupportConnection
 import com.potados.geomms.feature.location.data.LocationSupportPacket
@@ -163,12 +164,12 @@ class LocationSupportServiceImpl(
             lastReceivedTime = DateTime.now()
             lastReceivedPacket = packet
 
+            /*
             val personLocation = Location("").apply {
                 latitude = packet.latitude
                 longitude = packet.longitude
             }
 
-            /*
             currentDistance = Metric.fromDistanceBetween(
                 locationRepository.getCurrentLocation() ?: throw IllegalStateException()
                 , personLocation

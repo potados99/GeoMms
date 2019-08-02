@@ -32,15 +32,14 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     private val getReqIn: GetIncommingRequests by inject()
     private val getConnections: GetConnections by inject()
 
-    private val contactRepo: ContactRepository by inject()
-
     val connections = MutableLiveData<List<LocationSupportConnection>>()
     val incomingRequests = MutableLiveData<List<LocationSupportRequest>>()
 
     val markers = mutableListOf<Marker>()
 
     fun onMessageReceived(address: String, body: String) =
-        handlePacket(Pair(address, body)) {
+        if (LocationSupportProtocol.isLocationSupportMessage(body))
+            handlePacket(Pair(address, body)) {
             it.either(::handleFailure) { validPacket ->
 
                 /**
@@ -65,6 +64,10 @@ class MapViewModel : BaseViewModel(), KoinComponent {
                     }
                 }
             }
+        } else {
+            /**
+             * 무시합니다~
+             */
         }
 
     fun requestNewConnection(address: String, lifeSpan: Long) =
@@ -106,8 +109,7 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     fun loadConnections() =
         getConnections(UseCase.None()) {
             it.either(::handleFailure) { right ->
-                connections.value = right
-                1
+                connections.apply { value = right }
             }
         }
 
@@ -117,7 +119,4 @@ class MapViewModel : BaseViewModel(), KoinComponent {
                 incomingRequests.apply { value = right }
             }
         }
-
-
-    fun getName(address: String) = contactRepo.getContactNameByPhoneNumber(address)
 }

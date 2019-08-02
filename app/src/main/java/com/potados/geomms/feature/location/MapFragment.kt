@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.util.Log
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,9 @@ import com.potados.geomms.feature.common.SmsReceiver
 import com.potados.geomms.feature.location.data.LocationSupportConnection
 import com.potados.geomms.feature.location.data.LocationSupportRequest
 import kotlinx.android.synthetic.main.bottom_sheet_content.*
+import kotlinx.android.synthetic.main.bottom_sheet_content.friends_list_recyclerview
+import kotlinx.android.synthetic.main.bottom_sheet_content.no_connection_textview
+import kotlinx.android.synthetic.main.bottom_sheet_content.view.*
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlinx.android.synthetic.main.fragment_map.view.map_view
@@ -128,9 +132,13 @@ class MapFragment : NavigationBasedFragment(),
 
     private fun renderConnections(connections: List<LocationSupportConnection>?) {
         if (connections.isNullOrEmpty()) {
-
+            no_connection_textview.visibility = View.VISIBLE
+            friends_list_recyclerview.visibility = View.GONE
         }
         else {
+            no_connection_textview.visibility = View.GONE
+            friends_list_recyclerview.visibility = View.VISIBLE
+
             adapter.collection = connections.orEmpty()
 
             viewModel.markers.map { it.remove() }
@@ -142,7 +150,7 @@ class MapFragment : NavigationBasedFragment(),
                     map?.addMarker(
                         MarkerOptions().apply {
                             position(LatLng(packet.latitude, packet.longitude))
-                            title(connection.person.address)
+                            title(connection.person.name)
                             snippet("Last seen location")
                         }
                     )?.let {
@@ -158,7 +166,7 @@ class MapFragment : NavigationBasedFragment(),
 
         val req = requests.first()
 
-        notifyWithAction("Have new request from ${req.person.address} for ${Duration(req.lifeSpan).toShortenString()}.", "Accept") {
+        notifyWithAction("Have new request from ${req.person.name} for ${Duration(req.lifeSpan).toShortenString()}.", "Accept") {
             viewModel.acceptRequest(req)
         }
     }
@@ -215,16 +223,6 @@ class MapFragment : NavigationBasedFragment(),
 
 
             /**
-             * 친구 목록 보이기 버튼
-             */
-            with(show_list_button) {
-                scale(0f)
-                setOnClickListener {
-                    view.fragment_map_bottom_sheet_view.collapseSheet()
-                }
-            }
-
-            /**
              * 바텀 시트
              */
             with(fragment_map_bottom_sheet_view) {
@@ -243,43 +241,17 @@ class MapFragment : NavigationBasedFragment(),
                     }
 
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                        if (slideOffset in (-1f..0f)) {
-                            /**
-                             * between hidden and collapsed states.
-                             */
-                            with(view.show_list_button) {
-                                scale(slideOffset.unaryMinus())
-                            }
-                        }
-                        else {
-                            /**
-                             * between collapsed and expanded states
-                             */
-                            with(view.show_list_button) {
-                                scale(0f)
-                            }
-                            with(view.friends_content_grip) {
-                                if (slideOffset > 0.9) {
-                                    alpha = (1.0f - slideOffset) * 10
-                                }
-                            }
-                        }
+                        val param = no_connection_textview.layoutParams as ConstraintLayout.LayoutParams
+                        param.verticalBias = slideOffset / 2 + 0.05f
+                        no_connection_textview.layoutParams = param
                     }
                 })
 
-                friends_content_app_bar_layout.setOnClickListener {
+                bottom_sheet_root_layout.setOnClickListener {
                     toggleSheet()
                 }
             }
 
-            /**
-             * 설정 버튼
-             */
-            with(settings_button) {
-                setOnClickListener {
-                    context.startActivity(SettingsActivity.callingIntent(context))
-                }
-            }
         }
     }
 
