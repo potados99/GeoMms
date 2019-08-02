@@ -18,6 +18,7 @@ import androidx.test.rule.GrantPermissionRule
 import org.junit.Rule
 import java.nio.file.Files.exists
 import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.core.di.permissions
 
 

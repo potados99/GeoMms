@@ -35,7 +35,7 @@ class MessageRepositoryImpl(
                 )
             )
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:getSmsThreads", e.message)
+            Log.w("MessageRepositoryImpl:getSmsThreads", e)
 
             Either.Left(MessageFailure.QueryFailure())
         }
@@ -52,7 +52,7 @@ class MessageRepositoryImpl(
 
             Either.Right(UseCase.None())
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:removeSmsThread($thread)", e.message)
+            Log.w("MessageRepositoryImpl:removeSmsThread($thread)", e)
 
             Either.Left(MessageFailure.DeleteFailure())
         }
@@ -70,7 +70,7 @@ class MessageRepositoryImpl(
                 ).first() /* 어차피 결과는 하나만 나올 것. 없으면 NoSuchElementException 유발. */
             )
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:getSmsThreadById($threadId)", e.message)
+            Log.w("MessageRepositoryImpl:getSmsThreadById($threadId)", e)
 
             Either.Left(MessageFailure.QueryFailure())
         }
@@ -88,7 +88,7 @@ class MessageRepositoryImpl(
                 )
             )
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:getMessagesFromSmsThread($thread)", e.message)
+            Log.w("MessageRepositoryImpl:getMessagesFromSmsThread($thread)", e)
 
             Either.Left(MessageFailure.QueryFailure())
         }
@@ -105,7 +105,7 @@ class MessageRepositoryImpl(
 
             Either.Right(UseCase.None())
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:removeSms($sms)", e.message)
+            Log.w("MessageRepositoryImpl:removeSms($sms)", e)
 
             Either.Left(MessageFailure.DeleteFailure())
         }
@@ -128,7 +128,7 @@ class MessageRepositoryImpl(
             else Either.Left(MessageFailure.UpdateFailure())
 
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:markSmsThreadAsRead(id: ${thread.id})", e.message)
+            Log.w("MessageRepositoryImpl:markSmsThreadAsRead(id: ${thread.id})", e)
 
             Either.Left(MessageFailure.UpdateFailure())
         }
