@@ -17,8 +17,12 @@ class QueryInfoRepositoryImpl : QueryInfoRepository {
             .build()
     }
 
-    override fun getMessagesUriOfThread(threadId: Long): Uri {
+    override fun getMessagesUriOfThreadId(threadId: Long): Uri {
         return ContentUris.withAppendedId(getConversationsUri(), threadId)
+    }
+
+    override fun getMessageUriOfMessageId(messageId: Long): Uri {
+        return ContentUris.withAppendedId(Telephony.Sms.CONTENT_URI, messageId)
     }
 
     override fun getThreadsColumns(): Array<String> {

@@ -15,7 +15,12 @@ interface QueryInfoRepository {
     /**
      * 특정 thread_id를 지니는 대화방의 모든 메시지를 가져올 때에 사용할 uri입니다.
      */
-    fun getMessagesUriOfThread(threadId: Long): Uri
+    fun getMessagesUriOfThreadId(threadId: Long): Uri
+
+    /**
+     * 특정 id를 가진 메시지를 가져올 때에 사용할 uri입니다.
+     */
+    fun getMessageUriOfMessageId(messageId: Long): Uri
 
     /**
      * 대화방 목록인 threads 테이블 중 사용할 column만 모아놓았습니다.

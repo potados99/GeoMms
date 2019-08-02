@@ -35,32 +35,52 @@ class MessageRepositoryImpl(
                 )
             )
         } catch (e: Exception) {
+            Log.w("MessageRepositoryImpl:getSmsThreads", e.message)
+
             Either.Left(MessageFailure.QueryFailure())
         }
 
-    override fun getSmsThreadById(id: Long): Either<Failure, SmsThread> =
+    override fun removeSmsThread(thread: SmsThread): Either<Failure, UseCase.None> =
+        try {
+            context.contentResolver.delete(
+                queryRepo.getMessagesUriOfThreadId(thread.id), null, null
+            ).let { rowsDeleted ->
+                if (rowsDeleted < 1) {
+                    throw RuntimeException()
+                }
+            }
+
+            Either.Right(UseCase.None())
+        } catch (e: Exception) {
+            Log.w("MessageRepositoryImpl:removeSmsThread($thread)", e.message)
+
+            Either.Left(MessageFailure.DeleteFailure())
+        }
+
+    override fun getSmsThreadById(threadId: Long): Either<Failure, SmsThread> =
         try {
             Either.Right(
                 QueryHelper.queryToCollection<Collection<SmsThread>>(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
                     queryRepo.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
                     queryRepo.getThreadsColumns(),                                      /* threads 테이블 중 사용할 column. */
-                    queryRepo.getConversationsQuerySelection(id).selection(),           /* 특정 id인 대화방만 가져옴. */
-                    queryRepo.getConversationsQuerySelection(id).selectionArgs(),       /* 그 특정 id가 이 배열에 들어있을 것임. */
+                    queryRepo.getConversationsQuerySelection(threadId).selection(),           /* 특정 id인 대화방만 가져옴. */
+                    queryRepo.getConversationsQuerySelection(threadId).selectionArgs(),       /* 그 특정 id가 이 배열에 들어있을 것임. */
                     queryRepo.getConversationsQueryOrder()                              /* 정렬 조건 */
                 ).first() /* 어차피 결과는 하나만 나올 것. 없으면 NoSuchElementException 유발. */
             )
         } catch (e: Exception) {
+            Log.w("MessageRepositoryImpl:getSmsThreadById($threadId)", e.message)
+
             Either.Left(MessageFailure.QueryFailure())
         }
-
 
     override fun getMessagesFromSmsThread(thread: SmsThread): Either<Failure, List<ShortMessage>> =
         try {
             Either.Right(
                 QueryHelper.queryToCollection(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
-                    queryRepo.getMessagesUriOfThread(thread.id),                        /* 특정 대화방에 해당하는 메시지들이 모여있는 uri. */
+                    queryRepo.getMessagesUriOfThreadId(thread.id),                      /* 특정 대화방에 해당하는 메시지들이 모여있는 uri. */
                     queryRepo.getSmsColumns(),                                          /* 사용할 sms 테이블 column. */
                     queryRepo.getMessagesQuerySelection().selection(),                  /* 메시지 선택 조건문. */
                     queryRepo.getMessagesQuerySelection().selectionArgs(),              /* 조건문에 쓰일 값들. */
@@ -68,17 +88,35 @@ class MessageRepositoryImpl(
                 )
             )
         } catch (e: Exception) {
+            Log.w("MessageRepositoryImpl:getMessagesFromSmsThread($thread)", e.message)
+
             Either.Left(MessageFailure.QueryFailure())
         }
 
+    override fun removeSms(sms: ShortMessage): Either<Failure, UseCase.None> =
+        try {
+            context.contentResolver.delete(
+                queryRepo.getMessageUriOfMessageId(sms.id), null, null
+            ).let { rowsDeleted ->
+                if (rowsDeleted < 1) {
+                    throw RuntimeException()
+                }
+            }
 
-    override fun readConversation(thread: SmsThread): Either<Failure, UseCase.None> {
+            Either.Right(UseCase.None())
+        } catch (e: Exception) {
+            Log.w("MessageRepositoryImpl:removeSms($sms)", e.message)
+
+            Either.Left(MessageFailure.DeleteFailure())
+        }
+
+    override fun markSmsThreadAsRead(thread: SmsThread): Either<Failure, UseCase.None> {
         if (thread.isAllRead()) return Either.Right(UseCase.None())
         if (thread.messageCount == 0L) return Either.Right(UseCase.None())
 
         return try {
             val numberOfUpdatedRows = context.contentResolver.update(
-                queryRepo.getMessagesUriOfThread(thread.id),
+                queryRepo.getMessagesUriOfThreadId(thread.id),
                 ContentValues().apply { put(Telephony.Sms.READ, true) },
                 queryRepo.getUnreadMessagesQuerySelection().selection(),
                 queryRepo.getUnreadMessagesQuerySelection().selectionArgs()
@@ -90,6 +128,8 @@ class MessageRepositoryImpl(
             else Either.Left(MessageFailure.UpdateFailure())
 
         } catch (e: Exception) {
+            Log.w("MessageRepositoryImpl:markSmsThreadAsRead(id: ${thread.id})", e.message)
+
             Either.Left(MessageFailure.UpdateFailure())
         }
     }

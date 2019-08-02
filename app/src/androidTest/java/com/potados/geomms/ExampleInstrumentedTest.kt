@@ -1,14 +1,25 @@
 package com.potados.geomms
 
-import android.util.Log
-import androidx.test.InstrumentationRegistry
-import androidx.test.runner.AndroidJUnit4
-import com.potados.geomms.feature.location.LocationSupportProtocol
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.telephony.SmsManager
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.potados.geomms.feature.message.data.MessageRepository
+import com.potados.geomms.feature.message.data.MessageRepositoryImpl
+import com.potados.geomms.feature.message.data.QueryInfoRepositoryImpl
+import com.potados.geomms.feature.message.data.SmsThread
 
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.junit.Assert.*
+import androidx.test.rule.GrantPermissionRule
+import org.junit.Rule
+import java.nio.file.Files.exists
+import android.os.Build
+import com.potados.geomms.core.di.permissions
+
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -17,44 +28,40 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
-    //@Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.potados.geomms", appContext.packageName)
-    }
+
+    @get:Rule
+    val mRuntimePermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(*permissions)
+
+    private fun getContext(): Context = InstrumentationRegistry.getInstrumentation().context
+
+    fun getSmsThreads(messageRepo: MessageRepository): List<SmsThread> =
+        messageRepo.getSmsThreads().right
 
     @Test
-    fun locationSupportTest() {
+    fun removeSmsThreadTest() {
 
-        val locationData = LocationSupportProtocol.createDataPacket(32767, 127.12345, 37.12345)
-
-        val serialized = LocationSupportProtocol.serialize(locationData)
-        if (serialized == null) {
-            Log.d("locationSupportTest", "serialization failed.")
-            return
+        permissions.forEach {
+            assert(getContext().checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED)
         }
 
-        Log.d("locationSupportTest", "serialized: $serialized")
+        val messageRepo = MessageRepositoryImpl(
+            getContext(),
+            QueryInfoRepositoryImpl(),
+            SmsManager.getDefault()
+        )
 
+        val resultBefore = getSmsThreads(messageRepo)
+        val rowsBefore = resultBefore.size
+        val firstRow = resultBefore.first()
 
+        messageRepo.removeSmsThread(firstRow).right
 
-        val parsed = LocationSupportProtocol.parse(serialized)
-        if (parsed == null) {
-            Log.d("locationSupportTest", "parse failed.")
-            return
-        }
+        val resultAfter = getSmsThreads(messageRepo)
+        val rowsAfter = resultAfter.size
 
-        parsed.let {
-            Log.d("locationSupportTest", "type: ${it.type}")
-            Log.d("locationSupportTest", "connectionId: ${it.connectionId}")
-
-            Log.d("locationSupportTest", "lifeSpan: ${it.lifeSpan}")
-            Log.d("locationSupportTest", "lat: ${it.latitude}")
-            Log.d("locationSupportTest", "long: ${it.longitude}")
-        }
+        assert(rowsAfter == rowsBefore - 1)
     }
-
 
 
     /**

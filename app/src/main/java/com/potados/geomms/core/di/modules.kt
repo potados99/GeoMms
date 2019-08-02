@@ -23,7 +23,7 @@ import com.potados.geomms.feature.message.usecase.SendSms
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-private val permissions = arrayOf(
+val permissions = arrayOf(
     Manifest.permission.READ_SMS,
     Manifest.permission.RECEIVE_SMS,
     Manifest.permission.SEND_SMS,

@@ -11,5 +11,5 @@ class ReadConversation(
 ) : UseCase<UseCase.None, SmsThread>() {
 
     override suspend fun run(params: SmsThread): Either<Failure, None> =
-        messageRepository.readConversation(params)
+        messageRepository.markSmsThreadAsRead(params)
 }

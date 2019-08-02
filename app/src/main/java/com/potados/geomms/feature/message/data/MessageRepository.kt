@@ -18,9 +18,14 @@ interface MessageRepository {
     fun getSmsThreads(): Either<Failure, List<SmsThread>>
 
     /**
+     * 대화방을 지웁니다.
+     */
+    fun removeSmsThread(thread: SmsThread): Either<Failure, UseCase.None>
+
+    /**
      * 대화방 id를 이용해 특정 대화방을 찾아냅니다.
      */
-    fun getSmsThreadById(id: Long): Either<Failure, SmsThread>
+    fun getSmsThreadById(threadId: Long): Either<Failure, SmsThread>
 
     /**
      * 특정 대화방에 속하는 모든 메시지를 가져옵니다. (sms 한정)
@@ -28,9 +33,14 @@ interface MessageRepository {
     fun getMessagesFromSmsThread(thread: SmsThread): Either<Failure, List<ShortMessage>>
 
     /**
+     * 하나의 SMS를 지웁니다.
+     */
+    fun removeSms(sms: ShortMessage): Either<Failure, UseCase.None>
+
+    /**
      * 대화방의 모든 메시지를 읽음 처리합니다.
      */
-    fun readConversation(thread: SmsThread): Either<Failure, UseCase.None>
+    fun markSmsThreadAsRead(thread: SmsThread): Either<Failure, UseCase.None>
 
     /**
      * SMS를 전송합니다.
