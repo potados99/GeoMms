@@ -32,6 +32,8 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     private val getReqIn: GetIncommingRequests by inject()
     private val getConnections: GetConnections by inject()
 
+    private val contactRepository: ContactRepository by inject()
+
     val connections = MutableLiveData<List<LocationSupportConnection>>()
     val incomingRequests = MutableLiveData<List<LocationSupportRequest>>()
 
@@ -119,4 +121,8 @@ class MapViewModel : BaseViewModel(), KoinComponent {
                 incomingRequests.apply { value = right }
             }
         }
+
+    fun getName(address: String): String {
+        return contactRepository.getContactNameByPhoneNumber(address) ?: address
+    }
 }

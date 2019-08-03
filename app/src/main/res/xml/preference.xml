@@ -19,7 +19,7 @@
                 app:summary="위치 공유를 요청하는 메시지를 수신합니다." />
 
         <DropDownPreference
-                app:key="dropdown_preference"
+                app:key="location_connection_lifespan"
                 app:title="위치공유 연결 시간"
                 app:summary="위치공유 연결의 지속 시간입니다."
                 app:entries="@array/entries_connection_duration"

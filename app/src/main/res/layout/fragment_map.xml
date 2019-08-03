@@ -7,6 +7,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".feature.location.MapFragment">
 
+
     <com.google.android.gms.maps.MapView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -21,11 +22,24 @@
             app:behavior_hideable="false"
             app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
             app:behavior_fitToContents="false"
-            android:elevation="16dp"
             android:background="@drawable/top_rounded">
 
         <include layout="@layout/fragment_map_bottom_sheet"/>
 
     </FrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:src="@android:drawable/ic_menu_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/fragment_map_add_button"
+            app:layout_anchor="@id/fragment_map_bottom_sheet_view"
+            app:layout_anchorGravity="end"
+            android:layout_margin="20dp"
+            app:backgroundTint="@android:color/white"
+    />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

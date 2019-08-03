@@ -2,22 +2,29 @@ package com.potados.geomms.feature.location
 
 import android.content.IntentFilter
 import android.os.Bundle
+import android.text.InputType
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
 import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.extension.*
 import com.potados.geomms.core.platform.NavigationBasedFragment
+import com.potados.geomms.core.util.DateTime
 import com.potados.geomms.core.util.Duration
 import com.potados.geomms.core.util.Notify
+import com.potados.geomms.core.util.Popup
 import com.potados.geomms.feature.common.SettingsActivity
 import com.potados.geomms.feature.common.SettingsFragment
 import com.potados.geomms.feature.common.SmsReceiver
@@ -151,7 +158,7 @@ class MapFragment : NavigationBasedFragment(),
                         MarkerOptions().apply {
                             position(LatLng(packet.latitude, packet.longitude))
                             title(connection.person.name)
-                            snippet("Last seen location")
+                            snippet("현재 위치")
                         }
                     )?.let {
                         viewModel.markers.add(it.apply { tag = connection.person.address })
@@ -252,6 +259,31 @@ class MapFragment : NavigationBasedFragment(),
                 }
             }
 
+            /**
+             * 연결 추가 버튼
+             */
+            with(fragment_map_add_button) {
+                setOnClickListener {
+                    val input = EditText(context).apply {
+                        inputType = InputType.TYPE_CLASS_PHONE
+                    }
+
+                    Popup(context)
+                        .withTitle("새 연결!")
+                        .withView(input)
+                        .withPositiveButton("오케이") { _, _ ->
+                            val address = input.text.toString()
+                            val lifeSpan = PreferenceManager
+                                .getDefaultSharedPreferences(context)
+                                .getString("location_connection_lifespan", "1600000")
+                                ?.toLong() ?: 1700000
+
+                            viewModel.requestNewConnection(address, lifeSpan)
+                            Notify(context).long("${viewModel.getName(address)}에다가 ${Duration(lifeSpan).toShortenString()}짜리 연결 요청 날립니다")
+                        }
+                        .show()
+                }
+            }
         }
     }
 

@@ -17,7 +17,7 @@ data class LocationSupportRequest(
 ) {
 
     class Builder : KoinComponent {
-        private var id: Int = Random(0).nextInt(1, 99999)
+        private var id: Int = Random(System.currentTimeMillis()).nextInt(1, 99999)
         private var person: LocationSupportPerson? = null
         private var lifeSpan: Long = 1800000 /* 30분이 기본 */
         private var isOutBound: Boolean = true

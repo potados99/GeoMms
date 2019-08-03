@@ -16,12 +16,22 @@ class LocationRepositoryImpl(
 
     init {
         try {
+            /**
+             * GPS 사용 (실내에서는 안됨)
+             */
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER, minTime, minDistance, this
             )
+
+            /**
+             * 네트워크 사용
+             */
+            locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER, minTime, minDistance, this
+            )
         }
         catch (e: SecurityException) {
-            Log.e("LocationRepositoryImpl:init", "NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+            Log.e("LocationRepositoryImpl:init", "permission denied")
             throw e
         }
     }
@@ -32,7 +42,7 @@ class LocationRepositoryImpl(
     }
     override fun onLocationChanged(location: Location?) {
         currentLocation = location
-        Log.d("YEAH", "YEAH")
+        Log.d("LocationRepositoryImpl:onLocationChanged", "location changed.")
     }
 
     override fun onProviderDisabled(provider: String?) {

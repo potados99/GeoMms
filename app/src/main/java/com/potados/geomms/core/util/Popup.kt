@@ -3,6 +3,7 @@ package com.potados.geomms.core.util
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.view.View
 
 /**
  * AlertDialog의 wrapper입니다.
@@ -48,6 +49,11 @@ class Popup(private val context: Context?) {
 
     fun withNegativeButton(text: String, listener: (dialog: DialogInterface, which: Int) -> Unit): Popup {
         dialogBuilder.setNegativeButton(text, listener)
+        return this
+    }
+
+    fun withView(view: View): Popup {
+        dialogBuilder.setView(view)
         return this
     }
 
