@@ -5,16 +5,14 @@ import android.os.Bundle
 import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.potados.geomms.R
-import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.extension.baseActivity
 import com.potados.geomms.core.extension.failure
 import com.potados.geomms.core.extension.getViewModel
 import com.potados.geomms.core.extension.observe
 import com.potados.geomms.core.navigation.Navigator
 import com.potados.geomms.core.platform.NavigationBasedFragment
-import com.potados.geomms.core.util.Notify
 import com.potados.geomms.app.SmsReceiver
-import com.potados.geomms.feature.message.data.ConversationEntity
+import com.potados.geomms.feature.message.domain.Conversation
 import kotlinx.android.synthetic.main.fragment_conversation_list.view.conversation_list_recyclerview
 import org.koin.android.ext.android.inject
 
@@ -63,12 +61,12 @@ class ConversationListFragment : NavigationBasedFragment(),
         viewModel.loadConversations()
     }
 
-    override fun onConversationClicked(conversation: ConversationEntity) {
+    override fun onConversationClicked(conversation: Conversation) {
         navigator.showConversationActivity(baseActivity, conversation)
     }
 
-    private fun renderConversations(threadList: List<ConversationEntity>?) {
-        adapter.collection = threadList.orEmpty()
+    private fun renderConversations(conversationList: List<Conversation>?) {
+        adapter.collection = conversationList.orEmpty()
     }
 
     private fun initializeView(view: View) {
@@ -76,16 +74,9 @@ class ConversationListFragment : NavigationBasedFragment(),
         view.conversation_list_recyclerview.adapter = adapter
     }
 
-    private fun handleFailure(failure: Failure?) {
-        when(failure) {
-            is MessageFailure.QueryFailure -> {
-                notifyWithAction(R.string.failure_query, R.string.retry) {
-                    viewModel.loadConversations()
-                }
-            }
-            else -> {
-                Notify(activity).short("what??")
-            }
+    private fun handleFailure(failure: Exception?) {
+        failure?.let {
+            notify(failure.message ?: failure::class.java.name)
         }
     }
 }

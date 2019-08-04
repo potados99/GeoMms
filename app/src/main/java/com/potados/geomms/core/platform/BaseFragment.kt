@@ -37,7 +37,7 @@ abstract class BaseFragment : Fragment(),
      * Default null.
      */
     override fun intentFilter(): IntentFilter? = null
-    override fun smsReceivedBehavior(): ((address: String, body: String, date: Long) -> Unit)? = null
+    override fun smsReceivedBehavior(): ((address: String, body: String, date: Long) -> Any?)? = null
 
     private val receiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {

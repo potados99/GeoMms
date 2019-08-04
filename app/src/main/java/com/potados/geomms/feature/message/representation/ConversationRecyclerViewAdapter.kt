@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.core.util.ShortDate
 import com.potados.geomms.feature.message.data.SmsEntity
+import com.potados.geomms.feature.message.domain.Sms
 import kotlinx.android.synthetic.main.conversation_message_item.view.*
 import java.lang.RuntimeException
 import kotlin.properties.Delegates
 
 class ConversationRecyclerViewAdapter: RecyclerView.Adapter<ConversationRecyclerViewAdapter.ViewHolder>() {
 
-    internal var collection: List<SmsEntity> by Delegates.observable(emptyList()) {
+    internal var collection: List<Sms> by Delegates.observable(emptyList()) {
             _, _, _ -> notifyDataSetChanged()
     }
 
@@ -37,20 +38,20 @@ class ConversationRecyclerViewAdapter: RecyclerView.Adapter<ConversationRecycler
 
         if (position == 0) {
             holder.dateLayout.visibility = View.VISIBLE
-            holder.dateTextView.text = ShortDate.of(message.date)
+            holder.dateTextView.text = message.date.toShortenString()
         }
 
         when(holder) {
             is SentViewHolder -> {
                 holder.sentLayout.visibility = View.VISIBLE
                 holder.sentBody.text = message.body
-                holder.sentTime.text = ShortDate.of(message.date)
+                holder.sentTime.text = message.date.toShortenString()
             }
 
             is ReceivedViewHolder -> {
                 holder.receivedLayout.visibility = View.VISIBLE
                 holder.receivedBody.text = message.body
-                holder.receivedTime.text = ShortDate.of(message.date)
+                holder.receivedTime.text = message.date.toShortenString()
             }
 
             else -> {
@@ -61,9 +62,8 @@ class ConversationRecyclerViewAdapter: RecyclerView.Adapter<ConversationRecycler
     }
 
     override fun getItemViewType(position: Int): Int =
-        if (collection[position].isSent()) TYPE_MESSAGE_SENT
+        if (collection[position].isSent) TYPE_MESSAGE_SENT
         else TYPE_MESSAGE_RECEIVED
-
 
 
     open inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view) {

@@ -8,16 +8,15 @@ import com.potados.geomms.core.navigation.Navigator
 import com.potados.geomms.core.util.PermissionChecker
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.common.ContactRepositoryImpl
+import com.potados.geomms.feature.common.MessageService
+import com.potados.geomms.feature.common.MessageServiceImpl
 import com.potados.geomms.feature.location.domain.LSService
 import com.potados.geomms.feature.location.domain.LSServiceImpl
 import com.potados.geomms.feature.location.data.LocationRepository
 import com.potados.geomms.feature.location.data.LocationRepositoryImpl
 import com.potados.geomms.feature.location.domain.usecase.*
 import com.potados.geomms.feature.message.data.*
-import com.potados.geomms.feature.message.domain.usecase.GetConversations
-import com.potados.geomms.feature.message.domain.usecase.GetMessages
-import com.potados.geomms.feature.message.domain.usecase.ReadConversation
-import com.potados.geomms.feature.message.domain.usecase.SendSms
+import com.potados.geomms.feature.message.domain.usecase.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -46,6 +45,8 @@ val myModules = module {
     /** 연락처 저장소 */
     single { ContactRepositoryImpl(get()) as ContactRepository }
 
+    /** 메시지 서비스 */
+    single { MessageServiceImpl(get(), SmsManager.getDefault()) as MessageService }
 
 
     /**********************************************************
@@ -56,10 +57,13 @@ val myModules = module {
     single { QueryInfoRepositoryImpl() as QueryInfoRepository }
 
     /** 메시지 저장소 */
-    single { MessageRepositoryImpl(get(), get(), SmsManager.getDefault()) as MessageRepository }
+    single { MessageRepositoryImpl(get(), get(), get()) as MessageRepository }
 
     /** 대화목록 가져오는 use case */
     single { GetConversations(get()) }
+
+    /** id로 대화목록 가져오는 use case */
+    single { GetConversation(get()) }
 
     /** 대화방 메시지 가져오는 use case */
     single { GetMessages(get()) }
@@ -86,10 +90,7 @@ val myModules = module {
     }
 
     /** 위치공유서비스 */
-    single { LSServiceImpl(get()) as LSService }
-
-    /** 위치공유서비스 정보 저장소 */
-    single { LSRepositoryImpl(get()) as LSRepository }
+    single { LSServiceImpl(get(), get()) as LSService }
 
     /** USE CASE 1 */
     single { HandleLocationMessage(get()) }

@@ -14,6 +14,7 @@ import com.potados.geomms.core.extension.serialize
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.core.util.ShortDate
 import com.potados.geomms.feature.message.data.ConversationEntity
+import com.potados.geomms.feature.message.domain.Conversation
 
 import kotlinx.android.synthetic.main.conversation_list_item.view.*
 import org.koin.core.KoinComponent
@@ -26,7 +27,7 @@ class ConversationListRecyclerViewAdapter(
 
     private val contactRepo: ContactRepository by inject()
 
-    internal var collection: List<ConversationEntity> by Delegates.observable(emptyList()) {
+    internal var collection: List<Conversation> by Delegates.observable(emptyList()) {
         _, _, _ -> notifyDataSetChanged()
     }
 
@@ -42,7 +43,7 @@ class ConversationListRecyclerViewAdapter(
     override fun getItemCount(): Int = collection.size
 
     interface ConversationClickListener {
-        fun onConversationClicked(conversation: ConversationEntity)
+        fun onConversationClicked(conversation: Conversation)
     }
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
@@ -52,15 +53,15 @@ class ConversationListRecyclerViewAdapter(
         private val timeTextView: TextView = view.message_list_item_time
         private val unreadIconView: CircularImageView = view.message_list_item_unread
 
-        fun bind(item: ConversationEntity) {
-            senderTextView.text = item.recipientNames(contactRepo).serialize()
+        fun bind(item: Conversation) {
+            senderTextView.text = item.recipients.map{ it.contactName ?: it.phoneNumber }.serialize()
             bodyTextView.text = item.snippet
-            timeTextView.text = ShortDate.of(item.date)
+            timeTextView.text = item.date.toShortenString()
 
             // TODO: 더미 이미지 교체.
             avatarImageView.setImageResource(R.drawable.avatar_default)
 
-            if (item.isNotAllRead()) {
+            if (!item.allRead) {
                 unreadIconView.visibility = View.VISIBLE
                 bodyTextView.setTypeface(bodyTextView.typeface, Typeface.BOLD)
                 bodyTextView.setTextColor(Color.BLACK)

@@ -1,9 +1,10 @@
 package com.potados.geomms.core.util
 
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DateTime(val timeStamp: Long) {
+class DateTime(val timeStamp: Long) : Serializable {
 
     private val date = Date(timeStamp)
 

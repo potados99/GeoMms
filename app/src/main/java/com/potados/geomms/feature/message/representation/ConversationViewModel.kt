@@ -2,13 +2,11 @@ package com.potados.geomms.feature.message.representation
 
 import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.core.platform.BaseViewModel
-import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.message.domain.usecase.SendSms
-import com.potados.geomms.feature.message.data.SmsEntity
-import com.potados.geomms.feature.message.data.ConversationEntity
 import com.potados.geomms.feature.message.domain.Conversation
 import com.potados.geomms.feature.message.domain.Sms
 import com.potados.geomms.feature.message.domain.SmsComposed
+import com.potados.geomms.feature.message.domain.usecase.GetConversation
 import com.potados.geomms.feature.message.domain.usecase.GetMessages
 import com.potados.geomms.feature.message.domain.usecase.ReadConversation
 import org.koin.core.KoinComponent
@@ -22,43 +20,54 @@ class ConversationViewModel : BaseViewModel(), KoinComponent {
     /***********************************************************
      * UseCase
      ***********************************************************/
+    private val getConversation: GetConversation by inject()
     private val getMessages: GetMessages by inject()
     private val sendSms: SendSms by inject()
     private val readConversation: ReadConversation by inject()
 
-    lateinit var thread: Conversation
-
-    /**
-     * 연락처 가져올 때에 사용.
-     */
-    private val contactRepo: ContactRepository by inject()
+    val conversation = MutableLiveData<Conversation>()
 
     val messages = MutableLiveData<List<Sms>>()
 
-    fun loadMessages() = getMessages(thread) { result ->
-        result.onSuccess { data ->
-            messages.value = data
-        }.onError(::handleFailure)
+    fun start(id: Long) {
+        setConversationId(id)
     }
 
-    fun sendMessage(body: String) =
-        thread.recipients.forEach {
-            sendSms(SmsComposed(it.phoneNumber, body)) { result ->
+    private fun setConversationId(id: Long) {
+        getConversation(id) {
+            it.either( {
+                conversation.value = it
+                loadMessages()
+            }, ::handleFailure)
+        }
+    }
+
+    fun loadMessages() = conversation.value?.let {
+        getMessages(it) { result ->
+            result.onSuccess { data ->
+                messages.value = data
+            }.onError(::handleFailure)
+        }
+    }
+
+    fun setAsRead() = conversation.value?.let {
+        readConversation(it) { result ->
+            result.onError(::handleFailure)
+        }
+    }
+
+    fun sendMessage(body: String) = conversation.value?.let {
+        it.recipients.forEach { person ->
+            sendSms(SmsComposed(person.phoneNumber, body)) { result ->
                 result.onError(::handleFailure)
             }
         }
-
-
-    fun setAsRead() = readConversation(thread) { result ->
-        result.onError(::handleFailure)
     }
-
-    fun contactNames() = thread.recipients.map { it.contactName }
 
     /**
      * 리사이클러뷰가 최하단에 도달했는지 여부.
      * 초기값은 참.
      */
     var recyclerViewReachedItsEnd: Boolean = true
-
 }
+

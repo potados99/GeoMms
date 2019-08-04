@@ -2,6 +2,7 @@ package com.potados.geomms.feature.message.domain
 
 import com.potados.geomms.core.util.DateTime
 import com.potados.geomms.feature.common.Person
+import java.io.Serializable
 
 data class Conversation(
     val id: Long,
@@ -10,5 +11,5 @@ data class Conversation(
     val snippet: String,
     val messageCount: Long,
     val allRead: Boolean
-) {
+) : Serializable {
 }

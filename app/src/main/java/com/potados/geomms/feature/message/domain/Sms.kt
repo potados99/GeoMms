@@ -7,6 +7,7 @@ data class Sms(
     val id: Long,
     val recipient: Person,
     val date: DateTime,
-    val body: String
-) {
+    val body: String,
+    val isSent: Boolean
+    ) {
 }

@@ -16,7 +16,6 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
-import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.extension.*
 import com.potados.geomms.core.platform.NavigationBasedFragment
 import com.potados.geomms.core.util.Duration
@@ -32,6 +31,7 @@ import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.fragment_map.view.*
 import kotlinx.android.synthetic.main.fragment_map.view.map_view
 import kotlinx.android.synthetic.main.fragment_map_bottom_sheet.view.*
+import java.lang.Exception
 
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
@@ -152,11 +152,11 @@ class MapFragment : NavigationBasedFragment(),
                     map?.addMarker(
                         MarkerOptions().apply {
                             position(LatLng(packet.latitude, packet.longitude))
-                            title(connection.person.name)
+                            title(connection.person.contactName)
                             snippet("현재 위치")
                         }
                     )?.let {
-                        viewModel.markers.add(it.apply { tag = connection.person.address })
+                        viewModel.markers.add(it.apply { tag = connection.person.phoneNumber })
                     }
                 }
             }
@@ -168,7 +168,7 @@ class MapFragment : NavigationBasedFragment(),
 
         val req = requests.first()
 
-        notifyWithAction("Have new request from ${req.person.name} for ${Duration(req.lifeSpan).toShortenString()}.", "Accept") {
+        notifyWithAction("Have new request from ${req.person.contactName} for ${Duration(req.lifeSpan).toShortenString()}.", "Accept") {
             viewModel.acceptRequest(req)
         }
     }
@@ -282,9 +282,9 @@ class MapFragment : NavigationBasedFragment(),
         }
     }
 
-    private fun handleFailure(failure: Failure?) {
+    private fun handleFailure(failure: Exception?) {
         failure?.let {
-            notify(it::class.java.name)
+            notify(it.message ?: it::class.java.name)
         }
     }
 
@@ -293,7 +293,7 @@ class MapFragment : NavigationBasedFragment(),
      */
     override fun onFriendClicked(connection: LSConnection) {
         val marker = viewModel.markers.find {
-            (it.tag as String) == connection.person.address
+            (it.tag as String) == connection.person.phoneNumber
         } ?: return
 
         map?.apply {

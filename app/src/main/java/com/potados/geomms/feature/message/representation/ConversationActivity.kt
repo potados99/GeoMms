@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.potados.geomms.core.platform.BaseActivity
 import com.potados.geomms.core.platform.BaseFragment
 import com.potados.geomms.feature.message.data.ConversationEntity
+import com.potados.geomms.feature.message.domain.Conversation
 
 /**
  * 대화방 액티비티입니다.
@@ -14,7 +15,7 @@ class ConversationActivity : BaseActivity() {
 
     private val fragment by lazy {
         ConversationFragment.ofConversation(
-            intent.getSerializableExtra(INTENT_PARAM_CONVERSATION) as ConversationEntity
+            intent.getLongExtra(INTENT_PARAM_CONVERSATION, 0)
         )
     }
 
@@ -43,9 +44,9 @@ class ConversationActivity : BaseActivity() {
     companion object {
         private const val INTENT_PARAM_CONVERSATION = "com.potados.INTENT_PARAM_CONVERSATION"
 
-        fun callingIntent(context: Context, conversation: ConversationEntity) =
+        fun callingIntent(context: Context, conversationId: Long) =
             Intent(context, ConversationActivity::class.java).apply {
-                putExtra(INTENT_PARAM_CONVERSATION, conversation)
+                putExtra(INTENT_PARAM_CONVERSATION, conversationId)
             }
 
         private var instantiated = false

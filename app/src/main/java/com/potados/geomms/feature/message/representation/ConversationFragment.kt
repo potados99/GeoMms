@@ -8,13 +8,11 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
-import com.potados.geomms.core.exception.Failure
 import com.potados.geomms.core.extension.*
 import com.potados.geomms.core.platform.BaseFragment
-import com.potados.geomms.core.util.Notify
 import com.potados.geomms.app.SmsReceiver
-import com.potados.geomms.feature.message.data.SmsEntity
-import com.potados.geomms.feature.message.data.ConversationEntity
+import com.potados.geomms.feature.message.domain.Conversation
+import com.potados.geomms.feature.message.domain.Sms
 import kotlinx.android.synthetic.main.fragment_conversation.*
 
 class ConversationFragment : BaseFragment() {
@@ -32,17 +30,20 @@ class ConversationFragment : BaseFragment() {
         viewModel.loadMessages()
         viewModel.setAsRead()
     }
+
     override fun intentFilter(): IntentFilter? = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = getViewModel {
+            observe(conversation, ::renderConversation)
             observe(messages, ::renderMessages)
+
             failure(failure, ::handleFailure)
 
             /** 중요 */
-            thread = arguments?.get(PARAM_CONVERSATION) as ConversationEntity
+           arguments?.getLong(PARAM_CONVERSATION)?.let(::start)
         }
     }
 
@@ -73,24 +74,23 @@ class ConversationFragment : BaseFragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun renderConversation(conversation: Conversation?) {
+        conversation?.let {
+            conversation_toolbar_title.text = it.recipients.map { it.contactName ?: it.phoneNumber }.serialize()
+        }
+    }
 
-    private fun renderMessages(messages: List<SmsEntity>?) {
+    private fun renderMessages(messages: List<Sms>?) {
         val wasEmpty = adapter.collection.isEmpty()
 
         adapter.collection = messages.orEmpty()
         scrollToBottom(!wasEmpty)
     }
 
-    private fun handleFailure(failure: Failure?) {
-        when(failure) {
-            is MessageFailure.QueryFailure -> {
-                notifyWithAction(R.string.failure_query, R.string.retry) {
-                    viewModel.loadMessages()
-                }
-            }
-            is MessageFailure.SendFailure -> {
-                Notify(activity).short("Send failed :(")
-            }
+    private fun handleFailure(failure: Exception?) {
+        failure?.let {
+            notify(it.message ?: it::class.java.name)
+            it.printStackTrace()
         }
     }
 
@@ -110,11 +110,6 @@ class ConversationFragment : BaseFragment() {
                 setDisplayShowTitleEnabled(false)
                 setDisplayHomeAsUpEnabled(true)
             }
-
-            /**
-             * Toolbar 타이틀을 상대방 이름으로 설정.
-             */
-            conversation_toolbar_title.text = viewModel.contactNames().serialize()
 
             /**
              * 하단의 메시지 작성 레이아웃이 recyclerView의 컨텐츠를 가리지 않도록
@@ -176,10 +171,10 @@ class ConversationFragment : BaseFragment() {
     companion object {
         private const val PARAM_CONVERSATION = "param_conversation"
 
-        fun ofConversation(thread: ConversationEntity): ConversationFragment =
+        fun ofConversation(conversationId: Long): ConversationFragment =
             ConversationFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(PARAM_CONVERSATION, thread)
+                    putLong(PARAM_CONVERSATION, conversationId)
                 }
             }
     }

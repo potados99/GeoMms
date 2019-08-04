@@ -23,7 +23,7 @@ class MessageRepositoryImpl(
             Result.Success(
                 QueryHelper.queryToCollection<List<ConversationEntity>>(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
-                    queryRepository.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
+                    queryRepository.getConversationsUri(),                                    /* 대화방(conversation)이 모여있는 uri. */
                     queryRepository.getThreadsColumns(),                                      /* threads 테이블 중 사용할 column. */
                     queryRepository.getConversationsQuerySelection().selection(),             /* 선택 조건문. */
                     queryRepository.getConversationsQuerySelection().selectionArgs(),         /* 선택 조건문에 쓰일 값들. */
@@ -58,7 +58,7 @@ class MessageRepositoryImpl(
             Result.Success(
                 QueryHelper.queryToCollection<Collection<ConversationEntity>>(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
-                    queryRepository.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
+                    queryRepository.getConversationsUri(),                                    /* 대화방(conversation)이 모여있는 uri. */
                     queryRepository.getThreadsColumns(),                                      /* threads 테이블 중 사용할 column. */
                     queryRepository.getConversationsQuerySelection(id).selection(),           /* 특정 id인 대화방만 가져옴. */
                     queryRepository.getConversationsQuerySelection(id).selectionArgs(),       /* 그 특정 id가 이 배열에 들어있을 것임. */
@@ -74,14 +74,14 @@ class MessageRepositoryImpl(
     override fun getMessagesInConversation(conversation: Conversation): Result<List<Sms>> =
         try {
             Result.Success(
-                QueryHelper.queryToCollection(
+                QueryHelper.queryToCollection<List<SmsEntity>>(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
                     queryRepository.getMessagesUriOfThreadId(conversation.id),                      /* 특정 대화방에 해당하는 메시지들이 모여있는 uri. */
                     queryRepository.getSmsColumns(),                                          /* 사용할 sms 테이블 column. */
                     queryRepository.getMessagesQuerySelection().selection(),                  /* 메시지 선택 조건문. */
                     queryRepository.getMessagesQuerySelection().selectionArgs(),              /* 조건문에 쓰일 값들. */
                     queryRepository.getMessageQueryOrder()                                    /* 정렬 조건. */
-                )
+                ).map { it.toSms(contactRepository) }
             )
         } catch (e: Exception) {
             Log.e("MessageRepositoryImpl:getMessagesFromSmsThread($conversation)", e.message)

@@ -4,11 +4,12 @@ import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
 import android.provider.ContactsContract
+import java.io.Serializable
 import kotlin.IllegalArgumentException
 
 class ContactRepositoryImpl(
     private val context: Context
-) : ContactRepository {
+) : ContactRepository, Serializable {
 
     override fun getContactNameByRecipientId(recipientId: Long): String? {
         val phoneNumberString = getPhoneNumberByRecipientId(recipientId)

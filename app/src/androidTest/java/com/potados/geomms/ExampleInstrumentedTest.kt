@@ -32,35 +32,6 @@ class ExampleInstrumentedTest {
 
     private fun getContext(): Context = InstrumentationRegistry.getInstrumentation().context
 
-    fun getSmsThreads(messageRepo: MessageRepository): List<ConversationEntity> =
-        messageRepo.getConversations().right
-
-    @Test
-    fun removeSmsThreadTest() {
-
-        permissions.forEach {
-            assert(getContext().checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED)
-        }
-
-        val messageRepo = MessageRepositoryImpl(
-            getContext(),
-            QueryInfoRepositoryImpl(),
-            SmsManager.getDefault()
-        )
-
-        val resultBefore = getSmsThreads(messageRepo)
-        val rowsBefore = resultBefore.size
-        val firstRow = resultBefore.first()
-
-        messageRepo.removeConversations(firstRow).right
-
-        val resultAfter = getSmsThreads(messageRepo)
-        val rowsAfter = resultAfter.size
-
-        assert(rowsAfter == rowsBefore - 1)
-    }
-
-
     /**
      * TODO: 출시할 때에는 없애기
      * 실험용 함수입니다.
@@ -72,7 +43,7 @@ class ExampleInstrumentedTest {
         val dump = QueryHelper.dumpCursor(c)
         c.close()
 
-        val p = Popup(this).withTitle("thread table dump:")
+        val p = Popup(this).withTitle("conversation table dump:")
 
         dump.forEach { map ->
             map.forEach { k, v ->

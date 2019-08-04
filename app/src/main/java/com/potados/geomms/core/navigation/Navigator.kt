@@ -8,6 +8,7 @@ import com.potados.geomms.app.GiveMePermissionActivity
 import com.potados.geomms.app.MainActivity
 import com.potados.geomms.feature.message.MakeMeDefaultAppActivity
 import com.potados.geomms.feature.message.data.ConversationEntity
+import com.potados.geomms.feature.message.domain.Conversation
 
 /**
  * Global activity navigator.
@@ -20,10 +21,10 @@ class Navigator (private val permissionChecker: PermissionChecker){
         }
     }
 
-    fun showConversationActivity(context: Context, conversationEntity: ConversationEntity) {
+    fun showConversationActivity(context: Context, conversation: Conversation) {
         whenPossible(context) {
             it.startActivity(
-                ConversationActivity.callingIntent(it, conversationEntity)
+                ConversationActivity.callingIntent(it, conversation.id)
             )
         }
     }

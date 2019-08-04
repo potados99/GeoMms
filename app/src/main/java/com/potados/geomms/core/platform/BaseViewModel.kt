@@ -17,7 +17,7 @@ abstract class BaseViewModel : ViewModel() {
 
     val failure = MutableLiveData<Exception>()
 
-    protected fun handleFailure(failure: Exception) {
+    protected fun handleFailure(failure: Exception?) {
         this.failure.value = failure
     }
 }

@@ -34,7 +34,8 @@ data class SmsEntity(
             id = id,
             recipient = Person(address),
             date = DateTime(date),
-            body = body
+            body = body,
+            isSent = isSent()
         )
 
     companion object {

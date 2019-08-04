@@ -45,7 +45,7 @@ class LocationSupportConnectionRecyclerViewAdapter(
         private val statusTextView: TextView = view.friends_list_item_status_textview
 
         fun bind(item: LSConnection) {
-            nameTextView.text = item.person.name
+            nameTextView.text = item.person.contactName
             statusTextView.text = item.currentDistance?.toShortenString() ?: "-"
 
             val timerTask = object: TimerTask() {
