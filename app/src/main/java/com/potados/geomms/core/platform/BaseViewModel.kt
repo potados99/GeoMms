@@ -15,9 +15,9 @@ import com.potados.geomms.core.exception.Failure
  */
 abstract class BaseViewModel : ViewModel() {
 
-    val failure = MutableLiveData<Failure>()
+    val failure = MutableLiveData<Exception>()
 
-    protected fun handleFailure(failure: Failure) {
+    protected fun handleFailure(failure: Exception) {
         this.failure.value = failure
     }
 }

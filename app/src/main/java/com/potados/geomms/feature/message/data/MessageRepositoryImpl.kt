@@ -1,172 +1,132 @@
 package com.potados.geomms.feature.message.data
 
-import android.app.PendingIntent
 import android.provider.Telephony
-import com.potados.geomms.core.exception.Failure
-import com.potados.geomms.core.functional.Either
-import com.potados.geomms.core.interactor.UseCase
+import com.potados.geomms.core.functional.Result
+import com.potados.geomms.core.interactor.UseCase.None
 import com.potados.geomms.core.util.QueryHelper
 import kotlin.Exception
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
-import android.telephony.SmsManager
 import android.util.Log
-import com.potados.geomms.feature.common.SmsDeliveredReceiver.Companion.SMS_DELIVERED
-import com.potados.geomms.feature.common.SmsSentReceiver.Companion.SMS_SENT
-import com.potados.geomms.feature.message.MessageFailure
+import com.potados.geomms.feature.common.ContactRepository
+import com.potados.geomms.feature.message.domain.Conversation
+import com.potados.geomms.feature.message.domain.Sms
 
 class MessageRepositoryImpl(
     private val context: Context,
-    private val queryRepo: QueryInfoRepository,
-    private val smsManager: SmsManager
+    private val queryRepository: QueryInfoRepository,
+    private val contactRepository: ContactRepository
 ) : MessageRepository {
 
-    override fun getSmsThreads(): Either<Failure, List<SmsThread>> =
+    override fun getConversations(): Result<List<Conversation>> =
         try {
             Result.Success(
-                QueryHelper.queryToCollection(
+                QueryHelper.queryToCollection<List<ConversationEntity>>(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
-                    queryRepo.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
-                    queryRepo.getThreadsColumns(),                                      /* threads 테이블 중 사용할 column. */
-                    queryRepo.getConversationsQuerySelection().selection(),             /* 선택 조건문. */
-                    queryRepo.getConversationsQuerySelection().selectionArgs(),         /* 선택 조건문에 쓰일 값들. */
-                    queryRepo.getConversationsQueryOrder()                              /* 정렬 조건. */
-                )
+                    queryRepository.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
+                    queryRepository.getThreadsColumns(),                                      /* threads 테이블 중 사용할 column. */
+                    queryRepository.getConversationsQuerySelection().selection(),             /* 선택 조건문. */
+                    queryRepository.getConversationsQuerySelection().selectionArgs(),         /* 선택 조건문에 쓰일 값들. */
+                    queryRepository.getConversationsQueryOrder()                              /* 정렬 조건. */
+                ).map { it.toConversations(contactRepository) }
             )
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:getSmsThreads", e)
+            Log.e("MessageRepositoryImpl:getSmsThreads", e.message)
 
-            Result.Error(MessageFailure.QueryFailure())
+            Result.Error(e)
         }
 
-    override fun removeSmsThread(thread: SmsThread): Either<Failure, UseCase.None> =
+    override fun removeConversations(conversation: Conversation): Result<None> =
         try {
             context.contentResolver.delete(
-                queryRepo.getMessagesUriOfThreadId(thread.id), null, null
+                queryRepository.getMessagesUriOfThreadId(conversation.id), null, null
             ).let { rowsDeleted ->
                 if (rowsDeleted < 1) {
                     throw RuntimeException()
                 }
             }
 
-            Result.Success(UseCase.None())
+            Result.Success(None())
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:removeSmsThread($thread)", e)
+            Log.e("MessageRepositoryImpl:removeSmsThread($conversation)", e.message)
 
-            Result.Error(MessageFailure.DeleteFailure())
+            Result.Error(e)
         }
 
-    override fun getSmsThreadById(threadId: Long): Either<Failure, SmsThread> =
+    override fun getConversationById(id: Long): Result<Conversation> =
         try {
             Result.Success(
-                QueryHelper.queryToCollection<Collection<SmsThread>>(
+                QueryHelper.queryToCollection<Collection<ConversationEntity>>(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
-                    queryRepo.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
-                    queryRepo.getThreadsColumns(),                                      /* threads 테이블 중 사용할 column. */
-                    queryRepo.getConversationsQuerySelection(threadId).selection(),           /* 특정 id인 대화방만 가져옴. */
-                    queryRepo.getConversationsQuerySelection(threadId).selectionArgs(),       /* 그 특정 id가 이 배열에 들어있을 것임. */
-                    queryRepo.getConversationsQueryOrder()                              /* 정렬 조건 */
-                ).first() /* 어차피 결과는 하나만 나올 것. 없으면 NoSuchElementException 유발. */
+                    queryRepository.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
+                    queryRepository.getThreadsColumns(),                                      /* threads 테이블 중 사용할 column. */
+                    queryRepository.getConversationsQuerySelection(id).selection(),           /* 특정 id인 대화방만 가져옴. */
+                    queryRepository.getConversationsQuerySelection(id).selectionArgs(),       /* 그 특정 id가 이 배열에 들어있을 것임. */
+                    queryRepository.getConversationsQueryOrder()                              /* 정렬 조건 */
+                ).first().toConversations(contactRepository)
             )
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:getSmsThreadById($threadId)", e)
+            Log.e("MessageRepositoryImpl:getSmsThreadById($id)", e.message)
 
-            Result.Error(MessageFailure.QueryFailure())
+            Result.Error(e)
         }
 
-    override fun getMessagesFromSmsThread(thread: SmsThread): Either<Failure, List<ShortMessage>> =
+    override fun getMessagesInConversation(conversation: Conversation): Result<List<Sms>> =
         try {
             Result.Success(
                 QueryHelper.queryToCollection(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
-                    queryRepo.getMessagesUriOfThreadId(thread.id),                      /* 특정 대화방에 해당하는 메시지들이 모여있는 uri. */
-                    queryRepo.getSmsColumns(),                                          /* 사용할 sms 테이블 column. */
-                    queryRepo.getMessagesQuerySelection().selection(),                  /* 메시지 선택 조건문. */
-                    queryRepo.getMessagesQuerySelection().selectionArgs(),              /* 조건문에 쓰일 값들. */
-                    queryRepo.getMessageQueryOrder()                                    /* 정렬 조건. */
+                    queryRepository.getMessagesUriOfThreadId(conversation.id),                      /* 특정 대화방에 해당하는 메시지들이 모여있는 uri. */
+                    queryRepository.getSmsColumns(),                                          /* 사용할 sms 테이블 column. */
+                    queryRepository.getMessagesQuerySelection().selection(),                  /* 메시지 선택 조건문. */
+                    queryRepository.getMessagesQuerySelection().selectionArgs(),              /* 조건문에 쓰일 값들. */
+                    queryRepository.getMessageQueryOrder()                                    /* 정렬 조건. */
                 )
             )
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:getMessagesFromSmsThread($thread)", e)
+            Log.e("MessageRepositoryImpl:getMessagesFromSmsThread($conversation)", e.message)
 
-            Result.Error(MessageFailure.QueryFailure())
+            Result.Error(e)
         }
 
-    override fun removeSms(sms: ShortMessage): Either<Failure, UseCase.None> =
+    override fun removeSms(sms: Sms): Result<None> =
         try {
             context.contentResolver.delete(
-                queryRepo.getMessageUriOfMessageId(sms.id), null, null
+                queryRepository.getMessageUriOfMessageId(sms.id), null, null
             ).let { rowsDeleted ->
                 if (rowsDeleted < 1) {
                     throw RuntimeException()
                 }
             }
 
-            Result.Success(UseCase.None())
+            Result.Success(None())
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:removeSms($sms)", e)
+            Log.e("MessageRepositoryImpl:removeSms($sms)", e.message)
 
-            Result.Error(MessageFailure.DeleteFailure())
+            Result.Error(e)
         }
 
-    override fun markSmsThreadAsRead(thread: SmsThread): Either<Failure, UseCase.None> {
-        if (thread.isAllRead()) return Result.Success(UseCase.None())
-        if (thread.messageCount == 0L) return Result.Success(UseCase.None())
+    override fun markConversationAsRead(conversation: Conversation): Result<None> {
+        if (conversation.allRead) return Result.Success(None())
+        if (conversation.messageCount == 0L) return Result.Success(None())
 
         return try {
             val numberOfUpdatedRows = context.contentResolver.update(
-                queryRepo.getMessagesUriOfThreadId(thread.id),
+                queryRepository.getMessagesUriOfThreadId(conversation.id),
                 ContentValues().apply { put(Telephony.Sms.READ, true) },
-                queryRepo.getUnreadMessagesQuerySelection().selection(),
-                queryRepo.getUnreadMessagesQuerySelection().selectionArgs()
+                queryRepository.getUnreadMessagesQuerySelection().selection(),
+                queryRepository.getUnreadMessagesQuerySelection().selectionArgs()
             )
 
             val success = (numberOfUpdatedRows != 0)
 
-            if (success) Result.Success(UseCase.None())
-            else Result.Error(MessageFailure.UpdateFailure())
+            if (success) Result.Success(None())
+            else throw IllegalStateException("Number of updated rows is zero.")
 
         } catch (e: Exception) {
-            Log.w("MessageRepositoryImpl:markSmsThreadAsRead(id: ${thread.id})", e)
+            Log.e("MessageRepositoryImpl:markSmsThreadAsRead(id: ${conversation.id})", e.message)
 
-            Result.Error(MessageFailure.UpdateFailure())
+            Result.Error(e)
         }
     }
-
-    override fun sendSms(sms: SmsEntity, save: Boolean): Either<Failure, UseCase.None> =
-        try {
-            val sentPendingIntent = PendingIntent.getBroadcast(context, 0, Intent(SMS_SENT), 0)
-            val deliveredPendingIntent = PendingIntent.getBroadcast(context, 0, Intent(SMS_DELIVERED), 0)
-
-            smsManager.sendTextMessage(
-                sms.address,
-                null,
-                sms.body,
-                sentPendingIntent,
-                deliveredPendingIntent
-            )
-
-            if (save) {
-                /**
-                 * save 옵션이 참이면 DB에 저장합니다.
-                 */
-                context.contentResolver.insert(
-                    Telephony.Sms.Sent.CONTENT_URI,
-
-                    ContentValues().apply {
-                        put(Telephony.Sms.ADDRESS, sms.address)
-                        put(Telephony.Sms.BODY, sms.body)
-                        /* 나머지 column은 자동으로 채워짐! */
-                    }
-                )
-            }
-
-            Log.i("MessageRepositoryImpl:sendSms", "try to send message: {address: ${sms.address}, body: ${sms.body}}")
-
-            Result.Success(UseCase.None())
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Result.Error(MessageFailure.SendFailure())
-        }
 }

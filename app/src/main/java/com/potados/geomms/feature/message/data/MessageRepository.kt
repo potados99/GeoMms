@@ -1,8 +1,10 @@
 package com.potados.geomms.feature.message.data
 
-import com.potados.geomms.core.exception.Failure
-import com.potados.geomms.core.functional.Either
-import com.potados.geomms.core.interactor.UseCase
+import com.potados.geomms.core.functional.Result
+import com.potados.geomms.core.interactor.UseCase.None
+import com.potados.geomms.feature.common.Person
+import com.potados.geomms.feature.message.domain.Conversation
+import com.potados.geomms.feature.message.domain.Sms
 
 /**
  * 메시지와 관련된 데이터를 공급해주는 저장소입니다.
@@ -15,35 +17,30 @@ interface MessageRepository {
     /**
      * 기기에 존재하는 모든 대화방 정보를 불러옵니다.
      */
-    fun getSmsThreads(): Either<Failure, List<SmsThread>>
+    fun getConversations(): Result<List<Conversation>>
 
     /**
      * 대화방을 지웁니다.
      */
-    fun removeSmsThread(thread: SmsThread): Either<Failure, UseCase.None>
+    fun removeConversations(conversation: Conversation): Result<None>
 
     /**
      * 대화방 id를 이용해 특정 대화방을 찾아냅니다.
      */
-    fun getSmsThreadById(threadId: Long): Either<Failure, SmsThread>
+    fun getConversationById(id: Long): Result<Conversation>
 
     /**
      * 특정 대화방에 속하는 모든 메시지를 가져옵니다. (sms 한정)
      */
-    fun getMessagesFromSmsThread(thread: SmsThread): Either<Failure, List<ShortMessage>>
+    fun getMessagesInConversation(conversation: Conversation): Result<List<Sms>>
 
     /**
      * 하나의 SMS를 지웁니다.
      */
-    fun removeSms(sms: ShortMessage): Either<Failure, UseCase.None>
+    fun removeSms(sms: Sms): Result<None>
 
     /**
      * 대화방의 모든 메시지를 읽음 처리합니다.
      */
-    fun markSmsThreadAsRead(thread: SmsThread): Either<Failure, UseCase.None>
-
-    /**
-     * SMS를 전송합니다.
-     */
-    fun sendSms(sms: SmsEntity, save: Boolean = true): Either<Failure, UseCase.None>
+    fun markConversationAsRead(conversation: Conversation): Result<None>
 }

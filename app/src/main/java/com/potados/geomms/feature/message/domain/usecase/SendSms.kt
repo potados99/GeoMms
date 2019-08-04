@@ -1,0 +1,15 @@
+package com.potados.geomms.feature.message.domain.usecase
+
+import com.potados.geomms.core.functional.Result
+import com.potados.geomms.core.interactor.UseCase
+import com.potados.geomms.core.interactor.UseCase.None
+import com.potados.geomms.feature.common.MessageService
+import com.potados.geomms.feature.message.domain.SmsComposed
+
+class SendSms(
+    private val messageService: MessageService
+) : UseCase<None, SmsComposed>() {
+
+    override suspend fun run(params: SmsComposed): Result<None> =
+        messageService.sendSms(params, true)
+}

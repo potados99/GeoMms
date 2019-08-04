@@ -8,18 +8,16 @@ import com.potados.geomms.core.navigation.Navigator
 import com.potados.geomms.core.util.PermissionChecker
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.common.ContactRepositoryImpl
-import com.potados.geomms.feature.location.LocationSupportService
-import com.potados.geomms.feature.location.LocationSupportServiceImpl
+import com.potados.geomms.feature.location.domain.LSService
+import com.potados.geomms.feature.location.domain.LSServiceImpl
 import com.potados.geomms.feature.location.data.LocationRepository
 import com.potados.geomms.feature.location.data.LocationRepositoryImpl
-import com.potados.geomms.feature.location.data.LocationSupportRepository
-import com.potados.geomms.feature.location.data.LocationSupportRepositoryImpl
-import com.potados.geomms.feature.location.usecase.*
+import com.potados.geomms.feature.location.domain.usecase.*
 import com.potados.geomms.feature.message.data.*
-import com.potados.geomms.feature.message.usecase.GetConversations
-import com.potados.geomms.feature.message.usecase.GetMessages
-import com.potados.geomms.feature.message.usecase.ReadConversation
-import com.potados.geomms.feature.message.usecase.SendSms
+import com.potados.geomms.feature.message.domain.usecase.GetConversations
+import com.potados.geomms.feature.message.domain.usecase.GetMessages
+import com.potados.geomms.feature.message.domain.usecase.ReadConversation
+import com.potados.geomms.feature.message.domain.usecase.SendSms
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -88,10 +86,10 @@ val myModules = module {
     }
 
     /** 위치공유서비스 */
-    single { LocationSupportServiceImpl(get()) as LocationSupportService }
+    single { LSServiceImpl(get()) as LSService }
 
     /** 위치공유서비스 정보 저장소 */
-    single { LocationSupportRepositoryImpl(get()) as LocationSupportRepository }
+    single { LSRepositoryImpl(get()) as LSRepository }
 
     /** USE CASE 1 */
     single { HandleLocationMessage(get()) }
@@ -100,7 +98,7 @@ val myModules = module {
     single { RequestConnection(get()) }
 
     /** USE CASE 3 */
-    single { AcceptRequest(get()) }
+    single { AcceptNewConnection(get()) }
 
     /** USE CASE 4 */
     single { RequestLocation(get()) }
@@ -109,10 +107,10 @@ val myModules = module {
     single { SendLocation(get()) }
 
     /** USE CASE 6 */
-    single { GetPendingRequests(get()) }
+    single { GetOutboundRequests(get()) }
 
     /** USE CASE 7 */
-    single { GetIncommingRequests(get()) }
+    single { GetInboundRequests(get()) }
 
     /** USE CASE 8 */
     single { GetConnections(get()) }

@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
-            android:name="com.potados.geomms.feature.common.MyApplication"
+            android:name="com.potados.geomms.app.MyApplication"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
@@ -22,7 +22,7 @@
 
         <!-- 설정 액티비티 -->
         <activity
-                android:name="com.potados.geomms.feature.common.SettingsActivity">
+                android:name="com.potados.geomms.feature.settings.SettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
                 <action android:name="android.intent.action.SENDTO"/>
@@ -49,7 +49,7 @@
 
         <!-- 권한 요구 액티비티 -->
         <activity
-                android:name="com.potados.geomms.feature.common.GiveMePermissionActivity">
+                android:name="com.potados.geomms.app.GiveMePermissionActivity">
         </activity>
 
         <!-- SMS 기본 앱 요구 액티비티 -->
@@ -59,13 +59,13 @@
 
         <!-- 메인 액티비티 -->
         <activity
-                android:name="com.potados.geomms.feature.common.MainActivity"
+                android:name="com.potados.geomms.app.MainActivity"
                 android:label="@string/app_name">
         </activity>
 
         <!-- 메시지 작성 액티비티 -->
         <activity
-                android:name="com.potados.geomms.feature.message.ConversationActivity"
+                android:name="com.potados.geomms.feature.message.representation.ConversationActivity"
                 android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
@@ -85,7 +85,7 @@
 
         <!-- SMS 수신자 -->
         <receiver
-                android:name="com.potados.geomms.feature.common.SmsReceiver"
+                android:name="com.potados.geomms.app.SmsReceiver"
                 android:permission="android.permission.BROADCAST_SMS">
 
             <intent-filter>
@@ -95,14 +95,14 @@
         </receiver>
 
         <!-- SMS 발송 결과 수신자 -->
-        <receiver android:name="com.potados.geomms.feature.common.SmsSentReceiver">
+        <receiver android:name="com.potados.geomms.app.SmsSentReceiver">
             <intent-filter>
                 <action android:name="com.potados.SMS_SENT"/>
             </intent-filter>
         </receiver>
 
         <!-- SMS 전달 결과 수신자 -->
-        <receiver android:name="com.potados.geomms.feature.common.SmsDeliveredReceiver">
+        <receiver android:name="com.potados.geomms.app.SmsDeliveredReceiver">
             <intent-filter>
                 <action android:name="com.potados.SMS_DELIVERED"/>
             </intent-filter>
@@ -110,7 +110,7 @@
 
         <!-- MMS 수신자 -->
         <receiver
-                android:name="com.potados.geomms.feature.common.MmsReceiver"
+                android:name="com.potados.geomms.app.MmsReceiver"
                 android:permission="android.permission.BROADCAST_WAP_PUSH">
 
             <intent-filter>

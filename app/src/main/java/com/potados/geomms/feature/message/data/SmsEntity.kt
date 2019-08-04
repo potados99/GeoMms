@@ -1,16 +1,44 @@
 package com.potados.geomms.feature.message.data
 
-class SmsEntity {
-    var body: String = ""
-        private set
+import android.provider.Telephony
+import com.google.gson.annotations.SerializedName
+import com.potados.geomms.core.util.DateTime
+import com.potados.geomms.feature.common.ContactRepository
+import com.potados.geomms.feature.common.Person
+import com.potados.geomms.feature.message.domain.Sms
 
-    var address: String = ""
-        private set
+/**
+ * 하나의 SMS를 나타냅니다.
+ */
+data class SmsEntity(
+    @SerializedName(Telephony.Sms._ID)              val id: Long,
+    @SerializedName(Telephony.Sms.THREAD_ID)        val threadId: Long,
+    @SerializedName(Telephony.Sms.ADDRESS)          val address: String,
 
-    var date: Long = 0
-        private set
+    @SerializedName(Telephony.Sms.DATE)             val date: Long,
+    @SerializedName(Telephony.Sms.READ)             val read: Long,
+    @SerializedName(Telephony.Sms.STATUS)           val status: Long,
+    @SerializedName(Telephony.Sms.TYPE)             val type: Long,
 
-    fun body(body: String): SmsEntity = this.apply { this.body = body }
-    fun address(address: String): SmsEntity = this.apply { this.address = address }
-    fun date(address: String): SmsEntity = this.apply { this.date = date }
+    @SerializedName(Telephony.Sms.SUBJECT)          val subject: String,
+    @SerializedName(Telephony.Sms.BODY)             val body: String
+) {
+    fun isSent(): Boolean = (this.type.toInt() == Telephony.Sms.MESSAGE_TYPE_SENT)
+    fun isReceived(): Boolean = (this.type.toInt() == Telephony.Sms.MESSAGE_TYPE_INBOX)
+
+    fun isRead(): Boolean = (this.read == READ_TRUE)
+    fun isNotRead(): Boolean = (this.read == READ_FALSE)
+
+    fun toSms(contactRepository: ContactRepository) =
+        Sms(
+            id = id,
+            recipient = Person(address),
+            date = DateTime(date),
+            body = body
+        )
+
+    companion object {
+        const val READ_TRUE = 1L
+        const val READ_FALSE = 0L
+    }
 }

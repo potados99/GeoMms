@@ -6,8 +6,6 @@
  */
 package com.potados.geomms.core.interactor
 
-import com.potados.geomms.core.exception.Failure
-import com.potados.geomms.core.functional.Either
 import com.potados.geomms.core.functional.Result
 import kotlinx.coroutines.*
 import kotlin.Result.Companion.success
@@ -27,12 +25,6 @@ abstract class UseCase<out Type: Any, in Params> {
 
         MainScope().launch {
             onResult(job.await())
-        }
-
-        val a = success("")
-
-        a.getOrElse {
-
         }
     }
 

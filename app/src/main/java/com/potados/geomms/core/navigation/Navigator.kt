@@ -3,11 +3,11 @@ package com.potados.geomms.core.navigation
 import android.content.Context
 import android.provider.Telephony
 import com.potados.geomms.core.util.PermissionChecker
-import com.potados.geomms.feature.message.ConversationActivity
-import com.potados.geomms.feature.common.GiveMePermissionActivity
-import com.potados.geomms.feature.common.MainActivity
+import com.potados.geomms.feature.message.representation.ConversationActivity
+import com.potados.geomms.app.GiveMePermissionActivity
+import com.potados.geomms.app.MainActivity
 import com.potados.geomms.feature.message.MakeMeDefaultAppActivity
-import com.potados.geomms.feature.message.data.SmsThread
+import com.potados.geomms.feature.message.data.ConversationEntity
 
 /**
  * Global activity navigator.
@@ -20,10 +20,10 @@ class Navigator (private val permissionChecker: PermissionChecker){
         }
     }
 
-    fun showConversationActivity(context: Context, smsThread: SmsThread) {
+    fun showConversationActivity(context: Context, conversationEntity: ConversationEntity) {
         whenPossible(context) {
             it.startActivity(
-                ConversationActivity.callingIntent(it, smsThread)
+                ConversationActivity.callingIntent(it, conversationEntity)
             )
         }
     }

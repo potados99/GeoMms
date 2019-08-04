@@ -1,6 +1,5 @@
 package com.potados.geomms
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.telephony.SmsManager
@@ -9,16 +8,13 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.potados.geomms.feature.message.data.MessageRepository
 import com.potados.geomms.feature.message.data.MessageRepositoryImpl
 import com.potados.geomms.feature.message.data.QueryInfoRepositoryImpl
-import com.potados.geomms.feature.message.data.SmsThread
+import com.potados.geomms.feature.message.data.ConversationEntity
 
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import androidx.test.rule.GrantPermissionRule
 import org.junit.Rule
-import java.nio.file.Files.exists
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.core.di.permissions
 
 
@@ -36,8 +32,8 @@ class ExampleInstrumentedTest {
 
     private fun getContext(): Context = InstrumentationRegistry.getInstrumentation().context
 
-    fun getSmsThreads(messageRepo: MessageRepository): List<SmsThread> =
-        messageRepo.getSmsThreads().right
+    fun getSmsThreads(messageRepo: MessageRepository): List<ConversationEntity> =
+        messageRepo.getConversations().right
 
     @Test
     fun removeSmsThreadTest() {
@@ -56,7 +52,7 @@ class ExampleInstrumentedTest {
         val rowsBefore = resultBefore.size
         val firstRow = resultBefore.first()
 
-        messageRepo.removeSmsThread(firstRow).right
+        messageRepo.removeConversations(firstRow).right
 
         val resultAfter = getSmsThreads(messageRepo)
         val rowsAfter = resultAfter.size
@@ -90,7 +86,7 @@ class ExampleInstrumentedTest {
     private fun showSmsInbox() {
         val p = Popup(this).withTitle("Messages")
         val uri = Uri.parse("content://sms")
-        val projection = arrayOf("thread_id", "_id", "type", "address", "body", "person")
+        val projection = arrayOf("thread_id", "_id", "type", "address", "body", "recipient")
         val cursor = contentResolver.query(uri, projection, null, null, null) ?: return
         if (cursor.moveToFirst()) {
             do {
