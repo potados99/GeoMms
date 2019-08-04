@@ -13,8 +13,8 @@ package com.potados.geomms.core.functional
  * and [Right] is used for "success".
  */
 sealed class Either<out L, out R> {
-    data class Left<out L>(val a: L) : Either<L, Nothing>()
-    data class Right<out R>(val b: R) : Either<Nothing, R>()
+    data class Left<out L>(val a: L) : Either<L, None>()
+    data class Right<out R>(val b: R) : Either<None, R>()
 
     val isLeft get() = this is Left<L>
     val isRight get() = this is Right<R>
@@ -46,8 +46,8 @@ fun <A, B, C> ((A) -> B).and(fn: (B) -> C): (A) -> C = {
  */
 fun <T, L, R> Either<L, R>.flatMap(transform: (R) -> Either<L, T>): Either<L, T> =
     when (this) {
-        is Either.Left -> Either.Left(a) /* new instance */
-        is Either.Right -> transform(b)
+        is Result.Error -> Result.Error(a) /* new instance */
+        is Result.Success -> transform(b)
     }
 
 /**

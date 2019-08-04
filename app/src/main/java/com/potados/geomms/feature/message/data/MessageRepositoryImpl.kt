@@ -24,7 +24,7 @@ class MessageRepositoryImpl(
 
     override fun getSmsThreads(): Either<Failure, List<SmsThread>> =
         try {
-            Either.Right(
+            Result.Success(
                 QueryHelper.queryToCollection(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
                     queryRepo.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
@@ -37,7 +37,7 @@ class MessageRepositoryImpl(
         } catch (e: Exception) {
             Log.w("MessageRepositoryImpl:getSmsThreads", e)
 
-            Either.Left(MessageFailure.QueryFailure())
+            Result.Error(MessageFailure.QueryFailure())
         }
 
     override fun removeSmsThread(thread: SmsThread): Either<Failure, UseCase.None> =
@@ -50,16 +50,16 @@ class MessageRepositoryImpl(
                 }
             }
 
-            Either.Right(UseCase.None())
+            Result.Success(UseCase.None())
         } catch (e: Exception) {
             Log.w("MessageRepositoryImpl:removeSmsThread($thread)", e)
 
-            Either.Left(MessageFailure.DeleteFailure())
+            Result.Error(MessageFailure.DeleteFailure())
         }
 
     override fun getSmsThreadById(threadId: Long): Either<Failure, SmsThread> =
         try {
-            Either.Right(
+            Result.Success(
                 QueryHelper.queryToCollection<Collection<SmsThread>>(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
                     queryRepo.getConversationsUri(),                                    /* 대화방(thread)이 모여있는 uri. */
@@ -72,12 +72,12 @@ class MessageRepositoryImpl(
         } catch (e: Exception) {
             Log.w("MessageRepositoryImpl:getSmsThreadById($threadId)", e)
 
-            Either.Left(MessageFailure.QueryFailure())
+            Result.Error(MessageFailure.QueryFailure())
         }
 
     override fun getMessagesFromSmsThread(thread: SmsThread): Either<Failure, List<ShortMessage>> =
         try {
-            Either.Right(
+            Result.Success(
                 QueryHelper.queryToCollection(
                     context.contentResolver,                                            /* 컨텐츠 리졸버. */
                     queryRepo.getMessagesUriOfThreadId(thread.id),                      /* 특정 대화방에 해당하는 메시지들이 모여있는 uri. */
@@ -90,7 +90,7 @@ class MessageRepositoryImpl(
         } catch (e: Exception) {
             Log.w("MessageRepositoryImpl:getMessagesFromSmsThread($thread)", e)
 
-            Either.Left(MessageFailure.QueryFailure())
+            Result.Error(MessageFailure.QueryFailure())
         }
 
     override fun removeSms(sms: ShortMessage): Either<Failure, UseCase.None> =
@@ -103,16 +103,16 @@ class MessageRepositoryImpl(
                 }
             }
 
-            Either.Right(UseCase.None())
+            Result.Success(UseCase.None())
         } catch (e: Exception) {
             Log.w("MessageRepositoryImpl:removeSms($sms)", e)
 
-            Either.Left(MessageFailure.DeleteFailure())
+            Result.Error(MessageFailure.DeleteFailure())
         }
 
     override fun markSmsThreadAsRead(thread: SmsThread): Either<Failure, UseCase.None> {
-        if (thread.isAllRead()) return Either.Right(UseCase.None())
-        if (thread.messageCount == 0L) return Either.Right(UseCase.None())
+        if (thread.isAllRead()) return Result.Success(UseCase.None())
+        if (thread.messageCount == 0L) return Result.Success(UseCase.None())
 
         return try {
             val numberOfUpdatedRows = context.contentResolver.update(
@@ -124,13 +124,13 @@ class MessageRepositoryImpl(
 
             val success = (numberOfUpdatedRows != 0)
 
-            if (success) Either.Right(UseCase.None())
-            else Either.Left(MessageFailure.UpdateFailure())
+            if (success) Result.Success(UseCase.None())
+            else Result.Error(MessageFailure.UpdateFailure())
 
         } catch (e: Exception) {
             Log.w("MessageRepositoryImpl:markSmsThreadAsRead(id: ${thread.id})", e)
 
-            Either.Left(MessageFailure.UpdateFailure())
+            Result.Error(MessageFailure.UpdateFailure())
         }
     }
 
@@ -164,9 +164,9 @@ class MessageRepositoryImpl(
 
             Log.i("MessageRepositoryImpl:sendSms", "try to send message: {address: ${sms.address}, body: ${sms.body}}")
 
-            Either.Right(UseCase.None())
+            Result.Success(UseCase.None())
         } catch (e: Exception) {
             e.printStackTrace()
-            Either.Left(MessageFailure.SendFailure())
+            Result.Error(MessageFailure.SendFailure())
         }
 }
