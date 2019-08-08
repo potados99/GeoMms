@@ -2,7 +2,7 @@ package com.potados.geomms.core.navigation
 
 import android.content.Context
 import android.provider.Telephony
-import com.potados.geomms.util.PermissionChecker
+import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.feature.message.representation.ConversationActivity
 import com.potados.geomms.app.GiveMePermissionActivity
 import com.potados.geomms.app.MainActivity
@@ -12,7 +12,7 @@ import com.potados.geomms.feature.message.domain.Conversation
 /**
  * Global activity navigator.
  */
-class Navigator (private val permissionChecker: PermissionChecker){
+class Navigator (private val permissionManager: com.potados.geomms.manager.PermissionManager){
 
     fun showMain(context: Context) {
         whenPossible(context) {
@@ -37,7 +37,7 @@ class Navigator (private val permissionChecker: PermissionChecker){
     }
 
     private fun whenPossible(context: Context, body: (Context) -> Unit) {
-        if (!permissionChecker.isAllGranted()) {
+        if (!permissionManager.isAllGranted()) {
             /**
              * if not all permissions allowed.
              */

@@ -35,8 +35,6 @@ interface ConversationRepository {
 
     fun setConversationName(id: Long, name: String)
 
-    fun searchConversations(query: String): List<SearchResult>
-
     fun getBlockedConversations(): RealmResults<Conversation>
 
     fun getConversationAsync(threadId: Long): Conversation

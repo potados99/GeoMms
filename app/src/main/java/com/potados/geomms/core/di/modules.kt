@@ -5,7 +5,7 @@ import android.content.Context
 import android.location.LocationManager
 import android.telephony.SmsManager
 import com.potados.geomms.core.navigation.Navigator
-import com.potados.geomms.util.PermissionChecker
+import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.common.ContactRepositoryImpl
 import com.potados.geomms.feature.common.MessageService
@@ -37,7 +37,7 @@ val myModules = module {
      **********************************************************/
 
     /** 권한 확인 */
-    single { PermissionChecker(androidContext(), permissions) }
+    single { com.potados.geomms.manager.PermissionManager(androidContext(), permissions) }
 
     /** 네비게이터 */
     single { Navigator(get()) }

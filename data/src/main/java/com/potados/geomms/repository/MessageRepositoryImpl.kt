@@ -18,27 +18,22 @@
  */
 package com.potados.geomms.repository
 
-import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
 import com.google.android.mms.ContentType
 import com.google.android.mms.MMSPart
 import com.klinker.android.send_message.SmsManagerFactory
-import com.klinker.android.send_message.SmsManagerFactory.createSmsManager
-import com.klinker.android.send_message.StripAccents
 import com.klinker.android.send_message.Transaction
 import com.moez.QKSMS.receiver.SmsSentReceiver
 import com.potados.geomms.compat.TelephonyCompat
 import com.potados.geomms.extension.anyOf
-import com.potados.geomms.extension.insertOrUpdate
 import com.potados.geomms.manager.ActiveConversationManager
 import com.potados.geomms.manager.KeyManager
 import com.potados.geomms.model.Attachment
@@ -48,6 +43,7 @@ import com.potados.geomms.model.MmsPart
 import com.potados.geomms.preference.Preferences
 import com.potados.geomms.receiver.SmsDeliveredReceiver
 import com.potados.geomms.util.ImageUtils
+import com.potados.geomms.extension.tryOrNull
 import io.realm.Case
 import io.realm.Realm
 import io.realm.RealmResults
@@ -246,7 +242,7 @@ class MessageRepositoryImpl(
                 .mapNotNull { attachment -> attachment as? Attachment.Image }
                 .filter { attachment -> !attachment.isGif(context) }
                 .mapNotNull { attachment -> attachment.getUri() }
-                .mapNotNull { uri -> try { imageRepository.loadImage(uri) } catch(e: Exception) { null } }
+                .mapNotNull { uri -> tryOrNull { imageRepository.loadImage(uri) } }
                 .also { totalImageBytes = it.sumBy { it.allocationByteCount } }
                 .map { bitmap ->
                     val byteRatio = bitmap.allocationByteCount / totalImageBytes.toFloat()

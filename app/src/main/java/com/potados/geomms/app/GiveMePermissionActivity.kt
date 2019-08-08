@@ -10,7 +10,7 @@ import androidx.core.app.ActivityCompat
 import com.potados.geomms.R
 import com.potados.geomms.core.navigation.Navigator
 import com.potados.geomms.util.Notify
-import com.potados.geomms.util.PermissionChecker
+import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.util.Popup
 import org.koin.android.ext.android.inject
 import kotlin.system.exitProcess
@@ -22,12 +22,12 @@ import kotlin.system.exitProcess
 class GiveMePermissionActivity: AppCompatActivity() {
 
     private val navigator: Navigator by inject()
-    private val permissionChecker: PermissionChecker by inject()
+    private val permissionManager: com.potados.geomms.manager.PermissionManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (permissionChecker.isAllGranted()) {
+        if (permissionManager.isAllGranted()) {
             navigator.showMain(this)
             this.finish()
         }
@@ -36,7 +36,7 @@ class GiveMePermissionActivity: AppCompatActivity() {
             .withTitle(getString(R.string.need_permission))
             .withMessage(getString(R.string.please_allow_permissions))
             .withPositiveButton(getString(R.string.ok)) { _, _ ->
-                requirePermissions(permissionChecker.ungrantedPermissions())
+                requirePermissions(permissionManager.ungrantedPermissions())
             }
             .withNegativeButton(getString(R.string.cancel)) { _, _ ->
                 Notify(this).short("why... :(")
@@ -46,13 +46,13 @@ class GiveMePermissionActivity: AppCompatActivity() {
 
     private fun requirePermissions(permissions: Array<String>) {
 
-        if (permissionChecker.isAllGranted()) {
+        if (permissionManager.isAllGranted()) {
             onPermissionSuccess()
         }
         else {
             ActivityCompat.requestPermissions(
                 this,
-                permissionChecker.ungrantedPermissions(),
+                permissionManager.ungrantedPermissions(),
                 PERMISSION_REQUEST_CODE
             )
         }
