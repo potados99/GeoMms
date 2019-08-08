@@ -9,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.potados.geomms.R
 import com.potados.geomms.core.navigation.Navigator
-import com.potados.geomms.core.util.Notify
-import com.potados.geomms.core.util.PermissionChecker
-import com.potados.geomms.core.util.Popup
+import com.potados.geomms.util.Notify
+import com.potados.geomms.util.PermissionChecker
+import com.potados.geomms.util.Popup
 import org.koin.android.ext.android.inject
 import kotlin.system.exitProcess
 

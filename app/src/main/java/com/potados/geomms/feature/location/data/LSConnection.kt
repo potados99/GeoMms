@@ -1,7 +1,7 @@
 package com.potados.geomms.feature.location.data
 
-import com.potados.geomms.core.util.DateTime
-import com.potados.geomms.core.util.Metric
+import com.potados.geomms.util.DateTime
+import com.potados.geomms.util.Metric
 import com.potados.geomms.feature.common.Person
 
 /**

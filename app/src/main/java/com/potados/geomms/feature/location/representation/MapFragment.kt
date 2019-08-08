@@ -18,9 +18,9 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
 import com.potados.geomms.core.extension.*
 import com.potados.geomms.core.platform.NavigationBasedFragment
-import com.potados.geomms.core.util.Duration
-import com.potados.geomms.core.util.Notify
-import com.potados.geomms.core.util.Popup
+import com.potados.geomms.util.Duration
+import com.potados.geomms.util.Notify
+import com.potados.geomms.util.Popup
 import com.potados.geomms.app.SmsReceiver
 import com.potados.geomms.feature.location.data.LSConnection
 import com.potados.geomms.feature.location.data.LSRequest

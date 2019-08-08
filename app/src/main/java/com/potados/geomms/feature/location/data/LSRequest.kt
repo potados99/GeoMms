@@ -1,10 +1,8 @@
 package com.potados.geomms.feature.location.data
 
-import com.potados.geomms.core.util.DateTime
-import com.potados.geomms.feature.common.ContactRepository
+import com.potados.geomms.util.DateTime
 import com.potados.geomms.feature.common.Person
 import org.koin.core.KoinComponent
-import org.koin.core.inject
 import kotlin.random.Random
 
 /**

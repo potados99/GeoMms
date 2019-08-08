@@ -3,7 +3,7 @@ package com.potados.geomms.feature.location.domain
 import android.util.Log
 import com.potados.geomms.core.functional.Result
 import com.potados.geomms.core.interactor.UseCase.None
-import com.potados.geomms.core.util.DateTime
+import com.potados.geomms.util.DateTime
 import com.potados.geomms.feature.common.MessageService
 import com.potados.geomms.feature.location.data.LocationRepository
 import com.potados.geomms.feature.location.data.LSConnection
@@ -11,7 +11,6 @@ import com.potados.geomms.feature.location.data.LSPacket
 import com.potados.geomms.feature.location.data.LSRequest
 import com.potados.geomms.feature.message.domain.SmsComposed
 import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 class LSServiceImpl(
     private val locationRepository: LocationRepository,

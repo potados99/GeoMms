@@ -3,7 +3,7 @@ package com.potados.geomms.feature.message.data
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.Telephony
-import com.potados.geomms.core.util.QueryHelper
+import com.potados.geomms.util.QueryHelper
 
 class QueryInfoRepositoryImpl : QueryInfoRepository {
 

@@ -5,7 +5,7 @@ import android.content.Context
 import android.location.LocationManager
 import android.telephony.SmsManager
 import com.potados.geomms.core.navigation.Navigator
-import com.potados.geomms.core.util.PermissionChecker
+import com.potados.geomms.util.PermissionChecker
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.common.ContactRepositoryImpl
 import com.potados.geomms.feature.common.MessageService

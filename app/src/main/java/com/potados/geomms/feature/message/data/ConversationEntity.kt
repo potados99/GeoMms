@@ -2,7 +2,7 @@ package com.potados.geomms.feature.message.data
 
 import android.provider.Telephony
 import com.google.gson.annotations.SerializedName
-import com.potados.geomms.core.util.DateTime
+import com.potados.geomms.util.DateTime
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.common.Person
 import com.potados.geomms.feature.message.domain.Conversation

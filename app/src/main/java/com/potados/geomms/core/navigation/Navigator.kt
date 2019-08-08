@@ -2,12 +2,11 @@ package com.potados.geomms.core.navigation
 
 import android.content.Context
 import android.provider.Telephony
-import com.potados.geomms.core.util.PermissionChecker
+import com.potados.geomms.util.PermissionChecker
 import com.potados.geomms.feature.message.representation.ConversationActivity
 import com.potados.geomms.app.GiveMePermissionActivity
 import com.potados.geomms.app.MainActivity
 import com.potados.geomms.feature.message.MakeMeDefaultAppActivity
-import com.potados.geomms.feature.message.data.ConversationEntity
 import com.potados.geomms.feature.message.domain.Conversation
 
 /**

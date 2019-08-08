@@ -3,7 +3,7 @@ package com.potados.geomms.feature.message.data
 import android.provider.Telephony
 import com.potados.geomms.core.functional.Result
 import com.potados.geomms.core.interactor.UseCase.None
-import com.potados.geomms.core.util.QueryHelper
+import com.potados.geomms.util.QueryHelper
 import kotlin.Exception
 import android.content.ContentValues
 import android.content.Context

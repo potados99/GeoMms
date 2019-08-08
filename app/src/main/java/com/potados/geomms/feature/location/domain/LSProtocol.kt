@@ -4,8 +4,8 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
-import com.potados.geomms.core.util.Reflection
-import com.potados.geomms.core.util.Types
+import com.potados.geomms.util.Reflection
+import com.potados.geomms.util.Types
 import com.potados.geomms.feature.location.data.LSPacket
 
 /**
