@@ -19,7 +19,6 @@
 package com.potados.geomms.repository
 
 import com.potados.geomms.model.Conversation
-import com.potados.geomms.model.SearchResult
 import io.realm.RealmResults
 
 interface ConversationRepository {

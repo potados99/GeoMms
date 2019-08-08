@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.moez.QKSMS.mapper
+package com.potados.geomms.mapper
 
 import android.database.Cursor
 import com.potados.geomms.model.Conversation

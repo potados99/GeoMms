@@ -21,7 +21,6 @@ package com.potados.geomms.repository
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.potados.geomms.model.Message
-import java.util.*
 
 interface SyncRepository {
 
