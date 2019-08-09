@@ -15,6 +15,9 @@ buildscript {
     ext.smsmms_version = '5.1.4'
     ext.rx_preferences_version = '2.0.0-RC3'
     ext.glide_version = '4.9.0'
+    ext.rxandroid_version = '2.0.1'
+    ext.rxjava_version = '2.1.4'
+    ext.rxkotlin_version = '2.1.0'
 
     repositories {
         google()

@@ -38,6 +38,11 @@ dependencies {
     /** compat */
     implementation "androidx.appcompat:appcompat:$androidx_exifinterface_version"
 
+    /** rxjava */
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
+
     /** 로깅 */
     implementation "com.jakewharton.timber:timber:$timber_version"
 

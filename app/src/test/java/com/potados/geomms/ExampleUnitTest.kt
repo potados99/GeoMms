@@ -1,8 +1,7 @@
 package com.potados.geomms
 
+import io.reactivex.Flowable
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -11,18 +10,10 @@ import org.junit.Assert.*
  */
 class ExampleUnitTest {
     @Test
-    fun locationSupportTest() {
-        val message = "[GEOMMS]127.24524:37.523414:235971849"
-
-        val locationData = LocationSupportServiceImpl.parse(message)
-
-        locationData?.let {
-            println("lat: ${locationData.latitude}")
-            println("long: ${locationData.longitude}")
-            println("date: ${locationData.createDate}")
-
-        } ?: println("failed to parse.")
-
-        assertNotNull(locationData)
+    fun rxTest() {
+        Flowable.just(System.currentTimeMillis())
+            .doOnNext { println("item emitted: $it") }
+            .doOnNext { println("item emitted: $it") }
+            .subscribe({ println("yeah: $it") }, { println("error: ${it.message}") })
     }
 }

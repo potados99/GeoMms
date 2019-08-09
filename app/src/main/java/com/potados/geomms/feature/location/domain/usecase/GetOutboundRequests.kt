@@ -1,6 +1,5 @@
 package com.potados.geomms.feature.location.domain.usecase
 
-import com.potados.geomms.core.functional.Result
 import com.potados.geomms.core.interactor.UseCase
 import com.potados.geomms.core.interactor.UseCase.None
 import com.potados.geomms.feature.location.data.LSRequest
@@ -10,6 +9,6 @@ class GetOutboundRequests(
     private val service: LSService
 ) : UseCase<List<LSRequest>, None>() {
 
-    override suspend fun run(params: None): Result<List<LSRequest>> =
+    override suspend fun buildObservable(params: None): Flowable<*> =
         service.getOutboundRequests()
 }

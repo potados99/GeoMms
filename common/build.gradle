@@ -36,6 +36,11 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
 
+    /** rxjava */
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
+
     /** 코루틴 */
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 

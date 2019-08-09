@@ -3,11 +3,14 @@ package com.potados.geomms.usecase
 import com.potados.geomms.core.functional.Result
 import com.potados.geomms.core.interactor.UseCase
 import com.potados.geomms.repository.MessageRepository
+import io.reactivex.Flowable
 
 class MarkDelivered(
     private val messageRepo: MessageRepository
-) : UseCase<Unit, Long>() {
+) : UseCase<Long>() {
 
-    override suspend fun run(params: Long): Result<Unit> =
-        Result.of { messageRepo.markDelivered(params) }
+    override fun buildObservable(params: Long): Flowable<*> =
+        Flowable.just(Unit)
+            .doOnNext { messageRepo.markDelivered(params) }
+
 }
