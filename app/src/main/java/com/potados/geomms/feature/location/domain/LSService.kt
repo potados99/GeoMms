@@ -1,7 +1,7 @@
 package com.potados.geomms.feature.location.domain
 
-import com.potados.geomms.core.functional.Result
-import com.potados.geomms.core.interactor.UseCase.None
+import com.potados.geomms.common.functional.Result
+import com.potados.geomms.common.interactor.UseCase.None
 import com.potados.geomms.feature.location.data.LSConnection
 import com.potados.geomms.feature.location.data.LSPacket
 import com.potados.geomms.feature.location.data.LSRequest

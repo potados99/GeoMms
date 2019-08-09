@@ -1,0 +1,9 @@
+package com.potados.geomms.common.base.interfaces
+
+/**
+ * Indicate that the child might has toolbar.
+ */
+interface HasToolbar {
+    fun toolbarId(): Int?
+    fun toolbarMenuId(): Int?
+}

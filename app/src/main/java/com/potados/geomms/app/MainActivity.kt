@@ -3,10 +3,10 @@ package com.potados.geomms.app
 import android.content.Context
 import android.content.Intent
 import com.potados.geomms.feature.location.representation.MapFragment
-import com.potados.geomms.feature.message.representation.ConversationListFragment
+import com.potados.geomms.feature.message.ConversationListFragment
 import com.potados.geomms.R
-import com.potados.geomms.core.platform.BaseFragment
-import com.potados.geomms.core.platform.NavigationBasedActivity
+import com.potados.geomms.common.base.BaseFragment
+import com.potados.geomms.common.base.NavigationBasedActivity
 
 /**
  * 권한 획득과 기본 앱 설정 후 나타나는 주 액티비티입니다.

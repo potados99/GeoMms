@@ -1,6 +1,6 @@
 package com.potados.geomms.feature.location.domain.usecase
 
-import com.potados.geomms.core.interactor.UseCase
+import com.potados.geomms.common.interactor.UseCase
 import com.potados.geomms.feature.location.data.LSPacket
 import com.potados.geomms.feature.location.domain.LSService
 

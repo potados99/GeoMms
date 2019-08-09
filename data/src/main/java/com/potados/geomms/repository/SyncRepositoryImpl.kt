@@ -45,8 +45,7 @@ class SyncRepositoryImpl(
     private val cursorToMessage: CursorToMessage,
     private val cursorToRecipient: CursorToRecipient,
     private val cursorToContact: CursorToContact,
-    private val keys: KeyManager,
-    private val rxPrefs: RxSharedPreferences
+    private val keys: KeyManager
 ) : SyncRepository {
 
     /**

@@ -1,8 +1,8 @@
 package com.potados.geomms.feature.location.domain
 
 import android.util.Log
-import com.potados.geomms.core.functional.Result
-import com.potados.geomms.core.interactor.UseCase.None
+import com.potados.geomms.common.functional.Result
+import com.potados.geomms.common.interactor.UseCase.None
 import com.potados.geomms.util.DateTime
 import com.potados.geomms.feature.common.MessageService
 import com.potados.geomms.feature.location.data.LocationRepository

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.potados.geomms.R
-import com.potados.geomms.core.platform.BaseActivity
+import com.potados.geomms.common.base.BaseActivity
 
 class SettingsActivity : BaseActivity() {
 

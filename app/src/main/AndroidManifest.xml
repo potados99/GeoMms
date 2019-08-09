@@ -40,7 +40,7 @@
 
         <!-- 시작 액티비티 -->
         <activity
-                android:name="com.potados.geomms.core.navigation.RouteActivity">
+                android:name="com.potados.geomms.common.navigation.RouteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -65,7 +65,7 @@
 
         <!-- 메시지 작성 액티비티 -->
         <activity
-                android:name="com.potados.geomms.feature.message.representation.ConversationActivity"
+                android:name="com.potados.geomms.feature.message.ComposeActivity"
                 android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>

@@ -1,6 +1,7 @@
 package com.potados.geomms
 
 import com.potados.geomms.repository.SyncRepository
+import com.potados.geomms.repository.SyncRepositoryImpl
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -10,10 +11,9 @@ import org.junit.Assert.*
  *
  * @see [Testing documentation](http://d.android.com/tools/testing)
  */
-class DomainTest {
+class DataTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, (2 + 2).toLong())
     }
-
 }

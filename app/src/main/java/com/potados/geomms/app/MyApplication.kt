@@ -1,7 +1,7 @@
 package com.potados.geomms.app
 
 import android.app.Application
-import com.potados.geomms.core.di.myModules
+import com.potados.geomms.common.di.myModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber

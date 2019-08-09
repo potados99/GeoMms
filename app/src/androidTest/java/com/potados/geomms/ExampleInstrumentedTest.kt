@@ -1,8 +1,6 @@
 package com.potados.geomms
 
 import android.content.Context
-import android.content.pm.PackageManager
-import android.telephony.SmsManager
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.potados.geomms.feature.message.data.MessageRepository
@@ -10,12 +8,11 @@ import com.potados.geomms.feature.message.data.MessageRepositoryImpl
 import com.potados.geomms.feature.message.data.QueryInfoRepositoryImpl
 import com.potados.geomms.feature.message.data.ConversationEntity
 
-import org.junit.Test
 import org.junit.runner.RunWith
 
 import androidx.test.rule.GrantPermissionRule
 import org.junit.Rule
-import com.potados.geomms.core.di.permissions
+import com.potados.geomms.common.di.permissions
 
 
 /**

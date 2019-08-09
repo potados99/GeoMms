@@ -2,8 +2,8 @@ package com.potados.geomms.feature.location.representation
 
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.Marker
-import com.potados.geomms.core.interactor.UseCase.None
-import com.potados.geomms.core.platform.BaseViewModel
+import com.potados.geomms.common.interactor.UseCase.None
+import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.feature.common.ContactRepository
 import com.potados.geomms.feature.location.data.LSConnection
 import com.potados.geomms.feature.location.data.LSRequest

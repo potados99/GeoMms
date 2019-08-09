@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.provider.Telephony
 import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.R
-import com.potados.geomms.core.navigation.Navigator
+import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
 import org.koin.android.ext.android.inject
