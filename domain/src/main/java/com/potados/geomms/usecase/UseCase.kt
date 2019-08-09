@@ -4,7 +4,7 @@
  * Credits to Fernando Cejas.
  * https://github.com/android10/Android-CleanArchitecture-Kotlin
  */
-package com.potados.geomms.core.interactor
+package com.potados.geomms.usecase
 
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers

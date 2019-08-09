@@ -19,7 +19,6 @@
 package com.potados.geomms.mapper
 
 import android.database.Cursor
-import com.moez.QKSMS.mapper.Mapper
 import com.potados.geomms.model.Recipient
 
 interface CursorToRecipient : Mapper<Cursor, Recipient> {

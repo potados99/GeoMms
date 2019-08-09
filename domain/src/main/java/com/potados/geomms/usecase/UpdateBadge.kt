@@ -1,7 +1,5 @@
 package com.potados.geomms.usecase
 
-import com.potados.geomms.core.functional.Result
-import com.potados.geomms.core.interactor.UseCase
 import io.reactivex.Flowable
 import timber.log.Timber
 

@@ -1,7 +1,5 @@
 package com.potados.geomms.usecase
 
-import com.potados.geomms.core.interactor.UseCase
-import com.potados.geomms.core.functional.Result
 import com.potados.geomms.manager.NotificationManager
 import com.potados.geomms.repository.MessageRepository
 import io.reactivex.Flowable
