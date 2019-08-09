@@ -1,50 +1,40 @@
-package com.potados.geomms.feature.message
+package com.potados.geomms.feature.compose
 
-import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.potados.geomms.R
 import com.potados.geomms.common.extension.*
-import com.potados.geomms.common.base.BaseFragment
-import com.potados.geomms.app.SmsReceiver
+import com.potados.geomms.databinding.ComposeFragmentBinding
 import com.potados.geomms.feature.message.domain.Conversation
 import com.potados.geomms.feature.message.domain.Sms
-import kotlinx.android.synthetic.main.conversations_fragment.*
+import kotlinx.android.synthetic.main.compose_fragment.*
 
-class ComposeFragment : BaseFragment() {
+class ComposeFragment : Fragment() {
+
 
     private lateinit var viewModel: ComposeViewModel
-    private val adapter = ComposeAdapter()
+    private lateinit var viewDataBinding: ComposeFragmentBinding
 
-    /**
-     * BaseFragment 설정들.
-     */
-    override fun layoutId(): Int = R.layout.fragment_conversation
-    override fun toolbarId(): Int? = R.id.conversation_toolbar
-    override fun toolbarMenuId(): Int? = null
-    override fun smsReceivedBehavior() = { _: String, _: String, _: Long ->
-        viewModel.loadMessages()
-        viewModel.setAsRead()
-    }
-
-    override fun intentFilter(): IntentFilter? = IntentFilter(SmsReceiver.SMS_DELIVER_ACTION)
+    private val adapter = MessagesAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = getViewModel {
-            observe(conversation, ::renderConversation)
-            observe(messages, ::renderMessages)
-
-            failure(failure, ::handleFailure)
-
             /** 중요 */
            arguments?.getLong(PARAM_CONVERSATION)?.let(::start)
         }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return Compose
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,8 +90,8 @@ class ComposeFragment : BaseFragment() {
             /**
              * 리사이클러뷰 설정.
              */
-            conversation_recyclerview.layoutManager = LinearLayoutManager(context)
-            conversation_recyclerview.adapter = adapter
+            messages_recyclerview.layoutManager = LinearLayoutManager(context)
+            messages_recyclerview.adapter = adapter
 
             /**
              * 툴바 설정.
@@ -115,8 +105,8 @@ class ComposeFragment : BaseFragment() {
              * 하단의 메시지 작성 레이아웃이 recyclerView의 컨텐츠를 가리지 않도록
              * 레이아웃 변화에 맞추어 recyclerView의 패딩을 설정해줍니다.
              */
-            conversation_bottom_layout.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
-                with(conversation_recyclerview) {
+            compose_bottom_layout.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
+                with(messages_recyclerview) {
                     setPadding(paddingLeft, paddingTop, paddingRight, bottom - top)
 
                     if (viewModel.recyclerViewReachedItsEnd) {
@@ -129,7 +119,7 @@ class ComposeFragment : BaseFragment() {
              * 메시지 목록의 스크롤 상태에 따라 특정 상황에서 맨 밑으로 스크롤할지 여부가 달라집니다.
              * 스크롤 상태가 바뀔때마다 현재 바닥에 도달했는지 여부를 저장합니다.
              */
-            conversation_recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            messages_recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
 
@@ -137,31 +127,31 @@ class ComposeFragment : BaseFragment() {
                      * direction -1은 위, 1은 아래입니다.
                      * 아래로 스크롤할 수 없다면 바닥에 도달한 것입니다.
                      */
-                    viewModel.recyclerViewReachedItsEnd = !conversation_recyclerview.canScrollVertically(1)
+                    viewModel.recyclerViewReachedItsEnd = !messages_recyclerview.canScrollVertically(1)
                 }
             })
 
             /**
              * 보내기 버튼 동작 설정.
              */
-            conversation_send_button.setOnClickListener {
-                viewModel.sendMessage(conversation_edittext.text.toString())
-                conversation_edittext.text.clear()
+            compose_send_button.setOnClickListener {
+                viewModel.sendMessage(compose_edittext.text.toString())
+                compose_edittext.text.clear()
             }
         }
     }
 
     private fun scrollToBottom(smooth: Boolean = true) {
-        conversation_recyclerview.adapter?.let {
+        messages_recyclerview.adapter?.let {
             Log.d("ComposeActivity: scrollToBottom()", "scrolling to bottom.")
 
             val position =  if (it.itemCount > 0) it.itemCount - 1 else 0
 
             if (smooth) {
-                conversation_recyclerview.smoothScrollToPosition(position)
+                messages_recyclerview.smoothScrollToPosition(position)
             }
             else {
-                conversation_recyclerview.scrollToPosition(position)
+                messages_recyclerview.scrollToPosition(position)
             }
 
             viewModel.recyclerViewReachedItsEnd = true

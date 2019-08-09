@@ -4,7 +4,6 @@ import android.util.Log
 import com.potados.geomms.common.functional.Result
 import com.potados.geomms.common.interactor.UseCase.None
 import com.potados.geomms.util.DateTime
-import com.potados.geomms.feature.common.MessageService
 import com.potados.geomms.feature.location.data.LocationRepository
 import com.potados.geomms.feature.location.data.LSConnection
 import com.potados.geomms.feature.location.data.LSPacket

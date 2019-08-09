@@ -1,21 +1,13 @@
-package com.potados.geomms.feature.message
+package com.potados.geomms.feature.conversations
 
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.potados.geomms.R
-import com.potados.geomms.common.extension.baseActivity
-import com.potados.geomms.common.extension.failure
 import com.potados.geomms.common.extension.getViewModel
-import com.potados.geomms.common.extension.observe
 import com.potados.geomms.common.navigation.Navigator
-import com.potados.geomms.common.base.NavigationBasedFragment
-import com.potados.geomms.app.SmsReceiver
 import com.potados.geomms.databinding.ConversationsFragmentBinding
 import com.potados.geomms.model.Conversation
-import kotlinx.android.synthetic.main.connection_list.view.conversation_list_recyclerview
+import kotlinx.android.synthetic.main.conversations_fragment.view.*
 import org.koin.android.ext.android.inject
 
 /**
@@ -26,23 +18,22 @@ class ConversationsFragment : Fragment(),
 
     private val navigator: Navigator by inject()
 
-    private lateinit var viewModel: ConversationsViewModel
-    private lateinit var bindings: ConversationsFragmentBinding
+    private lateinit var conversationsViewModel: ConversationsViewModel
+    private lateinit var viewDataBinding: ConversationsFragmentBinding
 
-    private val adapter = ConversationsAdapter(this)
+    private val conversationsAdapter = ConversationsAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = getViewModel {}
+        conversationsViewModel = getViewModel {}
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return ConversationsFragmentBinding
             .inflate(inflater, container, false)
-            .apply { vm = viewModel }
-            .apply { lifecycleOwner = viewLifecycleOwner }
-            .apply { bindings = this }
+            .apply { vm = conversationsViewModel }
+            .apply { viewDataBinding = this }
             .root
             .apply { initializeView(this) }
     }
@@ -54,8 +45,8 @@ class ConversationsFragment : Fragment(),
     private fun initializeView(view: View) {
 
         /** 대화 목록 리사이클러뷰 */
-        with(view.conversation_list_recyclerview) {
-            adapter = adapter
+        with(view.conversations_recyclerview) {
+            adapter = conversationsAdapter
             // ...
         }
 

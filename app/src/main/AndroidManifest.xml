@@ -54,7 +54,7 @@
 
         <!-- SMS 기본 앱 요구 액티비티 -->
         <activity
-                android:name="com.potados.geomms.feature.message.MakeMeDefaultAppActivity">
+                android:name="com.potados.geomms.app.MakeMeDefaultAppActivity">
         </activity>
 
         <!-- 메인 액티비티 -->
@@ -65,7 +65,7 @@
 
         <!-- 메시지 작성 액티비티 -->
         <activity
-                android:name="com.potados.geomms.feature.message.ComposeActivity"
+                android:name="com.potados.geomms.feature.compose.ComposeActivity"
                 android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
@@ -121,7 +121,7 @@
         </receiver>
 
         <service
-                android:name="com.potados.geomms.feature.message.HeadlessSmsSendService"
+                android:name="com.potados.geomms.feature.compose.HeadlessSmsSendService"
                 android:exported="true"
                 android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>

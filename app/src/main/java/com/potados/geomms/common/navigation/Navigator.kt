@@ -4,8 +4,8 @@ import android.content.Context
 import android.provider.Telephony
 import com.potados.geomms.app.GiveMePermissionActivity
 import com.potados.geomms.app.MainActivity
-import com.potados.geomms.feature.message.ComposeActivity
-import com.potados.geomms.feature.message.MakeMeDefaultAppActivity
+import com.potados.geomms.feature.compose.ComposeActivity
+import com.potados.geomms.app.MakeMeDefaultAppActivity
 import com.potados.geomms.model.Conversation
 
 /**

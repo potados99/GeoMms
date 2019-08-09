@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.message
+package com.potados.geomms.feature.compose
 
 import android.app.Service
 import android.content.Intent

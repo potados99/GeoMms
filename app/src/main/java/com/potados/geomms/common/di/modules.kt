@@ -5,10 +5,6 @@ import android.content.Context
 import android.location.LocationManager
 import android.telephony.SmsManager
 import com.potados.geomms.common.navigation.Navigator
-import com.potados.geomms.feature.common.ContactRepository
-import com.potados.geomms.feature.common.ContactRepositoryImpl
-import com.potados.geomms.feature.common.MessageService
-import com.potados.geomms.feature.common.MessageServiceImpl
 import com.potados.geomms.feature.location.domain.LSService
 import com.potados.geomms.feature.location.domain.LSServiceImpl
 import com.potados.geomms.feature.location.data.LocationRepository

@@ -2,7 +2,6 @@ package com.potados.geomms.feature.location.data
 
 import com.potados.geomms.util.DateTime
 import com.potados.geomms.util.Metric
-import com.potados.geomms.feature.common.Person
 
 /**
  * LSServiceImpl 시스템의 연결 정보를 표현합니다.

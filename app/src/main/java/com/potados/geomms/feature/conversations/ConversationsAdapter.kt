@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.message
+package com.potados.geomms.feature.conversations
 
 import android.graphics.Color
 import android.graphics.Typeface
@@ -15,10 +15,8 @@ import com.potados.geomms.util.DateTime
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
-import kotlinx.android.synthetic.main.conversation_list_item.view.*
+import kotlinx.android.synthetic.main.conversations_item.view.*
 import org.koin.core.KoinComponent
-import org.koin.core.inject
-import kotlin.properties.Delegates
 
 class ConversationsAdapter(
     private val listener: ConversationClickListener

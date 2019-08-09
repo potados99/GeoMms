@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.message
+package com.potados.geomms.feature.conversations
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,10 +17,5 @@ class ConversationsViewModel : ViewModel(), KoinComponent {
 
     private val conversationRepo: ConversationRepository by inject()
 
-    var conversations: RealmResults<Conversation>? = null
-
-    init {
-        conversations = conversationRepo.getConversations()
-    }
-
+    val conversations: RealmResults<Conversation> = conversationRepo.getConversations()
 }
