@@ -3,7 +3,7 @@ package com.potados.geomms.app
 import android.content.Context
 import android.content.Intent
 import com.potados.geomms.feature.location.representation.MapFragment
-import com.potados.geomms.feature.message.ConversationListFragment
+import com.potados.geomms.feature.message.ConversationsFragment
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.base.NavigationBasedActivity
@@ -25,7 +25,7 @@ class MainActivity : NavigationBasedActivity() {
 
     /** 사용할 프래그먼트들 */
     private val mFragments by lazy{
-        arrayOf(ConversationListFragment(), MapFragment())
+        arrayOf(ConversationsFragment(), MapFragment())
     }
 
     companion object {

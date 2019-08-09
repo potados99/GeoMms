@@ -18,6 +18,8 @@ buildscript {
     ext.rxandroid_version = '2.0.1'
     ext.rxjava_version = '2.1.4'
     ext.rxkotlin_version = '2.1.0'
+    ext.realm_version = '5.8.0'
+    ext.realm_adapters_version = '3.1.0'
 
     repositories {
         google()
@@ -28,7 +30,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath "io.realm:realm-gradle-plugin:5.8.0"
+        classpath "io.realm:realm-gradle-plugin:$realm_version"
     }
 }
 

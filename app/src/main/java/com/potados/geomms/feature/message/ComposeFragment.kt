@@ -13,7 +13,7 @@ import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.app.SmsReceiver
 import com.potados.geomms.feature.message.domain.Conversation
 import com.potados.geomms.feature.message.domain.Sms
-import kotlinx.android.synthetic.main.fragment_conversation.*
+import kotlinx.android.synthetic.main.conversations_fragment.*
 
 class ComposeFragment : BaseFragment() {
 

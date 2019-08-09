@@ -35,6 +35,8 @@ import com.potados.geomms.mapper.CursorToConversation
 import com.potados.geomms.mapper.CursorToMessage
 import com.potados.geomms.mapper.CursorToRecipient
 import com.potados.geomms.model.*
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import io.realm.Realm
 import io.realm.Sort
 
@@ -62,7 +64,9 @@ class SyncRepositoryImpl(
     private val _progress = MutableLiveData<SyncRepository.SyncProgress>().apply {
         value = SyncRepository.SyncProgress.Idle()
     }
-    override val syncProgress: LiveData<SyncRepository.SyncProgress> = _progress
+
+    override val syncProgress: Subject<SyncRepository.SyncProgress> =
+        BehaviorSubject.createDefault(SyncRepository.SyncProgress.Idle())
 
     override fun syncMessages() {
 

@@ -27,10 +27,10 @@ import com.potados.geomms.feature.location.data.LSRequest
 import kotlinx.android.synthetic.main.bottom_sheet_content.friends_list_recyclerview
 import kotlinx.android.synthetic.main.bottom_sheet_content.no_connection_textview
 import kotlinx.android.synthetic.main.bottom_sheet_content.view.*
-import kotlinx.android.synthetic.main.fragment_map.*
-import kotlinx.android.synthetic.main.fragment_map.view.*
-import kotlinx.android.synthetic.main.fragment_map.view.map_view
-import kotlinx.android.synthetic.main.fragment_map_bottom_sheet.view.*
+import kotlinx.android.synthetic.main.map_fragment.*
+import kotlinx.android.synthetic.main.map_fragment.view.*
+import kotlinx.android.synthetic.main.map_fragment.view.map_view
+import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import java.lang.Exception
 
 /**

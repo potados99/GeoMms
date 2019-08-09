@@ -8,36 +8,39 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.mikhaellopez.circularimageview.CircularImageView
-
 import com.potados.geomms.R
-import com.potados.geomms.feature.common.ContactRepository
-import com.potados.geomms.feature.message.domain.Conversation
+
+import com.potados.geomms.model.Conversation
+import com.potados.geomms.util.DateTime
+import io.realm.OrderedRealmCollection
+import io.realm.RealmRecyclerViewAdapter
 
 import kotlinx.android.synthetic.main.conversation_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import kotlin.properties.Delegates
 
-class ConversationListRecyclerViewAdapter(
+class ConversationsAdapter(
     private val listener: ConversationClickListener
-) : RecyclerView.Adapter<ConversationListRecyclerViewAdapter.ViewHolder>(), KoinComponent {
+) : RealmRecyclerViewAdapter<Conversation, ConversationsAdapter.ViewHolder>(null, true), KoinComponent {
 
-    private val contactRepo: ContactRepository by inject()
+    override fun updateData(data: OrderedRealmCollection<Conversation>?) {
+        if (getData() === data) return
 
-    internal var collection: List<Conversation> by Delegates.observable(emptyList()) {
-        _, _, _ -> notifyDataSetChanged()
+        super.updateData(data)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(
-            LayoutInflater
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater
                 .from(parent.context)
                 .inflate(R.layout.conversation_list_item, parent, false)
-        )
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(collection[position])
+        return ViewHolder(view)
+    }
 
-    override fun getItemCount(): Int = collection.size
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        getItem(position)?.let(holder::bind)
+    }
 
     interface ConversationClickListener {
         fun onConversationClicked(conversation: Conversation)
@@ -51,14 +54,13 @@ class ConversationListRecyclerViewAdapter(
         private val unreadIconView: CircularImageView = view.message_list_item_unread
 
         fun bind(item: Conversation) {
-            senderTextView.text = item.recipients.map{ it.contactName ?: it.phoneNumber }.serialize()
+            senderTextView.text = item.getTitle()
             bodyTextView.text = item.snippet
-            timeTextView.text = item.date.toShortenString()
+            timeTextView.text = DateTime(item.date).toShortenString()
 
-            // TODO: 더미 이미지 교체.
             avatarImageView.setImageResource(R.drawable.avatar_default)
 
-            if (!item.allRead) {
+            if (!item.read) {
                 unreadIconView.visibility = View.VISIBLE
                 bodyTextView.setTypeface(bodyTextView.typeface, Typeface.BOLD)
                 bodyTextView.setTextColor(Color.BLACK)

@@ -8,7 +8,6 @@ package com.potados.geomms.common.base
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.potados.geomms.common.exception.Failure
 
 /**
  * ViewModel with default Failure handling.

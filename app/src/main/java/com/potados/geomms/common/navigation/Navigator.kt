@@ -2,11 +2,11 @@ package com.potados.geomms.common.navigation
 
 import android.content.Context
 import android.provider.Telephony
-import com.potados.geomms.feature.message.ComposeActivity
 import com.potados.geomms.app.GiveMePermissionActivity
 import com.potados.geomms.app.MainActivity
+import com.potados.geomms.feature.message.ComposeActivity
 import com.potados.geomms.feature.message.MakeMeDefaultAppActivity
-import com.potados.geomms.feature.message.domain.Conversation
+import com.potados.geomms.model.Conversation
 
 /**
  * Global activity navigator.
@@ -19,13 +19,15 @@ class Navigator (private val permissionManager: com.potados.geomms.manager.Permi
         }
     }
 
-    fun showConversationActivity(context: Context, conversation: Conversation) {
+
+    fun showComposeActivity(context: Context, conversation: Conversation) {
         whenPossible(context) {
             it.startActivity(
                 ComposeActivity.callingIntent(it, conversation.id)
             )
         }
     }
+
 
     private fun showGiveMePermission(context: Context) {
         context.startActivity(GiveMePermissionActivity.callingIntent(context))

@@ -24,7 +24,7 @@
             app:behavior_fitToContents="false"
             android:background="@drawable/top_rounded">
 
-        <include layout="@layout/fragment_map_bottom_sheet"/>
+        <include layout="@layout/bottom_sheet"/>
 
     </FrameLayout>
 

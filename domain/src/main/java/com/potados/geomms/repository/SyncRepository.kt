@@ -21,6 +21,7 @@ package com.potados.geomms.repository
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.potados.geomms.model.Message
+import io.reactivex.Observable
 
 interface SyncRepository {
 
@@ -29,7 +30,7 @@ interface SyncRepository {
         data class Running(val max: Int, val progress: Int, val indeterminate: Boolean) : SyncProgress()
     }
 
-    val syncProgress: LiveData<SyncProgress>
+    val syncProgress: Observable<SyncProgress>
 
     fun syncMessages()
 

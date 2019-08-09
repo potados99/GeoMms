@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.potados.geomms.R
 import com.potados.geomms.feature.location.data.LSConnection
 
-import kotlinx.android.synthetic.main.fragment_map_friends_list_item.view.*
+import kotlinx.android.synthetic.main.connection_list_item.view.*
 import java.util.*
 import kotlin.properties.Delegates
 
