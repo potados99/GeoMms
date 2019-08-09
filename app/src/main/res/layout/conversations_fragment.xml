@@ -52,7 +52,7 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:conversations="${vm.conversations}"
+            app:conversations="@{vm.conversations}"
     />
 
     <!--/androidx.core.widget.NestedScrollView-->

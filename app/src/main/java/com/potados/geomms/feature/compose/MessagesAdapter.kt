@@ -8,15 +8,17 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.model.Message
+import com.potados.geomms.util.DateTime
 import io.realm.RealmRecyclerViewAdapter
 import kotlinx.android.synthetic.main.message_item.view.*
 import java.lang.RuntimeException
 
-class MessagesAdapter: RealmRecyclerViewAdapter<Message, MessagesAdapter.ViewHolder>(null, true) {
+class MessagesAdapter:
+    RealmRecyclerViewAdapter<Message, MessagesAdapter.ViewHolder>(null, true) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.conversation_message_item, parent, false)
+            .inflate(R.layout.message_item, parent, false)
 
         return when (viewType) {
             TYPE_MESSAGE_RECEIVED -> ReceivedViewHolder(view)
@@ -26,24 +28,24 @@ class MessagesAdapter: RealmRecyclerViewAdapter<Message, MessagesAdapter.ViewHol
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val message = collection[position]
+        val message = getItem(position) ?: return
 
         if (position == 0) {
             holder.dateLayout.visibility = View.VISIBLE
-            holder.dateTextView.text = message.date.toShortenString()
+            holder.dateTextView.text = DateTime(message.date).toShortenString()
         }
 
         when(holder) {
             is SentViewHolder -> {
                 holder.sentLayout.visibility = View.VISIBLE
                 holder.sentBody.text = message.body
-                holder.sentTime.text = message.date.toShortenString()
+                holder.sentTime.text = DateTime(message.date).toShortenString()
             }
 
             is ReceivedViewHolder -> {
                 holder.receivedLayout.visibility = View.VISIBLE
                 holder.receivedBody.text = message.body
-                holder.receivedTime.text = message.date.toShortenString()
+                holder.receivedTime.text = DateTime(message.date).toShortenString()
             }
 
             else -> {
@@ -54,7 +56,7 @@ class MessagesAdapter: RealmRecyclerViewAdapter<Message, MessagesAdapter.ViewHol
     }
 
     override fun getItemViewType(position: Int): Int =
-        if (collection[position].isSent) TYPE_MESSAGE_SENT
+        if (getItem(position)!!.isOutgoingMessage()) TYPE_MESSAGE_SENT
         else TYPE_MESSAGE_RECEIVED
 
 

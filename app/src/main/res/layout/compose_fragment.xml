@@ -31,7 +31,9 @@
                         android:layout_gravity="center"
                         android:id="@+id/conversation_toolbar_title"
                         android:textSize="20sp"
-                        android:textColor="@android:color/black" tools:text="01029222661"/>
+                        android:textColor="@android:color/black"
+                        android:text="@{vm.conversation.getTitle()}"
+                        tools:text="01029222661"/>
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -53,7 +55,7 @@
                     android:paddingBottom="70dp"
                     android:clipToPadding="false"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:messages="${vm.messages}"/>
+                    app:messages="@{vm.messages}"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

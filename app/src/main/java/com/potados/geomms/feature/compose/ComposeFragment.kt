@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.databinding.ComposeFragmentBinding
-import com.potados.geomms.feature.message.domain.Conversation
-import com.potados.geomms.feature.message.domain.Sms
 import kotlinx.android.synthetic.main.compose_fragment.*
 
 class ComposeFragment : Fragment() {
@@ -33,27 +32,18 @@ class ComposeFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return Compose
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initializeView(view)
-        viewModel.setAsRead()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.loadMessages()
+        return ComposeFragmentBinding
+            .inflate(inflater, container, false)
+            .apply { vm = viewModel }
+            .apply { viewDataBinding = this }
+            .root
+            .apply { initializeView(this) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             android.R.id.home -> {
-                baseActivity.finish()
+                activity!!.finish()
                 return true
             }
             else -> {
@@ -64,27 +54,9 @@ class ComposeFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun renderConversation(conversation: Conversation?) {
-        conversation?.let {
-            conversation_toolbar_title.text = it.recipients.map { it.contactName ?: it.phoneNumber }.serialize()
-        }
-    }
-
-    private fun renderMessages(messages: List<Sms>?) {
-        val wasEmpty = adapter.collection.isEmpty()
-
-        adapter.collection = messages.orEmpty()
-        scrollToBottom(!wasEmpty)
-    }
-
-    private fun handleFailure(failure: Exception?) {
-        failure?.let {
-            notify(it.message ?: it::class.java.name)
-            it.printStackTrace()
-        }
-    }
-
     private fun initializeView(view: View) {
+        setHasOptionsMenu(true)
+
         with(view) {
 
             /**
@@ -96,7 +68,7 @@ class ComposeFragment : Fragment() {
             /**
              * 툴바 설정.
              */
-            supportActionBar?.apply {
+            (activity as AppCompatActivity).supportActionBar?.apply {
                 setDisplayShowTitleEnabled(false)
                 setDisplayHomeAsUpEnabled(true)
             }
@@ -135,8 +107,8 @@ class ComposeFragment : Fragment() {
              * 보내기 버튼 동작 설정.
              */
             compose_send_button.setOnClickListener {
-                viewModel.sendMessage(compose_edittext.text.toString())
-                compose_edittext.text.clear()
+                //viewModel.sendMessage(compose_edittext.text.toString())
+                //compose_edittext.text.clear()
             }
         }
     }

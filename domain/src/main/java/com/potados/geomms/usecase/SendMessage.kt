@@ -18,13 +18,13 @@
  */
 package com.potados.geomms.usecase
 
+import com.potados.geomms.functional.Result
 import android.content.Context
+import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.compat.TelephonyCompat
-import com.potados.geomms.extension.mapNotNull
 import com.potados.geomms.model.Attachment
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
-import io.reactivex.Flowable
 
 class SendMessage(
     private val context: Context,
@@ -40,25 +40,24 @@ class SendMessage(
         val attachments: List<Attachment> = listOf()
     )
 
-    override fun buildObservable(params: Params): Flowable<*> = Flowable.just(Unit)
-            .filter { params.addresses.isNotEmpty() }
-            .doOnNext {
-                // If a threadId isn't provided, try to obtain one
-                val threadId = when (params.threadId) {
-                    0L -> TelephonyCompat.getOrCreateThreadId(context, params.addresses.toSet())
-                    else -> params.threadId
-                }
-                messageRepo.sendMessage(params.subId, threadId, params.addresses, params.body, params.attachments)
+    override suspend fun run(params: Params): Result<*> =
+        Result.of {
+            if (params.addresses.isEmpty()) return@of
+
+            val threadId = when (params.threadId) {
+                0L -> TelephonyCompat.getOrCreateThreadId(context, params.addresses.toSet())
+                else -> params.threadId
             }
-            .mapNotNull {
+
+            messageRepo.sendMessage(params.subId, threadId, params.addresses, params.body, params.attachments)
+
+            when (params.threadId) {
                 // If the threadId wasn't provided, then it's probably because it doesn't exist in Realm.
                 // Sync it now and get the id
-                when (params.threadId) {
-                    0L -> conversationRepo.getOrCreateConversation(params.addresses)?.id
-                    else -> params.threadId
-                }
+                0L -> conversationRepo.getOrCreateConversation(params.addresses)?.id
+                else -> params.threadId
             }
-            .doOnNext { threadId -> conversationRepo.updateConversations(threadId) }
-            .doOnNext { threadId -> conversationRepo.markUnarchived(threadId) }
-
+                ?.also(conversationRepo::updateConversations)
+                ?.also(conversationRepo::markUnarchived)
+        }
 }

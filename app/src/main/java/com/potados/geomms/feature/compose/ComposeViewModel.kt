@@ -27,15 +27,13 @@ class ComposeViewModel : ViewModel(), KoinComponent {
     private val conversationRepo: ConversationRepository by inject()
     private val messageRepo: MessageRepository by inject()
 
-    private val _conversation = MutableLiveData<Conversation>()
-    val conversation: LiveData<Conversation> = _conversation
+    lateinit var conversation: Conversation
 
-    private val _messages = MutableLiveData<RealmResults<Message>>()
-    val messages: LiveData<RealmResults<Message>> = _messages
+    lateinit var messages: RealmResults<Message>
 
     fun start(threadId: Long) {
-        _conversation.value = conversationRepo.getConversation(threadId)
-        _messages.value = messageRepo.getMessages(threadId)
+        conversation = conversationRepo.getConversation(threadId)!!
+        messages = messageRepo.getMessages(threadId)
     }
 
     /**

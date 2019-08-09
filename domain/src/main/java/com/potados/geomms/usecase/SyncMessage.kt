@@ -1,10 +1,10 @@
 package com.potados.geomms.usecase
 
+import com.potados.geomms.functional.Result
 import android.net.Uri
-import com.potados.geomms.extension.mapNotNull
+import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.SyncRepository
-import io.reactivex.Flowable
 
 class SyncMessage(
     private val conversationRepo: ConversationRepository,
@@ -12,9 +12,10 @@ class SyncMessage(
     private val updateBadge: UpdateBadge
 ) : UseCase<Uri>() {
 
-    override fun buildObservable(params: Uri): Flowable<*> =
-        Flowable.just(params)
-            .mapNotNull { uri -> syncManager.syncMessage(uri) }
-            .doOnNext { message -> conversationRepo.updateConversations(message.threadId) }
-            .flatMap { updateBadge.buildObservable(Unit) }
+    override suspend fun run(params: Uri): Result<*> =
+        Result.of {
+            syncManager.syncMessage(params)
+                ?.let { conversationRepo.updateConversations(it.threadId) }
+            updateBadge(Unit)
+        }
 }

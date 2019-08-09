@@ -8,5 +8,4 @@ import io.realm.RealmResults
 @BindingAdapter("messages")
 fun setMessages(listView: RecyclerView, messages: RealmResults<Message>) {
     (listView.adapter as? MessagesAdapter)?.updateData(messages)
-
 }

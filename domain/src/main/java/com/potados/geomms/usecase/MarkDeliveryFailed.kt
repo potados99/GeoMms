@@ -1,7 +1,8 @@
 package com.potados.geomms.usecase
 
+import com.potados.geomms.functional.Result
+import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.repository.MessageRepository
-import io.reactivex.Flowable
 
 class MarkDeliveryFailed(
     private val messageRepo: MessageRepository
@@ -9,7 +10,8 @@ class MarkDeliveryFailed(
 
     data class Params(val id: Long, val resultCode: Int)
 
-    override fun buildObservable(params: Params): Flowable<*> =
-        Flowable.just(Unit)
-            .doOnNext { messageRepo.markDeliveryFailed(params.id, params.resultCode) }
+    override suspend fun run(params: Params): Result<*> =
+        Result.of {
+            messageRepo.markDeliveryFailed(params.id, params.resultCode)
+        }
 }
