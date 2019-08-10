@@ -11,8 +11,11 @@ import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
 import com.potados.geomms.model.Conversation
+import com.potados.geomms.repository.SyncRepository
+import com.potados.geomms.usecase.SyncMessages
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
@@ -29,10 +32,26 @@ class ConversationsFragment : NavigationFragment(),
 
     private val conversationsAdapter = ConversationsAdapter(this)
 
+
+    // TODO remove
+    private val syncMessages: SyncMessages by inject()
+    private val syncRepo: SyncRepository by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         conversationsViewModel = getViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //syncRepo.syncMessages()
+        syncMessages(Unit) {
+            it.onError {
+                Timber.w(it)
+            }
+        }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

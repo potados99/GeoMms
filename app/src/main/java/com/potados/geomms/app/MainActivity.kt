@@ -28,6 +28,8 @@ class MainActivity : NavigationActivity() {
 
     override fun menuResId(): Int = R.menu.bottom_nav_menu
 
+    override fun defaultMenuItemId(): Int = R.id.menu_item_navigation_message
+
     companion object {
         fun callingIntent(context: Context) = Intent(context, MainActivity::class.java)
     }

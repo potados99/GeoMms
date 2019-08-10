@@ -16,7 +16,7 @@ class SyncMessages(
         Result.of {
             val elapsed = TimeUnit.MILLISECONDS.toSeconds(elapsedTimeMillis(syncRepo::syncMessages))
 
-            Timber.v("Completed sync in $elapsed seconds.")
+            Timber.i("Completed sync in $elapsed seconds.")
 
             updateBadge(Unit)
         }

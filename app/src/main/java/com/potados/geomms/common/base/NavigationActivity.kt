@@ -13,6 +13,7 @@ abstract class NavigationActivity : AppCompatActivity() {
 
     abstract fun fragments(): List<NavigationFragment>
     abstract fun menuResId(): Int
+    open fun defaultMenuItemId(): Int = -1
 
     private val onNavigationItemChanged = { menuItem: MenuItem ->
         supportFragmentManager.showOnly {
@@ -22,6 +23,7 @@ abstract class NavigationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.navigation_activity)
 
         addFragments(savedInstanceState)
         setNavigationView()
@@ -40,9 +42,7 @@ abstract class NavigationActivity : AppCompatActivity() {
 
             setOnNavigationItemSelectedListener(onNavigationItemChanged)
 
-            // selectedItemId = R.id.menu_item_navigation_message
+            defaultMenuItemId().takeIf { it > 0 }?.let(::setSelectedItemId)
         }
     }
-
-
 }

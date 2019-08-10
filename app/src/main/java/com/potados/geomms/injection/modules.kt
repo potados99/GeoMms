@@ -1,7 +1,6 @@
-package com.potados.geomms.common.injection
+package com.potados.geomms.injection
 
 import android.Manifest
-import android.content.ContentResolver
 import android.content.Context
 import android.location.LocationManager
 import androidx.preference.PreferenceManager
@@ -17,6 +16,8 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.potados.geomms.manager.*
 import com.potados.geomms.mapper.*
 import com.potados.geomms.repository.*
+import com.potados.geomms.usecase.SyncMessages
+import com.potados.geomms.usecase.UpdateBadge
 
 val permissions = arrayOf(
     Manifest.permission.READ_SMS,
@@ -78,7 +79,7 @@ val myModules = module {
     }
 
     /** Cursor To Part */
-    single { CursorToPartImpl(context = get()) as CursorToPartImpl }
+    single { CursorToPartImpl(context = get()) as CursorToPart }
 
     /** Cursor To Recipient */
     single { CursorToRecipientImpl(context = get(), permissionManager = get()) as CursorToRecipient }
@@ -101,7 +102,13 @@ val myModules = module {
      **********************************************************/
 
     /** Conversation Repository */
-    single { ConversationRepositoryImpl(context = get(), cursorToConversation = get(), cursorToRecipient = get()) }
+    single {
+        ConversationRepositoryImpl(
+            context = get(),
+            cursorToConversation = get(),
+            cursorToRecipient = get()
+        ) as ConversationRepository
+    }
 
     /** Image Repository */
     single { ImageRepostoryImpl(context = get()) as ImageRepository }
@@ -132,7 +139,22 @@ val myModules = module {
     }
 
 
+    /**********************************************************
+     * Use Case
+     **********************************************************/
 
+    /** Mark Delivered */
+    /** Mark Delivery Failed */
+    /** Mark Failed */
+    /** Mark Sent */
+    /** Send Message */
+    /** Sync Message */
+
+    /** Sync Messages */
+    single { SyncMessages(syncRepo = get(), updateBadge = get()) }
+
+    /** Update Badges */
+    single { UpdateBadge() }
 
 
 

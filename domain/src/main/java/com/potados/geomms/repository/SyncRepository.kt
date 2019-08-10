@@ -22,12 +22,21 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.potados.geomms.model.Message
 import io.reactivex.Observable
+import timber.log.Timber
 
 interface SyncRepository {
 
     sealed class SyncProgress {
-        class Idle : SyncProgress()
-        data class Running(val max: Int, val progress: Int, val indeterminate: Boolean) : SyncProgress()
+        class Idle : SyncProgress() {
+            init {
+                Timber.i("Idle progress created")
+            }
+        }
+        data class Running(val max: Int, val progress: Int, val indeterminate: Boolean) : SyncProgress() {
+            init {
+                Timber.i("Running progress created")
+            }
+        }
     }
 
     val syncProgress: Observable<SyncProgress>
