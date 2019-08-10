@@ -128,8 +128,6 @@ class CursorToMessageImpl(
     }
 
     override fun getMessagesCursor(): Cursor? {
-
-
         val projection = when (true /* TODO */) {
             true -> this.projection + Mms.SUBSCRIPTION_ID
             false -> this.projection

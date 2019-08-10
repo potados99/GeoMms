@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.moez.QKSMS.mapper
+package com.potados.geomms.mapper
 
 import android.content.Context
 import android.database.Cursor
 import android.provider.ContactsContract.CommonDataKinds.Phone.*
 import com.potados.geomms.manager.PermissionManager
+import com.potados.geomms.mapper.CursorToContact
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.PhoneNumber
 

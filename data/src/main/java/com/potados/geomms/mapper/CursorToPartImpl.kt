@@ -23,7 +23,6 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.Telephony
-import com.moez.QKSMS.mapper.CursorToPart
 import com.potados.geomms.extension.*
 import com.potados.geomms.model.MmsPart
 import timber.log.Timber

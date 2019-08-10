@@ -23,7 +23,6 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.Telephony
 import android.provider.Telephony.Threads
-import com.moez.QKSMS.mapper.CursorToConversation
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.Recipient
