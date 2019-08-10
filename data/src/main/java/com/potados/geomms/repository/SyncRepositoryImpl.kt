@@ -72,11 +72,11 @@ class SyncRepositoryImpl(
 
     override fun syncMessages() {
 
-        Timber.i("enter syncMessages")
+        Timber.i(">>>> enter syncMessages")
 
         // If the sync is already running, don't try to do another one
-        //if (_progress.value is SyncRepository.SyncProgress.Running) return
-        //_progress.value = SyncRepository.SyncProgress.Running(0, 0, true)
+        if (_progress.value is SyncRepository.SyncProgress.Running) return
+        _progress.postValue(SyncRepository.SyncProgress.Running(0, 0, true))
 
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
@@ -104,7 +104,7 @@ class SyncRepositoryImpl(
 
         keys.reset()
 
-        Timber.i("removed everything except persistedData")
+        Timber.v("removed everything except persistedData")
 
         val messageCursor = cursorToMessage.getMessagesCursor()
         val conversationCursor = cursorToConversation.getConversationsCursor()
@@ -114,7 +114,7 @@ class SyncRepositoryImpl(
                 (conversationCursor?.count ?: 0) +
                 (recipientCursor?.count ?: 0)
 
-        Timber.i("sum of cursor rows: $max")
+        Timber.v("sum of cursor rows: $max")
 
         var progress = 0
 
@@ -122,7 +122,7 @@ class SyncRepositoryImpl(
         messageCursor?.use {
             val messageColumns = CursorToMessage.MessageColumns(messageCursor)
             val messages = messageCursor.map { cursor ->
-                Timber.i("syncing messages...$progress")
+                Timber.v("syncing messages...$progress")
 
                 progress++
                 _progress.postValue(SyncRepository.SyncProgress.Running(max, progress, false))
@@ -136,10 +136,8 @@ class SyncRepositoryImpl(
         conversationCursor?.use {
             val conversations = conversationCursor
                     .map { cursor ->
-                        Timber.i("syncing conversations...$progress")
-
-                        progress++
-                        _progress.postValue(SyncRepository.SyncProgress.Running(max, progress, false))
+                        Timber.v("syncing conversations...$progress")
+                        postProgress(max, ++progress, false)
                         cursorToConversation.map(cursor)
                     }
 
@@ -158,13 +156,13 @@ class SyncRepositoryImpl(
                     .distinct("threadId")
                     .findAll()
                     .forEach { message ->
-                        val conversation = conversations
-                                .firstOrNull { conversation -> conversation.id == message.threadId }
-                        conversation?.date = message.date
-                        conversation?.snippet = message.getSummary()
-                        conversation?.me = message.isMe()
+                        conversations
+                            .firstOrNull { conversation -> conversation.id == message.threadId }
+                            ?.apply { date = message.date }
+                            ?.apply { snippet = message.getSummary() }
+                            ?.apply { me = message.isMe() }
 
-                        Timber.i("updating conversations using latest messages.")
+                        Timber.v("updating conversations using latest messages.")
                     }
 
             realm.insertOrUpdate(conversations)
@@ -176,10 +174,9 @@ class SyncRepositoryImpl(
             val contacts = realm.copyToRealm(getContacts())
             val recipients = recipientCursor
                     .map { cursor ->
-                        Timber.i("syncing recipients...$progress")
+                        Timber.v("syncing recipients...$progress")
 
-                        progress++
-                        _progress.postValue(SyncRepository.SyncProgress.Running(max, progress, false))
+                        postProgress(max, ++progress, false)
                         cursorToRecipient.map(cursor).apply {
                             contact = contacts.firstOrNull { contact ->
                                 contact.numbers.any { PhoneNumberUtils.compare(address, it.address) }
@@ -190,17 +187,17 @@ class SyncRepositoryImpl(
             Timber.i("recipients inserted to realm")
         }
 
-        _progress.postValue(SyncRepository.SyncProgress.Running(0, 0, true))
+        postProgress(0, 0, false)
 
         realm.insert(SyncLog())
         realm.commitTransaction()
         realm.close()
 
-        Timber.i("Finished syncing")
+        Timber.i("finished syncing")
 
-        _progress.postValue(SyncRepository.SyncProgress.Idle())
+        postIdle()
 
-        Timber.i("exit syncMessages")
+        Timber.i("<<<< exit syncMessages")
     }
 
     override fun syncMessage(uri: Uri): Message? {
@@ -313,6 +310,13 @@ class SyncRepositoryImpl(
                         numbers.addAll(allNumbers)
                     }
                 } ?: listOf()
+    }
+
+    private fun postProgress(max: Int, progress: Int, indeterminate: Boolean) {
+        _progress.postValue(SyncRepository.SyncProgress.Running(max, progress, indeterminate))
+    }
+    private fun postIdle() {
+        _progress.postValue(SyncRepository.SyncProgress.Idle())
     }
 
 }

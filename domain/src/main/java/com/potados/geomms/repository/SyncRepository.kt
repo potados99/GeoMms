@@ -29,12 +29,12 @@ interface SyncRepository {
     sealed class SyncProgress {
         class Idle : SyncProgress() {
             init {
-                Timber.i("Idle progress created")
+                Timber.v("Idle progress created")
             }
         }
         data class Running(val max: Int, val progress: Int, val indeterminate: Boolean) : SyncProgress() {
             init {
-                Timber.i("Running progress created")
+                Timber.v("Running progress[$progress] created")
             }
         }
     }

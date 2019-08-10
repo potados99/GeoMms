@@ -68,8 +68,6 @@ class CursorToMessageImpl(
     )
 
     override fun map(from: Pair<Cursor, CursorToMessage.MessageColumns>): Message {
-        Timber.i("enter map")
-
         val cursor = from.first
         val columnsMap = from.second
 
@@ -127,8 +125,6 @@ class CursorToMessageImpl(
                     parts.addAll(cursorToPart.getPartsCursor(contentId)?.map { cursorToPart.map(it) } ?: listOf())
                 }
             }
-
-            Timber.i("exiting one message")
         }
     }
 
