@@ -9,9 +9,6 @@ import com.potados.geomms.feature.location.domain.LSService
 import com.potados.geomms.feature.location.domain.LSServiceImpl
 import com.potados.geomms.feature.location.data.LocationRepository
 import com.potados.geomms.feature.location.data.LocationRepositoryImpl
-import com.potados.geomms.feature.location.domain.usecase.*
-import com.potados.geomms.feature.message.data.*
-import com.potados.geomms.feature.message.domain.usecase.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 

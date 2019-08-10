@@ -4,7 +4,7 @@ interface PermissionManager {
 
     fun isAllGranted(): Boolean
 
-    fun ungrantedPermissions(): List<String>
+    fun ungrantedPermissions(): Array<String>
 
     fun isDefaultSms(): Boolean
 

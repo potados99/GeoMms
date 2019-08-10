@@ -9,43 +9,35 @@ import com.potados.geomms.common.base.BaseActivity
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.addAll
 import com.potados.geomms.common.extension.inImmediateTransaction
-import com.potados.geomms.feature.message.data.ConversationEntity
+import kotlinx.android.synthetic.main.main_activity.*
 
 /**
  * 대화방 액티비티입니다.
  */
 class ComposeActivity : AppCompatActivity() {
 
-    private val fragment by lazy {
-        ComposeFragment.ofConversation(
+    private val fragments by lazy {
+        arrayOf(ComposeFragment.ofConversation(
             intent.getLongExtra(
                 INTENT_PARAM_CONVERSATION,
                 0
             )
-        )
+        ))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (isInstantiated()) {
-            this.finish()
-        }
-        instantiated = true
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.con)
+        setContentView(R.layout.base_activity)
 
+        addFragments(savedInstanceState)
+    }
+
+    private fun addFragments(savedInstanceState: Bundle?) =
         savedInstanceState ?:
         supportFragmentManager.inImmediateTransaction {
-            addAll(fragmentContainerId(), fragments())
+            addAll(R.id.fragment_container, fragments)
             this
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        instantiated = false
-    }
-
 
     companion object {
         private const val INTENT_PARAM_CONVERSATION = "com.potados.INTENT_PARAM_CONVERSATION"
@@ -54,9 +46,5 @@ class ComposeActivity : AppCompatActivity() {
             Intent(context, ComposeActivity::class.java).apply {
                 putExtra(INTENT_PARAM_CONVERSATION, conversationId)
             }
-
-        private var instantiated = false
-        fun isInstantiated() =
-            instantiated
     }
 }

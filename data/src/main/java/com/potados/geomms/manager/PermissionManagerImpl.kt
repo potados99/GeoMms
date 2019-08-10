@@ -14,8 +14,10 @@ class PermissionManagerImpl(
     override fun isAllGranted(): Boolean =
         permissions.all(::isGranted)
 
-    override fun ungrantedPermissions(): List<String> =
-        permissions.filter { !isGranted(it) }
+    override fun ungrantedPermissions(): Array<String> =
+        permissions
+            .filter { !isGranted(it) }
+            .toTypedArray()
 
     override fun isDefaultSms(): Boolean {
         return Telephony.Sms.getDefaultSmsPackage(context) == context.packageName

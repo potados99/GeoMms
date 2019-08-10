@@ -12,12 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.databinding.ComposeFragmentBinding
-import kotlinx.android.synthetic.main.compose_fragment.*
+import com.potados.geomms.extension.withNonNull
+import kotlinx.android.synthetic.main.compose_fragment.messages_recyclerview
+import kotlinx.android.synthetic.main.compose_fragment.view.*
 
 class ComposeFragment : Fragment() {
 
 
-    private lateinit var viewModel: ComposeViewModel
+    private lateinit var composeViewModel: ComposeViewModel
     private lateinit var viewDataBinding: ComposeFragmentBinding
 
     private val adapter = MessagesAdapter()
@@ -25,25 +27,23 @@ class ComposeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = getViewModel {
-            /** 중요 */
-           arguments?.getLong(PARAM_CONVERSATION)?.let(::start)
-        }
+        composeViewModel = getViewModel { arguments?.getLong(PARAM_CONVERSATION)?.let(::start) }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return ComposeFragmentBinding
             .inflate(inflater, container, false)
-            .apply { vm = viewModel }
+            .apply { vm = composeViewModel }
             .apply { viewDataBinding = this }
+            .apply { setSupportActionBar(root.toolbar) }
+            .apply { initializeView(root) }
             .root
-            .apply { initializeView(this) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             android.R.id.home -> {
-                activity!!.finish()
+                baseActivity?.finish()
                 return true
             }
             else -> {
@@ -57,60 +57,36 @@ class ComposeFragment : Fragment() {
     private fun initializeView(view: View) {
         setHasOptionsMenu(true)
 
-        with(view) {
+        withNonNull(supportActionBar) {
+            // setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+        }
 
-            /**
-             * 리사이클러뷰 설정.
-             */
+        with(view.messages_recyclerview) {
             messages_recyclerview.layoutManager = LinearLayoutManager(context)
             messages_recyclerview.adapter = adapter
+        }
 
-            /**
-             * 툴바 설정.
-             */
-            (activity as AppCompatActivity).supportActionBar?.apply {
-                setDisplayShowTitleEnabled(false)
-                setDisplayHomeAsUpEnabled(true)
-            }
 
-            /**
-             * 하단의 메시지 작성 레이아웃이 recyclerView의 컨텐츠를 가리지 않도록
-             * 레이아웃 변화에 맞추어 recyclerView의 패딩을 설정해줍니다.
-             */
-            compose_bottom_layout.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
+        with(view.compose_bottom_layout) {
+            addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
                 with(messages_recyclerview) {
                     setPadding(paddingLeft, paddingTop, paddingRight, bottom - top)
 
-                    if (viewModel.recyclerViewReachedItsEnd) {
+                    if (composeViewModel.recyclerViewReachedItsEnd) {
                         scrollToBottom()
                     }
                 }
             }
+        }
 
-            /**
-             * 메시지 목록의 스크롤 상태에 따라 특정 상황에서 맨 밑으로 스크롤할지 여부가 달라집니다.
-             * 스크롤 상태가 바뀔때마다 현재 바닥에 도달했는지 여부를 저장합니다.
-             */
-            messages_recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-
-                    /**
-                     * direction -1은 위, 1은 아래입니다.
-                     * 아래로 스크롤할 수 없다면 바닥에 도달한 것입니다.
-                     */
-                    viewModel.recyclerViewReachedItsEnd = !messages_recyclerview.canScrollVertically(1)
-                }
-            })
-
-            /**
-             * 보내기 버튼 동작 설정.
-             */
-            compose_send_button.setOnClickListener {
-                //viewModel.sendMessage(compose_edittext.text.toString())
+        with(view.compose_send_button) {
+            setOnClickListener {
+                //composeViewModel.sendMessage(compose_edittext.text.toString())
                 //compose_edittext.text.clear()
             }
         }
+
     }
 
     private fun scrollToBottom(smooth: Boolean = true) {
@@ -126,9 +102,10 @@ class ComposeFragment : Fragment() {
                 messages_recyclerview.scrollToPosition(position)
             }
 
-            viewModel.recyclerViewReachedItsEnd = true
+            composeViewModel.recyclerViewReachedItsEnd = true
         }
     }
+
 
     companion object {
         private const val PARAM_CONVERSATION = "param_conversation"

@@ -19,14 +19,10 @@ import kotlinx.android.synthetic.main.main_activity.*
  */
 class MainActivity : AppCompatActivity() {
 
-    /** 사용할 프래그먼트들 */
     private val fragments by lazy{
         arrayOf(ConversationsFragment(), MapFragment())
     }
 
-    /**
-     * Switch fragment by only showing the selected one.
-     */
     private val onNavigationItemChanged = { menuItem: MenuItem ->
         supportFragmentManager.showOnly {
             (it as NavigationBasedFragment).menuItemId() == menuItem.itemId
@@ -35,38 +31,28 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.main_activity)
 
         addFragments(savedInstanceState)
         setNavigationView()
     }
 
-    /**
-     * Add all fragments to [supportFragmentManager].
-     */
     private fun addFragments(savedInstanceState: Bundle?) =
         savedInstanceState ?:
         supportFragmentManager.inImmediateTransaction {
-            addAll(fragmentContainerId(), fragments())
+            addAll(R.id.fragment_container, fragments)
             this
         }
 
-    /**
-     * Inflate Navigation menu and set listener.
-     */
+
     private fun setNavigationView() {
         with(nav_view) {
             inflateMenu(R.menu.bottom_nav_menu)
 
             if (fragments.isNotEmpty()) {
-                /**
-                 * listener is useless without fragments.
-                 */
                 setOnNavigationItemSelectedListener(onNavigationItemChanged)
 
-                /**
-                 * Set default selected menu.
-                 */
-                selectedItemId = R.id.menu_item_navigation_message)
+                selectedItemId = R.id.menu_item_navigation_message
             }
         }
     }

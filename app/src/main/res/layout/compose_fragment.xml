@@ -14,30 +14,26 @@
             android:layout_height="match_parent"
             tools:context=".feature.compose.ComposeActivity">
 
-        <!--앱 바 레이아웃-->
-        <com.google.android.material.appbar.AppBarLayout
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:background="?android:colorBackground">
+        <!--툴바-->
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
+                android:animateLayoutChanges="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/compose_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize">
+        <TextView
+                android:id="@+id/toolbar_title"
+                style="@style/ToolbarText"
+                android:layout_marginStart="16dp"
+                android:text="@{vm.conversation.getTitle()}"
+                tools:text="01029222661"/>
 
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:id="@+id/conversation_toolbar_title"
-                        android:textSize="20sp"
-                        android:textColor="@android:color/black"
-                        android:text="@{vm.conversation.getTitle()}"
-                        tools:text="01029222661"/>
-
-            </androidx.appcompat.widget.Toolbar>
-
-        </com.google.android.material.appbar.AppBarLayout>
+        </androidx.appcompat.widget.Toolbar>
 
         <!--컨텐츠 레이아웃-->
         <androidx.constraintlayout.widget.ConstraintLayout

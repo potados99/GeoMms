@@ -2,7 +2,8 @@
 
 <layout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -15,47 +16,51 @@
         android:layout_height="match_parent"
         android:id="@+id/conversation_list_root_layout">
 
-    <!--앱 바 레이아웃-->
-    <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar_layout"
-            android:fitsSystemWindows="true"
-            android:layout_height="120dp"
-            android:layout_width="match_parent"
-            android:background="?android:colorBackground">
+    <!--툴바-->
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            android:animateLayoutChanges="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:contentInsetStartWithNavigation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/toolbar_layout"
-                android:fitsSystemWindows="true"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:toolbarId="@+id/conversation_list_toolbar"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+        <TextView
+                android:id="@+id/toolbar_title"
+                style="@style/ToolbarText"
+                android:layout_marginStart="16dp" />
 
-            <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/conversation_list_toolbar"
-                    android:layout_height="?attr/actionBarSize"
-                    android:layout_width="match_parent"
-                    app:layout_collapseMode="pin"
-                    app:title="Messages"/>
+        <EditText
+                android:id="@+id/toolbar_search"
+                style="@style/ToolbarText"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/rounded_rectangle_24dp"
+                android:backgroundTint="?android:attr/queryBackground"
+                android:inputType="text"
+                tools:ignore="Autofill"
+                android:hint="search inbox..."
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColorHint="?android:attr/textColorTertiary"
+                app:textSize="primary"
+                tools:textSize="16sp" />
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.appcompat.widget.Toolbar>
 
     <!--컨텐츠 레이아웃-->
-    <!--androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"-->
-
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/conversations_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/conversations_item"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:conversations="@{vm.conversations}"
     />
-
-    <!--/androidx.core.widget.NestedScrollView-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

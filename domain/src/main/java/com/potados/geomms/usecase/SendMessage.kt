@@ -51,13 +51,14 @@ class SendMessage(
 
             messageRepo.sendMessage(params.subId, threadId, params.addresses, params.body, params.attachments)
 
-            when (params.threadId) {
+            val retrievedId = when (params.threadId) {
                 // If the threadId wasn't provided, then it's probably because it doesn't exist in Realm.
                 // Sync it now and get the id
-                0L -> conversationRepo.getOrCreateConversation(params.addresses)?.id
+                0L -> conversationRepo.getOrCreateConversation(params.addresses)?.id!!
                 else -> params.threadId
             }
-                ?.also(conversationRepo::updateConversations)
-                ?.also(conversationRepo::markUnarchived)
+            
+            conversationRepo.updateConversations(retrievedId)
+            conversationRepo.markUnarchived(retrievedId)
         }
 }

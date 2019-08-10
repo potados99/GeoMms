@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import com.potados.geomms.common.extension.getViewModel
+import com.potados.geomms.common.extension.setSupportActionBar
+import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
 import com.potados.geomms.model.Conversation
@@ -26,7 +28,7 @@ class ConversationsFragment : Fragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        conversationsViewModel = getViewModel {}
+        conversationsViewModel = getViewModel()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -34,8 +36,9 @@ class ConversationsFragment : Fragment(),
             .inflate(inflater, container, false)
             .apply { vm = conversationsViewModel }
             .apply { viewDataBinding = this }
+            .apply { setSupportActionBar(root.toolbar) }
+            .apply { initializeView(root) }
             .root
-            .apply { initializeView(this) }
     }
 
     override fun onConversationClicked(conversation: Conversation) {
@@ -51,5 +54,13 @@ class ConversationsFragment : Fragment(),
         }
 
         // ...
+
+        with(view.toolbar_search) {
+            setVisible(true)
+        }
+
+        with(view.toolbar_title) {
+            setVisible(false)
+        }
     }
 }

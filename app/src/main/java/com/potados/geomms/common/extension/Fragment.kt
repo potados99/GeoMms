@@ -10,6 +10,7 @@ import android.content.Context
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -20,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.common.base.BaseActivity
 import com.potados.geomms.common.base.BaseFragment
-import kotlinx.android.synthetic.main.base_activity_layout.*
+import kotlinx.android.synthetic.main.base_activity.*
 
 /**
  * Do something in the middle of beginTransaction() and commit().
@@ -67,14 +68,14 @@ fun FragmentTransaction.addAll(@IdRes containerViewId: Int, fragments: Array<out
 /**
  * Get ViewModel of the fragment with SingleUseCaseViewModelFactory.
  */
-inline fun <reified T : ViewModel> Fragment.getViewModel(factory: Factory, body: T.() -> Unit): T {
+inline fun <reified T : ViewModel> Fragment.getViewModel(factory: Factory, body: T.() -> Unit = {}): T {
     return ViewModelProviders.of(this, factory).get(T::class.java).apply(body)
 }
 
 /**
  * Get ViewModel of the fragment without SingleUseCaseViewModelFactory.
  */
-inline fun <reified T : ViewModel> Fragment.getViewModel(body: T.() -> Unit): T {
+inline fun <reified T : ViewModel> Fragment.getViewModel(body: T.() -> Unit = {}): T {
     return ViewModelProviders.of(this).get(T::class.java).apply(body)
 }
 
@@ -82,7 +83,7 @@ inline fun <reified T : ViewModel> Fragment.getViewModel(body: T.() -> Unit): T 
  * For Activity.
  * Get ViewModel of the fragment with SingleUseCaseViewModelFactory.
  */
-inline fun <reified T : ViewModel> FragmentActivity.getViewModel(factory: Factory, body: T.() -> Unit): T {
+inline fun <reified T : ViewModel> FragmentActivity.getViewModel(factory: Factory, body: T.() -> Unit = {}): T {
     return ViewModelProviders.of(this, factory).get(T::class.java).apply(body)
 }
 
@@ -94,9 +95,9 @@ inline fun <reified T : ViewModel> FragmentActivity.getViewModel(body: T.() -> U
     return ViewModelProviders.of(this).get(T::class.java).apply(body)
 }
 
-val BaseFragment.baseActivity: BaseActivity get() = (activity as BaseActivity)
-val BaseFragment.viewContainer: View get() = (activity as BaseActivity).fragment_container
-val BaseFragment.appContext: Context get() = activity?.applicationContext!!
+val Fragment.baseActivity: AppCompatActivity? get() = (activity as? AppCompatActivity)
+val Fragment.viewContainer: View? get() = (activity as? BaseActivity)?.fragment_container
+val Fragment.appContext: Context get() = activity?.applicationContext!!
 
-val BaseFragment.supportActionBar: ActionBar? get() = (activity as BaseActivity).supportActionBar
-fun BaseFragment.setSupportActionBar(toolbar: Toolbar) = (activity as BaseActivity).setSupportActionBar(toolbar)
+val Fragment.supportActionBar: ActionBar? get() = (activity as? BaseActivity)?.supportActionBar
+fun Fragment.setSupportActionBar(toolbar: Toolbar) = (activity as? BaseActivity)?.setSupportActionBar(toolbar)
