@@ -19,9 +19,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
-import com.potados.geomms.common.base.BaseActivity
-import com.potados.geomms.common.base.BaseFragment
-import kotlinx.android.synthetic.main.base_activity.*
+import kotlinx.android.synthetic.main.single_fragment_activity.*
 
 /**
  * Do something in the middle of beginTransaction() and commit().
@@ -96,8 +94,8 @@ inline fun <reified T : ViewModel> FragmentActivity.getViewModel(body: T.() -> U
 }
 
 val Fragment.baseActivity: AppCompatActivity? get() = (activity as? AppCompatActivity)
-val Fragment.viewContainer: View? get() = (activity as? BaseActivity)?.fragment_container
+val Fragment.viewContainer: View? get() = (activity as? AppCompatActivity)?.fragment_container
 val Fragment.appContext: Context get() = activity?.applicationContext!!
 
-val Fragment.supportActionBar: ActionBar? get() = (activity as? BaseActivity)?.supportActionBar
-fun Fragment.setSupportActionBar(toolbar: Toolbar) = (activity as? BaseActivity)?.setSupportActionBar(toolbar)
+val Fragment.supportActionBar: ActionBar? get() = (activity as? AppCompatActivity)?.supportActionBar
+fun Fragment.setSupportActionBar(toolbar: Toolbar) = (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)

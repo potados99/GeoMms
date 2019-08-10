@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.location.representation
+package com.potados.geomms.feature.location.presentation
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import com.potados.geomms.R
 import com.potados.geomms.feature.location.data.LSConnection
 
-import kotlinx.android.synthetic.main.connection_list_item.view.*
+import kotlinx.android.synthetic.main.connections_item.view.*
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -24,7 +24,7 @@ class LocationSupportConnectionRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_map_friends_list_item, parent, false)
+            .inflate(R.layout.connections_item, parent, false)
         return ViewHolder(view)
     }
 
@@ -45,7 +45,7 @@ class LocationSupportConnectionRecyclerViewAdapter(
         private val statusTextView: TextView = view.friends_list_item_status_textview
 
         fun bind(item: LSConnection) {
-            nameTextView.text = item.person.contactName
+            nameTextView.text = item.person.address
             statusTextView.text = item.currentDistance?.toShortenString() ?: "-"
 
             val timerTask = object: TimerTask() {

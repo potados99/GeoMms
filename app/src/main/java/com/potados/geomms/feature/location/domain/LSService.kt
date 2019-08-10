@@ -1,7 +1,5 @@
 package com.potados.geomms.feature.location.domain
 
-import com.potados.geomms.common.functional.Result
-import com.potados.geomms.common.interactor.UseCase.None
 import com.potados.geomms.feature.location.data.LSConnection
 import com.potados.geomms.feature.location.data.LSPacket
 import com.potados.geomms.feature.location.data.LSRequest
@@ -16,55 +14,65 @@ import com.potados.geomms.feature.location.data.LSRequest
 interface LSService {
 
     /**
+     * 스트링이 적절한 LSPacket인지 검사합니다.
+     */
+    fun isLocationSupportMessage(body: String): Boolean
+
+    /**
+     * 직렬화된 패킷의 parse를 시도합니다.
+     */
+    fun parse(body: String): LSPacket?
+
+    /**
+     * 패킷의 직렬화를 시도합니다.
+     */
+    fun serialize(locationPacket: LSPacket): String?
+
+    /**
      * LocationSupport 패킷이 도착했을 때의 동작을 지정합니다.
      * 패킷이 도착했을 때에 이 메소드가 호출되어야 그에 맞는 행동이 수행됩니다.
      */
-    fun onPacketReceived(address: String, packet: LSPacket): Result<LSPacket>
-
-    /**
-     * 직렬화된 패킷 스트링을 인자로 받습니다.
-     */
-    fun onPacketReceived(address: String, packet: String): Result<LSPacket>
+    fun onPacketReceived(address: String, body: String)
 
     /**
      * 새 연결을 생성하는 요청을 날립니다.
      */
-    fun requestNewConnection(request: LSRequest): Result<None>
+    fun requestNewConnection(request: LSRequest)
 
     /**
      * 새 연결 요청을 수락합니다.
      */
-    fun acceptNewConnection(request: LSRequest): Result<None>
+    fun acceptNewConnection(request: LSRequest)
 
     /**
      * 상대방에게 현재 위치를 알려줄 것을 요청합니다.
      */
-    fun requestUpdate(connection: LSConnection): Result<None>
+    fun requestUpdate(connection: LSConnection)
 
     /**
      * 상대방에게 내 현재 위치를 보냅니다.
      */
-    fun sendUpdate(connection: LSConnection): Result<None>
+    fun sendUpdate(connection: LSConnection)
 
     /**
      * 연결을 종료합니다.
      */
-    fun deleteConnection(connection: LSConnection): Result<None>
+    fun deleteConnection(connection: LSConnection)
 
 
     /**
      * 수락 대기중인 들어오는 요청을 가져옵니다.
      */
-    fun getInboundRequests(): Result<List<LSRequest>>
+    fun getInboundRequests(): List<LSRequest>
 
     /**
      * 상대방의 수락을 대기중인 나가는 요청을 가져옵니다.
      */
-    fun getOutboundRequests(): Result<List<LSRequest>>
+    fun getOutboundRequests(): List<LSRequest>
 
     /**
      * 현재 연결의 목록을 가져옵니다.
      */
-    fun getConnections(): Result<List<LSConnection>>
+    fun getConnections(): List<LSConnection>
 
 }

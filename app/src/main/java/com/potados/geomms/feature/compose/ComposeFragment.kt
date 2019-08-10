@@ -58,7 +58,7 @@ class ComposeFragment : Fragment() {
         setHasOptionsMenu(true)
 
         withNonNull(supportActionBar) {
-            // setDisplayShowTitleEnabled(false)
+            setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
         }
 

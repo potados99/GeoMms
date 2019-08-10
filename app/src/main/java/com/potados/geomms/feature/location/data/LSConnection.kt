@@ -8,7 +8,7 @@ import com.potados.geomms.util.Metric
  */
 data class LSConnection(
     val id: Int,
-    val person: Person,
+    val person: LSPerson,
     val lifeSpan: Long,
     val establishedTime: Long
 ) {

@@ -1,19 +1,23 @@
 package com.potados.geomms.feature.location.domain
 
 import android.util.Log
-import com.potados.geomms.common.functional.Result
-import com.potados.geomms.common.interactor.UseCase.None
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonSyntaxException
 import com.potados.geomms.util.DateTime
 import com.potados.geomms.feature.location.data.LocationRepository
 import com.potados.geomms.feature.location.data.LSConnection
 import com.potados.geomms.feature.location.data.LSPacket
 import com.potados.geomms.feature.location.data.LSRequest
-import com.potados.geomms.feature.message.domain.SmsComposed
+import com.potados.geomms.repository.MessageRepository
+import com.potados.geomms.util.Reflection
+import com.potados.geomms.util.Types
 import org.koin.core.KoinComponent
+import timber.log.Timber
 
 class LSServiceImpl(
-    private val locationRepository: LocationRepository,
-    private val messageService: MessageService
+    private val locationRepo: LocationRepository,
+    private val messageRepo: MessageRepository
 ) : LSService, KoinComponent {
 
     /**
@@ -29,11 +33,148 @@ class LSServiceImpl(
         restore()
     }
 
-    override fun onPacketReceived(address: String, packet: LSPacket): Result<LSPacket> {
+
+    override fun parse(body: String): LSPacket? {
+        /**
+         * 예외처리
+         */
+        if (!isLocationSupportMessage(body)) {
+            Timber.w("not a LocationSupport packet.")
+            return null
+        }
+
+        /**
+         * 페이로드의 필드들 가져오기.
+         */
+        val payload = body.removePrefix(GEO_MMS_PREFIX)
+        val payloadFields = payload.split(FIELD_SPLITTER)
+
+        /**
+         * 고정 필드가 type과 id로 두 개인데, 이보다 적으면 잘못된 패킷으로 간주.
+         */
+        if (payloadFields.size < 2) {
+            Timber.w("necessary fields are missing.")
+            return null
+        }
+
+        /**
+         * 페이로드 중 고정 부분의 첫번째 필드인 type 숫자 값을 가져옵니다.
+         */
+        val typeNumber = with(LSPacket.Companion.Field.TYPE) {
+            convert(payloadFields[positionInPayload])
+        }
+
+        /**
+         * 해당 typeNumber에 해당하는 PacketType을 가져옵니다.
+         */
+        val type =
+            findType(typeNumber)
+
+        /**
+         * 없으면 잘못된 패킷.
+         */
+        if (type == null) {
+            Timber.w("undefined type: $typeNumber")
+            return null
+        }
+
+        /**
+         * json으로 만들어서 담을겁니다.
+         */
+        val json = JsonObject()
+
+        /**
+         * 가져온 타입에 해당하는 필드들을 가지고 와서,
+         * {필드 이름}과 {페이로드에서 가져온 그 필드의 값} 쌍을 json 객체에 추가해줍니다.
+         */
+        type.fields.forEach {
+            val value = try {
+                /**
+                 * Convert를 굳이 여기서 해주는 이유는, 숫자 스트링이 무결한지 여기에서 확인하기 위함입니다.
+                 * Gson이 검사하게 해도 되는데 그냥 직접 하고 싶었습니다.
+                 */
+                it.convert(payloadFields[it.positionInPayload])
+            }
+            catch (e: Exception) {
+                when (e) {
+                    /** toDouble이나 toLong에서 문제가 생긴 경우 */
+                    is NumberFormatException -> {
+                        Timber.w("parse error at payload field ${it.positionInPayload}: ${payloadFields[it.positionInPayload]}")
+                    }
+                    else -> { /* 그렇지 않은 경우 */
+                        Timber.w("unknown error occurred while adding parsed number to json object.")
+                    }
+                }
+
+                return null
+            }
+
+            json.addProperty(it.fieldName, value)
+        }
+
+        /**
+         * LSPacket 객체 확보.
+         */
+        return try {
+            Gson().fromJson(json, Types.typeOf<LSPacket>())
+        }
+        catch (e: Exception) {
+            when (e) {
+                is JsonSyntaxException -> {
+                    Timber.w("error while parsing json. json syntax incorrect.")
+                }
+                else -> {
+                    Timber.w("unknown error occurred while parsing json.")
+                }
+            }
+            return null
+        }
+    }
+
+    override fun isLocationSupportMessage(body: String): Boolean {
+        if (body.isBlank())                     return false   /* 비어있는 메시지 */
+        if (!body.startsWith(GEO_MMS_PREFIX))   return false   /* 무관한 메시지 */
+
+        return true
+    }
+
+    override fun serialize(locationPacket: LSPacket): String? {
+
+        val builder = StringBuilder().append(GEO_MMS_PREFIX)
+
+        val type = LSPacket.Companion.PacketType.values().find { it.number == locationPacket.type }
+
+        if (type == null) {
+            Timber.w("wrong packet type: ${locationPacket.type}")
+            return null
+        }
+
+        type.fields.forEach {
+            val value = try {
+                Reflection.readInstanceProperty<Any>(locationPacket, it.fieldName).toString()
+            }
+            catch (e: Exception) {
+                Timber.w("error occurred while accessing property.")
+                return null
+            }
+
+            builder.append(value)
+
+            if (it != type.fields.last()) {
+                builder.append(FIELD_SPLITTER)
+            }
+        }
+
+        return builder.toString()
+    }
+
+
+    override fun onPacketReceived(address: String, body: String) {
         try {
-            /**
-             * 패킷 자체는 온전하다고 가정하고 처리해야 할 패킷만 처리합니다.
-             */
+            val packet = parse(body) ?: return
+
+            Timber.v("Packet parese success.")
+
             when (packet.type) {
 
                 /**
@@ -79,8 +220,10 @@ class LSServiceImpl(
                  * 위치정보 요청에 대한 패킷일 때.
                  */
                 LSPacket.Companion.PacketType.REQUEST_DATA.number -> {
-                    connections.find { it.id == packet.connectionId }?.let(::sendUpdate)
-                        ?: Log.w("LSServiceImpl:onPacketReceived", "cannot find corresponding connection for REQUEST_DATA.")
+                        connections
+                            .find { it.id == packet.connectionId }
+                            ?.let(::sendUpdate)
+                            ?: Timber.w("cannot find corresponding connection for REQUEST_DATA.")
                 }
 
                 /**
@@ -91,34 +234,24 @@ class LSServiceImpl(
                 }
             }
         } catch (e: Exception) {
-            return Result.Error(e)
+            Timber.w(e)
         }
-
-        return Result.Success(packet)
     }
 
-    override fun onPacketReceived(address: String, packet: String): Result<LSPacket> {
-        LSProtocol.parse(packet)?.let {
-            return onPacketReceived(address, it)
-        } ?: return Result.Error(IllegalArgumentException("Not a Location Support packet."))
-    }
-
-    override fun requestNewConnection(request: LSRequest): Result<None> {
+    override fun requestNewConnection(request: LSRequest) {
         try {
-            val address = request.person.phoneNumber
+            val address = request.person.address
             val packetToSend = LSPacket.ofCreatingNewRequest(request)
 
             sendPacket(address, packetToSend)
 
             pendingRequests.add(request)
         } catch (e: Exception) {
-            return Result.Error(e)
+            Timber.w(e)
         }
-
-        return Result.Success(None())
     }
 
-    override fun acceptNewConnection(request: LSRequest): Result<None> {
+    override fun acceptNewConnection(request: LSRequest) {
         try {
             if (incomingRequests.indexOf(request) == -1) {
                 /**
@@ -128,7 +261,7 @@ class LSServiceImpl(
                 throw IllegalArgumentException()
             }
 
-            val address = request.person.phoneNumber
+            val address = request.person.address
             val packetToSend = LSPacket.ofAcceptingRequest(request)
 
             sendPacket(address, packetToSend)
@@ -139,31 +272,27 @@ class LSServiceImpl(
             incomingRequests.remove(request)
             connections.add(LSConnection.fromAcceptedRequest(request))
         } catch (e: Exception) {
-            return Result.Error(e)
+              Timber.w(e)
         }
-
-        return Result.Success(None())
     }
 
-    override fun requestUpdate(connection: LSConnection): Result<None> {
+    override fun requestUpdate(connection: LSConnection) {
         try {
-            val address = connection.person.phoneNumber
+            val address = connection.person.address
             val packetToSend = LSPacket.ofRequestingUpdate(connection)
 
             sendPacket(address, packetToSend)
         } catch (e: Exception) {
-            return Result.Error(e)
+              Timber.w(e)
         }
-
-        return Result.Success(None())
     }
 
-    override fun sendUpdate(connection: LSConnection): Result<None> {
+    override fun sendUpdate(connection: LSConnection) {
         try {
-            val address = connection.person.phoneNumber
+            val address = connection.person.address
             val packetToSend = LSPacket.ofSendingData(
                 connection,
-                locationRepository.getCurrentLocation() ?: throw IllegalStateException()
+                locationRepo.getCurrentLocation() ?: throw IllegalStateException()
             )
 
             sendPacket(address, packetToSend)
@@ -173,33 +302,33 @@ class LSServiceImpl(
              */
             updateConnectionWithOutboundPacket(connection, packetToSend)
         } catch (e: Exception) {
-            return Result.Error(e)
+              Timber.w(e)
         }
 
-        return Result.Success(None())
+          
     }
 
-    override fun deleteConnection(connection: LSConnection): Result<None> {
+    override fun deleteConnection(connection: LSConnection) {
         try {
             // TODO
 
         } catch (e: Exception) {
-            return Result.Error(e)
+              Timber.w(e)
         }
 
-        return Result.Success(None())
+          
     }
 
-    override fun getInboundRequests(): Result<List<LSRequest>> {
-        return Result.Success(incomingRequests)
+    override fun getInboundRequests(): List<LSRequest> {
+        return incomingRequests
     }
 
-    override fun getOutboundRequests(): Result<List<LSRequest>> {
-        return Result.Success(pendingRequests)
+    override fun getOutboundRequests(): List<LSRequest> {
+        return pendingRequests
     }
 
-    override fun getConnections(): Result<List<LSConnection>> {
-        return Result.Success(connections)
+    override fun getConnections(): List<LSConnection> {
+        return connections
     }
 
 
@@ -207,8 +336,7 @@ class LSServiceImpl(
         val serialized = LSProtocol.serialize(packet)
             ?: throw IllegalArgumentException()
 
-        messageService.sendSms(SmsComposed(address, serialized), false)
-            .onError { throw IllegalArgumentException() }
+        // messageRepo.sendMessage()
     }
 
     private fun restore() {
@@ -229,7 +357,7 @@ class LSServiceImpl(
             }
 
             currentDistance = Metric.fromDistanceBetween(
-                locationRepository.getCurrentLocation() ?: throw IllegalStateException()
+                locationRepo.getCurrentLocation() ?: throw IllegalStateException()
                 , personLocation
             )
             */
@@ -241,5 +369,17 @@ class LSServiceImpl(
             lastSentTime = DateTime.now()
             lastSentPacket = packet
         }
+    }
+
+
+
+
+    private fun findType(typeNum: Number): LSPacket.Companion.PacketType? {
+        return LSPacket.Companion.PacketType.values().find { it.number == typeNum }
+    }
+
+    companion object {
+        private const val GEO_MMS_PREFIX = "[GEOMMS]"
+        private const val FIELD_SPLITTER = ':'
     }
 }

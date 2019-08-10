@@ -9,26 +9,26 @@ import kotlin.random.Random
  */
 data class LSRequest(
     val id: Int,
-    val person: Person,
+    val person: LSPerson,
     val lifeSpan: Long,
     val isOutBound: Boolean
 ) {
 
     class Builder : KoinComponent {
         private var id: Int = Random(System.currentTimeMillis()).nextInt(1, 99999)
-        private var person: Person? = null
+        private var person: LSPerson? = null
         private var lifeSpan: Long = 1800000 /* 30분이 기본 */
         private var isOutBound: Boolean = true
 
         fun setId(id: Int) =
             this.apply { this.id = id }
 
-        fun setPerson(person: Person) =
+        fun setPerson(person: LSPerson) =
             this.apply { this.person = person }
 
         fun setPerson(address: String) =
             this.apply {
-                this.person = Person(address)
+                this.person = LSPerson(address)
             }
 
         fun setLifeSpan(lifeSpan: Long) =

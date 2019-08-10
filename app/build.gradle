@@ -65,6 +65,12 @@ dependencies {
     /** Timber 로깅 */
     implementation "com.jakewharton.timber:timber:$timber_version"
 
+    /** GSON */
+    implementation "com.google.code.gson:gson:$gson_version"
+
+    /** reflection */
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
     implementation project(":domain")
     implementation project(":android-smsmms")
     implementation project(":common")

@@ -3,7 +3,6 @@ package com.potados.geomms.feature.compose
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.Message
 import com.potados.geomms.repository.ConversationRepository

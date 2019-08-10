@@ -3,6 +3,8 @@ package com.potados.geomms.feature.conversations
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import com.potados.geomms.R
+import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.getViewModel
 import com.potados.geomms.common.extension.setSupportActionBar
 import com.potados.geomms.common.extension.setVisible
@@ -15,8 +17,10 @@ import org.koin.android.ext.android.inject
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
  */
-class ConversationsFragment : Fragment(),
+class ConversationsFragment : NavigationFragment(),
     ConversationsAdapter.ConversationClickListener {
+
+    override fun menuId(): Int = R.id.menu_item_navigation_message
 
     private val navigator: Navigator by inject()
 

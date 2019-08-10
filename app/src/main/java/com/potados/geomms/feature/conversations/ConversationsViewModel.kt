@@ -2,7 +2,6 @@ package com.potados.geomms.feature.conversations
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.repository.ConversationRepository
 import io.realm.RealmResults

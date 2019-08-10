@@ -4,37 +4,30 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.potados.geomms.R
-import com.potados.geomms.common.base.BaseActivity
+import com.potados.geomms.common.base.SingleFragmentActivity
+import com.potados.geomms.common.extension.supportActionBar
+import com.potados.geomms.extension.withNonNull
+import kotlinx.android.synthetic.main.settings_activity.*
 
-class SettingsActivity : BaseActivity() {
+class SettingsActivity : SingleFragmentActivity() {
 
-    override fun layoutId(): Int = R.layout.activity_settings
-    override fun fragmentContainerId(): Int = R.id.settings_fragment_container
-    override fun toolbarId(): Int? = R.id.settings_toolbar
-    override fun toolbarMenuId(): Int? = null
-
-    override fun fragments(): Array<out Fragment> = arrayOf(SettingsFragment())
+    override fun fragment(): Fragment = SettingsFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.title = "Settings"
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        initializeView()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
-            android.R.id.home -> {
-                this.finish()
-                return true
-            }
-            else -> {
-                // 낫띵..
-            }
-        }
+    private fun initializeView() {
+        setSupportActionBar(toolbar)
 
-        return super.onOptionsItemSelected(item)
+        withNonNull(supportActionBar) {
+            setDisplayShowTitleEnabled(false)
+            setDisplayHomeAsUpEnabled(true)
+        }
     }
 
     companion object {

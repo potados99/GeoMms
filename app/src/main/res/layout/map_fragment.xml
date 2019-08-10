@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<layout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+                name="vm"
+                type="com.potados.geomms.feature.location.presentation.MapViewModel"/>
+    </data>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".feature.location.representation.MapFragment">
+        tools:context=".feature.location.presentation.MapFragment">
 
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar">
+
+        <TextView
+                android:id="@+id/toolbar_title"
+                style="@style/ToolbarText"
+                tools:text="Conversations"/>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.gms.maps.MapView
             android:layout_width="match_parent"
@@ -43,3 +61,5 @@
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>
