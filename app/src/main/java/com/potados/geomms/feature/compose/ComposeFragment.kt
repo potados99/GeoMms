@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.databinding.ComposeFragmentBinding
 import com.potados.geomms.extension.withNonNull
@@ -68,7 +66,7 @@ class ComposeFragment : Fragment() {
         }
 
 
-        with(view.compose_bottom_layout) {
+        with(view.compose_bar_layout) {
             addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
                 with(view.messages_recyclerview) {
                     setPadding(paddingLeft, paddingTop, paddingRight, bottom - top)
@@ -80,7 +78,7 @@ class ComposeFragment : Fragment() {
             }
         }
 
-        with(view.compose_send_button) {
+        with(view.send_imageview) {
             setOnClickListener {
                 //composeViewModel.sendMessage(compose_edittext.text.toString())
                 //compose_edittext.text.clear()

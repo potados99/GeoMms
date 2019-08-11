@@ -3,12 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
+        <item name="android:statusBarColor">?android:attr/colorBackground</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -16,28 +15,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="TextPrimary">
-        <item name="textColor">primary</item>
-        <item name="textSize">primary</item>
-    </style>
-
-    <style name="TextSecondary">
-        <item name="textColor">tertiary</item>
-        <item name="textSize">secondary</item>
-    </style>
-
-    <style name="TextTertiary">
-        <item name="textColor">tertiary</item>
-        <item name="textSize">tertiary</item>
-    </style>
-
     <style name="Toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">56dp</item>
-
-        <!-- This needs to be set so that we can tint the toolbar and not change the background
-         resource. This is mainly so that QkReplyActivity can call setClipToOutline -->
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">?android:attr/colorBackground</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -48,9 +29,6 @@
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">start|center_vertical</item>
         <item name="android:maxLines">1</item>
-        <!--item name="textColor">primary</item-->
-        <!--item name="textSize">toolbar</item-->
     </style>
-
 
 </resources>
