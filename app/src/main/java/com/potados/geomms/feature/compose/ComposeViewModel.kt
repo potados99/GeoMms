@@ -13,6 +13,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import timber.log.Timber
 import kotlin.concurrent.thread
 
 /**
@@ -37,6 +38,8 @@ class ComposeViewModel : ViewModel(), KoinComponent {
         conversation = conversationRepo.getConversation(threadId)!!
         messages = messageRepo.getMessages(threadId)
         activeConversationManager.setActiveConversation(threadId)
+
+        Timber.i("viewmodel started.")
     }
 
     /**

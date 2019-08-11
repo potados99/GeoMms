@@ -22,7 +22,7 @@ class ComposeFragment : Fragment() {
     private lateinit var composeViewModel: ComposeViewModel
     private lateinit var viewDataBinding: ComposeFragmentBinding
 
-    private val adapter = MessagesAdapter()
+    private val messagesAdapter = MessagesAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +64,7 @@ class ComposeFragment : Fragment() {
 
         with(view.messages_recyclerview) {
             messages_recyclerview.layoutManager = LinearLayoutManager(context)
-            messages_recyclerview.adapter = adapter
+            messages_recyclerview.adapter = messagesAdapter
         }
 
 
