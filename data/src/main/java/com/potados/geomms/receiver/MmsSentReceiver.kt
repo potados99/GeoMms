@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.moez.QKSMS.receiver
+package com.potados.geomms.receiver
 
 import android.app.Activity
 import android.content.BroadcastReceiver

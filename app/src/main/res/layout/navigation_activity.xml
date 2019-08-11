@@ -16,6 +16,15 @@
             app:layout_constraintBottom_toTopOf="@+id/nav_view">
     </FrameLayout>
 
+    <View
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:background="@drawable/ab_shadow_reversed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/nav_view_shadow"
+            app:layout_constraintBottom_toTopOf="@+id/nav_view"/>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
             style="@style/BottomNavigation"

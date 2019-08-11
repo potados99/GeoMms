@@ -2,6 +2,8 @@ package com.potados.geomms.feature.compose
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -16,7 +18,6 @@ import kotlinx.android.synthetic.main.compose_fragment.view.toolbar
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
 
 class ComposeFragment : Fragment() {
-
 
     private lateinit var composeViewModel: ComposeViewModel
     private lateinit var viewDataBinding: ComposeFragmentBinding
@@ -91,6 +92,21 @@ class ComposeFragment : Fragment() {
                 //composeViewModel.sendMessage(compose_edittext.text.toString())
                 //compose_edittext.text.clear()
             }
+        }
+
+        with(view.measage_edittext) {
+            addTextChangedListener(object: TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    with(view.send_imageview) {
+                        isEnabled = length() > 0
+                        imageAlpha = if (length() > 0) 255 else 128
+                    }
+                }
+                override fun afterTextChanged(s: Editable?) {
+                }
+            })
         }
 
     }

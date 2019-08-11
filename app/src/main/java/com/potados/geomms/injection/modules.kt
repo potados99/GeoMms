@@ -13,11 +13,11 @@ import com.potados.geomms.preference.Preferences
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.potados.geomms.common.manager.NotificationManagerImplTest
 import com.potados.geomms.manager.*
 import com.potados.geomms.mapper.*
 import com.potados.geomms.repository.*
-import com.potados.geomms.usecase.SyncMessages
-import com.potados.geomms.usecase.UpdateBadge
+import com.potados.geomms.usecase.*
 
 val permissions = arrayOf(
     Manifest.permission.READ_SMS,
@@ -52,6 +52,9 @@ val myModules = module {
 
     /** Key Manager */
     single { KeyManagerImpl() as KeyManager }
+
+    /** Notification Manager */
+    single { NotificationManagerImplTest() as NotificationManager }
 
     /** Permission Manager */
     single { PermissionManagerImpl(context = get(), permissions = permissions) as PermissionManager }
@@ -146,7 +149,41 @@ val myModules = module {
     /** Mark Delivered */
     /** Mark Delivery Failed */
     /** Mark Failed */
+
+    /** Mark Read */
+    single {
+        MarkRead(
+            conversationRepo = get(),
+            messageRepo = get(),
+            notificationManager = get(),
+            updateBadge = get()
+        )
+    }
+
     /** Mark Sent */
+
+    /** ReceiveMms */
+    single {
+        ReceiveMms(
+            activeConversationManager = get(),
+            conversationRepo = get(),
+            syncRepo = get(),
+            messageRepo = get(),
+            notificationManager = get(),
+            updateBadge = get()
+        )
+    }
+
+    /** ReceiveSms */
+    single {
+        ReceiveSms(
+            conversationRepo = get(),
+            messageRepo = get(),
+            notificationManager = get(),
+            updateBadge = get()
+        )
+    }
+
     /** Send Message */
     /** Sync Message */
 

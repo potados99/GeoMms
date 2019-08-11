@@ -40,4 +40,5 @@
         <item name="itemTextColor">@color/navigation_item</item>
     </style>
 
+
 </resources>

@@ -60,8 +60,8 @@
                 android:elevation="4dp"
                 android:padding="10dp"
                 android:src="@drawable/ic_add_black_24dp"
-                tools:backgroundTint="@color/tools_theme"
-                tools:tint="#FFFFFF"
+                android:backgroundTint="@color/primary"
+                android:tint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="8dp" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp"/>
@@ -92,8 +92,7 @@
                     android:elevation="4dp"
                     android:padding="10dp"
                     android:src="@drawable/ic_send_black_24dp"
-                    android:tint="?android:textColorSecondary"
-                    tools:backgroundTint="@color/tools_theme"
+                    android:tint="@color/primary"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
             />
             <EditText
@@ -111,7 +110,10 @@
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/send_imageview"
                     android:singleLine="false" app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintVertical_bias="1.0"/>
+                    app:layout_constraintVertical_bias="1.0"
+            />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -2,10 +2,10 @@ package com.potados.geomms.common.navigation
 
 import android.content.Context
 import android.provider.Telephony
-import com.potados.geomms.app.GiveMePermissionActivity
-import com.potados.geomms.app.MainActivity
+import com.potados.geomms.common.GiveMePermissionActivity
+import com.potados.geomms.common.MainActivity
 import com.potados.geomms.feature.compose.ComposeActivity
-import com.potados.geomms.app.MakeMeDefaultAppActivity
+import com.potados.geomms.common.MakeMeDefaultAppActivity
 import com.potados.geomms.model.Conversation
 
 /**

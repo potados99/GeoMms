@@ -35,6 +35,7 @@ import com.potados.geomms.mapper.CursorToConversation
 import com.potados.geomms.mapper.CursorToMessage
 import com.potados.geomms.mapper.CursorToRecipient
 import com.potados.geomms.model.*
+import com.potados.geomms.util.Types
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import io.realm.Realm

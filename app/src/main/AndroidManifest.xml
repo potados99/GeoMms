@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
-            android:name="com.potados.geomms.app.MyApplication"
+            android:name="com.potados.geomms.common.MyApplication"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
@@ -49,17 +49,17 @@
 
         <!-- 권한 요구 액티비티 -->
         <activity
-                android:name="com.potados.geomms.app.GiveMePermissionActivity">
+                android:name="com.potados.geomms.common.GiveMePermissionActivity">
         </activity>
 
         <!-- SMS 기본 앱 요구 액티비티 -->
         <activity
-                android:name="com.potados.geomms.app.MakeMeDefaultAppActivity">
+                android:name="com.potados.geomms.common.MakeMeDefaultAppActivity">
         </activity>
 
         <!-- 메인 액티비티 -->
         <activity
-                android:name="com.potados.geomms.app.MainActivity"
+                android:name="com.potados.geomms.common.MainActivity"
                 android:label="@string/app_name">
         </activity>
 
@@ -83,42 +83,29 @@
 
         </activity>
 
-        <!-- SMS 수신자 -->
+        <!--SMS 수신자-->
         <receiver
-                android:name="com.potados.geomms.app.SmsReceiver"
+                android:name=".receiver.SmsReceiver"
                 android:permission="android.permission.BROADCAST_SMS">
-
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_DELIVER"/>
-            </intent-filter>
-
-        </receiver>
-
-        <!-- SMS 발송 결과 수신자 -->
-        <receiver android:name="com.potados.geomms.app.SmsSentReceiver">
-            <intent-filter>
-                <action android:name="com.potados.SMS_SENT"/>
+                <action android:name="android.provider.Telephony.SMS_DELIVER" />
             </intent-filter>
         </receiver>
 
-        <!-- SMS 전달 결과 수신자 -->
-        <receiver android:name="com.potados.geomms.app.SmsDeliveredReceiver">
-            <intent-filter>
-                <action android:name="com.potados.SMS_DELIVERED"/>
-            </intent-filter>
-        </receiver>
-
-        <!-- MMS 수신자 -->
+        <!--MMS 수신자-->
         <receiver
-                android:name="com.potados.geomms.app.MmsReceiver"
+                android:name=".receiver.MmsReceiver"
                 android:permission="android.permission.BROADCAST_WAP_PUSH">
-
             <intent-filter>
-                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER"/>
-                <data android:mimeType="application/vnd.wap.mms-message"/>
+                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+                <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
-
         </receiver>
+
+        <!--MMS 수신 알림 수신자-->
+        <receiver
+                android:name=".receiver.MmsReceivedReceiver"
+                android:taskAffinity="com.klinker.android.messaging.MMS_RECEIVED" />
 
         <service
                 android:name="com.potados.geomms.feature.compose.HeadlessSmsSendService"

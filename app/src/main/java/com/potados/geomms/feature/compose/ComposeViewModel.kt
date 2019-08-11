@@ -8,6 +8,7 @@ import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.Message
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
+import com.potados.geomms.usecase.MarkRead
 import com.potados.geomms.usecase.SendMessage
 import io.realm.Realm
 import io.realm.RealmResults
@@ -25,6 +26,7 @@ class ComposeViewModel : ViewModel(), KoinComponent {
      * UseCase
      ***********************************************************/
     private val sendMessage: SendMessage by inject()
+    private val markRead: MarkRead by inject()
 
     private val activeConversationManager: ActiveConversationManager by inject()
     private val conversationRepo: ConversationRepository by inject()
@@ -38,6 +40,8 @@ class ComposeViewModel : ViewModel(), KoinComponent {
         conversation = conversationRepo.getConversation(threadId)!!
         messages = messageRepo.getMessages(threadId)
         activeConversationManager.setActiveConversation(threadId)
+
+        markRead(listOf(threadId))
 
         Timber.i("viewmodel started.")
     }

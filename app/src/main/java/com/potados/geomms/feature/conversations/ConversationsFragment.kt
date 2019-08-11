@@ -61,11 +61,11 @@ class ConversationsFragment : NavigationFragment(),
     override fun onResume() {
         super.onResume()
         //syncRepo.syncMessages()
-        syncMessages(Unit) {
+        /*syncMessages(Unit) {
             it.onError {
                 Timber.w(it)
             }
-        }
+        }*/
 
     }
 

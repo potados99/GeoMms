@@ -1,4 +1,4 @@
-package com.potados.geomms.app
+package com.potados.geomms.common
 
 import android.app.Application
 import com.potados.geomms.injection.myModules

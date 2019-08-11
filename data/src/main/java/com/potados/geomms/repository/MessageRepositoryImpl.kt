@@ -31,7 +31,6 @@ import com.google.android.mms.ContentType
 import com.google.android.mms.MMSPart
 import com.klinker.android.send_message.SmsManagerFactory
 import com.klinker.android.send_message.Transaction
-import com.moez.QKSMS.receiver.SmsSentReceiver
 import com.potados.geomms.compat.TelephonyCompat
 import com.potados.geomms.extension.anyOf
 import com.potados.geomms.manager.ActiveConversationManager
@@ -44,6 +43,7 @@ import com.potados.geomms.preference.Preferences
 import com.potados.geomms.receiver.SmsDeliveredReceiver
 import com.potados.geomms.util.ImageUtils
 import com.potados.geomms.extension.tryOrNull
+import com.potados.geomms.receiver.SmsSentReceiver
 import io.realm.Case
 import io.realm.Realm
 import io.realm.RealmResults
