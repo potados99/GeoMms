@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
+import com.potados.geomms.extension.withNonNull
 import kotlinx.android.synthetic.main.single_fragment_activity.*
 
 /**
@@ -98,4 +99,13 @@ val Fragment.viewContainer: View? get() = (activity as? AppCompatActivity)?.frag
 val Fragment.appContext: Context get() = activity?.applicationContext!!
 
 val Fragment.supportActionBar: ActionBar? get() = (activity as? AppCompatActivity)?.supportActionBar
-fun Fragment.setSupportActionBar(toolbar: Toolbar) = (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
+fun Fragment.setSupportActionBar(toolbar: Toolbar, title: Boolean = false, upButton: Boolean = false) {
+    withNonNull(activity as? AppCompatActivity) {
+        setSupportActionBar(toolbar)
+
+        withNonNull(supportActionBar) {
+            setDisplayShowTitleEnabled(title)
+            setHomeButtonEnabled(upButton)
+        }
+    }
+}

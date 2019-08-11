@@ -1,16 +1,13 @@
 package com.potados.geomms.feature.location.presentation
 
 import android.os.Bundle
-import android.text.InputType
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.*
@@ -18,9 +15,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
-import com.potados.geomms.util.Duration
 import com.potados.geomms.util.Notify
-import com.potados.geomms.util.Popup
 import com.potados.geomms.databinding.MapFragmentBinding
 import com.potados.geomms.feature.location.data.LSConnection
 import kotlinx.android.synthetic.main.bottom_sheet_content.view.*
@@ -28,6 +23,8 @@ import kotlinx.android.synthetic.main.map_fragment.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.map_view
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import kotlinx.android.synthetic.main.conversations_fragment.view.*
+import kotlinx.android.synthetic.main.map_fragment.view.toolbar
 
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
@@ -56,7 +53,7 @@ class MapFragment : NavigationFragment(),
             .inflate(inflater, container, false)
             .apply { vm = mapViewModel }
             .apply { viewDataBinding = this }
-            .apply { setSupportActionBar(root.toolbar) }
+            .apply { setSupportActionBar(toolbar = root.toolbar, title = false, upButton = false) }
             .apply { initializeView(root, savedInstanceState) }
             .root
 
@@ -107,7 +104,7 @@ class MapFragment : NavigationFragment(),
 
             setOnCameraMoveStartedListener {
                 if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                    with(fragment_map_bottom_sheet_view) {
+                    with(bottom_sheet_layout) {
                         if (sheetState() == BottomSheetBehavior.STATE_HIDDEN) {
                             //
                         }
@@ -171,14 +168,14 @@ class MapFragment : NavigationFragment(),
                  * 따라서 STATE_EXPANDED 상태일 때에는 STATE_COLLAPSED 상태로 바꾸고,
                  * 그 이외에는 STATE_EXPANDED로 설정합니다.
                  */
-                view.fragment_map_bottom_sheet_view.toggleSheet()
+                view.bottom_sheet_layout.toggleSheet()
             }
         }
 
         /**
          * 바텀 시트
          */
-        with(view.fragment_map_bottom_sheet_view) {
+        with(view.bottom_sheet_layout) {
             collapseSheet()
 
             bottomSheetBehavior().setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
@@ -205,31 +202,7 @@ class MapFragment : NavigationFragment(),
             }
         }
 
-        /**
-         * 연결 추가 버튼
-         */
-        with(view.fragment_map_add_button) {
-            setOnClickListener {
-                val input = EditText(context).apply {
-                    inputType = InputType.TYPE_CLASS_PHONE
-                }
 
-                Popup(context)
-                    .withTitle("새 연결!")
-                    .withView(input)
-                    .withPositiveButton("오케이") { _, _ ->
-                        val address = input.text.toString()
-                        val lifeSpan = PreferenceManager
-                            .getDefaultSharedPreferences(context)
-                            .getString("location_connection_lifespan", "1600000")
-                            ?.toLong() ?: 1700000
-
-                        mapViewModel.requestNewConnection(address, lifeSpan)
-                        Notify(context).long("$address 에다가 ${Duration(lifeSpan).toShortenString()}짜리 연결 요청 날립니다")
-                    }
-                    .show()
-            }
-        }
     }
 
     /**
@@ -246,7 +219,7 @@ class MapFragment : NavigationFragment(),
 
             marker.showInfoWindow()
 
-            fragment_map_bottom_sheet_view.collapseSheet()
+            bottom_sheet_layout.collapseSheet()
         }
     }
 

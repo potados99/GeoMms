@@ -24,9 +24,8 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 app:contentInsetStartWithNavigation="0dp"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
             <TextView
@@ -39,13 +38,6 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <View
-                android:layout_width="0dp"
-                android:layout_height="8dp"
-                android:background="@drawable/ab_shadow"
-                app:layout_constraintTop_toBottomOf="@id/toolbar" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" android:id="@+id/toolbar_shadow"/>
-
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/messages_recyclerview"
                 android:layout_width="0dp"
@@ -55,59 +47,43 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:messages="@{vm.messages}"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/compose_bar_layout"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"/>
+        <ImageView
+                android:id="@+id/attach_imageview"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/circle"
+                android:contentDescription="attach"
+                android:elevation="4dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_add_black_24dp"
+                tools:backgroundTint="@color/tools_theme"
+                tools:tint="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"/>
+
+        <View
+                android:layout_width="0dp"
+                android:layout_height="8dp"
+                android:background="@drawable/ab_shadow"
+                app:layout_constraintTop_toBottomOf="@id/toolbar" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" android:id="@+id/toolbar_shadow"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/compose_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/compose_bar_layout"
-                android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp">
-
-            <ImageView
-                    android:id="@+id/attach_imageview"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/circle"
-                    android:contentDescription="attach"
-                    android:elevation="4dp"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_add_black_24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    tools:backgroundTint="@color/tools_theme"
-                    tools:tint="#FFFFFF" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp"/>
-
-            <View
-                    android:id="@+id/compose_background"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/rounded_rectangle_22dp"
-                    android:backgroundTint="#DEDEDE"
-                    android:elevation="4dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/attach_imageview"
-                    android:layout_marginStart="8dp"/>
-
-            <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:id="@+id/measage_edittext"
-                    android:elevation="10dp"
-                    android:background="@null"
-                    app:layout_constraintTop_toTopOf="@+id/compose_background"
-                    app:layout_constraintBottom_toBottomOf="@+id/compose_background"
-                    app:layout_constraintStart_toStartOf="@+id/compose_background"
-                    app:layout_constraintEnd_toStartOf="@+id/send_imageview"
-                    android:paddingStart="16dp" android:paddingTop="12dp"
-                    android:paddingEnd="16dp" android:paddingBottom="12dp" android:hint="Write a message..."
-                    android:textSize="15sp" android:maxLines="6"/>
-
+                android:background="@drawable/rounded_rectangle_22dp"
+                android:backgroundTint="#DEDEDE"
+                android:elevation="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                app:layout_constraintStart_toEndOf="@+id/attach_imageview" android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp">
             <ImageView
                     android:id="@+id/send_imageview"
                     android:layout_width="44dp"
@@ -118,9 +94,24 @@
                     android:src="@drawable/ic_send_black_24dp"
                     android:tint="?android:textColorSecondary"
                     tools:backgroundTint="@color/tools_theme"
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            />
+            <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:id="@+id/measage_edittext"
+                    android:elevation="10dp"
+                    android:background="@null"
+                    android:paddingStart="16dp" android:paddingTop="12dp"
+                    android:paddingEnd="16dp" android:paddingBottom="12dp" android:hint="Write a message..."
+                    android:textSize="15sp" android:maxLines="6"
+                    android:backgroundTint="@null"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/compose_background"/>
-
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/send_imageview"
+                    android:singleLine="false" app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintVertical_bias="1.0"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

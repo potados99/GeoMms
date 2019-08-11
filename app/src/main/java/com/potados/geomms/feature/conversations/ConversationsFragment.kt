@@ -5,11 +5,10 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
-import com.potados.geomms.common.extension.getViewModel
-import com.potados.geomms.common.extension.setSupportActionBar
-import com.potados.geomms.common.extension.setVisible
+import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
+import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.SyncMessages
@@ -32,7 +31,6 @@ class ConversationsFragment : NavigationFragment(),
 
     private val conversationsAdapter = ConversationsAdapter(this)
 
-
     // TODO remove
     private val syncMessages: SyncMessages by inject()
     private val syncRepo: SyncRepository by inject()
@@ -41,6 +39,23 @@ class ConversationsFragment : NavigationFragment(),
         super.onCreate(savedInstanceState)
 
         conversationsViewModel = getViewModel()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return ConversationsFragmentBinding
+            .inflate(inflater, container, false)
+            .apply { vm = conversationsViewModel }
+            .apply { viewDataBinding = this }
+            .apply { setSupportActionBar(toolbar = root.toolbar, title = false, upButton = false) }
+            .apply { initializeView(root) }
+            .root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.compose, menu)
+        menu?.setTint(context, R.color.primary)
+
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onResume() {
@@ -54,19 +69,10 @@ class ConversationsFragment : NavigationFragment(),
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return ConversationsFragmentBinding
-            .inflate(inflater, container, false)
-            .apply { vm = conversationsViewModel }
-            .apply { viewDataBinding = this }
-            .apply { setSupportActionBar(root.toolbar) }
-            .apply { initializeView(root) }
-            .root
-    }
-
     override fun onConversationClicked(conversation: Conversation) {
         navigator.showComposeActivity(activity!!, conversation)
     }
+
 
     private fun initializeView(view: View) {
 

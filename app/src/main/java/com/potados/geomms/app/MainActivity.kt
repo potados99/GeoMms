@@ -19,7 +19,7 @@ class MainActivity : NavigationActivity() {
 
     override fun fragments(): List<NavigationFragment> = _fragments
 
-    override fun menuResId(): Int = R.menu.bottom_nav_menu
+    override fun menuResId(): Int = R.menu.bottom_nav
 
     override fun defaultMenuItemId(): Int = R.id.menu_item_navigation_message
 
