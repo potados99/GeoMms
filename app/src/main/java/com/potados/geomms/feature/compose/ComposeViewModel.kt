@@ -33,7 +33,6 @@ class ComposeViewModel : ViewModel(), KoinComponent {
     private val messageRepo: MessageRepository by inject()
 
     lateinit var conversation: Conversation
-
     lateinit var messages: RealmResults<Message>
 
     fun start(threadId: Long) {
@@ -44,6 +43,18 @@ class ComposeViewModel : ViewModel(), KoinComponent {
         markRead(listOf(threadId))
 
         Timber.i("viewmodel started.")
+    }
+
+    /* 임시 TODO */
+    fun sendSms(body: String) {
+        sendMessage(
+            SendMessage.Params(
+                subId = -1,
+                threadId = conversation.id,
+                addresses = conversation.recipients.map { it.address },
+                body = body,
+                attachments = listOf()
+        ))
     }
 
     /**

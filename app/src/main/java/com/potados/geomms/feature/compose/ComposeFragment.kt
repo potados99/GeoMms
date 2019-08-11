@@ -89,12 +89,17 @@ class ComposeFragment : Fragment() {
 
         with(view.send_imageview) {
             setOnClickListener {
-                //composeViewModel.sendMessage(compose_edittext.text.toString())
-                //compose_edittext.text.clear()
+                with(view.measage_edittext) {
+                    composeViewModel.sendSms(text.toString())
+                    text.clear()
+                }
             }
         }
 
         with(view.measage_edittext) {
+            view.send_imageview.isEnabled = false
+            view.send_imageview.imageAlpha = 128
+
             addTextChangedListener(object: TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 }

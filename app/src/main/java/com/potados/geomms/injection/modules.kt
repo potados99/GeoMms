@@ -161,6 +161,7 @@ val myModules = module {
     }
 
     /** Mark Sent */
+    single{ MarkSent(messageRepo = get()) }
 
     /** ReceiveMms */
     single {
@@ -185,6 +186,14 @@ val myModules = module {
     }
 
     /** Send Message */
+    single {
+        SendMessage(
+            context = get(),
+            conversationRepo = get(),
+            messageRepo = get()
+        )
+    }
+
     /** Sync Message */
 
     /** Sync Messages */

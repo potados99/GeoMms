@@ -56,9 +56,8 @@ class MessagesAdapter:
     }
 
     override fun getItemViewType(position: Int): Int =
-        if (getItem(position)!!.isOutgoingMessage()) TYPE_MESSAGE_SENT
+        if (getItem(position)!!.isMe()) TYPE_MESSAGE_SENT
         else TYPE_MESSAGE_RECEIVED
-
 
     open inner class ViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         val dateLayout: ConstraintLayout = view.message_resume_date_layout

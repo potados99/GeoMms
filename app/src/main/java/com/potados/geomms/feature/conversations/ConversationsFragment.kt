@@ -39,6 +39,13 @@ class ConversationsFragment : NavigationFragment(),
         super.onCreate(savedInstanceState)
 
         conversationsViewModel = getViewModel()
+
+        // TODO
+        syncMessages(Unit) {
+            it.onError {
+                Timber.w(it)
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -66,7 +73,6 @@ class ConversationsFragment : NavigationFragment(),
                 Timber.w(it)
             }
         }*/
-
     }
 
     override fun onConversationClicked(conversation: Conversation) {
