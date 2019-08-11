@@ -71,11 +71,10 @@ class SyncRepositoryImpl(
         BehaviorSubject.createDefault(SyncRepository.SyncProgress.Idle())
 
     override fun syncMessages() {
-
-        Timber.i(">>>> enter syncMessages")
-
-        // If the sync is already running, don't try to do another one
-        if (_progress.value is SyncRepository.SyncProgress.Running) return
+        if (_progress.value is SyncRepository.SyncProgress.Running) {
+            Timber.i("sync already in progress; return")
+            return
+        }
         _progress.postValue(SyncRepository.SyncProgress.Running(0, 0, true))
 
         val realm = Realm.getDefaultInstance()
@@ -83,7 +82,7 @@ class SyncRepositoryImpl(
 
         Timber.i("realm transaction began")
 
-        var persistedData = realm.where(Conversation::class.java)
+        val persistedData = realm.where(Conversation::class.java)
                 .beginGroup()
                 .equalTo("archived", true)
                 .or()
@@ -193,11 +192,9 @@ class SyncRepositoryImpl(
         realm.commitTransaction()
         realm.close()
 
-        Timber.i("finished syncing")
+        Timber.i("sync finished")
 
         postIdle()
-
-        Timber.i("<<<< exit syncMessages")
     }
 
     override fun syncMessage(uri: Uri): Message? {

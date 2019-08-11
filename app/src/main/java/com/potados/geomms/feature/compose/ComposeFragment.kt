@@ -70,7 +70,7 @@ class ComposeFragment : Fragment() {
 
         with(view.compose_bottom_layout) {
             addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
-                with(messages_recyclerview) {
+                with(view.messages_recyclerview) {
                     setPadding(paddingLeft, paddingTop, paddingRight, bottom - top)
 
                     if (composeViewModel.recyclerViewReachedItsEnd) {
