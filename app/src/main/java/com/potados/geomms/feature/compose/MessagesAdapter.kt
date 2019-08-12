@@ -7,14 +7,23 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
+import com.potados.geomms.common.extension.isVisible
+import com.potados.geomms.common.extension.setVisible
+import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Message
 import com.potados.geomms.util.DateTime
 import io.realm.RealmRecyclerViewAdapter
 import kotlinx.android.synthetic.main.message_item.view.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.lang.RuntimeException
+import java.util.concurrent.TimeUnit
 
 class MessagesAdapter:
-    RealmRecyclerViewAdapter<Message, MessagesAdapter.ViewHolder>(null, true) {
+    RealmRecyclerViewAdapter<Message, MessagesAdapter.ViewHolder>(null, true),
+    KoinComponent
+{
+    private val dateFormatter: DateFormatter by inject()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -29,23 +38,31 @@ class MessagesAdapter:
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val message = getItem(position) ?: return
+        val previous = if (position == 0) null else getItem(position - 1)
 
         if (position == 0) {
             holder.dateLayout.visibility = View.VISIBLE
-            holder.dateTextView.text = DateTime(message.date).toShortenString()
+            holder.dateTextView.text = dateFormatter.getMessageTimestamp(message.date)
         }
+
+        val timeSincePrevious = TimeUnit.MILLISECONDS.toMinutes(message.date - (previous?.date ?: 0))
+
+        val timeText = dateFormatter.getMessageTimestamp(message.date)
+        val timeVisibility = (timeSincePrevious >= BubbleUtils.TIMESTAMP_THRESHOLD)
 
         when(holder) {
             is SentViewHolder -> {
                 holder.sentLayout.visibility = View.VISIBLE
                 holder.sentBody.text = message.body
-                holder.sentTime.text = DateTime(message.date).toShortenString()
+                holder.sentTime.text = timeText
+                holder.sentTime.setVisible(timeVisibility)
             }
 
             is ReceivedViewHolder -> {
                 holder.receivedLayout.visibility = View.VISIBLE
                 holder.receivedBody.text = message.body
-                holder.receivedTime.text = DateTime(message.date).toShortenString()
+                holder.receivedTime.text = timeText
+                holder.receivedTime.setVisible(timeVisibility)
             }
 
             else -> {
@@ -81,5 +98,6 @@ class MessagesAdapter:
         const val TYPE_MESSAGE_RECEIVED = 2
 
         // TODO: 날짜 표시 조건 구현하기
+        // -> 함: 20190812
     }
 }

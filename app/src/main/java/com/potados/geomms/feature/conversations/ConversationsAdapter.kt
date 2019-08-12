@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.potados.geomms.R
+import com.potados.geomms.common.util.DateFormatter
 
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.util.DateTime
@@ -17,10 +18,14 @@ import io.realm.RealmRecyclerViewAdapter
 
 import kotlinx.android.synthetic.main.conversations_item.view.*
 import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class ConversationsAdapter(
     private val listener: ConversationClickListener
-) : RealmRecyclerViewAdapter<Conversation, ConversationsAdapter.ViewHolder>(null, true), KoinComponent {
+) : RealmRecyclerViewAdapter<Conversation, ConversationsAdapter.ViewHolder>(null, true),
+    KoinComponent
+{
+    private val dateFormatter: DateFormatter by inject()
 
     override fun updateData(data: OrderedRealmCollection<Conversation>?) {
         if (getData() === data) return
@@ -54,7 +59,7 @@ class ConversationsAdapter(
         fun bind(item: Conversation) {
             senderTextView.text = item.getTitle()
             bodyTextView.text = item.snippet
-            timeTextView.text = DateTime(item.date).toShortenString()
+            timeTextView.text = dateFormatter.getConversationTimestamp(item.date)
 
             avatarImageView.setImageResource(R.drawable.avatar_default)
 

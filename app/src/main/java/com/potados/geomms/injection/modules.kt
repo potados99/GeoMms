@@ -14,6 +14,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.potados.geomms.common.manager.NotificationManagerImplTest
+import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.manager.*
 import com.potados.geomms.mapper.*
 import com.potados.geomms.repository.*
@@ -201,6 +202,17 @@ val myModules = module {
 
     /** Update Badges */
     single { UpdateBadge() }
+
+
+
+    /**********************************************************
+     * Util
+     **********************************************************/
+
+    /** Date Formatter */
+    single { DateFormatter(get()) }
+
+
 
 
 
