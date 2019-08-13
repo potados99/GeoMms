@@ -9,8 +9,8 @@ import timber.log.Timber
 
 @BindingAdapter("conversations")
 fun setConversations(listView: RecyclerView, conversations: RealmResults<Conversation>) {
-    (listView.adapter as? ConversationsAdapter)?.updateData(conversations)
-        ?: Timber.w("adapter not set.")
-
-    Timber.i("conversations updated.")
+    (listView.adapter as? ConversationsAdapter)?.let {
+        it.updateData(conversations)
+        Timber.i("conversations updated.")
+    } ?: Timber.w("adapter not set.")
 }

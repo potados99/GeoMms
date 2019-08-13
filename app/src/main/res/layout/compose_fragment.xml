@@ -45,12 +45,16 @@
                 android:paddingBottom="70dp"
                 android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:conversation="@{vm.conversation}"
                 app:messages="@{vm.messages}"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"/>
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintVertical_bias="0.0"
+                android:background="@color/primaryBackground"/>
+
         <ImageView
                 android:id="@+id/attach_imageview"
                 android:layout_width="44dp"

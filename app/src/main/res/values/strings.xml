@@ -17,5 +17,9 @@
     <string name="cannot_send_message">Failed to send message.</string>
     <string name="no_friends">No friends :(</string>
 
+    <string name="message_status_sending">Sending…</string>
+    <string name="message_status_delivered">Delivered %s</string>
+    <string name="message_status_failed">Failed to send. Tap to try again</string>
+
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

@@ -87,7 +87,7 @@ open class Message : RealmObject() {
                 || boxId == Sms.MESSAGE_TYPE_OUTBOX
                 || boxId == Sms.MESSAGE_TYPE_QUEUED)
 
-        return !(isOutgoingMms || isOutgoingSms)
+        return isOutgoingMms || isOutgoingSms
     }
 
     /**

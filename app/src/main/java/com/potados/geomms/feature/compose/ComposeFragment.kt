@@ -22,11 +22,12 @@ class ComposeFragment : Fragment() {
     private lateinit var composeViewModel: ComposeViewModel
     private lateinit var viewDataBinding: ComposeFragmentBinding
 
-    private val messagesAdapter = MessagesAdapter()
+    private lateinit var messagesAdapter: MessagesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        messagesAdapter = MessagesAdapter(context!!)
         composeViewModel = getViewModel { arguments?.getLong(PARAM_CONVERSATION)?.let(::start) }
     }
 

@@ -49,7 +49,6 @@ sealed class Attachment {
     }
 
     data class Contact(val vCard: String) : Attachment()
-
 }
 
 class Attachments(attachments: List<Attachment>) : List<Attachment> by attachments

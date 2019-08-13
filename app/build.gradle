@@ -82,6 +82,15 @@ dependencies {
     /** 설정 */
     implementation "com.f2prateek.rx.preferences2:rx-preferences:$rx_preferences_version"
 
+    /** glide */
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+
+    implementation('com.googlecode.ez-vcard:ez-vcard:0.10.4', {
+        exclude group: "org.jsoup", module: "jsoup"
+        exclude group: "org.freemarker", module: "freemarker"
+        exclude group: "com.fasterxml.jackson.core", module: "jackson-core"
+    })
+
     implementation project(":domain")
     implementation project(":data")
     implementation project(":android-smsmms")

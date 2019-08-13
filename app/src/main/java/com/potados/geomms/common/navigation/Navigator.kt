@@ -1,12 +1,14 @@
 package com.potados.geomms.common.navigation
 
 import android.content.Context
+import android.net.Uri
 import android.provider.Telephony
 import com.potados.geomms.common.GiveMePermissionActivity
 import com.potados.geomms.common.MainActivity
 import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.common.MakeMeDefaultAppActivity
 import com.potados.geomms.model.Conversation
+import timber.log.Timber
 
 /**
  * Global activity navigator.
@@ -19,7 +21,6 @@ class Navigator (private val permissionManager: com.potados.geomms.manager.Permi
         }
     }
 
-
     fun showComposeActivity(context: Context, conversation: Conversation) {
         whenPossible(context) {
             it.startActivity(
@@ -27,7 +28,6 @@ class Navigator (private val permissionManager: com.potados.geomms.manager.Permi
             )
         }
     }
-
 
     private fun showGiveMePermission(context: Context) {
         context.startActivity(GiveMePermissionActivity.callingIntent(context))
@@ -55,4 +55,12 @@ class Navigator (private val permissionManager: com.potados.geomms.manager.Permi
         }
     }
 
+    // TODO
+    fun showMedia(id: Long) {
+        Timber.i("show media: $id")
+    }
+
+    fun saveVcard(uri: Uri) {
+        Timber.i("save vcard: $uri")
+    }
 }
