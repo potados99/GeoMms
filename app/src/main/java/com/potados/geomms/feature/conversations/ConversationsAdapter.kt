@@ -18,7 +18,6 @@ import com.potados.geomms.util.DateTime
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
-import kotlinx.android.synthetic.main.conversations_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
