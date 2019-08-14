@@ -12,12 +12,10 @@ import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
-
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.util.DateTime
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
-
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
