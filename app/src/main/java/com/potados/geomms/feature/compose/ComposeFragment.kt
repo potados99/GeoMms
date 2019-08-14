@@ -42,14 +42,14 @@ class ComposeFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater?.inflate(R.menu.compose, menu)
-        menu?.setTint(context, R.color.primary)
+        inflater.inflate(R.menu.compose, menu)
+        menu.setTint(context, R.color.primary)
 
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item?.itemId) {
+        when(item.itemId) {
             android.R.id.home -> {
                 baseActivity?.finish()
                 return true

@@ -59,8 +59,8 @@ class ConversationsFragment : NavigationFragment(),
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater?.inflate(R.menu.compose, menu)
-        menu?.setTint(context, R.color.primary)
+        inflater.inflate(R.menu.compose, menu)
+        menu.setTint(context, R.color.primary)
 
         super.onCreateOptionsMenu(menu, inflater)
     }
