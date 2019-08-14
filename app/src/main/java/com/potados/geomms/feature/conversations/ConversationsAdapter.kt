@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.potados.geomms.R
+import com.potados.geomms.common.base.BaseViewHolder
+import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
 
 import com.potados.geomms.model.Conversation
@@ -20,12 +22,11 @@ import kotlinx.android.synthetic.main.conversations_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class ConversationsAdapter(
-    private val listener: ConversationClickListener
-) : RealmRecyclerViewAdapter<Conversation, ConversationsAdapter.ViewHolder>(null, true),
+class ConversationsAdapter : RealmRecyclerViewAdapter<Conversation, BaseViewHolder>(null, true),
     KoinComponent
 {
     private val dateFormatter: DateFormatter by inject()
+    private val navigator: Navigator by inject()
 
     override fun updateData(data: OrderedRealmCollection<Conversation>?) {
         if (getData() === data) return
@@ -33,45 +34,38 @@ class ConversationsAdapter(
         super.updateData(data)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+
         val view = LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.conversations_item, parent, false)
+            .from(parent.context)
+            .inflate(R.layout.conversation_item, parent, false)
 
-        return ViewHolder(view)
+        if (viewType == VIEW_TYPE_READ) {
+            with(view) {
+
+            }
+
+        }
+
+        return BaseViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        getItem(position)?.let(holder::bind)
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+       // getItem(position)?.let(holder::bind)
     }
+
+    override fun getItemViewType(position: Int): Int =
+        when (getItem(position)?.read) {
+            true -> VIEW_TYPE_READ
+            else -> VIEW_TYPE_UNREAD
+        }
 
     interface ConversationClickListener {
         fun onConversationClicked(conversation: Conversation)
     }
 
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        private val avatarImageView: CircularImageView = view.message_list_item_avatar
-        private val senderTextView: TextView = view.message_list_item_sender_name
-        private val bodyTextView: TextView = view.message_list_item_body
-        private val timeTextView: TextView = view.message_list_item_time
-        private val unreadIconView: CircularImageView = view.message_list_item_unread
-
-        fun bind(item: Conversation) {
-            senderTextView.text = item.getTitle()
-            bodyTextView.text = item.snippet
-            timeTextView.text = dateFormatter.getConversationTimestamp(item.date)
-
-            avatarImageView.setImageResource(R.drawable.avatar_default)
-
-            if (!item.read) {
-                unreadIconView.visibility = View.VISIBLE
-                bodyTextView.setTypeface(bodyTextView.typeface, Typeface.BOLD)
-                bodyTextView.setTextColor(Color.BLACK)
-            }
-
-            view.setOnClickListener {
-                listener.onConversationClicked(item)
-            }
-        }
+    companion object {
+        private val VIEW_TYPE_READ = 1
+        private val VIEW_TYPE_UNREAD = 0
     }
 }

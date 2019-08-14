@@ -29,7 +29,7 @@ class ConversationsFragment : NavigationFragment(),
     private lateinit var conversationsViewModel: ConversationsViewModel
     private lateinit var viewDataBinding: ConversationsFragmentBinding
 
-    private val conversationsAdapter = ConversationsAdapter(this)
+    private val conversationsAdapter = ConversationsAdapter()
 
     // TODO remove
     private val syncMessages: SyncMessages by inject()

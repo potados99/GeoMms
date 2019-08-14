@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
+<!--><!-->
     <application
             android:name="com.potados.geomms.common.MyApplication"
             android:icon="@mipmap/ic_launcher"
