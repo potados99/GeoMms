@@ -20,10 +20,13 @@ package com.potados.geomms.common.extension
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import timber.log.Timber
 
 fun RecyclerView.Adapter<*>.autoScrollToStart(recyclerView: RecyclerView) {
     registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            Timber.v("range: ($positionStart..${positionStart + itemCount})")
+
             val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
 
             if (layoutManager.stackFromEnd) {
@@ -44,6 +47,8 @@ fun RecyclerView.Adapter<*>.autoScrollToStart(recyclerView: RecyclerView) {
         }
 
         override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+            Timber.v("range: ($positionStart..${positionStart + itemCount})")
+
             val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
 
             if (!layoutManager.stackFromEnd) {

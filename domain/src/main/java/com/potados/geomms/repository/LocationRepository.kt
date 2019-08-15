@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.location.data
+package com.potados.geomms.repository
 
 import android.location.Location
 

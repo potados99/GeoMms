@@ -118,7 +118,9 @@ class SyncRepositoryImpl(
 
         var progress = 0
 
-        // Sync messages
+        /**
+         * Message
+         */
         messageCursor?.use {
             val messageColumns = CursorToMessage.MessageColumns(messageCursor)
             val messages = messageCursor.map { cursor ->
@@ -132,7 +134,9 @@ class SyncRepositoryImpl(
             Timber.i("messages inserted to realm.")
         }
 
-        // Sync conversations
+        /**
+         * Conversation
+         */
         conversationCursor?.use {
             val conversations = conversationCursor
                     .map { cursor ->
@@ -169,7 +173,12 @@ class SyncRepositoryImpl(
             Timber.i("conversations inserted to realm.")
         }
 
-        // Sync recipients
+        /**
+         * Recepient
+         *
+         * Conversation을 가져올 때에는 recipient id만 채운 채로 가져온 뒤,
+         * 여기서 Contact와 이어줍니다.
+         */
         recipientCursor?.use {
             val contacts = realm.copyToRealm(getContacts())
             val recipients = recipientCursor
@@ -197,6 +206,8 @@ class SyncRepositoryImpl(
 
         postIdle()
     }
+
+
 
     override fun syncMessage(uri: Uri): Message? {
 
@@ -301,7 +312,12 @@ class SyncRepositoryImpl(
         return cursorToContact.getContactsCursor()
                 ?.map { cursor -> cursorToContact.map(cursor) }
                 ?.groupBy { contact -> contact.lookupKey }
-                ?.map { contacts ->
+                ?.map { contacts -> // lookupKey에 의한 그룹. Map.Entry<String, Contact>
+                    /**
+                     * 같은 Lookup key를 가진 연락처는 같은 연락처이므로,
+                     * lookup key를 공유하는 하나의 그룹은 첫 번째 value를
+                     * 대표로 하여 축약합니다.
+                     */
                     val allNumbers = contacts.value.map { it.numbers }.flatten()
                     contacts.value.first().apply {
                         numbers.clear()

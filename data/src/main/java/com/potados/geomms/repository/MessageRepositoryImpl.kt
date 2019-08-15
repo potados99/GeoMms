@@ -43,6 +43,7 @@ import com.potados.geomms.preference.Preferences
 import com.potados.geomms.receiver.SmsDeliveredReceiver
 import com.potados.geomms.util.ImageUtils
 import com.potados.geomms.extension.tryOrNull
+import com.potados.geomms.manager.KeyManagerImpl.Companion.CHANNEL_MESSAGE
 import com.potados.geomms.receiver.SmsSentReceiver
 import io.realm.Case
 import io.realm.Realm
@@ -305,7 +306,7 @@ class MessageRepositoryImpl(
             this.date = date
             this.subId = subId
 
-            id = messageIds.newId()
+            id = messageIds.newId(CHANNEL_MESSAGE)
             boxId = Telephony.Sms.MESSAGE_TYPE_OUTBOX
             type = "sms"
             read = true
@@ -356,7 +357,7 @@ class MessageRepositoryImpl(
             this.date = System.currentTimeMillis()
             this.subId = subId
 
-            id = messageIds.newId()
+            id = messageIds.newId(CHANNEL_MESSAGE)
             threadId = TelephonyCompat.getOrCreateThreadId(context, address)
             boxId = Telephony.Sms.MESSAGE_TYPE_INBOX
             type = "sms"

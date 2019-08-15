@@ -18,35 +18,55 @@
  */
 package com.potados.geomms.manager
 
+import android.util.SparseArray
+import com.potados.geomms.model.Connection
+import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.model.Message
 import io.realm.Realm
+import kotlin.math.max
+import kotlin.random.Random
 
 class KeyManagerImpl: KeyManager {
 
-    private var initialized = false
-    private var maxValue: Long = 0
+    data class Channel(var initialized: Boolean, var maxId: Long)
 
-    /**
-     * Should be called when a new sync is being started
-     */
-    override fun reset() {
-        initialized = true
-        maxValue = 0L
+    private val channels = SparseArray<Channel>().apply {
+        append(CHANNEL_MESSAGE, Channel(true, 0))
     }
 
-    /**
-     * Returns a valid ID that can be used to store a new message
-     */
-    override fun newId(): Long {
-        if (!initialized) {
-            maxValue = Realm.getDefaultInstance().use { realm ->
-                realm.where(Message::class.java).max("id")?.toLong() ?: 0L
-            }
+    override fun reset(channel: Int) {
+        channels[channel]?.apply {
             initialized = true
+            maxId = 0
+        }
+    }
+
+    override fun newId(channel: Int): Long {
+
+        val selectedChannel = channels[channel] ?: throw IllegalArgumentException("no such channel as $channel.")
+
+        if (!selectedChannel.initialized) {
+
+            selectedChannel.maxId = when (channel) {
+                CHANNEL_MESSAGE -> Realm.getDefaultInstance().use { realm ->
+                    realm.where(Message::class.java).max("id")?.toLong() ?: 0L
+                }
+
+                else -> throw IllegalArgumentException("no such channel as $channel.")
+            }
+
+            selectedChannel.initialized = true
         }
 
-        maxValue++
-        return maxValue
+        return ++selectedChannel.maxId
     }
 
+    override fun randomId(max: Long): Long {
+        return Random(System.currentTimeMillis()).nextLong(1, max)
+    }
+
+    companion object {
+        const val CHANNEL_MESSAGE = 1
+        // const val CHANNEL_CONNECTION = 2
+    }
 }

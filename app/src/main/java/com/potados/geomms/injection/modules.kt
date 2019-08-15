@@ -7,7 +7,6 @@ import androidx.preference.PreferenceManager
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.feature.location.domain.LSService
 import com.potados.geomms.feature.location.domain.LSServiceImpl
-import com.potados.geomms.feature.location.data.LocationRepository
 import com.potados.geomms.feature.location.data.LocationRepositoryImpl
 import com.potados.geomms.preference.Preferences
 import org.koin.android.ext.koin.androidContext
@@ -27,7 +26,7 @@ val permissions = arrayOf(
     Manifest.permission.READ_CONTACTS,
     Manifest.permission.ACCESS_FINE_LOCATION,
     Manifest.permission.INTERNET,
-    Manifest.permission.READ_PHONE_STATE
+    Manifest.permission.READ_PHONE_STATE,
 )
 
 val myModules = module {

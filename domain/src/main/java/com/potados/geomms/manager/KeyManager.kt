@@ -26,11 +26,15 @@ interface KeyManager {
     /**
      * Should be called when a new sync is being started
      */
-    fun reset()
+    fun reset(channel: Int)
 
     /**
-     * Returns a valid ID that can be used to store a new message
+     * Returns a valid ID
      */
-    fun newId(): Long
+    fun newId(channel: Int): Long
 
+    /**
+     * Returns random ID
+     */
+    fun randomId(max: Long): Long
 }
