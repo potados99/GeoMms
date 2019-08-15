@@ -60,7 +60,6 @@
             android:layout_marginStart="12dp"
             app:layout_constraintBottom_toBottomOf="@id/body"
             app:layout_constraintStart_toStartOf="parent"
-            android:backgroundTint="@color/primary"
             />
 
     <com.potados.geomms.common.widget.TightTextView

@@ -13,42 +13,45 @@ import timber.log.Timber
 /**
  * Global activity navigator.
  */
-class Navigator (private val permissionManager: com.potados.geomms.manager.PermissionManager){
+class Navigator (
+    private val context: Context,
+    private val permissionManager: com.potados.geomms.manager.PermissionManager
+){
 
-    fun showMain(context: Context) {
-        whenPossible(context) {
+    fun showMain() {
+        whenPossible {
             it.startActivity(MainActivity.callingIntent(it))
         }
     }
 
-    fun showComposeActivity(context: Context, conversation: Conversation) {
-        whenPossible(context) {
+    fun showComposeActivity(conversation: Conversation) {
+        whenPossible {
             it.startActivity(
                 ComposeActivity.callingIntent(it, conversation.id)
             )
         }
     }
 
-    private fun showGiveMePermission(context: Context) {
+    private fun showGiveMePermission() {
         context.startActivity(GiveMePermissionActivity.callingIntent(context))
     }
 
-    private fun showMakeMeDefaultApp(context: Context) {
+    private fun showMakeMeDefaultApp() {
         context.startActivity(MakeMeDefaultAppActivity.callingIntent(context))
     }
 
-    private fun whenPossible(context: Context, body: (Context) -> Unit) {
+    private fun whenPossible(body: (Context) -> Unit) {
         if (!permissionManager.isAllGranted()) {
             /**
              * if not all permissions allowed.
              */
-            showGiveMePermission(context)
+            showGiveMePermission()
         }
         else if (Telephony.Sms.getDefaultSmsPackage(context) != context.packageName) {
             /**
              * if this app is not a default messaging app.
              */
-            showMakeMeDefaultApp(context)
+            showMakeMeDefaultApp()
         }
         else {
             body(context)

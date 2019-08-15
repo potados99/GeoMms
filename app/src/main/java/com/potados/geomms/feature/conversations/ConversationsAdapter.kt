@@ -10,12 +10,14 @@ import android.widget.TextView
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewHolder
+import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.util.DateTime
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
+import kotlinx.android.synthetic.main.conversation_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -37,18 +39,38 @@ class ConversationsAdapter : RealmRecyclerViewAdapter<Conversation, BaseViewHold
             .from(parent.context)
             .inflate(R.layout.conversation_item, parent, false)
 
-        if (viewType == VIEW_TYPE_READ) {
-            with(view) {
-
+        if (viewType == VIEW_TYPE_UNREAD) {
+            view.apply {
+                title.setBold(true)
+                snippet.setBold(true)
+                snippet.setTextColorRes(R.color.primaryText) // TODO null theme
+                unread.setVisible(true)
+                unread.setTintRes(R.color.primary)
+                date.setBold(true)
+                date.setTextColorRes(R.color.primary)
             }
-
         }
 
-        return BaseViewHolder(view)
+        return BaseViewHolder(view).apply {
+            view.setOnClickListener {
+                val conversation = getItem(adapterPosition) ?: return@setOnClickListener
+
+                navigator.showComposeActivity(conversation)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-       // getItem(position)?.let(holder::bind)
+        val conversation = getItem(position) ?: return
+        val view = holder.containerView
+
+        view.apply {
+            avatars.contacts = conversation.recipients
+            title.collapseEnabled = conversation.recipients.isNotEmpty()
+            title.text = conversation.getTitle()
+            date.text = dateFormatter.getConversationTimestamp(conversation.date)
+            snippet.text = conversation.snippet
+        }
     }
 
     override fun getItemViewType(position: Int): Int =

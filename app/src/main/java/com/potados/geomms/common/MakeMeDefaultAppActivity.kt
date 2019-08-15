@@ -20,7 +20,7 @@ class MakeMeDefaultAppActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         if (Telephony.Sms.getDefaultSmsPackage(this) == this.packageName) {
-            navigator.showMain(this)
+            navigator.showMain()
             this.finish()
             return
         }
@@ -51,7 +51,7 @@ class MakeMeDefaultAppActivity : AppCompatActivity() {
 
         if (requestCode == CHANGE_SMS_APP_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                navigator.showMain(this)
+                navigator.showMain()
                 this.finish()
             }
             else {

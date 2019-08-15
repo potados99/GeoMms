@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.setBackgroundTint
 import com.potados.geomms.common.extension.setTint
+import com.potados.geomms.common.extension.setTintRes
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.Recipient
 import kotlinx.android.synthetic.main.avatar_view.view.*
@@ -109,7 +110,10 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
 
         photo.setImageDrawable(null)
         address?.let { address ->
-            Glide.with(photo).load(PhoneNumberUtils.stripSeparators(address)).into(photo)
+            // Glide.with(photo).load(PhoneNumberUtils.stripSeparators(address)).into(photo)
         }
+
+        icon.setTintRes(R.color.white)
+        setBackgroundTint(resources.getColor(R.color.primary, null))
     }
 }

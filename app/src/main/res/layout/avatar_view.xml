@@ -40,8 +40,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_person_black_24dp"
-        android:tint="@color/white" />
+        android:src="@drawable/ic_person_black_24dp"/>
 
     <ImageView
         android:id="@+id/photo"

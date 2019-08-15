@@ -5,7 +5,8 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="primary">@color/tools_theme</color>
-    <color name="primaryBackground">#BFD2DF</color>
+    <color name="primaryBackground">#FFEEEEEE</color>
+    <color name="primaryText">#FF222222</color>
 
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00000000</color>

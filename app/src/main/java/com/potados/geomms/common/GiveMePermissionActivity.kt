@@ -27,7 +27,7 @@ class GiveMePermissionActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         if (permissionManager.isAllGranted()) {
-            navigator.showMain(this)
+            navigator.showMain()
             this.finish()
         }
 
@@ -82,7 +82,7 @@ class GiveMePermissionActivity: AppCompatActivity() {
     }
 
     private fun onPermissionSuccess() {
-        navigator.showMain(this)
+        navigator.showMain()
         this.finish()
     }
 

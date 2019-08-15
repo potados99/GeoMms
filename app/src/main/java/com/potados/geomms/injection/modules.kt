@@ -40,7 +40,7 @@ val myModules = module {
     single { androidContext().contentResolver }
 
     /** Navigator */
-    single { Navigator(get()) }
+    single { Navigator(context = get(), permissionManager = get()) }
 
 
 

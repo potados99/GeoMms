@@ -71,41 +71,29 @@ class ComposeFragment : Fragment() {
         }
 
         with(view.messages_recyclerview) {
-            messages_recyclerview.layoutManager = LinearLayoutManager(context)
-            messages_recyclerview.adapter = messagesAdapter
+            setHasFixedSize(true)
+            messagesAdapter.autoScrollToStart(this@with)
+            adapter = messagesAdapter
         }
 
-
-        with(view.compose_layout) {
-            addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
-                with(view.messages_recyclerview) {
-                    setPadding(paddingLeft, paddingTop, paddingRight, bottom - top + 30)
-
-                    if (composeViewModel.recyclerViewReachedItsEnd) {
-                        scrollToBottom()
-                    }
-                }
-            }
-        }
-
-        with(view.send_imageview) {
+        with(view.send) {
             setOnClickListener {
-                with(view.measage_edittext) {
+                with(view.message) {
                     composeViewModel.sendSms(text.toString())
                     text.clear()
                 }
             }
         }
 
-        with(view.measage_edittext) {
-            view.send_imageview.isEnabled = false
-            view.send_imageview.imageAlpha = 128
+        with(view.message) {
+            view.send.isEnabled = false
+            view.send.imageAlpha = 128
 
             addTextChangedListener(object: TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 }
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    with(view.send_imageview) {
+                    with(view.send) {
                         isEnabled = length() > 0
                         imageAlpha = if (length() > 0) 255 else 128
                     }

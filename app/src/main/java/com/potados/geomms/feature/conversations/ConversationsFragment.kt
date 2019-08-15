@@ -76,7 +76,7 @@ class ConversationsFragment : NavigationFragment(),
     }
 
     override fun onConversationClicked(conversation: Conversation) {
-        navigator.showComposeActivity(activity!!, conversation)
+        navigator.showComposeActivity(conversation)
     }
 
 

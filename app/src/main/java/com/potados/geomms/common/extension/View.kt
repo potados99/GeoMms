@@ -4,6 +4,7 @@ import android.animation.LayoutTransition
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.os.Build
 import android.view.MotionEvent
 import android.view.View
@@ -12,6 +13,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.annotation.ColorRes
+import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -60,6 +64,10 @@ fun EditText.showKeyboard() {
 
 fun ImageView.setTint(color: Int) {
     imageTintList = ColorStateList.valueOf(color)
+}
+
+fun ImageView.setTintRes(@ColorRes colorResId: Int) {
+    setTint(resources.getColor(colorResId, null))
 }
 
 fun ProgressBar.setTint(color: Int) {
@@ -139,4 +147,13 @@ fun RecyclerView.scrapViews() {
     this.layoutManager = layoutManager
 
     adapter?.notifyDataSetChanged()
+}
+
+fun TextView.setBold(bold: Boolean) {
+    // TODO default value
+    this.setTypeface(this.typeface, if (bold) Typeface.BOLD else Typeface.NORMAL)
+}
+
+fun TextView.setTextColorRes(@ColorRes colorResId: Int) {
+    resources.getColor(colorResId, null)
 }
