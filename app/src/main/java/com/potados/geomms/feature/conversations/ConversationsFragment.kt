@@ -2,13 +2,11 @@ package com.potados.geomms.feature.conversations
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
-import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.SyncMessages
@@ -83,7 +81,7 @@ class ConversationsFragment : NavigationFragment(),
     private fun initializeView(view: View) {
 
         /** 대화 목록 리사이클러뷰 */
-        with(view.conversations_recyclerview) {
+        with(view.conversations) {
             adapter = conversationsAdapter
             // ...
         }

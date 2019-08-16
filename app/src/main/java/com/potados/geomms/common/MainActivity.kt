@@ -3,7 +3,7 @@ package com.potados.geomms.common
 import android.content.Context
 import android.content.Intent
 import com.potados.geomms.R
-import com.potados.geomms.feature.location.presentation.MapFragment
+import com.potados.geomms.feature.location.MapFragment
 import com.potados.geomms.feature.conversations.ConversationsFragment
 import com.potados.geomms.common.base.NavigationActivity
 import com.potados.geomms.common.base.NavigationFragment

@@ -16,5 +16,5 @@ class ConversationsViewModel : ViewModel(), KoinComponent {
 
     private val conversationRepo: ConversationRepository by inject()
 
-    val conversations: RealmResults<Conversation> = conversationRepo.getConversations()
+    val conversations = conversationRepo.getConversations()
 }

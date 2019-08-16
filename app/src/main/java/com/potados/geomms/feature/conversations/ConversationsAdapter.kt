@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.mikhaellopez.circularimageview.CircularImageView
 import com.potados.geomms.R
+import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
@@ -21,9 +22,8 @@ import kotlinx.android.synthetic.main.conversation_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class ConversationsAdapter : RealmRecyclerViewAdapter<Conversation, BaseViewHolder>(null, true),
-    KoinComponent
-{
+class ConversationsAdapter : BaseRealmAdapter<Conversation>(), KoinComponent {
+
     private val dateFormatter: DateFormatter by inject()
     private val navigator: Navigator by inject()
 

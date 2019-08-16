@@ -16,6 +16,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
+import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
@@ -31,7 +32,6 @@ import com.potados.geomms.model.Message
 import com.potados.geomms.model.Recipient
 import com.potados.geomms.util.DateTime
 import io.realm.RealmRecyclerViewAdapter
-import kotlinx.android.synthetic.main.message_item.view.*
 import kotlinx.android.synthetic.main.message_item_in.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -41,10 +41,8 @@ import java.util.concurrent.TimeUnit
 
 class MessagesAdapter(
     private val context: Context
-):
-    RealmRecyclerViewAdapter<Message, BaseViewHolder>(null, true),
-    KoinComponent
-{
+) : BaseRealmAdapter<Message>(), KoinComponent {
+
     lateinit var conversation: Conversation
 
     private val dateFormatter: DateFormatter by inject()

@@ -58,7 +58,7 @@
 
         <!--컨텐츠 레이아웃-->
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/conversations_recyclerview"
+                android:id="@+id/conversations"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 tools:listitem="@layout/conversation_item"

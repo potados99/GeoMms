@@ -5,8 +5,6 @@ import android.content.Context
 import android.location.LocationManager
 import androidx.preference.PreferenceManager
 import com.potados.geomms.common.navigation.Navigator
-import com.potados.geomms.feature.location.domain.LSService
-import com.potados.geomms.feature.location.domain.LSServiceImpl
 import com.potados.geomms.preference.Preferences
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -250,8 +248,5 @@ val myModules = module {
             5.0f
         ) as LocationRepository
     }
-
-    /** 위치공유서비스 */
-    single { LSServiceImpl(get(), get()) as LSService }
 
 }
