@@ -18,34 +18,34 @@ import androidx.annotation.ColorRes
 import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 
 fun View.hideSheet() {
-    BottomSheetBehavior.from(this).state = BottomSheetBehavior.STATE_HIDDEN
+    CustomBottomSheetBehavior.from(this).state = CustomBottomSheetBehavior.STATE_HIDDEN
 }
 
 fun View.collapseSheet() {
-    BottomSheetBehavior.from(this).state = BottomSheetBehavior.STATE_COLLAPSED
+    CustomBottomSheetBehavior.from(this).state = CustomBottomSheetBehavior.STATE_COLLAPSED
 }
 
 fun View.expandSheet() {
-    BottomSheetBehavior.from(this).state = BottomSheetBehavior.STATE_EXPANDED
+    CustomBottomSheetBehavior.from(this).state = CustomBottomSheetBehavior.STATE_EXPANDED
 }
 
-fun View.sheetState() = BottomSheetBehavior.from(this).state
+fun View.sheetState() = CustomBottomSheetBehavior.from(this).state
 
 fun View.toggleSheet() {
-    BottomSheetBehavior.from(this).apply {
+    CustomBottomSheetBehavior.from(this).apply {
         state = when (state) {
-            BottomSheetBehavior.STATE_EXPANDED -> BottomSheetBehavior.STATE_HALF_EXPANDED
-            BottomSheetBehavior.STATE_HALF_EXPANDED -> BottomSheetBehavior.STATE_COLLAPSED
-            BottomSheetBehavior.STATE_COLLAPSED -> BottomSheetBehavior.STATE_HALF_EXPANDED
-            else -> BottomSheetBehavior.STATE_HALF_EXPANDED
+            CustomBottomSheetBehavior.STATE_EXPANDED -> CustomBottomSheetBehavior.STATE_HALF_EXPANDED
+            CustomBottomSheetBehavior.STATE_HALF_EXPANDED -> CustomBottomSheetBehavior.STATE_COLLAPSED
+            CustomBottomSheetBehavior.STATE_COLLAPSED -> CustomBottomSheetBehavior.STATE_HALF_EXPANDED
+            else -> CustomBottomSheetBehavior.STATE_HALF_EXPANDED
         }
     }
 }
 
-fun View.bottomSheetBehavior() = BottomSheetBehavior.from(this)
+fun View.bottomSheetBehavior() = CustomBottomSheetBehavior.from(this)
 
 
 

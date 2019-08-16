@@ -25,6 +25,11 @@ import kotlinx.android.synthetic.main.map_fragment.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.map_view
 import kotlinx.android.synthetic.main.map_fragment.view.toolbar
+import com.potados.geomms.common.widget.CustomBottomSheetBehavior
+import androidx.recyclerview.widget.RecyclerView
+import android.view.MotionEvent
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+
 
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
@@ -44,6 +49,33 @@ class MapFragment : NavigationFragment(),
     private val requestsAdapter = RequestsAdapter(this)
 
     private var map: GoogleMap? = null
+
+    private val onItemTouchListener: RecyclerView.OnItemTouchListener = object : RecyclerView.OnItemTouchListener {
+        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+            setScrollable(viewDataBinding.bottomSheetLayout, rv)
+            return false
+        }
+
+        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+
+        }
+
+        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+
+        }
+    }
+
+    private fun setScrollable(bottomSheet: View, recyclerView: RecyclerView) {
+        val params = bottomSheet.layoutParams
+        if (params is CoordinatorLayout.LayoutParams) {
+            val coordinatorLayoutParams = params as CoordinatorLayout.LayoutParams
+            val behavior = coordinatorLayoutParams.getBehavior()
+            if (behavior != null && behavior is CustomBottomSheetBehavior<*>)
+                (behavior as CustomBottomSheetBehavior<*>).setNestedScrollingChildRef(recyclerView)
+        }
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -165,20 +197,24 @@ class MapFragment : NavigationFragment(),
              * 스크롤 이벤트가 리사이클러뷰에게 도착할 수 있게 해줍니다.
              */
             // ViewCompat.setNestedScrollingEnabled(this, true)
+
+            addOnItemTouchListener(onItemTouchListener)
         }
 
         with(view.incoming_requests) {
             requestsAdapter.companionView = view.incoming_requests_layout
             adapter = requestsAdapter
+
+            addOnItemTouchListener(onItemTouchListener)
         }
 
         with(view.bottom_sheet_layout) {
             collapseSheet()
 
-            bottomSheetBehavior().setBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
+            bottomSheetBehavior().setBottomSheetCallback(object: CustomBottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
-                        BottomSheetBehavior.STATE_EXPANDED -> {
+                        CustomBottomSheetBehavior.STATE_EXPANDED -> {
                             view.grip.alpha = 0f
                         }
                         else -> {
