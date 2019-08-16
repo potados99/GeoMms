@@ -2,10 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground" android:id="@+id/root_layout" android:paddingStart="12dp"
-        android:paddingTop="8dp" android:paddingEnd="12dp" android:paddingBottom="8dp">
+        android:background="?attr/selectableItemBackground"
+        android:id="@+id/root_layout"
+        android:paddingStart="12dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="8dp">
 
     <com.potados.geomms.common.widget.AvatarView
             android:layout_width="40dp"
@@ -24,8 +29,7 @@
             android:id="@+id/name"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toEndOf="@+id/avatar"
-            android:textColor="@android:color/black"
-            android:textSize="18sp" android:textStyle="bold"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/status"
     />
 
@@ -35,6 +39,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/status"
             app:layout_constraintTop_toBottomOf="@+id/name"
-            app:layout_constraintStart_toEndOf="@+id/avatar" android:layout_marginStart="16dp"/>
+            app:layout_constraintStart_toEndOf="@+id/avatar"
+            android:layout_marginStart="16dp"
+            android:textSize="12dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

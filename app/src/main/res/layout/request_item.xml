@@ -3,7 +3,9 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="70dp"
-        android:layout_height="70dp" android:id="@+id/root_layout">
+        android:layout_height="70dp"
+        android:background="?attr/selectableItemBackground"
+        android:id="@+id/root_layout">
 
     <com.potados.geomms.common.widget.AvatarView
             android:layout_width="40dp"

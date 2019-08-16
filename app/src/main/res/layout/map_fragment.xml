@@ -63,112 +63,123 @@
 
 
         <!--바텀쉿-->
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+
+
+        <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true"
                 android:id="@+id/bottom_sheet_layout"
                 app:layout_behavior="@string/bottom_sheet_behavior"
                 app:behavior_hideable="false"
                 app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
                 app:behavior_fitToContents="false"
-                android:background="@drawable/top_rounded">
+                android:background="@drawable/top_rounded"
+                android:fillViewport="true">
 
-            <!--그립-->
-            <View
-                    android:layout_width="40dp"
-                    android:layout_height="5dp"
-                    android:id="@+id/grip"
-                    android:background="@drawable/small_rounded"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-            <!--친구가없어-->
-            <TextView
-                    android:text="@string/no_friends"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/empty_view"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:textSize="24sp"
-            />
-
-            <!--들어오는 요청-->
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/incoming_requests_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/grip"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <!--요청목록 텍스트뷰-->
-                <TextView
-                        android:id="@+id/incoming_requests_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Incoming Requests"
+                <!--그립-->
+                <View
+                        android:layout_width="40dp"
+                        android:layout_height="5dp"
+                        android:id="@+id/grip"
+                        android:background="@drawable/small_rounded"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginStart="8dp"/>
-                <!--요청목록-->
-                <androidx.recyclerview.widget.RecyclerView
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!--친구가없어-->
+                <TextView
+                        android:text="@string/no_friends"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/empty_view"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:textSize="24sp"
+                />
+
+                <!--들어오는 요청-->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/incoming_requests_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:clipChildren="false"
-                        android:clipToPadding="false"
-                        android:id="@+id/incoming_requests"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintTop_toBottomOf="@id/grip"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/incoming_requests_text"
-                        app:incoming_requests="@{vm.incomingRequests}"
-                        tools:listitem="@layout/request_item"
-                />
-                <!--요청목록 마감-->
-                <View
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                    <!--요청목록 텍스트뷰-->
+                    <TextView
+                            android:id="@+id/incoming_requests_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Incoming Requests"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:layout_marginStart="8dp"/>
+                    <!--요청목록-->
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:id="@+id/incoming_requests"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/incoming_requests_text"
+                            app:incoming_requests="@{vm.incomingRequests}"
+                            tools:listitem="@layout/request_item"
+                    />
+                    <!--요청목록 마감-->
+                    <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:id="@+id/incoming_requests_separator"
+                            android:background="@drawable/rounded_rectangle_4dp"
+                            android:backgroundTint="#AAAAAA"
+                            app:layout_constraintTop_toBottomOf="@id/incoming_requests"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                    />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!--연결목록-->
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/connections"
                         android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:id="@+id/incoming_requests_separator"
-                        android:background="@drawable/rounded_rectangle_4dp"
-                        android:backgroundTint="@android:color/darker_gray"
-                        app:layout_constraintTop_toBottomOf="@id/incoming_requests"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_height="0dp"
+                        android:nestedScrollingEnabled="true"
                         android:layout_marginEnd="8dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/incoming_requests_layout"
+                        android:layout_marginStart="8dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:connections="@{vm.connections}"
+                        tools:listitem="@layout/connection_item"
                 />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!--연결목록-->
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/connections"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:nestedScrollingEnabled="false"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/incoming_requests_layout"
-                    android:layout_marginStart="8dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:connections="@{vm.connections}"
-            />
+        </androidx.core.widget.NestedScrollView>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

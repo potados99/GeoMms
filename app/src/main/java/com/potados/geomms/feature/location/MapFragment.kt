@@ -71,27 +71,30 @@ class MapFragment : NavigationFragment(),
         map_view?.onResume()
 
         Realm.getDefaultInstance().executeTransaction {
-            it.insertOrUpdate(
-                Connection(
-                    id = 12345,
-                    recipient = Recipient(123, "01029222661", null),
-                    duration = 1800000,
-                    date = System.currentTimeMillis()- 3000,
-                    lastUpdate = System.currentTimeMillis()
+            for (i in (0..15)) {
+                it.insertOrUpdate(
+                    Connection(
+                        id = 12345 + i.toLong(),
+                        recipient = Recipient(123, "01029222661", null),
+                        duration = 1800000,
+                        date = System.currentTimeMillis()- 3000,
+                        lastUpdate = System.currentTimeMillis()
+                    )
                 )
-            )
-            it.insertOrUpdate(
-                ConnectionRequest(
-                    connectionId = 12345,
-                    recipient = Recipient(1234, "01043732663", null),
-                    duration = 1800000,
-                    date = System.currentTimeMillis()- 5000,
-                    isInbound = true
+            }
+
+            for (i in (0..10)) {
+                it.insertOrUpdate(
+                    ConnectionRequest(
+                        connectionId = 13579 + i.toLong(),
+                        recipient = Recipient(12345, "01043732663", null),
+                        duration = 1800000,
+                        date = System.currentTimeMillis()- 5000,
+                        isInbound = true
+                    )
                 )
-            )
+            }
         }
-
-
     }
     override fun onPause() {
         super.onPause()
@@ -153,7 +156,7 @@ class MapFragment : NavigationFragment(),
 
         with(view.connections) {
 
-            addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+            // addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
 
             connectionsAdapter.emptyView = view.empty_view
             adapter = connectionsAdapter
@@ -161,7 +164,7 @@ class MapFragment : NavigationFragment(),
             /**
              * 스크롤 이벤트가 리사이클러뷰에게 도착할 수 있게 해줍니다.
              */
-            ViewCompat.setNestedScrollingEnabled(this, true)
+            // ViewCompat.setNestedScrollingEnabled(this, true)
         }
 
         with(view.incoming_requests) {
