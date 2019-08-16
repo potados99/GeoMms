@@ -12,8 +12,7 @@ import org.junit.Assert.*
  * @see [Testing documentation](http://d.android.com/tools/testing)
  */
 class DataTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, (2 + 2).toLong())
-    }
+
+
+
 }

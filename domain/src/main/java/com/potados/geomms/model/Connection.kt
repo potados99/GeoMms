@@ -7,12 +7,13 @@ import io.realm.annotations.PrimaryKey
 
 open class Connection(
     @PrimaryKey var id: Long = 0,
-    var recipient: Recipient = Recipient(),
+    var recipient: Recipient? = null,
     var duration: Long = 0,
     var date: Long = 0, // date established
     var lastUpdate: Long = 0,
     var lastSent: Long = 0,
-    var location: Location = Location("")
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0
 
 ) : RealmObject() {
 

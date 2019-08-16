@@ -23,15 +23,21 @@ import com.klinker.android.send_message.MmsReceivedReceiver
 import com.potados.geomms.usecase.ReceiveMms
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import timber.log.Timber
 
 class MmsReceivedReceiver : MmsReceivedReceiver(), KoinComponent {
 
     private val receiveMms: ReceiveMms by inject()
 
     override fun onMessageReceived(messageUri: Uri?) {
+        Timber.v("onMessageReceived")
+
         messageUri?.let { uri ->
             val pendingResult = goAsync()
-            receiveMms(uri) { pendingResult.finish() }
+            receiveMms(uri) {
+                pendingResult.finish()
+                Timber.i("received MMS.")
+            }
         }
     }
 

@@ -6,7 +6,7 @@ class Packet(
     var type: Int = 0,
     var connectionId: Long = 0,
     var duration: Long = 0,
-    var latitue: Double = 0.0,
+    var latitude: Double = 0.0,
     var longitude: Double = 0.0,
 
     var address: String = "",
@@ -48,7 +48,7 @@ class Packet(
             Packet(
                 type = PacketType.DATA.number,
                 connectionId = connection.id,
-                latitue = location.latitude,
+                latitude = location.latitude,
                 longitude = location.longitude
             )
     }

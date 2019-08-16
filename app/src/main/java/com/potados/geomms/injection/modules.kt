@@ -7,7 +7,6 @@ import androidx.preference.PreferenceManager
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.feature.location.domain.LSService
 import com.potados.geomms.feature.location.domain.LSServiceImpl
-import com.potados.geomms.feature.location.data.LocationRepositoryImpl
 import com.potados.geomms.preference.Preferences
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -17,6 +16,8 @@ import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.manager.*
 import com.potados.geomms.mapper.*
 import com.potados.geomms.repository.*
+import com.potados.geomms.service.LocationSupportService
+import com.potados.geomms.service.LocationSupportServiceImpl
 import com.potados.geomms.usecase.*
 
 val permissions = arrayOf(
@@ -26,7 +27,7 @@ val permissions = arrayOf(
     Manifest.permission.READ_CONTACTS,
     Manifest.permission.ACCESS_FINE_LOCATION,
     Manifest.permission.INTERNET,
-    Manifest.permission.READ_PHONE_STATE,
+    Manifest.permission.READ_PHONE_STATE
 )
 
 val myModules = module {
@@ -40,6 +41,21 @@ val myModules = module {
 
     /** Navigator */
     single { Navigator(context = get(), permissionManager = get()) }
+
+
+
+    /**********************************************************
+     * Service
+     **********************************************************/
+
+    /** Location Support Service */
+    single {
+        LocationSupportServiceImpl(
+            conversationRepo = get(),
+            locationRepo = get(),
+            keyManager = get()
+        ) as LocationSupportService
+    }
 
 
 
@@ -163,7 +179,7 @@ val myModules = module {
     /** Mark Sent */
     single{ MarkSent(messageRepo = get()) }
 
-    /** ReceiveMms */
+    /** Receive Mms */
     single {
         ReceiveMms(
             activeConversationManager = get(),
@@ -175,7 +191,14 @@ val myModules = module {
         )
     }
 
-    /** ReceiveSms */
+    /** Receive Packet */
+    single {
+        ReceivePacket(
+            service = get()
+        )
+    }
+
+    /** Receive Sms */
     single {
         ReceiveSms(
             conversationRepo = get(),

@@ -8,6 +8,7 @@ import com.potados.geomms.util.DateTime
 import com.potados.geomms.feature.location.data.LSConnection
 import com.potados.geomms.feature.location.data.LSPacket
 import com.potados.geomms.feature.location.data.LSRequest
+import com.potados.geomms.repository.LocationRepository
 import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.util.Reflection
 import com.potados.geomms.util.Types

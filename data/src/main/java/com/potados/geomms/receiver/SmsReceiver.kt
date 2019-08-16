@@ -22,6 +22,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony.Sms
+import com.potados.geomms.service.LocationSupportService
+import com.potados.geomms.usecase.ReceivePacket
 import com.potados.geomms.usecase.ReceiveSms
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -30,16 +32,33 @@ import timber.log.Timber
 class SmsReceiver : BroadcastReceiver(), KoinComponent {
 
     private val receiveMessage: ReceiveSms by inject()
+    private val receivePacket: ReceivePacket by inject()
+    private val locationService: LocationSupportService by inject()
 
     override fun onReceive(context: Context, intent: Intent) {
         Timber.v("onReceive")
 
         Sms.Intents.getMessagesFromIntent(intent)?.let { messages ->
-            val subId = intent.extras?.getInt("subscription", -1) ?: -1
-
             val pendingResult = goAsync()
-            receiveMessage(ReceiveSms.Params(subId, messages)) { pendingResult.finish() }
+
+            val subId = intent.extras?.getInt("subscription", -1) ?: -1
+            val isPacket = messages.isNotEmpty() &&
+                    locationService.isValidPacket(
+                        messages
+                            .mapNotNull { it.displayMessageBody }
+                            .reduce { body, new -> body + new }
+                    )
+
+            when (isPacket) {
+                true -> receivePacket(messages) {
+                    pendingResult.finish()
+                    Timber.i("received packet.")
+                }
+                else -> receiveMessage(ReceiveSms.Params(subId, messages)) {
+                    pendingResult.finish()
+                    Timber.i("received SMS.")
+                }
+            }
         }
     }
-
 }

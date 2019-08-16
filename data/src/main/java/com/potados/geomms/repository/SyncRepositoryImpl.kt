@@ -30,6 +30,7 @@ import com.potados.geomms.extension.insertOrUpdate
 import com.potados.geomms.extension.map
 import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.manager.KeyManager
+import com.potados.geomms.manager.KeyManagerImpl.Companion.CHANNEL_MESSAGE
 import com.potados.geomms.mapper.CursorToContact
 import com.potados.geomms.mapper.CursorToConversation
 import com.potados.geomms.mapper.CursorToMessage
@@ -102,7 +103,7 @@ class SyncRepositoryImpl(
         realm.delete(MmsPart::class.java)
         realm.delete(Recipient::class.java)
 
-        keys.reset()
+        keys.reset(CHANNEL_MESSAGE)
 
         Timber.v("removed everything except persistedData")
 

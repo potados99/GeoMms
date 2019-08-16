@@ -27,6 +27,7 @@ import com.google.android.mms.pdu_alt.PduHeaders
 import com.google.android.mms.pdu_alt.PduPersister
 import com.potados.geomms.extension.map
 import com.potados.geomms.manager.KeyManager
+import com.potados.geomms.manager.KeyManagerImpl.Companion.CHANNEL_MESSAGE
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Message
 import com.potados.geomms.util.SqliteWrapper
@@ -79,7 +80,7 @@ class CursorToMessageImpl(
                 else -> "unknown"
             }
 
-            id = keys.newId()
+            id = keys.newId(CHANNEL_MESSAGE)
             threadId = cursor.getLong(columnsMap.threadId)
             contentId = cursor.getLong(columnsMap.msgId)
             date = cursor.getLong(columnsMap.date)
