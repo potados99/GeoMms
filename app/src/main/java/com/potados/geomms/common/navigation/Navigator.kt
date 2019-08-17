@@ -59,6 +59,7 @@ class Navigator (
     }
 
     private fun startActivityWithFlag(intent: Intent) {
+        // on higher version of android
         context.startActivity(intent.apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK })
     }
 
