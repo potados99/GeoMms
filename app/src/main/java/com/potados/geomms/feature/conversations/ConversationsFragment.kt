@@ -39,11 +39,13 @@ class ConversationsFragment : NavigationFragment(),
         conversationsViewModel = getViewModel()
 
         // TODO
+        /*
         syncMessages(Unit) {
             it.onError {
                 Timber.w(it)
             }
         }
+        */
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
