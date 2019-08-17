@@ -33,12 +33,12 @@ class DeleteMessages(
 
     data class Params(val messageIds: List<Long>, val threadId: Long? = null)
 
-    override suspend fun run(params: Params): Result<*> {
-        params.messageIds.toLongArray()
-            .also { messageIds -> messageRepo.deleteMessages(*messageIds) }         // delete the messages
-            .also { params.threadId?.let(conversationRepo::updateConversations) }   // update the conversation
-            .also { params.threadId?.let(notificationManager::update) }             // remove notifications on the conversation
-            .also { updateBadge(Unit) }                                             // update the badge
-    }
-
+    override suspend fun run(params: Params): Result<*> =
+        Result.of {
+            params.messageIds.toLongArray()
+                .also { messageIds -> messageRepo.deleteMessages(*messageIds) }                 // delete the messages
+                .also { params.threadId?.let { conversationRepo.updateConversations(it) } }     // update the conversation
+                .also { params.threadId?.let(notificationManager::update) }                     // remove notifications on the conversation
+                .also { updateBadge(Unit) }                                                     // update the badge
+        }
 }

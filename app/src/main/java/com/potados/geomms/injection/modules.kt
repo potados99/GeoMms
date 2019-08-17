@@ -68,7 +68,14 @@ val myModules = module {
     single { KeyManagerImpl() as KeyManager }
 
     /** Notification Manager */
-    single { NotificationManagerImplTest() as NotificationManager }
+    single {
+        NotificationManagerImplTest(
+            context = get(),
+            conversationRepo = get(),
+            messageRepo = get(),
+            permissionManager = get()
+    ) as NotificationManager
+    }
 
     /** Permission Manager */
     single { PermissionManagerImpl(context = get(), permissions = permissions) as PermissionManager }
