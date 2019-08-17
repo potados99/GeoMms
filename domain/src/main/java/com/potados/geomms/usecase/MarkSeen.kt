@@ -16,21 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.potados.geomms.receiver
+package com.potados.geomms.usecase
 
-import com.android.mms.transaction.PushReceiver
+import com.potados.geomms.functional.Result
+import com.potados.geomms.interactor.UseCase
+import com.potados.geomms.repository.MessageRepository
+import io.reactivex.Flowable
 
-/**
- * Manifest registered.
- * Receive both explicit intent and
- * implicit intent with action of [android.provider.Telephony.WAP_PUSH_DELIVER].
- *
- * Handle MMS and call [MmsReceivedReceiver].
- *
- * It moves first when the action(see above) arrives.
- * The PushReceiver receives the intent, download, save MMS,
- * and calls [MmsReceivedReceiver] by action [com.klinker.android.messaging.MMS_RECEIVED].
- *
- * @see [MmsReceivedReceiver]
- */
-class MmsReceiver : PushReceiver()
+class MarkSeen(private val messageRepo: MessageRepository) : UseCase<Long>() {
+
+    override suspend fun run(params: Long): Result<*> =
+        Result.of {
+            messageRepo.markRead(params)
+        }
+}

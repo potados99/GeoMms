@@ -160,6 +160,9 @@ val myModules = module {
      * Use Case
      **********************************************************/
 
+    /** Delete Conversations */
+    /** Delete Messages */
+
     /** Mark Delivered */
     /** Mark Delivery Failed */
     /** Mark Failed */
@@ -173,6 +176,8 @@ val myModules = module {
             updateBadge = get()
         )
     }
+
+    /** Mark Seen */
 
     /** Mark Sent */
     single{ MarkSent(messageRepo = get()) }

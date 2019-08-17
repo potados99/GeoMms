@@ -18,36 +18,35 @@
  */
 package com.potados.geomms.receiver
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
-import com.klinker.android.send_message.MmsReceivedReceiver
-import com.potados.geomms.usecase.ReceiveMms
+import com.potados.geomms.usecase.SyncMessage
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import timber.log.Timber
 
 /**
  * Manifest registered.
  * Receive both explicit intent and
- * implicit intent with action of [com.klinker.android.messaging.MMS_RECEIVED].
+ * implicit intent with action of [com.potados.geomms.MMS_UPDATED].
  *
- * After MMS handled by [MmsReceiver], invoke [ReceiveMms].
+ * Invoke [SyncMessage] with given uri of the MMS.
  *
- * @see [MmsReceiver]
- * @see [ReceiveMms]
+ * @see [SyncMessage]
  */
-class MmsReceivedReceiver : MmsReceivedReceiver(), KoinComponent {
+class MmsUpdatedReceiver : BroadcastReceiver(), KoinComponent {
 
-    private val receiveMms: ReceiveMms by inject()
+    companion object {
+        const val URI = "uri"
+    }
 
-    override fun onMessageReceived(messageUri: Uri?) {
-        Timber.v("onMessageReceived")
+    private val syncMessage: SyncMessage by inject()
 
-        messageUri?.let { uri ->
+    override fun onReceive(context: Context, intent: Intent) {
+        intent.getStringExtra(URI)?.let { uriString ->
             val pendingResult = goAsync()
-            receiveMms(uri) {
-                pendingResult.finish()
-                Timber.i("received MMS.")
-            }
+            syncMessage(Uri.parse(uriString)) { pendingResult.finish() }
         }
     }
 

@@ -29,6 +29,20 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
 
+/**
+ * Manifest registered.
+ * Receive both explicit intent and
+ * implicit intent with action of [android.provider.Telephony.SMS_DELIVER].
+ *
+ * Handle incoming SMS, and invoke [ReceiveSms] or [ReceivePacket]
+ *
+ * If the SMS body starts with Location Support prefix,
+ * [ReceivePacket] takes it, or [ReceiveSms] does.
+ *
+ * @see [ReceiveSms]
+ * @see [ReceivePacket]
+ * @see [LocationSupportService]
+ */
 class SmsReceiver : BroadcastReceiver(), KoinComponent {
 
     private val receiveMessage: ReceiveSms by inject()

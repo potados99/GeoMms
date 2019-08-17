@@ -18,37 +18,30 @@
  */
 package com.potados.geomms.receiver
 
-import android.net.Uri
-import com.klinker.android.send_message.MmsReceivedReceiver
-import com.potados.geomms.usecase.ReceiveMms
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import com.potados.geomms.usecase.DeleteMessages
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import timber.log.Timber
 
 /**
  * Manifest registered.
- * Receive both explicit intent and
- * implicit intent with action of [com.klinker.android.messaging.MMS_RECEIVED].
+ * Receive explicit intent only.
  *
- * After MMS handled by [MmsReceiver], invoke [ReceiveMms].
+ * Invoke [DeleteMessages].
  *
- * @see [MmsReceiver]
- * @see [ReceiveMms]
+ * @see [DeleteMessages]
  */
-class MmsReceivedReceiver : MmsReceivedReceiver(), KoinComponent {
+class DeleteMessagesReceiver : BroadcastReceiver(), KoinComponent {
 
-    private val receiveMms: ReceiveMms by inject()
+    private val deleteMessages: DeleteMessages by inject()
 
-    override fun onMessageReceived(messageUri: Uri?) {
-        Timber.v("onMessageReceived")
-
-        messageUri?.let { uri ->
-            val pendingResult = goAsync()
-            receiveMms(uri) {
-                pendingResult.finish()
-                Timber.i("received MMS.")
-            }
-        }
+    override fun onReceive(context: Context, intent: Intent) {
+        val pendingResult = goAsync()
+        val threadId = intent.getLongExtra("threadId", 0)
+        val messageIds = intent.getLongArrayExtra("messageIds")
+        deleteMessages(DeleteMessages.Params(messageIds.toList(), threadId)) { pendingResult.finish() }
     }
 
 }

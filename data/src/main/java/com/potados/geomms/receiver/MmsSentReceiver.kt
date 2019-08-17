@@ -35,6 +35,16 @@ import org.koin.core.inject
 import timber.log.Timber
 import java.io.File
 
+/**
+ * Manifest registered.
+ * Receive both explicit intent and
+ * implicit intent with action of [com.potados.geomms.MMS_SENT].
+ *
+ * Handle the result of sending MMS,
+ * and then invoke [SyncMessage] with given uri of the MMS.
+ *
+ * @see [SyncMessage]
+ */
 class MmsSentReceiver : BroadcastReceiver(), KoinComponent {
 
     private val syncMessage: SyncMessage by inject()

@@ -107,6 +107,8 @@ public class DownloadManager {
             wakeLock.acquire(60 * 1000);
 
             Intent newIntent = (Intent) intent.clone();
+
+            // Here! sends intent to MmsReceivedReceiver.
             newIntent.setAction(MmsReceivedReceiver.MMS_RECEIVED);
             BroadcastUtils.sendExplicitBroadcast(context, newIntent, MmsReceivedReceiver.MMS_RECEIVED);
         }

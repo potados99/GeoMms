@@ -22,14 +22,33 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.potados.geomms.receiver.SmsSentReceiver.Companion.ACTION
 import com.potados.geomms.usecase.MarkDelivered
 import com.potados.geomms.usecase.MarkDeliveryFailed
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+/**
+ * Not registered in manifest.
+ * Receive both explicit intent and
+ * implicit intent with action of [ACTION].
+ *
+ * Handle the result of SMS delivery and invoke
+ * [MarkDelivered] or [markDeliveryFailed].
+ *
+ * @see [MarkDelivered]
+ * @see [MarkDeliveryFailed]
+ */
 class SmsDeliveredReceiver : BroadcastReceiver(), KoinComponent {
 
     companion object {
+        /**
+         * [MmsUpdatedReceiver] receives implicit intent.
+         * So it does also.
+         *
+         * There could be another broadcast receiver that receives
+         * intent with [ACTION].
+         */
         const val ACTION = "com.potados.geomms.SMS_DELIVERED"
     }
 

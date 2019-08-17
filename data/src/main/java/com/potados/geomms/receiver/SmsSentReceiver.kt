@@ -28,9 +28,27 @@ import com.potados.geomms.usecase.MarkSent
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+/**
+ * Not registered in manifest.
+ * Receive both explicit intent and
+ * implicit intent with action of [ACTION].
+ *
+ * Handle the result of sending SMS and invoke
+ * [MarkSent] or [MarkFailed].
+ *
+ * @see [MarkSent]
+ * @see [MarkFailed]
+ */
 class SmsSentReceiver : BroadcastReceiver(), KoinComponent {
 
     companion object {
+        /**
+         * [MmsSentReceiver] receives implicit intent.
+         * So it does also.
+         *
+         * There could be another broadcast receiver that receives
+         * intent with [ACTION].
+         */
         const val ACTION = "com.potados.geomms.SMS_SENT"
     }
 
