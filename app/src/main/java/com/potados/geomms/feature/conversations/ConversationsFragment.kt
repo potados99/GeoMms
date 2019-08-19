@@ -11,6 +11,7 @@ import com.potados.geomms.model.Conversation
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.SyncMessages
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
+import kotlinx.android.synthetic.main.main_permission_hint.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -61,7 +62,9 @@ class ConversationsFragment : NavigationFragment(),
 
         with(view.snackbar) {
             setOnInflateListener { _, _ ->
-
+                button.setOnClickListener {
+                    
+                }
             }
         }
 
