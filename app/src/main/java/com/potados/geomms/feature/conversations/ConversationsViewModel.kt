@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.repository.ConversationRepository
+import com.potados.geomms.repository.SyncRepository
 import io.realm.RealmResults
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -18,7 +19,9 @@ class ConversationsViewModel : ViewModel(), KoinComponent {
 
     val conversations = conversationRepo.getConversations()
 
-    var permissionHintTitle = ""
-    var permissionHintMessage = ""
-    var permissionHintButtonText = ""
+    // Permission hint snackbar
+    var defaultSmsState: Boolean = false
+
+    // Sync progress
+    var syncState: SyncRepository.SyncProgress = SyncRepository.SyncProgress.Idle()
 }

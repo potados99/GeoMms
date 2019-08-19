@@ -89,7 +89,11 @@ fun View.setPadding(left: Int? = null, top: Int? = null, right: Int? = null, bot
     setPadding(left ?: paddingLeft, top ?: paddingTop, right ?: paddingRight, bottom ?: paddingBottom)
 }
 
-val View.isVisible: Boolean get() = this.visibility == View.VISIBLE
+var View.isVisible: Boolean
+    get() = this.visibility == View.VISIBLE
+    set(visible) {
+        this.visibility = if (visible) View.VISIBLE else View.GONE
+    }
 
 fun View.setVisible(visible: Boolean, invisible: Int = View.GONE) {
     visibility = if (visible) View.VISIBLE else invisible
