@@ -17,10 +17,10 @@ operator fun Menu.iterator() = object : MutableIterator<MenuItem> {
     override fun remove() = removeItem(--index)
 }
 
-fun Menu.setTint(context: Context?, @ColorRes color: Int) {
+fun Menu.setTint(context: Context?, color: Int) {
     context?.let { c ->
         iterator().forEach { item ->
-            item.icon.setTint(c.resources.getColor(R.color.primary, c.theme))
+            item.icon.setTint(color)
         }
     }
 }

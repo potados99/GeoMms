@@ -22,7 +22,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@color/primary"
+    tools:background="?attr/avatarColor"
     tools:parentTag="com.potados.geomms.common.widget.AvatarView">
 
     <TextView

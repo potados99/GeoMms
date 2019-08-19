@@ -19,15 +19,14 @@
 package com.potados.geomms.common.widget
 
 import android.content.Context
+import android.graphics.Color
 import android.telephony.PhoneNumberUtils
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import com.bumptech.glide.Glide
 import com.potados.geomms.R
-import com.potados.geomms.common.extension.setBackgroundTint
-import com.potados.geomms.common.extension.setTint
-import com.potados.geomms.common.extension.setTintRes
+import com.potados.geomms.common.extension.*
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.Recipient
 import kotlinx.android.synthetic.main.avatar_view.view.*
@@ -94,9 +93,9 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
     }
 
     fun applyTheme(threadId: Long) {
-        icon.setBackgroundTint(R.color.primary)
-        icon.setTint(R.color.white)
-        // TODO
+        setBackgroundTint(context.resolveThemeColor(R.attr.avatarColor))
+        initial.setTextColor(Color.WHITE)
+        icon.setTint(Color.WHITE)
     }
 
     private fun updateView() {
@@ -113,7 +112,5 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
             // Glide.with(photo).load(PhoneNumberUtils.stripSeparators(address)).into(photo)
         }
 
-        icon.setTintRes(R.color.white)
-        setBackgroundTint(resources.getColor(R.color.primary, null))
     }
 }

@@ -19,6 +19,8 @@
         <enum name="dialog" value="4" />
     </attr>
 
+    <attr name="tintPrimary" format="reference" />
+    <attr name="avatarColor" format="reference" />
     <attr name="bubbleColor" format="reference" />
     <attr name="composeBackground" format="reference" />
 

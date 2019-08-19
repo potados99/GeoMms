@@ -69,9 +69,8 @@ class SyncRepositoryImpl(
         value = SyncRepository.SyncProgress.Idle()
     }
 
-    override val syncProgress: Subject<SyncRepository.SyncProgress> =
-        BehaviorSubject.createDefault(SyncRepository.SyncProgress.Idle())
-
+    override val syncProgress: LiveData<SyncRepository.SyncProgress> = _progress
+    
     override fun syncMessages() {
         if (_progress.value is SyncRepository.SyncProgress.Running) {
             Timber.i("sync already in progress; return")

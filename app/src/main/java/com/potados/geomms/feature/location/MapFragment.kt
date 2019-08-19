@@ -29,6 +29,8 @@ import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import androidx.recyclerview.widget.RecyclerView
 import android.view.MotionEvent
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import kotlinx.android.synthetic.main.bottom_sheet.*
+import kotlinx.android.synthetic.main.bottom_sheet.view.*
 
 
 /**
@@ -40,7 +42,7 @@ class MapFragment : NavigationFragment(),
     RequestsAdapter.RequestClickListener
 {
 
-    override fun menuId(): Int = R.id.menu_item_navigation_map
+    override fun navigationMenuId(): Int = R.id.menu_item_navigation_map
 
     private lateinit var mapViewModel: MapViewModel
     private lateinit var viewDataBinding: MapFragmentBinding
@@ -52,7 +54,7 @@ class MapFragment : NavigationFragment(),
 
     private val onItemTouchListener: RecyclerView.OnItemTouchListener = object : RecyclerView.OnItemTouchListener {
         override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-            setScrollable(viewDataBinding.bottomSheetLayout, rv)
+            setScrollable(viewDataBinding.sheet, rv)
             return false
         }
 
@@ -161,8 +163,8 @@ class MapFragment : NavigationFragment(),
 
             setOnCameraMoveStartedListener {
                 if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                    with(bottom_sheet_layout) {
-                        if (sheetState() == BottomSheetBehavior.STATE_HIDDEN) {
+                    with(viewDataBinding.sheet) {
+                        if (sheetState == BottomSheetBehavior.STATE_HIDDEN) {
                             //
                         }
                         else {
@@ -208,7 +210,7 @@ class MapFragment : NavigationFragment(),
             addOnItemTouchListener(onItemTouchListener)
         }
 
-        with(view.bottom_sheet_layout) {
+        with(view.sheet) {
             collapseSheet()
 
             bottomSheetBehavior().setBottomSheetCallback(object: CustomBottomSheetBehavior.BottomSheetCallback() {

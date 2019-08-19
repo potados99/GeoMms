@@ -29,6 +29,7 @@ import com.potados.geomms.usecase.DeleteMessages
 import com.potados.geomms.usecase.SyncMessages
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import timber.log.Timber
 
 /**
  * Manifest registered.
@@ -46,6 +47,8 @@ class DefaultSmsChangedReceiver : BroadcastReceiver(), KoinComponent {
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onReceive(context: Context, intent: Intent) {
+        Timber.i("default sms app changed")
+
         if (intent.getBooleanExtra(Telephony.Sms.Intents.EXTRA_IS_DEFAULT_SMS_APP, false)) {
             val pendingResult = goAsync()
             permissionManager.refresh()

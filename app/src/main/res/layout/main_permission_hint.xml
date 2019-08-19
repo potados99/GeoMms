@@ -12,8 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:defaultSmsState="@{vm.defaultSmsState}"
-    >
+            app:defaultSmsState="@{vm.defaultSmsState}">
 
         <com.potados.geomms.common.widget.QkTextView
                 android:id="@+id/title"
@@ -46,7 +45,7 @@
         <com.potados.geomms.common.widget.QkTextView
                 android:id="@+id/button"
                 style="@style/TextSecondary"
-                android:textColor="@color/primary"
+                android:textColor="?attr/tintPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -57,6 +56,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title"
                 android:text="@string/main_default_sms_change" />
+
+        <View
+                android:id="@+id/bottom"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/divider"
+                app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

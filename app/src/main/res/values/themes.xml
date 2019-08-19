@@ -13,13 +13,16 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="actionBarPopupTheme">@style/PopupThemeLight</item>
+
+        <item name="avatarColor">@color/green</item>
         <item name="bubbleColor">@color/bubbleLight</item>
         <item name="composeBackground">@color/backgroundLight</item>
+        <item name="tintPrimary">@color/green</item>
+
         <item name="colorPrimary">@color/toolbarLight</item>
         <item name="colorPrimaryDark">@color/statusBarLight</item>
         <item name="selectableItemBackground">@drawable/ripple</item>
         <item name="windowActionBar">false</item>
-
     </style>
     <style name="AppThemeLightDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:textColorPrimary">@color/textPrimary</item>

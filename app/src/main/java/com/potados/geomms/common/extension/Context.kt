@@ -24,6 +24,7 @@ import android.graphics.Color
 import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.potados.geomms.extension.tryOrNull
@@ -48,6 +49,10 @@ fun Context.resolveThemeColor(attributeId: Int, default: Int = 0): Int {
     val wasResolved = theme.resolveAttribute(attributeId, outValue, true)
 
     return if (wasResolved) getColorCompat(outValue.resourceId) else default
+}
+
+fun Context.resolveColor(@ColorRes res: Int): Int {
+    return this.resources.getColor(res, theme)
 }
 
 fun Context.makeToast(@StringRes res: Int, duration: Int = Toast.LENGTH_SHORT) {

@@ -39,6 +39,7 @@ import androidx.core.graphics.drawable.IconCompat
 import com.bumptech.glide.Glide
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.dpToPx
+import com.potados.geomms.common.extension.resolveThemeColor
 import com.potados.geomms.extension.isImage
 import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.feature.compose.ComposeActivity
@@ -105,7 +106,7 @@ class NotificationManagerImplTest(
 
         val notification = NotificationCompat.Builder(context, getChannelIdForNotification(threadId))
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-            .setColor(context.resources.getColor(R.color.primary, null))
+            .setColor(context.resolveThemeColor(R.attr.tintPrimary))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setSmallIcon(R.drawable.ic_notification)
             .setNumber(messages.size)
@@ -207,7 +208,7 @@ class NotificationManagerImplTest(
         val notification = NotificationCompat.Builder(context, getChannelIdForNotification(threadId))
             .setContentTitle("Failed")
             .setContentText("Send failed: " + conversation.getTitle())
-            .setColor(context.resources.getColor(R.color.primary, null))
+            .setColor(context.resolveThemeColor(R.attr.tintPrimary))
             .setPriority(NotificationManagerCompat.IMPORTANCE_MAX)
             .setSmallIcon(R.drawable.ic_notification_failed)
             .setAutoCancel(true)
@@ -324,7 +325,7 @@ class NotificationManagerImplTest(
             .setShowWhen(false)
             .setWhen(System.currentTimeMillis()) // Set this anyway in case it's shown
             .setSmallIcon(R.drawable.ic_file_download_black_24dp)
-            .setColor(context.resources.getColor(R.color.primary, null))
+            .setColor(context.resolveThemeColor(R.attr.tintPrimary))
             .setCategory(NotificationCompat.CATEGORY_PROGRESS)
             .setPriority(NotificationCompat.PRIORITY_MIN)
             .setProgress(0, 0, true)

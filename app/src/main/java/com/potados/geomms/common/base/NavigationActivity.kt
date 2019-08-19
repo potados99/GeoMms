@@ -2,7 +2,6 @@ package com.potados.geomms.common.base
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.addAll
 import com.potados.geomms.common.extension.inImmediateTransaction
@@ -17,7 +16,7 @@ abstract class NavigationActivity : BaseActivity() {
 
     private val onNavigationItemChanged = { menuItem: MenuItem ->
         supportFragmentManager.showOnly {
-            (it as NavigationFragment).menuId() == menuItem.itemId
+            (it as NavigationFragment).navigationMenuId() == menuItem.itemId
         }
     }
 

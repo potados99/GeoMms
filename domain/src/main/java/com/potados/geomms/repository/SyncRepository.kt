@@ -39,7 +39,7 @@ interface SyncRepository {
         }
     }
 
-    val syncProgress: Observable<SyncProgress>
+    val syncProgress: LiveData<SyncProgress>
 
     fun syncMessages()
 

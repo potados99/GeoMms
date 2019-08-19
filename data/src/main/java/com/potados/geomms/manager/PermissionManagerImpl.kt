@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.reactivex.Flowable
+import timber.log.Timber
 
 class PermissionManagerImpl(
     private val context: Context,
@@ -22,6 +23,7 @@ class PermissionManagerImpl(
 
     override fun refresh() {
         _isDefaultSms.value = isDefaultSms()
+        Timber.i("value posted to _isDefaultSms")
     }
 
     override fun isAllGranted(): Boolean =

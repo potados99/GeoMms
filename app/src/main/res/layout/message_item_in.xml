@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground">
 
-    <TextView
+    <com.potados.geomms.common.widget.QkTextView
             android:id="@+id/timestamp"
             style="@style/TextSecondary"
             android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
         android:layout_marginEnd="12dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="2dp"
-        android:backgroundTint="@color/primary"
+        android:backgroundTint="?attr/tintPrimary"
         android:autoLink="email|phone|web"
         android:background="@drawable/message_only"
         android:gravity="start|center_vertical"

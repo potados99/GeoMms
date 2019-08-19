@@ -32,7 +32,11 @@ fun View.expandSheet() {
     CustomBottomSheetBehavior.from(this).state = CustomBottomSheetBehavior.STATE_EXPANDED
 }
 
-fun View.sheetState() = CustomBottomSheetBehavior.from(this).state
+var View.sheetState: Int
+    get() = CustomBottomSheetBehavior.from(this).state
+    set(value) {
+        CustomBottomSheetBehavior.from(this).state = value
+    }
 
 fun View.toggleSheet() {
     CustomBottomSheetBehavior.from(this).apply {

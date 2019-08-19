@@ -32,6 +32,7 @@ import com.potados.geomms.model.Message
 import com.potados.geomms.model.Recipient
 import com.potados.geomms.util.DateTime
 import io.realm.RealmRecyclerViewAdapter
+import kotlinx.android.synthetic.main.conversation_item.view.*
 import kotlinx.android.synthetic.main.message_item_in.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -71,7 +72,11 @@ class MessagesAdapter(
         view.attachments.setRecycledViewPool(partsViewPool)
         view.body.forwardTouches(view)
 
-        return BaseViewHolder(view)
+        return BaseViewHolder(view).apply {
+            containerView.setOnClickListener {
+                it.status.setVisible(!it.status.isVisible)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
@@ -165,7 +170,7 @@ class MessagesAdapter(
             message.isSending() -> true
             message.isFailedMessage() -> true
             expanded[message.id] == false -> false
-            conversation?.recipients?.size ?: 0 > 1 && !message.isMe() && next?.compareSender(message) != true -> true
+            conversation.recipients.size > 1 && !message.isMe() && next?.compareSender(message) != true -> true
             message.isDelivered() && next?.isDelivered() != true && age <= BubbleUtils.TIMESTAMP_THRESHOLD -> true
             else -> false
         })

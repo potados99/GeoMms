@@ -21,6 +21,11 @@ package com.potados.geomms.common.extension
 import android.content.Context
 import android.graphics.Color
 import android.util.TypedValue
+import androidx.annotation.ColorInt
+import android.R
+import android.content.res.Resources.Theme
+
+
 
 fun Int.dpToPx(context: Context): Int {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), context.resources.displayMetrics).toInt()
