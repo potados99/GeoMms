@@ -17,4 +17,8 @@ class ConversationsViewModel : ViewModel(), KoinComponent {
     private val conversationRepo: ConversationRepository by inject()
 
     val conversations = conversationRepo.getConversations()
+
+    var permissionHintTitle = ""
+    var permissionHintMessage = ""
+    var permissionHintButtonText = ""
 }

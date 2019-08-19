@@ -19,4 +19,7 @@
         <enum name="dialog" value="4" />
     </attr>
 
+    <attr name="bubbleColor" format="reference" />
+    <attr name="composeBackground" format="reference" />
+
 </resources>

@@ -125,7 +125,7 @@ class SyncRepositoryImpl(
         messageCursor?.use {
             val messageColumns = CursorToMessage.MessageColumns(messageCursor)
             val messages = messageCursor.map { cursor ->
-                Timber.v("syncing messages...$progress")
+                Timber.v("main_syncing messages...$progress")
 
                 progress++
                 _progress.postValue(SyncRepository.SyncProgress.Running(max, progress, false))
@@ -141,7 +141,7 @@ class SyncRepositoryImpl(
         conversationCursor?.use {
             val conversations = conversationCursor
                     .map { cursor ->
-                        Timber.v("syncing conversations...$progress")
+                        Timber.v("main_syncing conversations...$progress")
                         postProgress(max, ++progress, false)
                         cursorToConversation.map(cursor)
                     }
@@ -184,7 +184,7 @@ class SyncRepositoryImpl(
             val contacts = realm.copyToRealm(getContacts())
             val recipients = recipientCursor
                     .map { cursor ->
-                        Timber.v("syncing recipients...$progress")
+                        Timber.v("main_syncing recipients...$progress")
 
                         postProgress(max, ++progress, false)
                         cursorToRecipient.map(cursor).apply {

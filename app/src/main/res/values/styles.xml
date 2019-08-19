@@ -1,19 +1,59 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme" parent="AppBaseThemeLight"/>
 
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">?android:attr/colorBackground</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
+    <!-- Light theme -->
+    <style name="AppBaseThemeLight" parent="Theme.AppCompat.Light.NoActionBar">item>
+        <item name="android:divider">@color/separatorLight</item>
+        <item name="android:queryBackground">@color/toolbarSearchBackgroundLight</item>
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+        <item name="android:textColorSecondary">@color/textSecondary</item>
+        <item name="android:textColorTertiary">@color/textTertiary</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="actionBarPopupTheme">@style/PopupThemeLight</item>
+        <item name="bubbleColor">@color/bubbleLight</item>
+        <item name="composeBackground">@color/backgroundLight</item>
+        <item name="colorPrimary">@color/toolbarLight</item>
+        <item name="colorPrimaryDark">@color/statusBarLight</item>
+        <item name="selectableItemBackground">@drawable/ripple</item>
         <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
+    <style name="AppThemeLightDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+        <item name="android:textColorSecondary">@color/textSecondary</item>
+        <item name="android:textColorTertiary">@color/textTertiary</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="actionBarPopupTheme">@style/PopupThemeLight</item>
+        <item name="bubbleColor">@color/bubbleLight</item>
+        <item name="colorPrimary">@color/toolbarLight</item>
+        <item name="colorPrimaryDark">@color/statusBarLight</item>
+        <item name="composeBackground">@color/backgroundLight</item>
+        <item name="selectableItemBackground">@drawable/ripple</item>
+        <item name="windowActionBar">false</item>
+    </style>
+    <style name="PopupThemeLight" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <!-- Text -->
+    <style name="TextPrimary">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">@dimen/textPrimary</item>
+    </style>
+    <style name="TextSecondary">
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">@dimen/textSecondary</item>
+    </style>
+    <style name="TextTertiary">
+        <item name="android:textColor">@color/textTertiary</item>
+        <item name="android:textSize">@dimen/textTertiary</item>
+    </style>
+
+
 
     <style name="Toolbar">
         <item name="android:layout_width">match_parent</item>
@@ -29,7 +69,8 @@
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">start|center_vertical</item>
         <item name="android:maxLines">1</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">@dimen/textToolbar</item>
     </style>
 
     <style name="BottomNavigation">
@@ -39,6 +80,5 @@
         <item name="itemIconTint">@color/navigation_item</item>
         <item name="itemTextColor">@color/navigation_item</item>
     </style>
-
 
 </resources>

@@ -29,21 +29,10 @@ class ConversationsFragment : NavigationFragment(),
 
     private val conversationsAdapter = ConversationsAdapter()
 
-    // TODO remove
-    private val syncMessages: SyncMessages by inject()
-    private val syncRepo: SyncRepository by inject()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         conversationsViewModel = getViewModel()
-
-        // TODO
-        syncMessages(Unit) {
-            it.onError {
-                Timber.w(it)
-            }
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -63,16 +52,6 @@ class ConversationsFragment : NavigationFragment(),
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onResume() {
-        super.onResume()
-        //syncRepo.syncMessages()
-        /*syncMessages(Unit) {
-            it.onError {
-                Timber.w(it)
-            }
-        }*/
-    }
-
     override fun onConversationClicked(conversation: Conversation) {
         navigator.showComposeActivity(conversation)
     }
@@ -80,7 +59,16 @@ class ConversationsFragment : NavigationFragment(),
 
     private fun initializeView(view: View) {
 
-        /** 대화 목록 리사이클러뷰 */
+        with(view.snackbar) {
+            setOnInflateListener { _, _ ->
+
+            }
+        }
+
+        with(view.syncing) {
+
+        }
+
         with(view.conversations) {
             adapter = conversationsAdapter
             // ...

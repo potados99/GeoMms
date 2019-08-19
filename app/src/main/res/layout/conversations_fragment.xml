@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:id="@+id/conversation_list_root_layout">
 
-        <!--툴바-->
+        <!-- 툴바 -->
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/Toolbar"
@@ -56,7 +56,7 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <!--컨텐츠 레이아웃-->
+        <!-- 컨텐츠 레이아웃 -->
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/conversations"
                 android:layout_width="0dp"
@@ -69,6 +69,25 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <!-- 동기화 상태창 -->
+        <ViewStub
+                android:id="@+id/syncing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inflatedId="@id/syncing"
+                android:layout="@layout/main_syncing"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- 기본앱 설정 안내창 -->
+        <ViewStub
+                android:id="@+id/snackbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inflatedId="@id/snackbar"
+                android:layout="@layout/main_permission_hint"
+                app:layout_constraintBottom_toTopOf="@id/syncing" />
+
+        <!-- 툴바 그림자 -->
         <View
                 android:layout_width="0dp"
                 android:layout_height="8dp"
@@ -79,7 +98,5 @@
                 android:id="@+id/toolbar_shadow"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     
 </layout>
