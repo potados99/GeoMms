@@ -27,6 +27,7 @@
 
     <TextView
             android:id="@+id/timestamp"
+            style="@style/TextSecondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
@@ -65,12 +66,14 @@
 
     <com.potados.geomms.common.widget.TightTextView
         android:id="@+id/body"
+        style="@style/TextPrimary"
         android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="2dp"
+        android:backgroundTint="@color/primary"
         android:autoLink="email|phone|web"
         android:background="@drawable/message_only"
         android:gravity="start|center_vertical"
@@ -84,11 +87,12 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/avatar"
         app:layout_constraintTop_toBottomOf="@id/attachments"
-        android:backgroundTint="@color/primary"
         tools:text="@tools:sample/lorem" />
 
     <TextView
         android:id="@+id/status"
+        android:textColor="@color/textSecondary"
+        android:textSize="@dimen/textTertiary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"

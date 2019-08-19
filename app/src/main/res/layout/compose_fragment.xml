@@ -14,12 +14,8 @@
             android:layout_height="match_parent"
             tools:context=".feature.compose.ComposeFragment"
             android:id="@+id/root_layout"
-            android:background="@color/primaryBackground"
-    >
+            android:background="@color/primaryBackground">
 
-        <!--툴바-->
-
-        <!--컨텐츠 레이아웃-->
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/Toolbar"

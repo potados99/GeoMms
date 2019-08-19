@@ -9,7 +9,7 @@ import com.potados.geomms.common.extension.inImmediateTransaction
 import com.potados.geomms.common.extension.showOnly
 import kotlinx.android.synthetic.main.navigation_activity.*
 
-abstract class NavigationActivity : AppCompatActivity() {
+abstract class NavigationActivity : BaseActivity() {
 
     abstract fun fragments(): List<NavigationFragment>
     abstract fun menuResId(): Int

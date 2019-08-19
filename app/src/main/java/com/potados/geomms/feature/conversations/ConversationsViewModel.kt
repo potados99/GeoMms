@@ -14,13 +14,9 @@ import org.koin.core.inject
  * ConversationListFragment를 보조할 뷰모델입니다.
  * 대화방들의 정보를 가지고 있습니다.
  */
-class ConversationsViewModel : BaseViewModel(), KoinComponent {
+class ConversationsViewModel : ViewModel(), KoinComponent {
 
     private val conversationRepo: ConversationRepository by inject()
-
-    init {
-
-    }
 
     val conversations = conversationRepo.getConversations()
 

@@ -8,7 +8,7 @@ import com.potados.geomms.R
 import com.potados.geomms.common.extension.addAll
 import com.potados.geomms.common.extension.inImmediateTransaction
 
-abstract class SingleFragmentActivity : AppCompatActivity() {
+abstract class SingleFragmentActivity : BaseActivity() {
 
     abstract fun fragment(): Fragment
 
