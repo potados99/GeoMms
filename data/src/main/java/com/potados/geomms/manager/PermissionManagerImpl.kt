@@ -5,11 +5,23 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.provider.Telephony
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 class PermissionManagerImpl(
     private val context: Context,
     val permissions: Array<String>
 ) : PermissionManager {
+
+    private val _isDefaultSms = MutableLiveData<Boolean>()
+
+    init {
+        refresh()
+    }
+
+    override fun refresh() {
+        _isDefaultSms.value = (Telephony.Sms.getDefaultSmsPackage(context) == context.packageName)
+    }
 
     override fun isAllGranted(): Boolean =
         permissions.all(::isGranted)
@@ -19,8 +31,8 @@ class PermissionManagerImpl(
             .filter { !isGranted(it) }
             .toTypedArray()
 
-    override fun isDefaultSms(): Boolean {
-        return Telephony.Sms.getDefaultSmsPackage(context) == context.packageName
+    override fun isDefaultSms(): LiveData<Boolean> {
+        return _isDefaultSms
     }
 
     override fun hasReadSms(): Boolean {

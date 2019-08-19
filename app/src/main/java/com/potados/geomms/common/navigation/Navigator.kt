@@ -32,6 +32,14 @@ class Navigator (
         }
     }
 
+    fun showDefaultSmsDialog() {
+        val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+        if (Telephony.Sms.getDefaultSmsPackage(context) != context.packageName) {
+            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, context.packageName)
+        }
+        startActivityWithFlag(intent)
+    }
+
     private fun showGiveMePermission() {
         startActivityWithFlag(GiveMePermissionActivity.callingIntent(context))
     }

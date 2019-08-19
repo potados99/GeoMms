@@ -2,11 +2,13 @@ package com.potados.geomms.feature.conversations
 
 import android.os.Bundle
 import android.view.*
+import androidx.lifecycle.Observer
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
+import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.SyncMessages
@@ -24,6 +26,7 @@ class ConversationsFragment : NavigationFragment(),
     override fun menuId(): Int = R.id.menu_item_navigation_message
 
     private val navigator: Navigator by inject()
+    private val permissionManager: PermissionManager by inject()
 
     private lateinit var conversationsViewModel: ConversationsViewModel
     private lateinit var viewDataBinding: ConversationsFragmentBinding
@@ -60,16 +63,18 @@ class ConversationsFragment : NavigationFragment(),
 
     private fun initializeView(view: View) {
 
+        permissionManager.isDefaultSms().observe(this, object: Observer<Boolean> {
+            override fun onChanged(isDefault: Boolean?) {
+                isDefault?.let { conversationsViewModel.defaultSmsState = it }
+            }
+        })
+
         with(view.snackbar) {
             setOnInflateListener { _, _ ->
                 button.setOnClickListener {
-
+                    navigator.showDefaultSmsDialog()
                 }
             }
-        }
-
-        with(view.syncing) {
-
         }
 
         with(view.conversations) {
