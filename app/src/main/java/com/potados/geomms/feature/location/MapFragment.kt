@@ -42,7 +42,7 @@ class MapFragment : NavigationFragment(),
     RequestsAdapter.RequestClickListener
 {
 
-    override fun navigationMenuId(): Int = R.id.menu_item_navigation_map
+    override fun navigationItemId(): Int = R.id.menu_item_navigation_map
 
     private lateinit var mapViewModel: MapViewModel
     private lateinit var viewDataBinding: MapFragmentBinding

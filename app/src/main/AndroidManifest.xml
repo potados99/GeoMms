@@ -23,20 +23,7 @@
             tools:ignore="GoogleAppIndexingWarning">
 
         <!--Activity-->
-        <activity android:name="com.potados.geomms.feature.settings.SettingsActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <action android:name="android.intent.action.SENDTO"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data android:scheme="sms"/>
-                <data android:scheme="smsto"/>
-                <data android:scheme="mms"/>
-                <data android:scheme="mmsto"/>
-            </intent-filter>
-        </activity>
+        <activity android:name="com.potados.geomms.feature.settings.SettingsActivity" />
         <activity android:name="com.potados.geomms.common.navigation.RouteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

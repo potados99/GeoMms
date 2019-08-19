@@ -59,13 +59,6 @@ class ComposeFragment : BaseFragment() {
     }
 
     private fun initializeView(view: View) {
-        setHasOptionsMenu(true)
-
-        withNonNull(supportActionBar) {
-            setDisplayShowTitleEnabled(false)
-            setDisplayHomeAsUpEnabled(true)
-        }
-
         with(view.messages_recyclerview) {
             setHasFixedSize(true)
             messagesAdapter.autoScrollToStart(this@with)
@@ -100,24 +93,6 @@ class ComposeFragment : BaseFragment() {
         }
 
     }
-
-    private fun scrollToBottom(smooth: Boolean = true) {
-        messages_recyclerview.adapter?.let {
-            Log.d("ComposeActivity: scrollToBottom()", "scrolling to bottom.")
-
-            val position =  if (it.itemCount > 0) it.itemCount - 1 else 0
-
-            if (smooth) {
-                messages_recyclerview.smoothScrollToPosition(position)
-            }
-            else {
-                messages_recyclerview.scrollToPosition(position)
-            }
-
-            composeViewModel.recyclerViewReachedItsEnd = true
-        }
-    }
-
 
     companion object {
         private const val PARAM_CONVERSATION = "param_conversation"

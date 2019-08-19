@@ -27,7 +27,7 @@ import timber.log.Timber
 class ConversationsFragment : NavigationFragment() {
 
     override fun optionMenuId(): Int? = R.menu.conversations
-    override fun navigationMenuId(): Int = R.id.menu_item_navigation_message
+    override fun navigationItemId(): Int = R.id.menu_item_navigation_message
 
     private val navigator: Navigator by inject()
     private val permissionManager: PermissionManager by inject()

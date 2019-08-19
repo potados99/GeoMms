@@ -32,7 +32,7 @@
                     android:id="@+id/toolbar_title"
                     style="@style/ToolbarText"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:text="@{vm.conversation.getTitle()}"
                     tools:text="01029222661"/>
 

@@ -31,17 +31,29 @@ inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Fragmen
 /**
  * Do something in the middle of beginTransaction() and commitNow().
  */
-inline fun FragmentManager.inImmediateTransaction(func: FragmentTransaction.() -> FragmentTransaction) =
+inline fun FragmentManager.inImmediateTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
     beginTransaction().func().commitNow()
+}
+
 
 /**
  * Show only one fragment.
  */
 inline fun FragmentManager.showOnly(predicate: (Fragment) -> Boolean): Boolean  {
     inTransaction {
-        fragments.forEach { hide(it) }
-        fragments.find(predicate)?.let(::show) ?: return false
+        fragments.forEach {
+            if (predicate(it)) {
+                it.activity?.invalidateOptionsMenu()
+                show(it)
+            }
+            else {
+                hide(it)
+            }
+        }
+        this
     }
+
+    executePendingTransactions()
 
     return true
 }
@@ -105,7 +117,7 @@ fun Fragment.setSupportActionBar(toolbar: Toolbar, title: Boolean = false, upBut
 
         withNonNull(supportActionBar) {
             setDisplayShowTitleEnabled(title)
-            setHomeButtonEnabled(upButton)
+            setDisplayHomeAsUpEnabled(upButton)
         }
     }
 }

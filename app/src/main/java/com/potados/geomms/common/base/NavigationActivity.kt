@@ -5,18 +5,19 @@ import android.view.MenuItem
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.addAll
 import com.potados.geomms.common.extension.inImmediateTransaction
+import com.potados.geomms.common.extension.inTransaction
 import com.potados.geomms.common.extension.showOnly
 import kotlinx.android.synthetic.main.navigation_activity.*
 
 abstract class NavigationActivity : BaseActivity() {
 
     abstract fun fragments(): List<NavigationFragment>
-    abstract fun menuResId(): Int
+    abstract fun navigationMenuId(): Int
     open fun defaultMenuItemId(): Int = -1
 
     private val onNavigationItemChanged = { menuItem: MenuItem ->
         supportFragmentManager.showOnly {
-            (it as NavigationFragment).navigationMenuId() == menuItem.itemId
+            (it as NavigationFragment).navigationItemId() == menuItem.itemId
         }
     }
 
@@ -28,16 +29,17 @@ abstract class NavigationActivity : BaseActivity() {
         setNavigationView()
     }
 
-    private fun addFragments(savedInstanceState: Bundle?) =
+    private fun addFragments(savedInstanceState: Bundle?) {
         savedInstanceState ?:
         supportFragmentManager.inImmediateTransaction {
             addAll(R.id.fragment_container, fragments())
             this
         }
+    }
 
     private fun setNavigationView() {
         with(nav_view) {
-            inflateMenu(menuResId())
+            inflateMenu(navigationMenuId())
 
             setOnNavigationItemSelectedListener(onNavigationItemChanged)
 
