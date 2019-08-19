@@ -63,7 +63,7 @@ class ConversationsFragment : NavigationFragment(),
         with(view.snackbar) {
             setOnInflateListener { _, _ ->
                 button.setOnClickListener {
-                    
+
                 }
             }
         }
