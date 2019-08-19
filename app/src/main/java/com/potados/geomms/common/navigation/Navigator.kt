@@ -1,7 +1,9 @@
 package com.potados.geomms.common.navigation
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.provider.Telephony
 import com.potados.geomms.common.GiveMePermissionActivity
 import com.potados.geomms.common.MainActivity
@@ -20,24 +22,22 @@ class Navigator (
 
     fun showMain() {
         whenPossible {
-            it.startActivity(MainActivity.callingIntent(it))
+            startActivityWithFlag(MainActivity.callingIntent(it))
         }
     }
 
     fun showComposeActivity(conversation: Conversation) {
         whenPossible {
-            it.startActivity(
-                ComposeActivity.callingIntent(it, conversation.id)
-            )
+            startActivityWithFlag(ComposeActivity.callingIntent(it, conversation.id))
         }
     }
 
     private fun showGiveMePermission() {
-        context.startActivity(GiveMePermissionActivity.callingIntent(context))
+        startActivityWithFlag(GiveMePermissionActivity.callingIntent(context))
     }
 
     private fun showMakeMeDefaultApp() {
-        context.startActivity(MakeMeDefaultAppActivity.callingIntent(context))
+        startActivityWithFlag(MakeMeDefaultAppActivity.callingIntent(context))
     }
 
     private fun whenPossible(body: (Context) -> Unit) {
@@ -56,6 +56,11 @@ class Navigator (
         else {
             body(context)
         }
+    }
+
+    private fun startActivityWithFlag(intent: Intent) {
+        // on higher version of android
+        context.startActivity(intent.apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK })
     }
 
     // TODO
