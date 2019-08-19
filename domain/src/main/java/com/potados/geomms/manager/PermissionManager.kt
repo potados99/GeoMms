@@ -1,6 +1,7 @@
 package com.potados.geomms.manager
 
 import androidx.lifecycle.LiveData
+import io.reactivex.Flowable
 
 interface PermissionManager {
 
@@ -10,7 +11,9 @@ interface PermissionManager {
 
     fun ungrantedPermissions(): Array<String>
 
-    fun isDefaultSms(): LiveData<Boolean>
+    fun isDefaultSms(): Boolean
+
+    fun isDefaultSmsLiveData(): LiveData<Boolean>
 
     fun hasReadSms(): Boolean
 

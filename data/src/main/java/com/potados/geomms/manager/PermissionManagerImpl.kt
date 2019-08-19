@@ -7,6 +7,7 @@ import android.provider.Telephony
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.Flowable
 
 class PermissionManagerImpl(
     private val context: Context,
@@ -20,7 +21,7 @@ class PermissionManagerImpl(
     }
 
     override fun refresh() {
-        _isDefaultSms.value = (Telephony.Sms.getDefaultSmsPackage(context) == context.packageName)
+        _isDefaultSms.value = isDefaultSms()
     }
 
     override fun isAllGranted(): Boolean =
@@ -31,7 +32,11 @@ class PermissionManagerImpl(
             .filter { !isGranted(it) }
             .toTypedArray()
 
-    override fun isDefaultSms(): LiveData<Boolean> {
+    override fun isDefaultSms(): Boolean {
+        return (Telephony.Sms.getDefaultSmsPackage(context) == context.packageName)
+    }
+
+    override fun isDefaultSmsLiveData(): LiveData<Boolean> {
         return _isDefaultSms
     }
 
