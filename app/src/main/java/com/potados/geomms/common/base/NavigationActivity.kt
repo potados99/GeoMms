@@ -37,6 +37,12 @@ abstract class NavigationActivity : BaseActivity() {
     /**
      * Show only fragment that has [id] as NavigationItemId.
      * If the destination fragment is not added to fragment manager, add it.
+     *
+     * @param id is navigation menu id of fragment.
+     * An id and a fragment should consist a pair.
+     *
+     * @return false if [id] has no paired fragment
+     * or Fragment Manager has fragment other than [NavigationFragment].
      */
     private fun addOrShowFragment(id: Int): Boolean {
         val transaction = supportFragmentManager.beginTransaction()
