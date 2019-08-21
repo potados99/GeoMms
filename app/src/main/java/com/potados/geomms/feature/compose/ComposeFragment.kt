@@ -1,22 +1,15 @@
 package com.potados.geomms.feature.compose
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.databinding.ComposeFragmentBinding
-import com.potados.geomms.extension.withNonNull
-import kotlinx.android.synthetic.main.compose_fragment.messages_recyclerview
 import kotlinx.android.synthetic.main.compose_fragment.view.*
 import kotlinx.android.synthetic.main.compose_fragment.view.toolbar
-import kotlinx.android.synthetic.main.conversations_fragment.view.*
 
 class ComposeFragment : BaseFragment() {
 
@@ -59,7 +52,7 @@ class ComposeFragment : BaseFragment() {
     }
 
     private fun initializeView(view: View) {
-        with(view.messages_recyclerview) {
+        with(view.messages) {
             setHasFixedSize(true)
             messagesAdapter.autoScrollToStart(this@with)
             adapter = messagesAdapter

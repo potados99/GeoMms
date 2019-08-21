@@ -3,17 +3,12 @@
 
     <item
             android:id="@+id/menu_item_navigation_message"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="@string/tab_label_title_message"/>
+            android:icon="@drawable/ic_chat_24dp"
+            android:title="@string/menu_message"/>
 
     <item
             android:id="@+id/menu_item_navigation_map"
             android:icon="@android:drawable/ic_dialog_map"
-            android:title="@string/tab_label_title_map"/>
-
-    <!-- item
-            android:connectionId="@+connectionId/navigation_setting"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="@string/title_setting"/ -->
+            android:title="@string/menu_map"/>
 
 </menu>

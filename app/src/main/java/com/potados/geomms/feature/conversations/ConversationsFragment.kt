@@ -2,6 +2,8 @@ package com.potados.geomms.feature.conversations
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
@@ -52,6 +54,23 @@ class ConversationsFragment : NavigationFragment() {
             .apply { setSupportActionBar(toolbar = root.toolbar, title = false, upButton = false) }
             .apply { initializeView(root) }
             .root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        val searchView = menu.findItem(R.id.search).actionView as SearchView
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            // TODO implement
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+        })
     }
 
     override fun onShow() {

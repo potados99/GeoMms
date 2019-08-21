@@ -4,16 +4,16 @@
 
     <item
             android:id="@+id/search"
-            android:icon="@android:drawable/ic_search_category_default"
-            android:title="Search"
-            android:visible="true"
-            app:showAsAction="always" />
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="@string/menu_search"
+            app:actionViewClass="androidx.appcompat.widget.SearchView"
+            app:showAsAction="ifRoom|collapseActionView" />
 
     <item
             android:id="@+id/write"
-            android:icon="@android:drawable/ic_menu_send"
-            android:title="Write"
+            android:icon="@drawable/ic_create_24dp"
+            android:title="@string/menu_write"
             android:visible="true"
-            app:showAsAction="always" />
+            app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

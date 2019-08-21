@@ -33,14 +33,13 @@ import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import timber.log.Timber
 
-
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
  */
 class MapFragment : NavigationFragment(),
     OnMapReadyCallback,
-    ConnectionsAdapter.ConnectionClickListener,
-    RequestsAdapter.RequestClickListener
+    ConnectionsAdapter.ConnectionClickListener, // TODO: remove
+    RequestsAdapter.RequestClickListener // TODO: remove
 {
 
     override fun optionMenuId(): Int? = R.menu.map
@@ -158,7 +157,7 @@ class MapFragment : NavigationFragment(),
             }
         }
 
-        Log.d("MapFragment: onMapReady", "map is ready!")
+        Timber.i( "map is ready!")
     }
 
     private fun initializeView(view: View, savedInstanceState: Bundle?) {
@@ -237,7 +236,7 @@ class MapFragment : NavigationFragment(),
             val coordinatorLayoutParams = params as CoordinatorLayout.LayoutParams
             val behavior = coordinatorLayoutParams.getBehavior()
             if (behavior != null && behavior is CustomBottomSheetBehavior<*>)
-                (behavior as CustomBottomSheetBehavior<*>).setNestedScrollingChildRef(recyclerView)
+                behavior.setNestedScrollingChildRef(recyclerView)
         }
     }
 }

@@ -2,9 +2,8 @@
 <resources>
     <string name="app_name">Geo MMS</string>
     <string name="friend_content_title_textview">친구 목록</string>
-    <string name="tab_label_title_map">지도</string>
-    <string name="tab_label_title_message">메시지</string>
-    <string name="title_setting">설정</string>
+    <string name="menu_map">지도</string>
+    <string name="menu_message">메시지</string>
     <string name="btn_lable_refresh">새로고침</string>
     <string name="btn_label_call">전화</string>
     <string name="make_me_default_app">이 앱을 기본 SMS 앱으로 변경해 주세요 :)</string>
@@ -19,16 +18,10 @@
     <string name="no_friends">친구가 없어요 :(</string>
 
 
-    <string name="shortcut_compose_long_label">새로운 대화</string>
-    <string name="shortcut_compose_short_label">메시지 작성</string>
-    <string name="shortcut_compose_disabled_message">바로가기 해제</string>
-    <string name="title_archived">보관됨</string>
     <string name="title_settings">설정</string>
     <string name="title_notification_prefs">알림</string>
     <string name="title_theme">테마</string>
     <string name="title_compose">문자작성</string>
-    <string name="setup_skip">건너뛰기</string>
-    <string name="setup_next">계속</string>
     <string name="menu_call">전화</string>
     <string name="menu_info">자세히</string>
     <string name="menu_save">갤러리에 저장하기</string>
@@ -69,10 +62,6 @@
     <string name="drawer_invite">친구 초대하기</string>
     <string name="drawer_plus_banner_title">QKSMS+</string>
     <string name="drawer_plus_banner_summary">놀랍고 새로운 기능을 사용하고 개발 지원을 할 수 있습니다!</string>
-    <string name="rate_title">QKSMS 앱을 즐기고 있으세요?</string>
-    <string name="rate_summary">Google Play 스토어에 리뷰를 남겨주세요!</string>
-    <string name="rate_okay">좋아요!</string>
-    <string name="rate_dismiss">안할래요</string>
     <string name="dialog_delete_title">삭제</string>
     <plurals name="dialog_delete_message">
         <item quantity="other">정말 이 대화를 삭제할까요?
@@ -136,7 +125,6 @@
     <string name="gallery_error">미디어를 불러올 수 없습니다</string>
     <string name="gallery_toast_saved">갤러리에 저장</string>
     <string name="backup_title">백업과 복원</string>
-    <string name="backup_backing_up">메시지 백업하기</string>
     <string name="backup_restoring">복원하기</string>
     <string name="backup_last">최근 백업</string>
     <string name="backup_loading">로딩 중...</string>
@@ -163,53 +151,12 @@
     <string name="backup_progress_syncing">동기화 중...</string>
     <string name="backup_progress_finished">끝!</string>
     <string name="backup_notification_channel_name">백업과 복원</string>
-    <string name="scheduled_title">예약됨</string>
-    <string name="scheduled_empty_description">원하는 그 시간에 자동으로 메시지를 보냅니다.</string>
-    <string name="scheduled_empty_message_1">잠깐만요! 생일이 언제였나요..?</string>
-    <string name="scheduled_empty_message_2">12 월 23 일 입니다</string>
-    <string name="scheduled_empty_message_3">생일 축하해요! 당신의 생일을 기억하는 멋진 친구죠..?</string>
-    <string name="scheduled_empty_message_3_timestamp">12 월 23 일에 보냅니다.</string>
-    <string name="scheduled_compose_cd">메시지 예약 전송하기</string>
-    <string name="scheduled_options_title">예약된 메시지</string>
     <string-array name="scheduled_options">
         <item>지금 보내기</item>
         <item>삭제</item>
     </string-array>
-    <string name="settings_category_appearance">외관</string>
     <string name="settings_category_general">일반 설정</string>
-    <string name="settings_category_qkreply">빠른 응답</string>
-    <string name="settings_theme_title">테마</string>
-    <string name="settings_night_title">나이트 모드</string>
-    <string name="settings_black_title">완전한 블랙 테마</string>
-    <string name="settings_night_start_title">시작 시간</string>
-    <string name="settings_night_end_title">끝나는 시간</string>
-    <string name="settings_text_size_title">글꼴 크기</string>
-    <string name="settings_system_font_title">시스템 글꼴 사용</string>
-    <string name="settings_auto_emoji_title">자동 이모티콘</string>
-    <string name="settings_notifications_title">알림</string>
-    <string name="settings_notifications_o_summary">사용자 지정 탭</string>
-    <string name="settings_notification_actions_title">동작</string>
-    <string name="settings_notification_action_1">버튼 1</string>
-    <string name="settings_notification_action_2">버튼 2</string>
-    <string name="settings_notification_action_3">버튼 3</string>
-    <string name="settings_notification_previews_title">알림 미리 보기</string>
-    <string name="settings_vibration_title">진동</string>
-    <string name="settings_ringtone_title">소리</string>
-    <string name="settings_ringtone_none">없음</string>
-    <string name="settings_qkreply_title">빠른 응답</string>
-    <string name="settings_qkreply_summary">새로운 메시지에 대한 팝업</string>
-    <string name="settings_qkreply_tap_dismiss_title">탭해서 닫기</string>
-    <string name="settings_qkreply_tap_dismiss_summary">아무곳을 터치하면 팝업이 닫힙니다.</string>
-    <string name="settings_blocking_title">차단</string>
     <!-- Do not translate -->
-    <string name="settings_should_i_answer_title">Should I Answer 앱 </string>
-    <string name="settings_should_i_answer_summary">Should I Answer 앱을 이용해 필요없는 번호에서 보낸 메시지를 자동으로 필터링하기</string>
-    <string name="settings_delayed_title">전송 지연</string>
-    <string name="settings_swipe_actions">쓸어넘기기 설정</string>
-    <string name="settings_swipe_actions_summary">대화를 쓸어넘겼을 때 할 작업</string>
-    <string name="settings_swipe_actions_right">오른쪽으로 쓸어넘기기</string>
-    <string name="settings_swipe_actions_left">왼쪽으로 쓸어넘기기</string>
-    <string name="settings_swipe_actions_change">변경</string>
     <string-array name="settings_swipe_actions">
         <item>없음</item>
         <item>아카이브</item>
@@ -220,18 +167,12 @@
     </string-array>
     <string name="settings_delivery_title">전송 확인</string>
     <string name="settings_delivery_summary">전송 성공을 확인합니다</string>
-    <string name="settings_unicode_title">스트립 악센트</string>
-    <string name="settings_unicode_summary">SMS를 주고받을 때, 대문자 없애기</string>
-    <string name="settings_mobile_title">전화번호만 보이기</string>
-    <string name="settings_mobile_summary">메시지를 쓸 때, 전화번호만 보이게 하기</string>
     <string name="settings_mms_size_title">자동으로 MMS 첨부 파일 압축하기</string>
     <string name="settings_sync_title">메시지 동기화 하기</string>
     <string name="settings_sync_summary">기본 안드로이드 SMS 데이터베이스에 다시 동기화하기</string>
-    <string name="settings_about_title">QKSMS에 대해...</string>
     <string name="settings_version">버전 정보 %s</string>
     <string name="settings_logging_enabled">디버그 로깅 설정됨</string>
     <string name="settings_logging_disabled">디버그 로깅 해제됨</string>
-    <string name="settings_delay_duration_hint">기간 (초)을 입력</string>
     <string name="blocked_title">차단</string>
     <string name="blocked_empty">차단된 대화가 여기에 나타납니다.</string>
     <string name="blocked_unblock_dialog_title">차단 해제</string>
@@ -244,47 +185,13 @@
     <string name="about_contact_title">연락처</string>
     <string name="about_license_title">라이선스</string>
     <string name="about_copyright_title">저작권</string>
-    <string name="qksms_plus_description_title">개발을 지원하고 모든 기능을 해제하세요.</string>
-    <string name="qksms_plus_description_summary">배고픈 개발자를 위해 %s 만큼만으로도 구할 수 있습니다.</string>
-    <string name="qksms_plus_upgrade">%1$s %2$s 으로 평생 업그레이드</string>
-    <string name="qksms_plus_upgrade_donate">%1$s %2$s 으로 프리미엄 기능 잠금 해제 및 기부</string>
-    <string name="qksms_plus_thanks_title">QKSMS를 지원해 주셔서 감사합니다!</string>
-    <string name="qksms_plus_thanks_summary">이제 모든 QKSMS+ 기능에 액세스할 수 있습니다</string>
-    <string name="qksms_plus_free_title">QKSMS+는 F-Droid 사용자들에게 무료입니다! 만약 여러분이 개발을 지원하고 싶으시다면, 기부해 주시기 바랍니다.</string>
-    <string name="qksms_plus_donate">페이팔을 통해 기부</string>
-    <string name="qksms_plus_coming_soon">출시 예정</string>
-    <string name="qksms_plus_themes_title">프리미엄 테마</string>
-    <string name="qksms_plus_themes_summary">Material Design 팔레트에선 볼 수 없던 아름다운 테마를 잠금해제 하세요!</string>
-    <string name="qksms_plus_emoji_title">사용자 지정 이모티콘</string>
-    <string name="qksms_plus_emoji_summary">사용자 지정 이모티콘 바로 가기 만들기</string>
-    <string name="qksms_plus_backup_title">메시지 백업</string>
-    <string name="qksms_plus_backup_summary">자동으로 메시지를 백업해서 휴대폰을 바꾸거나 잊어버려도 문제없죠!</string>
-    <string name="qksms_plus_scheduled_title">예약 전송 메시지</string>
-    <string name="qksms_plus_scheduled_summary">특정한 시간에 메시지가 보내지도록 메시지 전송을 예약하세요</string>
-    <string name="qksms_plus_delayed_title">지연 전송</string>
-    <string name="qksms_plus_delayed_summary">지연 전송이라는 멋진 기능이 있답니다!</string>
-    <string name="qksms_plus_night_title">자동 나이트 모드</string>
-    <string name="qksms_plus_night_summary">시간에 따라 나이트 모드 설정하기</string>
-    <string name="qksms_plus_blacklist_title">고급 차단 기능</string>
-    <string name="qksms_plus_blacklist_summary">특정 키워드 및 패턴이 있을 때 차단합니다</string>
-    <string name="qksms_plus_forward_title">자동 전달</string>
-    <string name="qksms_plus_forward_summary">자동으로 특정한 보낸 사람으로부터 메시지를 전달합니다</string>
-    <string name="qksms_plus_respond_title">자동 응답</string>
-    <string name="qksms_plus_respond_summary">미리 설정된 응답으로 받은 메시지에 자동으로 응답합니다</string>
-    <string name="qksms_plus_more_title">더보기</string>
-    <string name="qksms_plus_more_summary">QKSMS는 개발이 활성화되어 있고 여러분의 구입이 모든 미래의 QKSMS+ 기능들이 포함될 것입니다!</string>
-    <string name="widget_loading">불러오는 중&#8230;</string>
+    <string name="widget_loading">불러오는 중...</string>
     <string name="widget_more">더 많은 대화 보기</string>
-    <string name="qkreply_menu_read">읽음으로 표시</string>
-    <string name="qkreply_menu_call">전화하기</string>
-    <string name="qkreply_menu_delete">삭제하기</string>
-    <string name="qkreply_menu_expand">더 보기</string>
-    <string name="qkreply_menu_collapse">적게 표시</string>
-    <string name="qkreply_menu_view">대화 열기</string>
-    <string name="theme_material">Meterial</string>
-    <string name="theme_plus">QKSMS+</string>
-    <string name="theme_hex">HEX</string>
-    <string name="theme_apply">적용하기</string>
+    <string name="reply_menu_read">읽음으로 표시</string>
+    <string name="reply_menu_delete">삭제하기</string>
+    <string name="reply_menu_expand">더 보기</string>
+    <string name="reply_menu_collapse">적게 표시</string>
+    <string name="reply_menu_view">대화 열기</string>
     <string-array name="notification_actions">
         <item>없음</item>
         <item>읽음으로 표시</item>
@@ -301,8 +208,6 @@
     <string name="button_unblock">차단 해제</string>
     <string name="button_undo">되돌리기</string>
     <string name="toast_copied">복사됨</string>
-    <string name="toast_archived">보관된 대화</string>
-    <string name="toast_qksms_plus">이 기능을 사용하려면 QKSMS+ 를 잠금 해제해야 합니다.</string>
     <plurals name="notification_new_messages">
         <item quantity="other">새로운 메세지
 
@@ -357,6 +262,9 @@
     </string-array>
     <string name="title_conversations">메시지</string>
     <string name="title_friends">친구 찾기</string>
+    <string name="menu_search">검색</string>
+    <string name="menu_invite">초대</string>
+    <string name="menu_write">작성</string>
 
 
 </resources>

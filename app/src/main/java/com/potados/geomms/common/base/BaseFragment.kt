@@ -18,6 +18,8 @@ abstract class BaseFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
         optionMenuId()?.let {
             inflater.inflate(it, menu)
             Timber.d("inflate option menu")
@@ -26,7 +28,5 @@ abstract class BaseFragment : Fragment() {
         context?.let {
             menu.setTint(it, it.resolveThemeColor(R.attr.tintPrimary))
         }
-
-        super.onCreateOptionsMenu(menu, inflater)
     }
 }

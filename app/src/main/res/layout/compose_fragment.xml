@@ -39,24 +39,24 @@
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/messages_recyclerview"
+                android:id="@+id/messages"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="16dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp"
                 app:conversation="@{vm.conversation}"
-                app:messages="@{vm.messages}"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="@+id/compose_background"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="@+id/composeBackground"
                 app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
                 app:layout_constraintVertical_bias="0.0"
+                app:messages="@{vm.messages}"
                 app:stackFromEnd="true"
-                tools:listitem="@layout/message_item_in"/>
+                tools:listitem="@layout/message_item_in" />
 
         <View
                 android:layout_width="0dp"
@@ -84,7 +84,7 @@
 
 
         <View
-                android:id="@+id/composeBackground"
+                android:id="@+id/compose_background"
                 android:layout_width="0dp"
                 android:layout_height="8dp"
                 android:layout_marginTop="8dp"
@@ -93,10 +93,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/messageBackground" />
+                app:layout_constraintTop_toTopOf="@id/message_background" />
 
         <View
-                android:id="@+id/messageBackground"
+                android:id="@+id/message_background"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="8dp"
@@ -122,19 +122,21 @@
                 android:paddingStart="8dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toTopOf="@id/message"
-                app:layout_constraintEnd_toEndOf="@id/messageBackground"
-                app:layout_constraintStart_toStartOf="@id/messageBackground"
+                app:layout_constraintEnd_toEndOf="@id/message_background"
+                app:layout_constraintStart_toStartOf="@id/message_background"
                 tools:listitem="@layout/attachment_image_item" />
 
         <EditText
                 android:id="@+id/message"
+                android:textSize="@dimen/textPrimary"
+                android:textColor="@color/textSecondary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
                 android:elevation="4dp"
                 android:gravity="center_vertical"
-                android:hint="Write a message..."
+                android:hint="@string/compose_hint"
                 android:inputType="textLongMessage|textCapSentences|textMultiLine"
                 android:maxLines="6"
                 android:minHeight="44dp"
@@ -143,9 +145,9 @@
                 android:paddingStart="16dp"
                 android:paddingTop="12dp"
                 android:textColorHint="?android:attr/textColorTertiary"
-                app:layout_constraintBottom_toBottomOf="@id/messageBackground"
+                app:layout_constraintBottom_toBottomOf="@id/message_background"
                 app:layout_constraintEnd_toStartOf="@id/send"
-                app:layout_constraintStart_toStartOf="@id/messageBackground" />
+                app:layout_constraintStart_toStartOf="@id/message_background" />
 
         <com.potados.geomms.common.widget.QkTextView
                 android:id="@+id/counter"
@@ -167,8 +169,8 @@
                 android:padding="10dp"
                 android:src="@drawable/ic_send_black_24dp"
                 android:tint="?android:textColorSecondary"
-                app:layout_constraintBottom_toBottomOf="@id/messageBackground"
-                app:layout_constraintEnd_toEndOf="@id/messageBackground"
+                app:layout_constraintBottom_toBottomOf="@id/message_background"
+                app:layout_constraintEnd_toEndOf="@id/message_background"
                 tools:backgroundTint="@color/tools_theme" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
