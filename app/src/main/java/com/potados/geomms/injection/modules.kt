@@ -11,6 +11,10 @@ import org.koin.dsl.module
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.potados.geomms.common.manager.NotificationManagerImplTest
 import com.potados.geomms.common.util.DateFormatter
+import com.potados.geomms.feature.compose.filter.ContactFilter
+import com.potados.geomms.feature.compose.filter.ConversationFilter
+import com.potados.geomms.feature.compose.filter.PhoneNumberFilter
+import com.potados.geomms.feature.compose.filter.RecipientFilter
 import com.potados.geomms.manager.*
 import com.potados.geomms.mapper.*
 import com.potados.geomms.repository.*
@@ -124,6 +128,13 @@ val myModules = module {
     /**********************************************************
      * Repository
      **********************************************************/
+
+    /** Contact Repository */
+    single {
+        ContactRepositoryImpl(
+            context = get()
+        ) as ContactRepository
+    }
 
     /** Conversation Repository */
     single {
@@ -245,6 +256,27 @@ val myModules = module {
     single { DateFormatter(get()) }
 
 
+
+    /**********************************************************
+     * Filter
+     **********************************************************/
+
+    /** Contact Filter */
+    single { ContactFilter(phoneNumberFilter = get()) }
+
+    /** Conversation Filter */
+    single { ConversationFilter(recipientFilter = get()) }
+
+    /** Phone Number Filter */
+    single { PhoneNumberFilter() }
+
+    /** Recipient Filter */
+    single {
+        RecipientFilter(
+            contactFilter = get(),
+            phoneNumberFilter = get()
+        )
+    }
 
 
 

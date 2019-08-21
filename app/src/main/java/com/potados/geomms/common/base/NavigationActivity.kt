@@ -57,22 +57,27 @@ abstract class NavigationActivity : BaseActivity() {
                 Timber.i("add new fragment of id $id")
             }
 
+            if (activeFragmentId == id) {
+                return true
+            }
+
             // Show only destination fragment
             // Do this only when destination fragment is not a
             // currently active fragment
-            supportFragmentManager.fragments.takeIf { activeFragmentId != id }?.forEach {
+            supportFragmentManager.fragments.forEach {
                     // ensure all fragments are NavigationFragment
                     if (it !is NavigationFragment) throw RuntimeException("only NavigationFragment is allowed in NavigationActivity.")
 
                     if (it.navigationItemId() == id) {
                         transaction.show(it)
                         it.onShow()
-                        activeFragmentId = id
                     } else {
                         transaction.hide(it)
                         it.onHide()
                     }
                 }
+
+            activeFragmentId = id
 
             return true
         } catch (e: Throwable) {

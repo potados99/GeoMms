@@ -1,13 +1,7 @@
 package com.potados.geomms.feature.conversations
 
-import android.graphics.Color
-import android.graphics.Typeface
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import com.mikhaellopez.circularimageview.CircularImageView
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
@@ -16,10 +10,8 @@ import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.usecase.SyncMessages
-import com.potados.geomms.util.DateTime
 import io.realm.OrderedRealmCollection
-import io.realm.RealmRecyclerViewAdapter
-import kotlinx.android.synthetic.main.conversation_item.view.*
+import kotlinx.android.synthetic.main.conversation_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -39,7 +31,7 @@ class ConversationsAdapter : BaseRealmAdapter<Conversation>(), KoinComponent {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val view = LayoutInflater
             .from(parent.context)
-            .inflate(R.layout.conversation_item, parent, false)
+            .inflate(R.layout.conversation_list_item, parent, false)
 
         if (viewType == VIEW_TYPE_UNREAD) {
             view.apply {
@@ -58,7 +50,7 @@ class ConversationsAdapter : BaseRealmAdapter<Conversation>(), KoinComponent {
                 if (adapterPosition < 0) return@setOnClickListener
                 val conversation = getItem(adapterPosition) ?: return@setOnClickListener
 
-                navigator.showComposeActivity(conversation)
+                navigator.showConversation(conversation.id)
             }
         }
     }

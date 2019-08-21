@@ -12,6 +12,9 @@ import timber.log.Timber
 abstract class BaseFragment : Fragment() {
     open fun optionMenuId(): Int? = null
 
+    private var menu: Menu? = null
+    fun getOptionsMenu(): Menu? = menu
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(optionMenuId() != null)
@@ -28,5 +31,7 @@ abstract class BaseFragment : Fragment() {
         context?.let {
             menu.setTint(it, it.resolveThemeColor(R.attr.tintPrimary))
         }
+
+        this.menu = menu
     }
 }

@@ -10,10 +10,6 @@ import android.util.LongSparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseRealmAdapter
@@ -30,13 +26,9 @@ import com.potados.geomms.feature.compose.part.PartsAdapter
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.Message
 import com.potados.geomms.model.Recipient
-import com.potados.geomms.util.DateTime
-import io.realm.RealmRecyclerViewAdapter
-import kotlinx.android.synthetic.main.conversation_item.view.*
-import kotlinx.android.synthetic.main.message_item_in.view.*
+import kotlinx.android.synthetic.main.message_list_item_in.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import java.lang.RuntimeException
 import java.util.HashMap
 import java.util.concurrent.TimeUnit
 
@@ -59,10 +51,10 @@ class MessagesAdapter(
 
         val view = when (viewType) {
             VIEW_TYPE_MESSAGE_OUT -> {
-                layoutInflater.inflate(R.layout.message_item_out, parent, false)
+                layoutInflater.inflate(R.layout.message_list_item_out, parent, false)
             }
             else -> {
-                layoutInflater.inflate(R.layout.message_item_in, parent, false).apply {
+                layoutInflater.inflate(R.layout.message_list_item_in, parent, false).apply {
                     avatar.threadId = data?.first()?.threadId ?: 0
                 }
             }

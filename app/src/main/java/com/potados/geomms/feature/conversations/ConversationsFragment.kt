@@ -73,6 +73,17 @@ class ConversationsFragment : NavigationFragment() {
         })
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.write -> {
+                navigator.showCompose()
+            }
+        }
+
+        return true // super.onOptionsItemSelected(item)
+    }
+
     override fun onShow() {
         super.onShow()
         Timber.i("ConversationsFragment is shown")

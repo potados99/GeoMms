@@ -42,7 +42,7 @@
                 android:id="@+id/conversations"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                tools:listitem="@layout/conversation_item"
+                tools:listitem="@layout/conversation_list_item"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:conversations="@{vm.conversations}"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar"

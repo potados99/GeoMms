@@ -24,3 +24,9 @@ fun Menu.setTint(context: Context?, color: Int) {
         }
     }
 }
+
+fun Menu.setVisible(visible: Boolean) {
+    iterator().forEach {
+        it.isVisible = visible
+    }
+}

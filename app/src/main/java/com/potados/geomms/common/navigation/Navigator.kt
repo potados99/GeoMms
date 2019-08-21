@@ -3,10 +3,9 @@ package com.potados.geomms.common.navigation
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.provider.Telephony
 import com.potados.geomms.common.GiveMePermissionActivity
-import com.potados.geomms.common.MainActivity
+import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.common.MakeMeDefaultAppActivity
 import com.potados.geomms.model.Conversation
@@ -26,9 +25,26 @@ class Navigator (
         }
     }
 
-    fun showComposeActivity(conversation: Conversation) {
+    fun showConversation(threadId: Long, query: String? = null) {
         whenPossible {
-            startActivityWithFlag(ComposeActivity.callingIntent(it, conversation.id))
+            startActivityWithFlag(
+                ComposeActivity.callingIntent(it)
+                    .putExtra("threadId", threadId)
+                    .putExtra("query", query)
+            )
+        }
+    }
+
+    fun showCompose(body: String? = null, images: List<Uri>? = null) {
+        whenPossible {
+            val intent = ComposeActivity.callingIntent(it)
+                .putExtra(Intent.EXTRA_TEXT, body)
+
+            images?.takeIf { list -> list.isNotEmpty() }?.let {
+                intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(images))
+            }
+
+            startActivityWithFlag(intent)
         }
     }
 

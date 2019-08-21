@@ -32,7 +32,7 @@
         </activity>
         <activity android:name="com.potados.geomms.common.GiveMePermissionActivity"/>
         <activity android:name="com.potados.geomms.common.MakeMeDefaultAppActivity"/>
-        <activity android:name="com.potados.geomms.common.MainActivity"
+        <activity android:name="com.potados.geomms.feature.main.MainActivity"
                   android:windowSoftInputMode="adjustNothing" />
         <activity android:name="com.potados.geomms.feature.compose.ComposeActivity">
             <intent-filter>

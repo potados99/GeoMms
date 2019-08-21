@@ -8,8 +8,7 @@ import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Connection
-import io.realm.RealmRecyclerViewAdapter
-import kotlinx.android.synthetic.main.connection_item.view.*
+import kotlinx.android.synthetic.main.connection_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -24,7 +23,7 @@ class ConnectionsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.connection_item, parent, false)
+            .inflate(R.layout.connection_list_item, parent, false)
 
         return BaseViewHolder(view).apply {
             view.setOnClickListener {

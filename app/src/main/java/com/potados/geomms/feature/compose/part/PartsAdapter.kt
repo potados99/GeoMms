@@ -32,7 +32,7 @@ import com.potados.geomms.extension.isVideo
 import com.potados.geomms.feature.compose.BubbleUtils.Companion.canGroup
 import com.potados.geomms.model.Message
 import com.potados.geomms.model.MmsPart
-import kotlinx.android.synthetic.main.message_item_in.view.*
+import kotlinx.android.synthetic.main.message_list_item_in.view.*
 
 class PartsAdapter(context: Context, navigator: Navigator) : BaseAdapter<MmsPart>() {
 

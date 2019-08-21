@@ -1,4 +1,4 @@
-package com.potados.geomms.common
+package com.potados.geomms.feature.main
 
 import android.content.Context
 import android.content.Intent

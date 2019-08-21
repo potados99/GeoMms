@@ -74,7 +74,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/incoming_requests_text"
                     app:incoming_requests="@{vm.incomingRequests}"
-                    tools:listitem="@layout/request_item"/>
+                    tools:listitem="@layout/request_list_item"/>
 
             <!--요청목록 마감-->
             <View
@@ -105,7 +105,7 @@
                 android:layout_marginStart="8dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:connections="@{vm.connections}"
-                tools:listitem="@layout/connection_item"/>
+                tools:listitem="@layout/connection_list_item"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
