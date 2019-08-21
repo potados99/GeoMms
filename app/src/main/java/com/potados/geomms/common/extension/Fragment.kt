@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
+import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.extension.withNonNull
 import kotlinx.android.synthetic.main.single_fragment_activity.*
 
@@ -56,6 +57,10 @@ inline fun FragmentManager.showOnly(predicate: (Fragment) -> Boolean): Boolean  
     executePendingTransactions()
 
     return true
+}
+
+fun FragmentManager.findFragmentByNavigationId(id: Int): Fragment? {
+    return fragments.find { (it as? NavigationFragment)?.navigationItemId() == id }
 }
 
 /**

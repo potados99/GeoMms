@@ -54,6 +54,14 @@ class ConversationsFragment : NavigationFragment() {
             .root
     }
 
+    override fun onShow() {
+        super.onShow()
+        Timber.i("ConversationsFragment is shown")
+    }
+    override fun onHide() {
+        super.onHide()
+        Timber.i("ConversationsFragment is hidden")
+    }
     override fun onResume() {
         super.onResume()
         permissionManager.refresh()

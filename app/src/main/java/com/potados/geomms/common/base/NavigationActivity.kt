@@ -2,12 +2,14 @@ package com.potados.geomms.common.base
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.addAll
-import com.potados.geomms.common.extension.inImmediateTransaction
+import com.potados.geomms.common.extension.findFragmentByNavigationId
 import com.potados.geomms.common.extension.inTransaction
 import com.potados.geomms.common.extension.showOnly
 import kotlinx.android.synthetic.main.navigation_activity.*
+import timber.log.Timber
 
 abstract class NavigationActivity : BaseActivity() {
 
@@ -15,25 +17,68 @@ abstract class NavigationActivity : BaseActivity() {
     abstract fun navigationMenuId(): Int
     open fun defaultMenuItemId(): Int = -1
 
+    private var activeFragmentId: Int = -1
+
+    /**
+     * Add fragments on-demand
+     */
     private val onNavigationItemChanged = { menuItem: MenuItem ->
-        supportFragmentManager.showOnly {
-            (it as NavigationFragment).navigationItemId() == menuItem.itemId
-        }
+        addOrShowFragment(menuItem.itemId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.navigation_activity)
 
-        addFragments(savedInstanceState)
+        savedInstanceState ?: addOrShowFragment(defaultMenuItemId())
         setNavigationView()
     }
 
-    private fun addFragments(savedInstanceState: Bundle?) {
-        savedInstanceState ?:
-        supportFragmentManager.inImmediateTransaction {
-            addAll(R.id.fragment_container, fragments())
-            this
+    /**
+     * Show only fragment that has [id] as NavigationItemId.
+     * If the destination fragment is not added to fragment manager, add it.
+     */
+    private fun addOrShowFragment(id: Int): Boolean {
+        val transaction = supportFragmentManager.beginTransaction()
+
+        try {
+            // Ensure destination fragment is added
+            if (supportFragmentManager.findFragmentByNavigationId(id) == null) {
+                val fragmentToAdd = fragments().find { it.navigationItemId() == id } as? Fragment
+                    ?: throw IllegalArgumentException("fragment of corresponding id $id not exist.")
+
+                transaction.add(R.id.fragment_container, fragmentToAdd)
+                Timber.i("add new fragment of id $id")
+            }
+
+            // Show only destination fragment
+            // Do this only when destination fragment is not a
+            // currently active fragment
+            supportFragmentManager.fragments.takeIf { activeFragmentId != id }?.forEach {
+                    // ensure all fragments are NavigationFragment
+                    if (it !is NavigationFragment) throw RuntimeException("only NavigationFragment is allowed in NavigationActivity.")
+
+                    if (it.navigationItemId() == id) {
+                        transaction.show(it)
+                        it.onShow()
+                        activeFragmentId = id
+                    } else {
+                        transaction.hide(it)
+                        it.onHide()
+                    }
+                }
+
+            return true
+        } catch (e: Throwable) {
+            Timber.w(e)
+            return false
+        } finally {
+            // commit() does not add fragment immediately.
+            // It makes problem when calling [addOrShowFragment] rapidly
+            // because it does not ensure fragment is added after the call.
+            // So the addition can occur over one time, which throws exception.
+            // Use commitNow instead.
+            transaction.commitNow()
         }
     }
 

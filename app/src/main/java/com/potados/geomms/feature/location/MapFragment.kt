@@ -31,6 +31,7 @@ import android.view.MotionEvent
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import timber.log.Timber
 
 
 /**
@@ -42,6 +43,7 @@ class MapFragment : NavigationFragment(),
     RequestsAdapter.RequestClickListener
 {
 
+    override fun optionMenuId(): Int? = R.menu.map
     override fun navigationItemId(): Int = R.id.menu_item_navigation_map
 
     private lateinit var mapViewModel: MapViewModel
@@ -51,32 +53,6 @@ class MapFragment : NavigationFragment(),
     private val requestsAdapter = RequestsAdapter(this)
 
     private var map: GoogleMap? = null
-
-    private val onItemTouchListener: RecyclerView.OnItemTouchListener = object : RecyclerView.OnItemTouchListener {
-        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-            setScrollable(viewDataBinding.sheet, rv)
-            return false
-        }
-
-        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
-
-        }
-
-        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-
-        }
-    }
-
-    private fun setScrollable(bottomSheet: View, recyclerView: RecyclerView) {
-        val params = bottomSheet.layoutParams
-        if (params is CoordinatorLayout.LayoutParams) {
-            val coordinatorLayoutParams = params as CoordinatorLayout.LayoutParams
-            val behavior = coordinatorLayoutParams.getBehavior()
-            if (behavior != null && behavior is CustomBottomSheetBehavior<*>)
-                (behavior as CustomBottomSheetBehavior<*>).setNestedScrollingChildRef(recyclerView)
-        }
-    }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,14 +71,17 @@ class MapFragment : NavigationFragment(),
             .root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initializeView(view, savedInstanceState)
+    override fun onShow() {
+        super.onShow()
+        Timber.i("MapFragment is shown")
     }
-
+    override fun onHide() {
+        super.onHide()
+        Timber.i("MapFragment is hidden")
+    }
     override fun onResume() {
         super.onResume()
-        map_view?.onResume()
+        viewDataBinding.mapView.onResume()
 
         Realm.getDefaultInstance().executeTransaction {
             for (i in (0..15)) {
@@ -132,15 +111,15 @@ class MapFragment : NavigationFragment(),
     }
     override fun onPause() {
         super.onPause()
-        map_view?.onPause()
+        viewDataBinding.mapView.onPause()
     }
     override fun onDestroy() {
         super.onDestroy()
-        map_view?.onDestroy()
+        viewDataBinding.mapView.onDestroy()
     }
     override fun onLowMemory() {
         super.onLowMemory()
-        map_view?.onLowMemory()
+        viewDataBinding.mapView.onLowMemory()
     }
 
     override fun onMapReady(map: GoogleMap?) {
@@ -185,20 +164,12 @@ class MapFragment : NavigationFragment(),
     private fun initializeView(view: View, savedInstanceState: Bundle?) {
         with(view.map_view) {
             onCreate(savedInstanceState)
-            getMapAsync(this@MapFragment) /* 준비 끝나면 onMapReady 호출됨. */
+            getMapAsync(this@MapFragment) // onMapReady called after this done
         }
 
         with(view.connections) {
-
-            // addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
-
             connectionsAdapter.emptyView = view.empty_view
             adapter = connectionsAdapter
-
-            /**
-             * 스크롤 이벤트가 리사이클러뷰에게 도착할 수 있게 해줍니다.
-             */
-            // ViewCompat.setNestedScrollingEnabled(this, true)
 
             addOnItemTouchListener(onItemTouchListener)
         }
@@ -245,5 +216,28 @@ class MapFragment : NavigationFragment(),
 
     override fun onRequestClick(request: ConnectionRequest) {
         Notify(context).short("Ya!!")
+    }
+
+
+    /**
+     * Pass touch events of Bottom Sheet to Recycler View.
+     */
+    private val onItemTouchListener: RecyclerView.OnItemTouchListener = object : RecyclerView.OnItemTouchListener {
+        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+            setScrollable(viewDataBinding.sheet, rv)
+            return false
+        }
+        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
+        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+    }
+
+    private fun setScrollable(bottomSheet: View, recyclerView: RecyclerView) {
+        val params = bottomSheet.layoutParams
+        if (params is CoordinatorLayout.LayoutParams) {
+            val coordinatorLayoutParams = params as CoordinatorLayout.LayoutParams
+            val behavior = coordinatorLayoutParams.getBehavior()
+            if (behavior != null && behavior is CustomBottomSheetBehavior<*>)
+                (behavior as CustomBottomSheetBehavior<*>).setNestedScrollingChildRef(recyclerView)
+        }
     }
 }
