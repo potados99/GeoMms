@@ -14,9 +14,7 @@ import timber.log.Timber
  */
 class MainActivity : NavigationActivity() {
 
-    private val _fragments= listOf(ConversationsFragment(), MapFragment())
-
-    override fun fragments(): List<NavigationFragment> = _fragments
+    override val fragments: List<NavigationFragment> = listOf(ConversationsFragment(), MapFragment())
 
     override fun navigationMenuId(): Int = R.menu.bottom_nav
 

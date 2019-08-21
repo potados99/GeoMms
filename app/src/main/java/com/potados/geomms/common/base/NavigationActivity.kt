@@ -13,7 +13,8 @@ import timber.log.Timber
 
 abstract class NavigationActivity : BaseActivity() {
 
-    abstract fun fragments(): List<NavigationFragment>
+    abstract val fragments: List<NavigationFragment>
+
     abstract fun navigationMenuId(): Int
     open fun defaultMenuItemId(): Int = -1
 
@@ -50,7 +51,7 @@ abstract class NavigationActivity : BaseActivity() {
         try {
             // Ensure destination fragment is added
             if (supportFragmentManager.findFragmentByNavigationId(id) == null) {
-                val fragmentToAdd = fragments().find { it.navigationItemId() == id } as? Fragment
+                val fragmentToAdd = fragments.find { it.navigationItemId() == id } as? Fragment
                     ?: throw IllegalArgumentException("fragment of corresponding id $id not exist.")
 
                 transaction.add(R.id.fragment_container, fragmentToAdd)

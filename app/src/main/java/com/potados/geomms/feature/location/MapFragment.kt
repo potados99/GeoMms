@@ -1,11 +1,13 @@
 package com.potados.geomms.feature.location
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -27,10 +29,11 @@ import kotlinx.android.synthetic.main.map_fragment.view.map_view
 import kotlinx.android.synthetic.main.map_fragment.view.toolbar
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import androidx.recyclerview.widget.RecyclerView
-import android.view.MotionEvent
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.potados.geomms.common.navigation.Navigator
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 /**
@@ -45,6 +48,8 @@ class MapFragment : NavigationFragment(),
     override fun optionMenuId(): Int? = R.menu.map
     override fun navigationItemId(): Int = R.id.menu_item_navigation_map
 
+    private val navigator: Navigator by inject()
+
     private lateinit var mapViewModel: MapViewModel
     private lateinit var viewDataBinding: MapFragmentBinding
 
@@ -53,11 +58,18 @@ class MapFragment : NavigationFragment(),
 
     private var map: GoogleMap? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mapViewModel = getViewModel()
+        context?.registerReceiver(object: BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                intent?.getStringExtra("address")?.let {
+                    mapViewModel.request(it)
+                    Notify(context).short("New request to $it")
+                }
+            }
+        }, IntentFilter("inviteContact"))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -68,6 +80,16 @@ class MapFragment : NavigationFragment(),
             .apply { setSupportActionBar(toolbar = root.toolbar, title = false, upButton = false) }
             .apply { initializeView(root, savedInstanceState) }
             .root
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.invite -> {
+                navigator.showInvite()
+            }
+        }
+
+        return true
     }
 
     override fun onShow() {
@@ -233,7 +255,7 @@ class MapFragment : NavigationFragment(),
     private fun setScrollable(bottomSheet: View, recyclerView: RecyclerView) {
         val params = bottomSheet.layoutParams
         if (params is CoordinatorLayout.LayoutParams) {
-            val coordinatorLayoutParams = params as CoordinatorLayout.LayoutParams
+            val coordinatorLayoutParams = params
             val behavior = coordinatorLayoutParams.getBehavior()
             if (behavior != null && behavior is CustomBottomSheetBehavior<*>)
                 behavior.setNestedScrollingChildRef(recyclerView)

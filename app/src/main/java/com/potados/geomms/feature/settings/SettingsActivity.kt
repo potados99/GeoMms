@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.settings_activity.*
 
 class SettingsActivity : SingleFragmentActivity() {
 
-    override fun fragment(): Fragment = SettingsFragment()
+    override val fragment: Fragment = SettingsFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

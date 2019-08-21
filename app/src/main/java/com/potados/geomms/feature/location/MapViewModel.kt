@@ -25,4 +25,8 @@ class MapViewModel : ViewModel(), KoinComponent {
     val incomingRequests = locationService.getIncomingRequests()
     val outgoingRequests = locationService.getOutgoingRequests()
     val connections = locationService.getConnections()
+
+    fun request(address: String) {
+        locationService.requestNewConnection(address, 1800000)
+    }
 }

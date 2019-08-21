@@ -10,7 +10,7 @@ import com.potados.geomms.common.extension.inImmediateTransaction
 
 abstract class SingleFragmentActivity : BaseActivity() {
 
-    abstract fun fragment(): Fragment
+    abstract val fragment: Fragment
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +23,7 @@ abstract class SingleFragmentActivity : BaseActivity() {
     private fun addFragments(savedInstanceState: Bundle?) =
         savedInstanceState ?:
         supportFragmentManager.inImmediateTransaction {
-            add(R.id.fragment_container, fragment())
+            add(R.id.fragment_container, fragment)
             this
         }
 }

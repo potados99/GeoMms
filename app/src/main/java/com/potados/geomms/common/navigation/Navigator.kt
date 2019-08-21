@@ -8,6 +8,7 @@ import com.potados.geomms.common.GiveMePermissionActivity
 import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.common.MakeMeDefaultAppActivity
+import com.potados.geomms.feature.location.InviteActivity
 import com.potados.geomms.model.Conversation
 import timber.log.Timber
 
@@ -54,6 +55,10 @@ class Navigator (
             intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, context.packageName)
         }
         startActivityWithFlag(intent)
+    }
+
+    fun showInvite() {
+        startActivityWithFlag(InviteActivity.callingIntent(context))
     }
 
     private fun showGiveMePermission() {

@@ -15,11 +15,9 @@ import com.potados.geomms.common.extension.inImmediateTransaction
  */
 class ComposeActivity : SingleFragmentActivity() {
 
-    override fun fragment(): Fragment = ComposeFragment()
+    override val fragment: Fragment = ComposeFragment()
 
     companion object {
-        private const val INTENT_PARAM_CONVERSATION = "com.potados.INTENT_PARAM_CONVERSATION"
-
         fun callingIntent(context: Context) =
             Intent(context, ComposeActivity::class.java)
     }

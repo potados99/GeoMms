@@ -58,7 +58,6 @@ class ComposeViewModel : ViewModel(), KoinComponent {
             sharedText = ""
             attatchments = Attachments(listOf())
 
-
         } else {
             // conversation is set.
             // handle messages, shared text and attachments.
