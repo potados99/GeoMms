@@ -13,6 +13,7 @@ import com.potados.geomms.common.base.NavigationActivity
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.extension.withNonNull
+import com.potados.geomms.service.LocationSupportService
 import kotlinx.android.synthetic.main.drawer_view.*
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
@@ -30,6 +31,8 @@ class MainActivity : NavigationActivity(), KoinComponent {
     override val defaultMenuItemId: Int = R.id.menu_item_navigation_message
     override val layoutId: Int = R.layout.main_activity
 
+    private val service: LocationSupportService by inject()
+
     private val navigator: Navigator by inject()
 
     private lateinit var toggle: ActionBarDrawerToggle
@@ -39,6 +42,7 @@ class MainActivity : NavigationActivity(), KoinComponent {
 
         setDrawer()
         setVersionView()
+        setService()
     }
 
     private fun setDrawer() {
@@ -65,6 +69,14 @@ class MainActivity : NavigationActivity(), KoinComponent {
         val currentVersion = getString(R.string.version, BuildConfig.VERSION_NAME)
 
         current_version.text = currentVersion
+    }
+
+    /**
+     * Until user tab the Map tab, this service does not get started.
+     * So do it here manually.
+     */
+    private fun setService() {
+        service.start()
     }
 
     companion object {

@@ -301,9 +301,10 @@ val myModules = module {
     /** 현재 위치 저장소 */
     single {
         LocationRepositoryImpl(
-            androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager,
-            5000,
-            5.0f
+            locationManager = androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager,
+            permissionManager = get(),
+            minTime = 5000,
+            minDistance = 5.0f
         ) as LocationRepository
     }
 

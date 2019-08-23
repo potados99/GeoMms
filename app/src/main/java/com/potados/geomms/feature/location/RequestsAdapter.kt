@@ -26,6 +26,11 @@ class RequestsAdapter(
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
                 listener.onRequestClick(item)
             }
+            view.setOnLongClickListener {
+                val item = getItem(adapterPosition) ?: return@setOnLongClickListener false
+                listener.onRequestLongClick(item)
+                true
+            }
         }
     }
 
@@ -39,6 +44,7 @@ class RequestsAdapter(
 
     interface RequestClickListener {
         fun onRequestClick(request: ConnectionRequest)
+        fun onRequestLongClick(request: ConnectionRequest)
     }
 
 }

@@ -54,14 +54,14 @@ abstract class BaseRealmAdapter<T: RealmModel> : RealmRecyclerViewAdapter<T, Bas
         removeListener(data)
     }
 
-    private fun addListener(data: OrderedRealmCollection<T>?) {
+    protected open fun addListener(data: OrderedRealmCollection<T>?) {
         when (data) {
             is RealmResults<T> -> data.addChangeListener(emptyListener)
             is RealmList<T> -> data.addChangeListener(emptyListener)
         }
     }
 
-    private fun removeListener(data: OrderedRealmCollection<T>?) {
+    protected open fun removeListener(data: OrderedRealmCollection<T>?) {
         when (data) {
             is RealmResults<T> -> data.removeChangeListener(emptyListener)
             is RealmList<T> -> data.removeChangeListener(emptyListener)

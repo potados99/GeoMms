@@ -1,5 +1,7 @@
 package com.potados.geomms.functional
 
+import timber.log.Timber
+
 /**
  * A generic class that holds a value with its loading status.
  */
@@ -42,6 +44,7 @@ sealed class Result<out T> {
             return try {
                 Success(body())
             } catch (e: Exception) {
+                Timber.e(e)
                 Error(e)
             }
         }

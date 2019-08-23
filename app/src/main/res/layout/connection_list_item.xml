@@ -21,6 +21,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
     />
 
+    <!-- Title -->
     <TextView
             android:id="@+id/name"
             style="@style/TextPrimary"
@@ -32,6 +33,7 @@
             tools:text="TextView"
     />
 
+    <!-- Status -->
     <TextView
             android:id="@+id/status"
             style="@style/TextSecondary"
@@ -41,5 +43,19 @@
             app:layout_constraintStart_toEndOf="@+id/avatar"
             android:layout_marginStart="16dp"
             tools:text="TextView"/>
+
+    <!-- Duration remaining -->
+    <com.dinuscxj.progressbar.CircleProgressBar
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:id="@+id/time_left"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:style="solid"
+            app:progress_text_size="0dp"
+            app:progress_start_color="?attr/tintPrimary"
+            app:progress_end_color="?attr/tintPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

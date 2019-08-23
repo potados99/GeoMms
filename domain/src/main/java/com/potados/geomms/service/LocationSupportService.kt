@@ -15,13 +15,11 @@ import io.realm.RealmResults
  */
 interface LocationSupportService {
 
-
+    fun start()
 
     fun getConnections(): RealmResults<Connection>
 
-    fun getConnection(id: Long): Connection
-
-    fun removeConnection(id: Long)
+    fun getConnection(id: Long): Connection?
 
     fun getIncomingRequests(): RealmResults<ConnectionRequest>
 
@@ -29,12 +27,12 @@ interface LocationSupportService {
 
 
     /** I request YOU to join. */
-    fun requestNewConnection(address: String, duration: Long): ConnectionRequest
+    fun requestNewConnection(address: String, duration: Long)
     /** YOU requested me to join. So I handle it. */
     fun beRequestedNewConnection(packet: Packet)
 
     /** I accept YOUr request. */
-    fun acceptConnectionRequest(request: ConnectionRequest): Connection
+    fun acceptConnectionRequest(request: ConnectionRequest)
     /** YOU accepted my request. I handle it. */
     fun beAcceptedConnectionRequest(packet: Packet)
 

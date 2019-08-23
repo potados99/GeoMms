@@ -22,4 +22,6 @@ interface PermissionManager {
     fun hasContacts(): Boolean
 
     fun hasPhone(): Boolean
+
+    fun hasLocation(): Boolean
 }

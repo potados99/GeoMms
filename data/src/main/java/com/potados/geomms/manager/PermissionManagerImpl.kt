@@ -23,6 +23,7 @@ class PermissionManagerImpl(
 
     override fun refresh() {
         _isDefaultSms.value = isDefaultSms()
+
         Timber.i("value posted to _isDefaultSms")
     }
 
@@ -42,21 +43,11 @@ class PermissionManagerImpl(
         return _isDefaultSms
     }
 
-    override fun hasReadSms(): Boolean {
-        return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun hasSendSms(): Boolean {
-        return ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun hasContacts(): Boolean {
-        return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
-    }
-
-    override fun hasPhone(): Boolean {
-        return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
-    }
+    override fun hasReadSms(): Boolean = isGranted(Manifest.permission.READ_SMS)
+    override fun hasSendSms(): Boolean = isGranted(Manifest.permission.SEND_SMS)
+    override fun hasContacts(): Boolean = isGranted(Manifest.permission.READ_CONTACTS)
+    override fun hasPhone(): Boolean = isGranted(Manifest.permission.READ_PHONE_STATE)
+    override fun hasLocation(): Boolean = isGranted(Manifest.permission.ACCESS_FINE_LOCATION)
 
     private fun isGranted(permission: String): Boolean =
         ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED

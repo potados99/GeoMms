@@ -105,32 +105,6 @@ class MapFragment : NavigationFragment(),
     override fun onResume() {
         super.onResume()
         viewDataBinding.mapView.onResume()
-
-        Realm.getDefaultInstance().executeTransaction {
-            for (i in (0..15)) {
-                it.insertOrUpdate(
-                    Connection(
-                        id = 12345 + i.toLong(),
-                        recipient = Recipient(123, "01029222661", null),
-                        duration = 1800000,
-                        date = System.currentTimeMillis()- 3000,
-                        lastUpdate = System.currentTimeMillis()
-                    )
-                )
-            }
-
-            for (i in (0..10)) {
-                it.insertOrUpdate(
-                    ConnectionRequest(
-                        connectionId = 13579 + i.toLong(),
-                        recipient = Recipient(12345, "01043732663", null),
-                        duration = 1800000,
-                        date = System.currentTimeMillis()- 5000,
-                        isInbound = true
-                    )
-                )
-            }
-        }
     }
     override fun onPause() {
         super.onPause()
@@ -234,13 +208,26 @@ class MapFragment : NavigationFragment(),
     }
 
     override fun onConnectionClick(connection: Connection) {
-        Notify(context).short("Hello!")
+        // TODO show on map
+    }
+
+    override fun onConnectionLongClick(connection: Connection) {
+        mapViewModel.delete(connection)
+
+        Notify(context).short("Deleted connection.")
     }
 
     override fun onRequestClick(request: ConnectionRequest) {
-        Notify(context).short("Ya!!")
+        mapViewModel.accept(request)
+
+        Notify(context).short("Accept.")
     }
 
+    override fun onRequestLongClick(request: ConnectionRequest) {
+        mapViewModel.refuse(request)
+
+        Notify(context).short("Refuse.")
+    }
 
     /**
      * Pass touch events of Bottom Sheet to Recycler View.

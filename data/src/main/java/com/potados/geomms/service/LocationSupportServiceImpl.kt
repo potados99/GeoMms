@@ -15,9 +15,7 @@ import com.potados.geomms.receiver.SendUpdateReceiver
 import com.potados.geomms.receiver.SendUpdateReceiver.Companion.EXTRA_CONNECTION_ID
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.LocationRepository
-import com.potados.geomms.util.Reflection
-import com.potados.geomms.util.Scheduler
-import com.potados.geomms.util.Types
+import com.potados.geomms.util.*
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
@@ -31,25 +29,30 @@ class LocationSupportServiceImpl(
     private val keyManager: KeyManager
 ) : LocationSupportService {
 
-    private val realm = Realm.getDefaultInstance()
+    private var started = false
 
-    init {
+    override fun start() {
+        if (started) return
         restoreTasks()
+        started = true
     }
 
     override fun getConnections(): RealmResults<Connection> {
-        return realm.where(Connection::class.java)
+        return Realm.getDefaultInstance().where(Connection::class.java)
             .sort("date", Sort.ASCENDING)
             .findAll()
     }
 
-    /**
-     * @throws IllegalArgumentException when nothing found
-     */
-    override fun getConnection(id: Long): Connection {
-        return realm.where(Connection::class.java)
+    override fun getConnection(id: Long): Connection? {
+        val connection = Realm.getDefaultInstance().where(Connection::class.java)
             .equalTo("id", id)
-            .findFirst() ?: throw IllegalArgumentException("connection of id $id does not exist.")
+            .findFirst()
+
+        if (connection == null) {
+            Timber.w("Connection of id $id does not exist.")
+        }
+
+        return connection
     }
 
     /**
@@ -61,33 +64,23 @@ class LocationSupportServiceImpl(
             ?: throw RuntimeException("conversation of address $address must exist.")
     }
 
-    override fun removeConnection(id: Long) {
-        val connection = getConnection(id)
-
-        unregisterTask(connection) // stop automatically sending update.
-
-        realm.executeTransaction {
-            // no cascading delete!
-            connection.deleteFromRealm()
-        }
-    }
 
     override fun getIncomingRequests(): RealmResults<ConnectionRequest> {
-        return realm.where(ConnectionRequest::class.java)
+        return  Realm.getDefaultInstance().where(ConnectionRequest::class.java)
             .sort("date", Sort.ASCENDING)
             .equalTo("isInbound", true)
             .findAll()
     }
 
     override fun getOutgoingRequests(): RealmResults<ConnectionRequest> {
-        return realm.where(ConnectionRequest::class.java)
+        return  Realm.getDefaultInstance().where(ConnectionRequest::class.java)
             .sort("date", Sort.ASCENDING)
             .equalTo("isInbound", false)
             .findAll()
     }
 
 
-    override fun requestNewConnection(address: String, duration: Long): ConnectionRequest {
+    override fun requestNewConnection(address: String, duration: Long) {
         val recipient = getRecipient(address)
 
         var request = ConnectionRequest(
@@ -100,11 +93,17 @@ class LocationSupportServiceImpl(
 
         sendPacket(address, Packet.ofRequestingNewConnection(request))
 
-        realm.executeTransaction { request = it.copyToRealmOrUpdate(request) }
-
-        return request
+        Realm.getDefaultInstance().executeTransaction { request = it.copyToRealmOrUpdate(request) }
     }
     override fun beRequestedNewConnection(packet: Packet) {
+        // prevent double accepting and creating connection
+        val found = Realm.getDefaultInstance()
+            .where(Connection::class.java)
+            .equalTo("id", packet.connectionId)
+            .findFirst()
+
+        if (found != null) return
+
         val request = ConnectionRequest(
             connectionId = packet.connectionId,
             recipient = getRecipient(packet.address),
@@ -113,47 +112,69 @@ class LocationSupportServiceImpl(
             duration = packet.duration
         )
 
-        realm.executeTransaction { it.insertOrUpdate(request) }
+        Timber.i("New incoming request: ${packet.connectionId}")
+
+        Realm.getDefaultInstance().executeTransaction { it.insertOrUpdate(request) }
     }
 
     /**
      * @throws IllegalAccessError when [request] is not inbound
      * @throws IllegalArgumentException when [request] has no recipients
      */
-    override fun acceptConnectionRequest(request: ConnectionRequest): Connection {
+    override fun acceptConnectionRequest(request: ConnectionRequest) {
         if (!request.isInbound) throw IllegalAccessError("Cannot accept request not heading to isInbound.")
         if (request.recipient == null) throw IllegalArgumentException("Request without recipient is impossible.")
 
+        val realm = Realm.getDefaultInstance()
+
         // prevent double accepting and creating connection
-        val found = realm
+        val found =  Realm.getDefaultInstance()
             .where(Connection::class.java)
             .equalTo("id", request.connectionId)
             .findFirst()
 
-        if (found != null) return found
-
-        // add connection
-        var connection = Connection.fromAcceptedRequest(request)
-        realm.executeTransaction { realm -> connection = realm.copyToRealm(connection) }
+        if (found != null) return
 
         // tell it to YOU
         request.recipient?.let {
             sendPacket(it.address, Packet.ofAcceptingRequest(request))
         }
 
-        return connection
+        // add connection, delete request
+        val connection = Connection.fromAcceptedRequest(request)
+
+        realm.executeTransaction { realm ->
+            realm.insertOrUpdate(connection)
+            request.deleteFromRealm()
+        }
+
+        Timber.i("New connection: ${connection.id}")
+
+        // start sending updates
+        registerTask(connection)
+
+        realm.close()
     }
     override fun beAcceptedConnectionRequest(packet: Packet) {
+        val realm = Realm.getDefaultInstance()
+
         realm.where(ConnectionRequest::class.java)
             .equalTo("connectionId", packet.connectionId)
-            .equalTo("isInbound", true)
+            .equalTo("isInbound", false) // outbound request accepted
             .findFirst()
             ?.let { request ->
-                realm.executeTransaction {
-                    it.insertOrUpdate(Connection.fromAcceptedRequest(request))
-                }
+                // add connection
+                val connection = Connection.fromAcceptedRequest(request)
+                realm.executeTransaction { it.insertOrUpdate(connection) }
+
+                Timber.i("New connection: ${connection.id}")
+
+                // start sending updates
+                registerTask(connection)
             }
             ?: Timber.w("cannot find corresponding pending request for ACCEPT_CONNECT.")
+
+        realm.close()
     }
 
     /**
@@ -164,12 +185,18 @@ class LocationSupportServiceImpl(
         if (!request.isInbound) throw IllegalAccessError("Cannot refuse request not heading to isInbound.")
         if (request.recipient == null) throw IllegalArgumentException("Request without recipient is impossible.")
 
+        // let you know
         request.recipient?.let {
             sendPacket(it.address, Packet.ofRefusingRequest(request))
         }
+        
+        // delete
+        Realm.getDefaultInstance().executeTransaction {
+            request.deleteFromRealm()
+        }
     }
     override fun beRefusedConnectionRequest(packet: Packet) {
-        realm.where(ConnectionRequest::class.java)
+         Realm.getDefaultInstance().where(ConnectionRequest::class.java)
             .equalTo("connectionId", packet.connectionId)
             .equalTo("isInbound", true)
             .findFirst()
@@ -178,15 +205,13 @@ class LocationSupportServiceImpl(
     }
 
     override fun sendUpdate(connectionId: Long) {
-        val connection = getConnection(connectionId)
+        val connection = getConnection(connectionId) ?: return
         val packet = Packet.ofSendingData(connection, locationRepo.getCurrentLocation() ?: return)
 
         sendPacket(connection.recipient?.address ?: return, packet)
-
-        Timber.i("sent update")
     }
     override fun beSentUpdate(packet: Packet) {
-        realm.where(Connection::class.java)
+         Realm.getDefaultInstance().where(Connection::class.java)
             .equalTo("id", packet.connectionId)
             .findFirst()
             ?.let { connection ->
@@ -197,7 +222,7 @@ class LocationSupportServiceImpl(
     }
 
     override fun requestUpdate(connectionId: Long) {
-        val connection = getConnection(connectionId)
+        val connection = getConnection(connectionId) ?: return
         val packet = Packet.ofRequestingUpdate(connection)
 
         sendPacket(connection.recipient?.address ?: return, packet)
@@ -205,7 +230,7 @@ class LocationSupportServiceImpl(
         Timber.i("requested update")
     }
     override fun beRequestedUpdate(packet: Packet) {
-        realm.where(Connection::class.java)
+         Realm.getDefaultInstance().where(Connection::class.java)
             .equalTo("id", packet.connectionId)
             .findFirst()
             ?.let { sendUpdate(it.id) }
@@ -213,23 +238,32 @@ class LocationSupportServiceImpl(
     }
 
     override fun requestDisconnect(connectionId: Long) {
-        val connection = getConnection(connectionId)
+        val realm = Realm.getDefaultInstance()
+
+        val connection = getConnection(connectionId) ?: return
         val packet = Packet.ofRequestingDisconnect(connection)
 
+        // stop sending
+        unregisterTask(connection)
+
+        // notify
         sendPacket(connection.recipient?.address ?: return, packet)
 
+        // delete
         realm.executeTransaction {
             connection.deleteFromRealm()
         }
 
+        realm.close()
+
         Timber.i("requested disconnect")
     }
     override fun beRequestedDisconnect(packet: Packet) {
-        val connection = getConnection(packet.connectionId)
+        val connection = getConnection(packet.connectionId) ?: return
 
         sendPacket(connection.recipient?.address ?: return, packet)
 
-        realm.executeTransaction {
+         Realm.getDefaultInstance().executeTransaction {
             connection.deleteFromRealm()
         }
     }
@@ -247,7 +281,7 @@ class LocationSupportServiceImpl(
                 null
             )
 
-            Timber.i("sent packet")
+            Timber.i("sent packet: \"$serialized\"")
         } catch (e: Exception) {
             Timber.w(e)
         }
@@ -456,7 +490,16 @@ class LocationSupportServiceImpl(
      * Add scheduled tasks for active connections.
      */
     private fun restoreTasks() {
-        getConnections().forEach(::registerTask)
+        scheduler.cancelAll()
+        Realm.getDefaultInstance().executeTransaction {
+            getConnections().forEach {
+                if (it.isExpired()) {
+                    it.deleteFromRealm()
+                } else {
+                    registerTask(it)
+                }
+            }
+        }
     }
 
     /**
@@ -474,6 +517,12 @@ class LocationSupportServiceImpl(
                     .apply { putExtra(EXTRA_CONNECTION_ID, connection.id) }
             )
         }
+        scheduler.doAtTime(connection.id, connection.due) {
+            requestDisconnect(connection.id)
+        }
+
+        Timber.i("Task registered: connection ${connection.id}, for every ${Duration(UPDATE_INTERVAL).toShortenString()}")
+        Timber.i("Will be disconnected at ${DateTime(connection.due).toString()}")
     }
 
     /**
@@ -482,7 +531,9 @@ class LocationSupportServiceImpl(
      * @param connection must be a realm managed object.
      */
     private fun unregisterTask(connection: Connection) {
-        scheduler.doNoMore(connection.id)
+        scheduler.cancel(connection.id)
+
+        Timber.i("Task unregistered: connection ${connection.id}.")
     }
 
     companion object {

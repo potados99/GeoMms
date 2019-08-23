@@ -3,7 +3,9 @@ package com.potados.geomms.feature.location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.Marker
+import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.model.Connection
+import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.service.LocationSupportService
 import io.realm.RealmResults
 import org.koin.core.KoinComponent
@@ -28,5 +30,23 @@ class MapViewModel : ViewModel(), KoinComponent {
 
     fun request(address: String) {
         locationService.requestNewConnection(address, 1800000)
+    }
+
+    fun accept(request: ConnectionRequest) {
+        tryOrNull {
+            locationService.acceptConnectionRequest(request)
+        }
+    }
+
+    fun refuse(request: ConnectionRequest) {
+        tryOrNull {
+            locationService.refuseConnectionRequest(request)
+        }
+    }
+
+    fun delete(connection: Connection) {
+        tryOrNull {
+            locationService.requestDisconnect(connection.id)
+        }
     }
 }

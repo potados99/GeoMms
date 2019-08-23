@@ -1,14 +1,16 @@
 package com.potados.geomms.util
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import timber.log.Timber
 
+/**
+ * Manage tasks by id.
+ */
 class Scheduler {
     private val handler = Handler(Looper.getMainLooper())
 
-    private val tasks = LinkedHashMap<Long, Runnable>()
+    private val tasks = LinkedHashMap<Long, MutableList<Runnable>>()
 
     /**
      * Add periodic task, and return its id.
@@ -17,27 +19,56 @@ class Scheduler {
         val runnable = object: Runnable {
             override fun run() {
                 task()
+                Timber.v("Periodic task $taskId ran.")
                 handler.postDelayed(this, period)
             }
         }
 
-        tasks[taskId] = runnable // overwrite
+        with(runnable) {
+            addRunnable(taskId, this)
+            handler.post(this)
+        }
+
+        Timber.i("task $taskId scheduled.")
+    }
+
+    /**
+     * Add task to be done at time.
+     */
+    fun doAtTime(taskId: Long, time: Long, task: () -> Unit) {
+        val runnable = Runnable {
+            task()
+            Timber.v("On time task $taskId ran.")
+        }
+
+        with(runnable) {
+            addRunnable(taskId, this)
+            handler.postDelayed(this, time - System.currentTimeMillis())
+        }
+
+        Timber.i("task $taskId scheduled.")
     }
 
     /**
      * Stop periodic task and remove it from handler.
      */
-    fun doNoMore(id: Long) {
-        tasks[id]?.let {
-            handler.removeCallbacks(it)
-        } ?: Timber.i("scheduled task of id $id not found. ignore")
+    fun cancel(taskId: Long) {
+        tasks[taskId]?.let {
+            it.forEach(handler::removeCallbacks)
+            Timber.i("task $taskId canceled.")
+
+        } ?: Timber.i("scheduled task of taskId $taskId not found. ignore")
     }
 
-    fun getTaskIds(): Set<Long> {
-        return tasks.keys
+    private fun addRunnable(taskId: Long, runnable: Runnable) {
+        if (tasks[taskId] == null) {
+            tasks[taskId] = mutableListOf()
+        }
+
+        tasks[taskId]?.add(runnable)
     }
 
-    fun getTasks(): Map<Long, Runnable> {
-        return tasks
+    fun cancelAll() {
+        tasks.keys.forEach { cancel(it) }
     }
 }
