@@ -14,6 +14,7 @@ import com.potados.geomms.databinding.InviteFragmentBinding
 import com.potados.geomms.feature.compose.ChipsAdapter
 import com.potados.geomms.feature.compose.ContactAdapter
 import com.potados.geomms.feature.location.MapFragment.Companion.ACTION_SET_ADDRESS
+import com.potados.geomms.feature.location.MapFragment.Companion.EXTRA_ADDRESS
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.PhoneNumber
 import io.realm.RealmList
@@ -37,7 +38,7 @@ class InviteFragment : BaseFragment() {
     private val broadcastSelectedAddress: (Contact) -> Unit = {
         context?.sendBroadcast(
             Intent(ACTION_SET_ADDRESS)
-                .putExtra("address", it.numbers[0]?.address
+                .putExtra(EXTRA_ADDRESS, it.numbers[0]?.address
                     ?: throw RuntimeException("check ContactAdapter."))
         )
         activity?.finish()

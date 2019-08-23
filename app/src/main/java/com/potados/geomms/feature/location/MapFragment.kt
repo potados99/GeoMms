@@ -60,7 +60,7 @@ class MapFragment : NavigationFragment(),
      * Invoked when ACTION_SET_ADDRESS intent received.
      */
     private val receiver = createBroadcastReceiver {
-        it?.getStringExtra("address")?.let { address ->
+        it?.getStringExtra(EXTRA_ADDRESS)?.let { address ->
             mapViewModel.request(address)
             Notify(context).short("New request to $address")
         }
@@ -265,5 +265,6 @@ class MapFragment : NavigationFragment(),
 
     companion object {
         const val ACTION_SET_ADDRESS = "com.potados.geomms.SET_ADDR"
+        const val EXTRA_ADDRESS = "address"
     }
 }

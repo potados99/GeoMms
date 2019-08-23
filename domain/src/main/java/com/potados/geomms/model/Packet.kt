@@ -32,6 +32,12 @@ class Packet(
                 connectionId = request.connectionId
             )
 
+        fun ofRefusingRequest(request: ConnectionRequest) =
+            Packet(
+                type = PacketType.REFUSE_CONNECT.number,
+                connectionId = request.connectionId
+            )
+
         fun ofRequestingUpdate(connection: Connection) =
             Packet(
                 type = PacketType.REQUEST_DATA.number,

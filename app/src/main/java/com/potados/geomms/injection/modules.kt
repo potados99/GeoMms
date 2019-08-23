@@ -21,6 +21,7 @@ import com.potados.geomms.repository.*
 import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.service.LocationSupportServiceImpl
 import com.potados.geomms.usecase.*
+import com.potados.geomms.util.Scheduler
 
 val permissions = arrayOf(
     Manifest.permission.READ_SMS,
@@ -45,6 +46,10 @@ val myModules = module {
     single { Navigator(context = get(), permissionManager = get()) }
 
 
+    /** Scheduler */
+    single { Scheduler() }
+
+
 
     /**********************************************************
      * Service
@@ -53,8 +58,10 @@ val myModules = module {
     /** Location Support Service */
     single {
         LocationSupportServiceImpl(
+            context = get(),
             conversationRepo = get(),
             locationRepo = get(),
+            scheduler = get(),
             keyManager = get()
         ) as LocationSupportService
     }
@@ -235,6 +242,13 @@ val myModules = module {
             context = get(),
             conversationRepo = get(),
             messageRepo = get()
+        )
+    }
+
+    /** Send Update */
+    single {
+        SendUpdate(
+            service = get()
         )
     }
 
