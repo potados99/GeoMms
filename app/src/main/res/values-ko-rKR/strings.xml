@@ -270,6 +270,7 @@
     <string name="description_launcher_icon">런처 아이콘입니다.</string>
     <string name="close_drawer">메뉴 닫기</string>
     <string name="open_drawer">메뉴 열기</string>
+    <string name="version">버전 %s</string>
 
 
 </resources>

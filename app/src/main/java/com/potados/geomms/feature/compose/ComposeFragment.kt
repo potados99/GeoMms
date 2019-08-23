@@ -65,23 +65,19 @@ class ComposeFragment : BaseFragment() {
 
         with(chipsAdapter) {
             // data by query
-            editText.addTextChangedListener(object: TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    val query = s.toString()
+            editText.setOnTextChanged {
+                val query = it.toString()
 
-                    var contacts = composeViewModel.getContacts(query)
+                var contacts = composeViewModel.getContacts(query)
 
-                    if (PhoneNumberUtils.isWellFormedSmsAddress(query)) {
-                        val newAddress = PhoneNumberUtils.formatNumber(query, Locale.getDefault().country)
-                        val newContact = Contact(numbers = RealmList(PhoneNumber(address = newAddress ?: query)))
-                        contacts = listOf(newContact) + contacts
-                    }
-
-                    contactAdapter.data = contacts
+                if (PhoneNumberUtils.isWellFormedSmsAddress(query)) {
+                    val newAddress = PhoneNumberUtils.formatNumber(query, Locale.getDefault().country)
+                    val newContact = Contact(numbers = RealmList(PhoneNumber(address = newAddress ?: query)))
+                    contacts = listOf(newContact) + contacts
                 }
-                override fun afterTextChanged(s: Editable?) {}
-            })
+
+                contactAdapter.data = contacts
+            }
         }
 
         with(contactAdapter) {
@@ -99,8 +95,8 @@ class ComposeFragment : BaseFragment() {
 
         with(view.messages) {
             setHasFixedSize(true)
-            messagesAdapter.autoScrollToStart(this@with)
-            messagesAdapter.emptyView = messages_empty
+            messagesAdapter.autoScrollToStart(this)
+            messagesAdapter.emptyView = view.messages_empty
             adapter = messagesAdapter
         }
 

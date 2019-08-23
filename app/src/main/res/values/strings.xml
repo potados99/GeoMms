@@ -307,5 +307,7 @@
     <string name="description_launcher_icon">This is a launcher icon.</string>
     <string name="close_drawer">Close drawer</string>
     <string name="open_drawer">Open drawer</string>
+    <string name="version">Version %s</string>
+    <string name="powered_by" translatable="false">Powered by QKSMS.</string>
 
 </resources>

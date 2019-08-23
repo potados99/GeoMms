@@ -60,21 +60,6 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <!-- Empty -->
-        <com.potados.geomms.common.widget.QkTextView
-                android:id="@+id/messages_empty"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="@dimen/textSecondary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="56dp"
-                android:layout_marginStart="56dp"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text="@string/compose_messages_empty"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
         <!-- Messages -->
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/messages"
@@ -95,6 +80,21 @@
                 app:layout_constraintVertical_bias="0.0"
                 app:stackFromEnd="true"
                 tools:listitem="@layout/message_list_item_in" />
+
+        <!-- Empty -->
+        <com.potados.geomms.common.widget.QkTextView
+                android:id="@+id/messages_empty"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="@dimen/textSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="56dp"
+                android:layout_marginStart="56dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/compose_messages_empty"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <!-- Compose background -->
         <View

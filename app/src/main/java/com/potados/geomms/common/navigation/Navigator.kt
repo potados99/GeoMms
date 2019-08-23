@@ -9,6 +9,7 @@ import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.common.MakeMeDefaultAppActivity
 import com.potados.geomms.feature.location.InviteActivity
+import com.potados.geomms.feature.settings.SettingsActivity
 import com.potados.geomms.model.Conversation
 import timber.log.Timber
 
@@ -59,6 +60,10 @@ class Navigator (
 
     fun showInvite() {
         startActivityWithFlag(InviteActivity.callingIntent(context))
+    }
+
+    fun showSettings() {
+        startActivityWithFlag(SettingsActivity.callingIntent(context))
     }
 
     private fun showGiveMePermission() {
