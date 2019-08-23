@@ -211,13 +211,20 @@ class LocationSupportServiceImpl(
         sendPacket(connection.recipient?.address ?: return, packet)
     }
     override fun beSentUpdate(packet: Packet) {
-         Realm.getDefaultInstance().where(Connection::class.java)
+        val realm = Realm.getDefaultInstance()
+
+        realm.where(Connection::class.java)
             .equalTo("id", packet.connectionId)
             .findFirst()
             ?.let { connection ->
-                connection.lastUpdate = System.currentTimeMillis()
-                connection.latitude = packet.latitude
-                connection.longitude = packet.longitude
+                realm.executeTransaction {
+                    connection.lastUpdate = System.currentTimeMillis()
+                    connection.latitude = packet.latitude
+                    connection.longitude = packet.longitude
+                }
+
+                Timber.i("Received data updated.")
+
             } ?: Timber.w("cannot find corresponding connection for DATA.")
     }
 
