@@ -28,7 +28,7 @@ import com.potados.geomms.model.PhoneNumber
 import kotlinx.android.synthetic.main.contact_list_item.view.*
 
 class PhoneNumberAdapter(
-    private val numberClicked: (Contact, Int) -> Unit
+    private val onNumberClick: (Contact, Int) -> Unit
 ) : BaseAdapter<PhoneNumber>() {
 
     lateinit var contact: Contact
@@ -45,7 +45,7 @@ class PhoneNumberAdapter(
 
         // Setting this in onCreateViewHolder causes a crash sometimes. [contact] returns the
         // contact from a different row, I'm not sure why
-        view.setOnClickListener { numberClicked(contact, position) }
+        view.setOnClickListener { onNumberClick(contact, position) }
 
         view.address.text = number.address
         view.type.text = number.type

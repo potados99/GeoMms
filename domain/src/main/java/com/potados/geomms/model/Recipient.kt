@@ -12,9 +12,6 @@ open class Recipient(
     var lastUpdate: Long = 0
 ) : RealmObject() {
 
-    /**
-     * 화면에 표시될 이름
-     */
     fun getDisplayName(): String = contact?.name?.takeIf { it.isNotBlank() }
             ?: PhoneNumberUtils.formatNumber(address, Locale.getDefault().country)
             ?: address

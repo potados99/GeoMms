@@ -4,35 +4,53 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.potados.geomms.R
-import com.potados.geomms.common.extension.addAll
-import com.potados.geomms.common.extension.findFragmentByNavigationId
-import com.potados.geomms.common.extension.inTransaction
-import com.potados.geomms.common.extension.showOnly
+import com.potados.geomms.common.extension.*
+import com.potados.geomms.extension.withNonNull
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.navigation_activity.*
+import kotlinx.android.synthetic.main.navigation_activity.nav_view
 import timber.log.Timber
 
+/**
+ * Base class for Bottom Navigation View based activity,
+ * providing quick transition between fragments, without state loss.
+ * Fragments are only shown or hidden when tab is switched.
+ * They are lazy-added to Fragment Manager on demand.
+ * It has customized Toolbar. @see [toolbar]
+ *
+ * Usage:
+ * 1. Override [fragments], which will be used as tab contents.
+ * 2. Override [navigationMenuId], the id of [BottomNavigationView].
+ * 3. (Optional) Override [defaultMenuItemId] and/or [layoutId].
+ */
 abstract class NavigationActivity : BaseActivity() {
 
     abstract val fragments: List<NavigationFragment>
 
-    abstract fun navigationMenuId(): Int
-    open fun defaultMenuItemId(): Int = -1
+    abstract val navigationMenuId: Int
+    open val defaultMenuItemId: Int = -1
+    open val layoutId: Int = R.layout.navigation_activity
 
     private var activeFragmentId: Int = -1
 
-    /**
-     * Add fragments on-demand
-     */
     private val onNavigationItemChanged = { menuItem: MenuItem ->
         addOrShowFragment(menuItem.itemId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.navigation_activity)
-
-        savedInstanceState ?: addOrShowFragment(defaultMenuItemId())
+        setContentView(layoutId)
+        setToolbar()
+        savedInstanceState ?: addOrShowFragment(defaultMenuItemId)
         setNavigationView()
+    }
+
+    private fun setToolbar() {
+        setSupportActionBar(toolbar)
+        withNonNull(supportActionBar) {
+            setDisplayShowTitleEnabled(false)   // use title text view instead.
+            setDisplayHomeAsUpEnabled(false)    // no up button
+        }
     }
 
     /**
@@ -51,7 +69,7 @@ abstract class NavigationActivity : BaseActivity() {
         try {
             // Ensure destination fragment is added
             if (supportFragmentManager.findFragmentByNavigationId(id) == null) {
-                val fragmentToAdd = fragments.find { it.navigationItemId() == id } as? Fragment
+                val fragmentToAdd = fragments.find { it.navigationItemId == id } as? Fragment
                     ?: throw IllegalArgumentException("fragment of corresponding id $id not exist.")
 
                 transaction.add(R.id.fragment_container, fragmentToAdd)
@@ -69,7 +87,8 @@ abstract class NavigationActivity : BaseActivity() {
                     // ensure all fragments are NavigationFragment
                     if (it !is NavigationFragment) throw RuntimeException("only NavigationFragment is allowed in NavigationActivity.")
 
-                    if (it.navigationItemId() == id) {
+                    if (it.navigationItemId == id) {
+                        it.setTitle(getString(it.titleId))
                         transaction.show(it)
                         it.onShow()
                     } else {
@@ -96,11 +115,11 @@ abstract class NavigationActivity : BaseActivity() {
 
     private fun setNavigationView() {
         with(nav_view) {
-            inflateMenu(navigationMenuId())
+            inflateMenu(navigationMenuId)
 
             setOnNavigationItemSelectedListener(onNavigationItemChanged)
 
-            defaultMenuItemId().takeIf { it > 0 }?.let(::setSelectedItemId)
+            defaultMenuItemId.takeIf { it > 0 }?.let(::setSelectedItemId)
         }
     }
 }

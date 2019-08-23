@@ -6,6 +6,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.common.extension.resolveThemeColor
 
+/**
+ * Base class providing navigation bar coloring.
+ * By default, the color is [android.R.attr.windowBackground].
+ */
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

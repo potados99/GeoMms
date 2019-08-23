@@ -84,7 +84,7 @@
 
     <com.potados.geomms.common.widget.QkTextView
         android:id="@+id/status"
-        android:textColor="@color/textSecondary"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="@dimen/textTertiary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

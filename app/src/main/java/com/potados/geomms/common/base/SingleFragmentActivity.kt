@@ -17,10 +17,10 @@ abstract class SingleFragmentActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.single_fragment_activity)
 
-        addFragments(savedInstanceState)
+        addFragment(savedInstanceState)
     }
 
-    private fun addFragments(savedInstanceState: Bundle?) =
+    private fun addFragment(savedInstanceState: Bundle?) =
         savedInstanceState ?:
         supportFragmentManager.inImmediateTransaction {
             add(R.id.fragment_container, fragment)

@@ -151,9 +151,10 @@ class ConversationRepositoryImpl(
             ?.let { threadId ->
                 var conversation = getConversation(threadId)
 
-                /* 복사본 */
-                if (conversation != null)
+                if (conversation != null) {
+                    // get unmanaged copy
                     conversation = Realm.getDefaultInstance().copyFromRealm(conversation)
+                }
 
                 conversation ?: updateConversationFromCp(threadId)
             }

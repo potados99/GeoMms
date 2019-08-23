@@ -20,7 +20,7 @@ import java.util.*
 
 class ComposeFragment : BaseFragment() {
 
-    override fun optionMenuId(): Int? = R.menu.compose
+    override val optionMenuId: Int? = R.menu.compose
 
     private lateinit var composeViewModel: ComposeViewModel
     private lateinit var viewDataBinding: ComposeFragmentBinding
@@ -146,14 +146,4 @@ class ComposeFragment : BaseFragment() {
 
     }
 
-    companion object {
-        private const val PARAM_CONVERSATION = "param_conversation"
-
-        fun ofConversation(conversationId: Long): ComposeFragment =
-            ComposeFragment().apply {
-                arguments = Bundle().apply {
-                    putLong(PARAM_CONVERSATION, conversationId)
-                }
-            }
-    }
 }

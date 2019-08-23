@@ -18,7 +18,6 @@
  */
 package com.potados.geomms.feature.compose
 
-import android.os.BaseBundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -30,7 +29,7 @@ import com.potados.geomms.model.Contact
 import kotlinx.android.synthetic.main.contact_list_item.view.*
 import kotlin.math.min
 
-class ContactAdapter(private val contactClicked: (Contact) -> Unit) : BaseAdapter<Contact>() {
+class ContactAdapter(private val onContactClick: (Contact) -> Unit) : BaseAdapter<Contact>() {
 
     private val numbersViewPool = RecyclerView.RecycledViewPool()
 
@@ -43,11 +42,11 @@ class ContactAdapter(private val contactClicked: (Contact) -> Unit) : BaseAdapte
         return BaseViewHolder(view).apply {
             view.primary.setOnClickListener {
                 val contact = getItem(adapterPosition)
-                contactClicked(copyContact(contact, 0))
+                onContactClick(copyContact(contact, 0))
             }
 
             view.addresses.adapter = PhoneNumberAdapter { contact, index ->
-                contactClicked(copyContact(contact, index + 1))
+                onContactClick(copyContact(contact, index + 1))
             }
         }
     }

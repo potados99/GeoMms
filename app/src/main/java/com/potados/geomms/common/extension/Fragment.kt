@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.extension.withNonNull
 import kotlinx.android.synthetic.main.single_fragment_activity.*
+import kotlinx.android.synthetic.main.toolbar.*
 
 /**
  * Do something in the middle of beginTransaction() and commit().
@@ -44,7 +45,6 @@ inline fun FragmentManager.showOnly(predicate: (Fragment) -> Boolean): Boolean  
     inTransaction {
         fragments.forEach {
             if (predicate(it)) {
-                it.activity?.invalidateOptionsMenu()
                 show(it)
             }
             else {
@@ -60,7 +60,7 @@ inline fun FragmentManager.showOnly(predicate: (Fragment) -> Boolean): Boolean  
 }
 
 fun FragmentManager.findFragmentByNavigationId(id: Int): Fragment? {
-    return fragments.find { (it as? NavigationFragment)?.navigationItemId() == id }
+    return fragments.find { (it as? NavigationFragment)?.navigationItemId == id }
 }
 
 /**
@@ -124,5 +124,11 @@ fun Fragment.setSupportActionBar(toolbar: Toolbar, title: Boolean = false, upBut
             setDisplayShowTitleEnabled(title)
             setDisplayHomeAsUpEnabled(upButton)
         }
+    }
+}
+
+fun Fragment.setTitle(title: String?) {
+    withNonNull(activity as? AppCompatActivity) {
+        toolbar_title.text = title
     }
 }

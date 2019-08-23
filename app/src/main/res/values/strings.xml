@@ -302,5 +302,10 @@
     <string name="menu_write">Write</string>
     <string name="info_name_hint">Title...</string>
     <string name="menu_invite">Invite</string>
+    <string name="current_version">Current Version %s</string>
+    <string name="latest_version">Latest Version %s</string>
+    <string name="description_launcher_icon">This is a launcher icon.</string>
+    <string name="close_drawer">Close drawer</string>
+    <string name="open_drawer">Open drawer</string>
 
 </resources>

@@ -265,6 +265,11 @@
     <string name="menu_search">검색</string>
     <string name="menu_invite">초대</string>
     <string name="menu_write">작성</string>
+    <string name="current_version">현재 버전 %s</string>
+    <string name="latest_version">최신 버전 %s</string>
+    <string name="description_launcher_icon">런처 아이콘입니다.</string>
+    <string name="close_drawer">메뉴 닫기</string>
+    <string name="open_drawer">메뉴 열기</string>
 
 
 </resources>

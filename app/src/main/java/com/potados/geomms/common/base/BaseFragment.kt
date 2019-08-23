@@ -10,20 +10,20 @@ import com.potados.geomms.common.extension.setTint
 import timber.log.Timber
 
 abstract class BaseFragment : Fragment() {
-    open fun optionMenuId(): Int? = null
+    open val optionMenuId: Int? = null
 
     private var menu: Menu? = null
     fun getOptionsMenu(): Menu? = menu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(optionMenuId() != null)
+        setHasOptionsMenu(optionMenuId != null)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
-        optionMenuId()?.let {
+        optionMenuId?.let {
             inflater.inflate(it, menu)
             Timber.d("inflate option menu")
         }

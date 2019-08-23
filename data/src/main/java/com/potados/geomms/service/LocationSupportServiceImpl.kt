@@ -41,30 +41,18 @@ class LocationSupportServiceImpl(
     }
 
     private fun getRecipient(address: String): Recipient {
-        val found = realm.where(Recipient::class.java)
-            .equalTo("address", PhoneNumberUtils.stripSeparators(address))
-            .findFirst()
-
-        return if (found != null) found
-        else {
-            conversationRepo.getOrCreateConversation(address)
-            /**
-             * 넘겨받은 주소에 해당하는 새로운 conversation이 만들어졌으니
-             * 이에 해당하는 recipient가 realm에 저장되었을 것이 보장됩니다.
-             */
-            realm.where(Recipient::class.java)
-                .equalTo("address", PhoneNumberUtils.stripSeparators(address))
-                .findFirst() ?: throw RuntimeException("recipient of address $address must exist.")
-        }
+        return conversationRepo.getOrCreateConversation(address)?.recipients?.get(0)
+            ?: throw RuntimeException("conversation of address $address must exist.")
     }
 
     override fun removeConnection(id: Long) {
         val connection = realm.where(Connection::class.java)
             .equalTo("id", id)
-            .findAll()
+            .findFirst()
 
         realm.executeTransaction {
-            connection.deleteAllFromRealm()
+            // no cascading delete!
+            connection?.deleteFromRealm()
         }
     }
 
@@ -101,7 +89,7 @@ class LocationSupportServiceImpl(
 
         sendPacket(address, Packet.ofRequestingNewConnection(request))
 
-        realm.executeTransaction { request = it.copyToRealm(request) }
+        realm.executeTransaction { request = it.copyToRealmOrUpdate(request) }
 
         return request
     }

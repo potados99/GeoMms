@@ -26,7 +26,6 @@ import io.realm.annotations.PrimaryKey
 import kotlinx.android.synthetic.main.map_fragment.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.map_view
-import kotlinx.android.synthetic.main.map_fragment.view.toolbar
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import androidx.recyclerview.widget.RecyclerView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -45,8 +44,9 @@ class MapFragment : NavigationFragment(),
     RequestsAdapter.RequestClickListener // TODO: remove
 {
 
-    override fun optionMenuId(): Int? = R.menu.map
-    override fun navigationItemId(): Int = R.id.menu_item_navigation_map
+    override val optionMenuId: Int? = R.menu.map
+    override val navigationItemId: Int = R.id.menu_item_navigation_map
+    override val titleId: Int = R.string.title_friends
 
     private val navigator: Navigator by inject()
 
@@ -62,14 +62,7 @@ class MapFragment : NavigationFragment(),
         super.onCreate(savedInstanceState)
 
         mapViewModel = getViewModel()
-        context?.registerReceiver(object: BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                intent?.getStringExtra("address")?.let {
-                    mapViewModel.request(it)
-                    Notify(context).short("New request to $it")
-                }
-            }
-        }, IntentFilter("inviteContact"))
+        setAddressSelectReceiver()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -77,7 +70,6 @@ class MapFragment : NavigationFragment(),
             .inflate(inflater, container, false)
             .apply { vm = mapViewModel }
             .apply { viewDataBinding = this }
-            .apply { setSupportActionBar(toolbar = root.toolbar, title = false, upButton = false) }
             .apply { initializeView(root, savedInstanceState) }
             .root
     }
@@ -230,6 +222,15 @@ class MapFragment : NavigationFragment(),
         }
     }
 
+    private fun setAddressSelectReceiver() {
+        // TODO unregister extension
+        context?.registerReceiver(ACTION_SET_ADDRESS) { intent ->
+            intent?.getStringExtra("address")?.let { address ->
+                mapViewModel.request(address)
+                Notify(context).short("New request to $address")
+            }
+        }
+    }
 
     override fun onConnectionClick(connection: Connection) {
         Notify(context).short("Hello!")
@@ -255,10 +256,13 @@ class MapFragment : NavigationFragment(),
     private fun setScrollable(bottomSheet: View, recyclerView: RecyclerView) {
         val params = bottomSheet.layoutParams
         if (params is CoordinatorLayout.LayoutParams) {
-            val coordinatorLayoutParams = params
-            val behavior = coordinatorLayoutParams.getBehavior()
+            val behavior = params.behavior
             if (behavior != null && behavior is CustomBottomSheetBehavior<*>)
                 behavior.setNestedScrollingChildRef(recyclerView)
         }
+    }
+
+    companion object {
+        const val ACTION_SET_ADDRESS = "com.potados.geomms.SET_ADDR"
     }
 }

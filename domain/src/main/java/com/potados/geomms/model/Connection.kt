@@ -20,6 +20,8 @@ open class Connection(
     fun isExpired(): Boolean =
         (System.currentTimeMillis() - date > duration)
 
+    fun due(): Long = date + duration
+
     companion object {
         fun fromAcceptedRequest(request: ConnectionRequest) =
             Connection(

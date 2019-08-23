@@ -2,6 +2,7 @@ package com.potados.geomms.feature.conversations
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.Observer
@@ -18,6 +19,7 @@ import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.SyncMessages
 import io.realm.Realm
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.main_permission_hint.view.*
 import org.koin.android.ext.android.inject
 import org.koin.core.inject
@@ -28,8 +30,9 @@ import timber.log.Timber
  */
 class ConversationsFragment : NavigationFragment() {
 
-    override fun optionMenuId(): Int? = R.menu.conversations
-    override fun navigationItemId(): Int = R.id.menu_item_navigation_message
+    override val optionMenuId: Int? = R.menu.conversations
+    override val navigationItemId: Int = R.id.menu_item_navigation_message
+    override val titleId: Int = R.string.title_conversations
 
     private val navigator: Navigator by inject()
     private val permissionManager: PermissionManager by inject()
@@ -51,7 +54,6 @@ class ConversationsFragment : NavigationFragment() {
             .apply { vm = conversationsViewModel }
             .apply { lifecycleOwner = this@ConversationsFragment }
             .apply { viewDataBinding = this }
-            .apply { setSupportActionBar(toolbar = root.toolbar, title = false, upButton = false) }
             .apply { initializeView(root) }
             .root
     }

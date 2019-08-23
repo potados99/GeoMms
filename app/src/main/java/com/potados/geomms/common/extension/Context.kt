@@ -19,7 +19,10 @@
 package com.potados.geomms.common.extension
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
@@ -70,4 +73,12 @@ fun Activity.dismissKeyboard() {
 
         focus.clearFocus()
     }
+}
+
+fun Context.registerReceiver(action: String, onReceive: (intent: Intent?) -> Unit) {
+    registerReceiver(object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            onReceive(intent)
+        }
+    }, IntentFilter(action))
 }
