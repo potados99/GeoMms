@@ -55,20 +55,6 @@ class ComposeFragment : BaseFragment() {
         menu.setVisible(composeViewModel.conversation.value != null)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            android.R.id.home -> {
-                baseActivity?.finish()
-                return true
-            }
-            else -> {
-                // 낫띵..
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun initializeView(view: View) {
         observe(composeViewModel.conversation) { conversation ->
             Timber.i("%s menu", if (conversation != null) "show" else "hide")
@@ -99,7 +85,6 @@ class ComposeFragment : BaseFragment() {
         }
 
         with(contactAdapter) {
-            // initial data
             data = composeViewModel.getContacts()
         }
 
@@ -109,11 +94,13 @@ class ComposeFragment : BaseFragment() {
 
         with(view.contacts) {
             adapter = contactAdapter
+            itemAnimator = null
         }
 
         with(view.messages) {
             setHasFixedSize(true)
             messagesAdapter.autoScrollToStart(this@with)
+            messagesAdapter.emptyView = messages_empty
             adapter = messagesAdapter
         }
 

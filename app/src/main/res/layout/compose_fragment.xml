@@ -16,6 +16,7 @@
             android:background="?attr/composeBackground"
             android:animateLayoutChanges="true">
 
+        <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/Toolbar"
@@ -33,6 +34,7 @@
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
+                <!-- Title -->
                 <TextView
                         android:id="@+id/toolbar_title"
                         style="@style/ToolbarText"
@@ -42,7 +44,7 @@
                         android:text="@{vm.conversation.getTitle()}"
                         tools:text="01029222661" />
 
-                <!-- Edit contact -->
+                <!-- Chips -->
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/chips"
                         android:layout_width="match_parent"
@@ -58,6 +60,22 @@
 
         </androidx.appcompat.widget.Toolbar>
 
+        <!-- Empty -->
+        <com.potados.geomms.common.widget.QkTextView
+                android:id="@+id/messages_empty"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="@dimen/textSecondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="56dp"
+                android:layout_marginStart="56dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/compose_messages_empty"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+        <!-- Messages -->
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/messages"
                 android:layout_width="0dp"
@@ -78,6 +96,7 @@
                 app:stackFromEnd="true"
                 tools:listitem="@layout/message_list_item_in" />
 
+        <!-- Compose background -->
         <View
                 android:id="@+id/compose_background"
                 android:layout_width="0dp"
@@ -90,6 +109,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/message_background" />
 
+        <!-- Message background -->
         <View
                 android:id="@+id/message_background"
                 android:layout_width="0dp"
@@ -105,6 +125,7 @@
                 app:layout_constraintStart_toEndOf="@id/attach"
                 app:layout_constraintTop_toTopOf="@id/attachments"/>
 
+        <!-- Attach -->
         <ImageView
                 android:id="@+id/attach"
                 android:layout_width="44dp"
@@ -121,6 +142,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
+        <!-- Attachments -->
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/attachments"
                 android:layout_width="0dp"
@@ -137,6 +159,7 @@
                 app:layout_constraintStart_toStartOf="@id/message_background"
                 tools:listitem="@layout/attachment_image_list_item" />
 
+        <!-- Message -->
         <EditText
                 android:id="@+id/message"
                 android:textSize="@dimen/textPrimary"
@@ -160,6 +183,7 @@
                 app:layout_constraintEnd_toStartOf="@id/send"
                 app:layout_constraintStart_toStartOf="@id/message_background" />
 
+        <!-- Counter -->
         <com.potados.geomms.common.widget.QkTextView
                 android:id="@+id/counter"
                 android:layout_width="0dp"
@@ -172,6 +196,7 @@
                 app:layout_constraintStart_toStartOf="@id/send"
                 tools:text="108 / 2" />
 
+        <!-- Send -->
         <ImageView
                 android:id="@+id/send"
                 android:layout_width="44dp"
@@ -183,6 +208,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/message_background"
                 app:layout_constraintEnd_toEndOf="@id/message_background" />
 
+        <!-- Contacts -->
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/contacts"
                 android:layout_width="0dp"
@@ -202,6 +228,7 @@
                 android:elevation="4dp"
                 tools:visibility="gone" />
 
+        <!-- Toolbar shadow -->
         <View
                 android:id="@+id/toolbar_shadow"
                 android:layout_width="0dp"

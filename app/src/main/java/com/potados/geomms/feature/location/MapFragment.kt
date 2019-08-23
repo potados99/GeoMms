@@ -56,13 +56,23 @@ class MapFragment : NavigationFragment(),
     private val connectionsAdapter = ConnectionsAdapter(this)
     private val requestsAdapter = RequestsAdapter(this)
 
+    /**
+     * Invoked when ACTION_SET_ADDRESS intent received.
+     */
+    private val receiver = createBroadcastReceiver {
+        it?.getStringExtra("address")?.let { address ->
+            mapViewModel.request(address)
+            Notify(context).short("New request to $address")
+        }
+    }
+
     private var map: GoogleMap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mapViewModel = getViewModel()
-        setAddressSelectReceiver()
+        context?.registerReceiver(receiver, IntentFilter(ACTION_SET_ADDRESS))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -129,6 +139,7 @@ class MapFragment : NavigationFragment(),
     override fun onDestroy() {
         super.onDestroy()
         viewDataBinding.mapView.onDestroy()
+        context?.unregisterReceiver(receiver)
     }
     override fun onLowMemory() {
         super.onLowMemory()
@@ -218,16 +229,6 @@ class MapFragment : NavigationFragment(),
 
             setOnClickListener {
                 toggleSheet()
-            }
-        }
-    }
-
-    private fun setAddressSelectReceiver() {
-        // TODO unregister extension
-        context?.registerReceiver(ACTION_SET_ADDRESS) { intent ->
-            intent?.getStringExtra("address")?.let { address ->
-                mapViewModel.request(address)
-                Notify(context).short("New request to $address")
             }
         }
     }

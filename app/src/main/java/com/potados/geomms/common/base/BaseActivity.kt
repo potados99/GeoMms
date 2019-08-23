@@ -2,6 +2,7 @@ package com.potados.geomms.common.base
 
 import android.os.Build
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.common.extension.resolveThemeColor
@@ -23,6 +24,16 @@ abstract class BaseActivity : AppCompatActivity() {
         // Some devices don't let you modify android.R.attr.navigationBarColor
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             window.navigationBarColor = resolveThemeColor(android.R.attr.windowBackground)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

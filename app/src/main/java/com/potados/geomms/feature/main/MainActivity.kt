@@ -44,7 +44,11 @@ class MainActivity : NavigationActivity() {
             R.string.close_drawer
         )
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+        }
+
+        toggle.syncState()
     }
 
     private fun setVersionView() {
