@@ -83,7 +83,7 @@ class LocationSupportServiceImpl(
     override fun requestNewConnection(address: String, duration: Long) {
         val recipient = getRecipient(address)
 
-        var request = ConnectionRequest(
+        val request = ConnectionRequest(
             connectionId = keyManager.randomId(99999),
             recipient = recipient,
             isInbound = false,
@@ -93,7 +93,7 @@ class LocationSupportServiceImpl(
 
         sendPacket(address, Packet.ofRequestingNewConnection(request))
 
-        Realm.getDefaultInstance().executeTransaction { request = it.copyToRealmOrUpdate(request) }
+        Realm.getDefaultInstance().executeTransaction { it.insertOrUpdate(request) }
     }
     override fun beRequestedNewConnection(packet: Packet) {
         // prevent double accepting and creating connection
@@ -506,6 +506,9 @@ class LocationSupportServiceImpl(
                     registerTask(it)
                 }
             }
+
+            // TODO find a way to remove outgoing requests.
+            getOutgoingRequests().deleteAllFromRealm()
         }
     }
 
