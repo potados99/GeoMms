@@ -11,11 +11,12 @@ import com.potados.geomms.common.extension.inImmediateTransaction
 abstract class SingleFragmentActivity : BaseActivity() {
 
     abstract val fragment: Fragment
+    open val layoutId: Int = R.layout.single_fragment_activity
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.single_fragment_activity)
+        setContentView(layoutId)
 
         addFragment(savedInstanceState)
     }

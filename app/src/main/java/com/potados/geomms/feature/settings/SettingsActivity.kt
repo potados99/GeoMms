@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.settings_activity.*
 class SettingsActivity : SingleFragmentActivity() {
 
     override val fragment: Fragment = SettingsFragment()
+    override val layoutId: Int = R.layout.settings_activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,9 +25,12 @@ class SettingsActivity : SingleFragmentActivity() {
     private fun initializeView() {
         setSupportActionBar(toolbar)
 
+        // Here, activity has the toolbar.
         withNonNull(supportActionBar) {
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
+
+            toolbar_title.text = getString(R.string.title_settings)
         }
     }
 

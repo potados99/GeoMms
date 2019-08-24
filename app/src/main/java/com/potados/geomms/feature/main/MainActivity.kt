@@ -14,6 +14,7 @@ import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.service.LocationSupportService
+import com.potados.geomms.util.Notify
 import kotlinx.android.synthetic.main.drawer_view.*
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
@@ -62,6 +63,10 @@ class MainActivity : NavigationActivity(), KoinComponent {
 
         settings.setOnClickListener {
             navigator.showSettings()
+            root_layout.closeDrawers()
+        }
+        help.setOnClickListener {
+            Notify(this).short("Not implemented yet.")
         }
     }
 
