@@ -19,8 +19,8 @@ import timber.log.Timber
 fun setConversations(listView: RecyclerView, conversations: RealmResults<Conversation>) {
     (listView.adapter as? ConversationsAdapter)?.let {
         it.updateData(conversations)
-        Timber.i("conversations updated.")
-    } ?: Timber.w("adapter not set.")
+        Timber.i("Conversations updated.")
+    } ?: Timber.w("Adapter not set.")
 }
 
 @BindingAdapter("syncState")
@@ -51,5 +51,5 @@ fun setDefaultSmsState(layout: ConstraintLayout, isDefaultSms: Boolean) {
     // show when this is not a default sms app
     layout.isVisible = !isDefaultSms
 
-    Timber.i("default sms state updated")
+    Timber.i("Default sms state updated")
 }

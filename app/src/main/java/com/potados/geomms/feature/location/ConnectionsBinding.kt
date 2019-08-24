@@ -11,14 +11,14 @@ import timber.log.Timber
 fun setConnections(listView: RecyclerView, connections: RealmResults<Connection>) {
     (listView.adapter as? ConnectionsAdapter)?.let {
         it.updateData(connections)
-        Timber.i("connections updated.")
-    } ?: Timber.w("adapter not set.")
+        Timber.i("Connections updated.")
+    } ?: Timber.w("Adapter not set.")
 }
 
 @BindingAdapter("incoming_requests")
 fun setIncomingRequests(listView: RecyclerView, requests: RealmResults<ConnectionRequest>) {
     (listView.adapter as? RequestsAdapter)?.let {
         it.updateData(requests)
-        Timber.i("requests updated.")
-    } ?: Timber.w("adapter not set.")
+        Timber.i("Requests updated.")
+    } ?: Timber.w("Adapter not set.")
 }

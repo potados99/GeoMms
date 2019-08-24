@@ -6,6 +6,9 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.potados.geomms.manager.PermissionManager
 import timber.log.Timber
@@ -15,13 +18,28 @@ class LocationRepositoryImpl(
     context: Context
 ) : LocationRepository {
 
-    private val locationClient = LocationServices.getFusedLocationProviderClient(context)
-
     private var currentLocation: Location? = null
 
-    init {
-        locationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            currentLocation = location
+    private val locationClient = LocationServices.getFusedLocationProviderClient(context)
+
+    private val request = LocationRequest.create().apply {
+        interval = 10000 // 10sec
+        fastestInterval = 2000 // 2sec
+        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
+
+    private val locationCallback = object: LocationCallback() {
+        override fun onLocationResult(result: LocationResult?) {
+            if (result == null) {
+                Timber.i("Location Result is null.")
+                return
+            }
+
+            // Get average of location data.
+            currentLocation = Location(result.lastLocation).apply {
+                latitude = result.locations.map { it.latitude }.average()
+                longitude = result.locations.map { it.longitude }.average()
+            }
         }
     }
 
@@ -30,5 +48,13 @@ class LocationRepositoryImpl(
             Timber.i("Current location is null.")
         }
         return currentLocation
+    }
+
+    override fun startLocationUpdates() {
+        locationClient.requestLocationUpdates(request, locationCallback, null)
+    }
+
+    override fun stopLocationUpdates() {
+        locationClient.removeLocationUpdates(locationCallback)
     }
 }

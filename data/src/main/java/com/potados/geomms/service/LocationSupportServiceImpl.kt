@@ -32,9 +32,18 @@ class LocationSupportServiceImpl(
     private var started = false
 
     override fun start() {
-        if (started) return
+        if (started) {
+            Timber.i("Already started!")
+
+            return
+        }
+
         restoreTasks()
+        startLocationUpdates()
+
         started = true
+
+        Timber.i("Service started.")
     }
 
     override fun getConnections(): RealmResults<Connection> {
@@ -64,14 +73,12 @@ class LocationSupportServiceImpl(
             ?: throw RuntimeException("conversation of address $address must exist.")
     }
 
-
     override fun getIncomingRequests(): RealmResults<ConnectionRequest> {
         return  Realm.getDefaultInstance().where(ConnectionRequest::class.java)
             .sort("date", Sort.ASCENDING)
             .equalTo("isInbound", true)
             .findAll()
     }
-
     override fun getOutgoingRequests(): RealmResults<ConnectionRequest> {
         return  Realm.getDefaultInstance().where(ConnectionRequest::class.java)
             .sort("date", Sort.ASCENDING)
@@ -510,6 +517,10 @@ class LocationSupportServiceImpl(
             // TODO find a way to remove outgoing requests.
             getOutgoingRequests().deleteAllFromRealm()
         }
+    }
+
+    private fun startLocationUpdates() {
+        locationRepo.startLocationUpdates()
     }
 
     /**

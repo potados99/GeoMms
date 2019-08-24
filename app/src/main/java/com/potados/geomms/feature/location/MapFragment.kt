@@ -138,7 +138,10 @@ class MapFragment : NavigationFragment(),
                 throw RuntimeException("THIS IS IMPOSSIBLE. CHECK PERMISSION.")
             }
 
-            moveTo(connection.latitude, connection.longitude, 10f)
+            // Move to current location.
+            locationRepo.getCurrentLocation()?.let {
+                moveTo(it.latitude, it.longitude, 10f)
+            }
 
             // Hide bottom sheet when map moving.
             setOnCameraMoveStartedListener {
