@@ -74,6 +74,8 @@ dependencies {
     /** reflection */
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
+    /** 위치 */
+    implementation "com.google.android.gms:play-services-location:$map_version"
 
     implementation project(":domain")
     implementation project(":android-smsmms")

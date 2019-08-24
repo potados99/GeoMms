@@ -28,8 +28,10 @@ val permissions = arrayOf(
     Manifest.permission.RECEIVE_SMS,
     Manifest.permission.SEND_SMS,
     Manifest.permission.READ_CONTACTS,
-    Manifest.permission.ACCESS_FINE_LOCATION,
     Manifest.permission.INTERNET,
+    Manifest.permission.ACCESS_NETWORK_STATE,
+    Manifest.permission.ACCESS_FINE_LOCATION,
+    Manifest.permission.ACCESS_COARSE_LOCATION,
     Manifest.permission.READ_PHONE_STATE
 )
 
@@ -295,17 +297,10 @@ val myModules = module {
 
 
     /**********************************************************
-     * 위치공유 // TODO
+     * Location Support
      **********************************************************/
 
-    /** 현재 위치 저장소 */
-    single {
-        LocationRepositoryImpl(
-            locationManager = androidContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager,
-            permissionManager = get(),
-            minTime = 5000,
-            minDistance = 5.0f
-        ) as LocationRepository
-    }
+    /** Location Repository */
+    single { LocationRepositoryImpl(context = get()) as LocationRepository }
 
 }

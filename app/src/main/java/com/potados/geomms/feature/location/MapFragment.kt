@@ -30,6 +30,8 @@ import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import androidx.recyclerview.widget.RecyclerView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.potados.geomms.common.navigation.Navigator
+import com.potados.geomms.extension.withNonNull
+import com.potados.geomms.repository.LocationRepository
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import org.koin.android.ext.android.inject
@@ -40,8 +42,8 @@ import timber.log.Timber
  */
 class MapFragment : NavigationFragment(),
     OnMapReadyCallback,
-    ConnectionsAdapter.ConnectionClickListener, // TODO: remove
-    RequestsAdapter.RequestClickListener // TODO: remove
+    ConnectionsAdapter.ConnectionClickListener,
+    RequestsAdapter.RequestClickListener
 {
 
     override val optionMenuId: Int? = R.menu.map
@@ -49,6 +51,7 @@ class MapFragment : NavigationFragment(),
     override val titleId: Int = R.string.title_friends
 
     private val navigator: Navigator by inject()
+    private val locationRepo: LocationRepository by inject()
 
     private lateinit var mapViewModel: MapViewModel
     private lateinit var viewDataBinding: MapFragmentBinding
@@ -71,7 +74,9 @@ class MapFragment : NavigationFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mapViewModel = getViewModel()
+        MapsInitializer.initialize(context)
+
+        mapViewModel = getViewModel { start() }
         context?.registerReceiver(receiver, IntentFilter(ACTION_SET_ADDRESS))
     }
 
@@ -122,13 +127,8 @@ class MapFragment : NavigationFragment(),
 
     override fun onMapReady(map: GoogleMap?) {
         this.map = map?.apply {
-            val seoul = LatLng(37.56, 126.97)
 
-            MapsInitializer.initialize(context)
-
-            moveCamera(CameraUpdateFactory.newLatLng(seoul))
-            animateCamera(CameraUpdateFactory.zoomTo(10.0f))
-
+            // Set map UI.
             try {
                 isMyLocationEnabled = true
 
@@ -138,25 +138,27 @@ class MapFragment : NavigationFragment(),
                 throw RuntimeException("THIS IS IMPOSSIBLE. CHECK PERMISSION.")
             }
 
+            moveTo(connection.latitude, connection.longitude, 10f)
+
+            // Hide bottom sheet when map moving.
             setOnCameraMoveStartedListener {
                 if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                    with(viewDataBinding.sheet) {
-                        if (sheetState == BottomSheetBehavior.STATE_HIDDEN) {
-                            //
-                        }
-                        else {
-                            collapseSheet()
-                        }
-                    }
+                    viewDataBinding.sheet.collapseSheet()
                 }
             }
 
-            setOnCameraMoveListener {
+            // Draw marker when connection refreshed.
+            observe(mapViewModel.markers) { markers ->
+                clear() // map
+                markers?.forEach { marker ->
+                    addMarker(marker) // map
 
+                    Timber.i("Marker drawn.")
+                }
             }
         }
 
-        Timber.i( "map is ready!")
+        Timber.i( "Map is ready!")
     }
 
     private fun initializeView(view: View, savedInstanceState: Bundle?) {
@@ -208,7 +210,11 @@ class MapFragment : NavigationFragment(),
     }
 
     override fun onConnectionClick(connection: Connection) {
-        // TODO show on map
+        withNonNull(map) {
+            if (connection.lastUpdate != 0L) {
+                moveTo(connection.latitude, connection.longitude, 15f)
+            }
+        }
     }
 
     override fun onConnectionLongClick(connection: Connection) {
@@ -228,6 +234,7 @@ class MapFragment : NavigationFragment(),
 
         Notify(context).short("Refuse.")
     }
+
 
     /**
      * Pass touch events of Bottom Sheet to Recycler View.
