@@ -10,8 +10,8 @@ class Packet(
     var longitude: Double = 0.0,
 
     var address: String = "",
-    var date: Long = 0, // 받은 시점
-    var dateSent: Long = 0, // 보낸 시점
+    var date: Long = 0,         // 받은 시점
+    var dateSent: Long = 0,     // 보낸 시점
 
     var isInbound: Boolean = false
 
@@ -111,13 +111,12 @@ class Packet(
     }
 
     /**
-     * INDEX    NAME            DESCRIPTION
-     * 0        TYPE            패킷의 종류
-     * 1        ID              연결 식별
-     *
-     * 2        DURATION        연결의 지속 시간
-     * 2        LATITUDE        위도
-     * 3        LONGITUDE       경도
+     * INDEX    NAME                    DESCRIPTION
+     * 0        TYPE                    패킷의 종류
+     * 1        ID                      연결 식별
+     * 2        DURATION                연결의 지속 시간
+     * 2        LATITUDE                위도
+     * 3        LONGITUDE               경도
      */
     enum class Field(val positionInPayload: Int, val fieldName: String, val convert: String.() -> Number) {
 
