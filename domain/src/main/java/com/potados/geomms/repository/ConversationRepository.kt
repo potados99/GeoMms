@@ -23,20 +23,20 @@ import io.realm.RealmResults
 
 abstract class ConversationRepository : Repository() {
 
-    abstract fun getConversations(archived: Boolean = false): RealmResults<Conversation>
+    abstract fun getConversations(archived: Boolean = false): RealmResults<Conversation>?
 
-    abstract fun getConversationsSnapshot(): List<Conversation>
+    abstract fun getConversationsSnapshot(): List<Conversation>?
 
     /**
      * Returns the top conversations that were active in the last week
      */
-    abstract fun getTopConversations(): List<Conversation>
+    abstract fun getTopConversations(): List<Conversation>?
 
     abstract fun setConversationName(id: Long, name: String)
 
-    abstract fun getBlockedConversations(): RealmResults<Conversation>
+    abstract fun getBlockedConversations(): RealmResults<Conversation>?
 
-    abstract fun getConversationAsync(threadId: Long): Conversation
+    abstract fun getConversationAsync(threadId: Long): Conversation?
 
     abstract fun getConversation(threadId: Long): Conversation?
 

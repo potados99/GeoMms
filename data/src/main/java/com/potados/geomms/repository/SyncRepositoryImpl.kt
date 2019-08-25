@@ -25,9 +25,7 @@ import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.potados.geomms.extension.insertOrUpdate
-import com.potados.geomms.extension.map
-import com.potados.geomms.extension.tryOrNull
+import com.potados.geomms.extension.*
 import com.potados.geomms.manager.KeyManager
 import com.potados.geomms.manager.KeyManagerImpl.Companion.CHANNEL_MESSAGE
 import com.potados.geomms.mapper.CursorToContact
@@ -60,18 +58,19 @@ class SyncRepositoryImpl(
         val name: String
     )
 
-    private val _progress = MutableLiveData<SyncRepository.SyncProgress>().apply {
+    private val _progress = MutableLiveData<SyncProgress>().apply {
         value = SyncRepository.SyncProgress.Idle()
     }
 
-    override val syncProgress: LiveData<SyncRepository.SyncProgress> = _progress
+    override val syncProgress: LiveData<SyncProgress> = _progress
     
-    override fun syncMessages() {
-        if (_progress.value is SyncRepository.SyncProgress.Running) {
+    override fun syncMessages() = unitOnFail {
+        if (_progress.value is SyncProgress.Running) {
             Timber.i("sync already in progress; return")
-            return
+            return@unitOnFail
         }
-        _progress.postValue(SyncRepository.SyncProgress.Running(0, 0, true))
+
+        _progress.postValue(SyncProgress.Running(0, 0, true))
 
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
@@ -202,19 +201,17 @@ class SyncRepositoryImpl(
         postIdle()
     }
 
-
-
-    override fun syncMessage(uri: Uri): Message? {
+    override fun syncMessage(uri: Uri): Message? = nullOnFail {
 
         // If we don't have a valid type, return null
         val type = when {
             uri.toString().contains("mms") -> "mms"
             uri.toString().contains("sms") -> "sms"
-            else -> return null
+            else -> return@nullOnFail null
         }
 
         // If we don't have a valid id, return null
-        val id = tryOrNull(false) { ContentUris.parseId(uri) } ?: return null
+        val id = tryOrNull(false) { ContentUris.parseId(uri) } ?: throw RuntimeException("Failed to sync message. No valid id for given uri.")
 
         // Check if the message already exists, so we can reuse the id
         val existingId = Realm.getDefaultInstance().use { realm ->
@@ -233,10 +230,10 @@ class SyncRepositoryImpl(
             else -> ContentUris.withAppendedId(Telephony.Sms.CONTENT_URI, id)
         }
 
-        return contentResolver.query(stableUri, null, null, null, null)?.use { cursor ->
+        return@nullOnFail contentResolver.query(stableUri, null, null, null, null)?.use { cursor ->
 
             // If there are no rows, return null. Otherwise, we've moved to the first row
-            if (!cursor.moveToFirst()) return null
+            if (!cursor.moveToFirst()) return@nullOnFail null
 
             val columnsMap = CursorToMessage.MessageColumns(cursor)
             cursorToMessage.map(Pair(cursor, columnsMap)).apply {
@@ -248,9 +245,9 @@ class SyncRepositoryImpl(
         }
     }
 
-    override fun syncContacts() {
+    override fun syncContacts() = unitOnFail {
         // Load all the contacts
-        var contacts = getContacts()
+        var contacts = getContacts() ?: throw RuntimeException("Failed to sync contacts.")
 
         Realm.getDefaultInstance()?.use { realm ->
             val recipients = realm.where(Recipient::class.java).findAll()
@@ -275,11 +272,11 @@ class SyncRepositoryImpl(
         }
     }
 
-    override fun syncContact(address: String): Boolean {
+    override fun syncContact(address: String): Boolean? = nullOnFail {
         // See if there's a contact that matches this phone number
-        var contact = getContacts().firstOrNull {
+        var contact = getContacts()?.firstOrNull {
             it.numbers.any { number -> PhoneNumberUtils.compare(number.address, address) }
-        } ?: return false
+        } ?: return@nullOnFail false
 
         Realm.getDefaultInstance().use { realm ->
             val recipients = realm.where(Recipient::class.java).findAll()
@@ -300,11 +297,11 @@ class SyncRepositoryImpl(
             }
         }
 
-        return true
+        return@nullOnFail true
     }
 
-    private fun getContacts(): List<Contact> {
-        return cursorToContact.getContactsCursor()
+    private fun getContacts(): List<Contact>? = nullOnFail {
+        return@nullOnFail cursorToContact.getContactsCursor()
                 ?.map { cursor -> cursorToContact.map(cursor) }
                 ?.groupBy { contact -> contact.lookupKey }
                 ?.map { contacts -> // lookupKey에 의한 그룹. Map.Entry<String, Contact>
@@ -321,10 +318,10 @@ class SyncRepositoryImpl(
                 } ?: listOf()
     }
 
-    private fun postProgress(max: Int, progress: Int, indeterminate: Boolean) {
-        _progress.postValue(SyncRepository.SyncProgress.Running(max, progress, indeterminate))
+    private fun postProgress(max: Int, progress: Int, indeterminate: Boolean) = unitOnFail {
+        _progress.postValue(SyncProgress.Running(max, progress, indeterminate))
     }
-    private fun postIdle() {
+    private fun postIdle() = unitOnFail {
         _progress.postValue(SyncRepository.SyncProgress.Idle())
     }
 

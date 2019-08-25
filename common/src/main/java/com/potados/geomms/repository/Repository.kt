@@ -13,6 +13,6 @@ import timber.log.Timber
  */
 abstract class Repository : FailableComponent(), Startable {
     override fun start() {
-        // Do nothing
+        Timber.v("${this::class.java.name} started.")
     }
 }

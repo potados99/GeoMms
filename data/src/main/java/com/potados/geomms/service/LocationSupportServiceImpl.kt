@@ -6,6 +6,9 @@ import android.telephony.SmsManager
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
+import com.potados.geomms.base.Failable
+import com.potados.geomms.extension.nullOnFail
+import com.potados.geomms.extension.unitOnFail
 import com.potados.geomms.manager.KeyManager
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
@@ -38,6 +41,8 @@ class LocationSupportServiceImpl(
             return
         }
 
+        super.start()
+
         restoreTasks()
         startLocationUpdates()
 
@@ -46,13 +51,13 @@ class LocationSupportServiceImpl(
         Timber.i("Service started.")
     }
 
-    override fun getConnections(): RealmResults<Connection> {
-        return Realm.getDefaultInstance().where(Connection::class.java)
+    override fun getConnections(): RealmResults<Connection>? = nullOnFail{
+        return@nullOnFail Realm.getDefaultInstance().where(Connection::class.java)
             .sort("date", Sort.ASCENDING)
             .findAll()
     }
 
-    override fun getConnection(id: Long): Connection? {
+    override fun getConnection(id: Long): Connection? = nullOnFail {
         val connection = Realm.getDefaultInstance().where(Connection::class.java)
             .equalTo("id", id)
             .findFirst()
@@ -61,34 +66,37 @@ class LocationSupportServiceImpl(
             Timber.w("Connection of id $id does not exist.")
         }
 
-        return connection
+        return@nullOnFail connection
     }
 
     /**
      * @return Recipient of conversation created from [address].
      * @throws RuntimeException when failed to get or create conversation.
      */
-    private fun getRecipient(address: String): Recipient {
-        return conversationRepo.getOrCreateConversation(address)?.recipients?.get(0)
+    private fun getRecipient(address: String): Recipient? = nullOnFail {
+        return@nullOnFail conversationRepo.getOrCreateConversation(address)?.recipients?.get(0)
             ?: throw RuntimeException("conversation of address $address must exist.")
     }
 
-    override fun getIncomingRequests(): RealmResults<ConnectionRequest> {
-        return  Realm.getDefaultInstance().where(ConnectionRequest::class.java)
+    override fun getIncomingRequests(): RealmResults<ConnectionRequest>? = nullOnFail {
+        return@nullOnFail  Realm.getDefaultInstance().where(ConnectionRequest::class.java)
             .sort("date", Sort.ASCENDING)
             .equalTo("isInbound", true)
             .findAll()
     }
-    override fun getOutgoingRequests(): RealmResults<ConnectionRequest> {
-        return  Realm.getDefaultInstance().where(ConnectionRequest::class.java)
+    override fun getOutgoingRequests(): RealmResults<ConnectionRequest>? = nullOnFail {
+        return@nullOnFail  Realm.getDefaultInstance().where(ConnectionRequest::class.java)
             .sort("date", Sort.ASCENDING)
             .equalTo("isInbound", false)
             .findAll()
     }
 
 
-    override fun requestNewConnection(address: String, duration: Long) {
+    override fun requestNewConnection(address: String, duration: Long) = unitOnFail {
         val recipient = getRecipient(address)
+        if (recipient == null) {
+            setFailure(Failable.Failure("Failed to request new connection. Couldn't get recipient of address $address.", true))
+        }
 
         val request = ConnectionRequest(
             connectionId = keyManager.randomId(99999),
@@ -102,14 +110,14 @@ class LocationSupportServiceImpl(
 
         Realm.getDefaultInstance().executeTransaction { it.insertOrUpdate(request) }
     }
-    override fun beRequestedNewConnection(packet: Packet) {
+    override fun beRequestedNewConnection(packet: Packet) = unitOnFail {
         // prevent double accepting and creating connection
         val found = Realm.getDefaultInstance()
             .where(Connection::class.java)
             .equalTo("id", packet.connectionId)
             .findFirst()
 
-        if (found != null) return
+        if (found != null) return@unitOnFail
 
         val request = ConnectionRequest(
             connectionId = packet.connectionId,
@@ -128,9 +136,15 @@ class LocationSupportServiceImpl(
      * @throws IllegalAccessError when [request] is not inbound
      * @throws IllegalArgumentException when [request] has no recipients
      */
-    override fun acceptConnectionRequest(request: ConnectionRequest) {
-        if (!request.isInbound) throw IllegalAccessError("Cannot accept request not heading to isInbound.")
-        if (request.recipient == null) throw IllegalArgumentException("Request without recipient is impossible.")
+    override fun acceptConnectionRequest(request: ConnectionRequest) = unitOnFail {
+        if (!request.isInbound) {
+            setFailure(Failable.Failure("Cannot accept request not inbound.", true))
+            return@unitOnFail
+        }
+        if (request.recipient == null) {
+            setFailure(Failable.Failure("Request without recipient is impossible.", true))
+            return@unitOnFail
+        }
 
         val realm = Realm.getDefaultInstance()
 
@@ -140,7 +154,7 @@ class LocationSupportServiceImpl(
             .equalTo("id", request.connectionId)
             .findFirst()
 
-        if (found != null) return
+        if (found != null) return@unitOnFail
 
         // tell it to YOU
         request.recipient?.let {
@@ -162,7 +176,7 @@ class LocationSupportServiceImpl(
 
         realm.close()
     }
-    override fun beAcceptedConnectionRequest(packet: Packet) {
+    override fun beAcceptedConnectionRequest(packet: Packet) = unitOnFail {
         val realm = Realm.getDefaultInstance()
 
         realm.where(ConnectionRequest::class.java)
@@ -188,28 +202,31 @@ class LocationSupportServiceImpl(
      * @throws IllegalAccessError when [request] is not inbound
      * @throws IllegalArgumentException when [request] has no recipients
      */
-    override fun refuseConnectionRequest(request: ConnectionRequest) {
-        if (!request.isInbound) throw IllegalAccessError("Cannot refuse request not heading to isInbound.")
+    override fun refuseConnectionRequest(request: ConnectionRequest) = unitOnFail {
+        if (!request.isInbound) {
+            setFailure(Failable.Failure("Cannot refuse request not inbound.", true))
+            return@unitOnFail
+        }
         if (request.recipient == null) {
-            // delete
             Realm.getDefaultInstance().executeTransaction {
                 request.deleteFromRealm()
             }
-            throw IllegalArgumentException("Request without recipient is impossible.")
+            setFailure(Failable.Failure("Request without recipient is impossible.", true))
+            return@unitOnFail
         }
 
         // let you know
         request.recipient?.let {
             sendPacket(it.address, Packet.ofRefusingRequest(request))
         }
-        
+
         // delete
         Realm.getDefaultInstance().executeTransaction {
             request.deleteFromRealm()
         }
     }
-    override fun beRefusedConnectionRequest(packet: Packet) {
-         Realm.getDefaultInstance().where(ConnectionRequest::class.java)
+    override fun beRefusedConnectionRequest(packet: Packet) = unitOnFail {
+        Realm.getDefaultInstance().where(ConnectionRequest::class.java)
             .equalTo("connectionId", packet.connectionId)
             .equalTo("isInbound", true)
             .findFirst()
@@ -217,13 +234,18 @@ class LocationSupportServiceImpl(
             ?: Timber.w("cannot find corresponding pending request for REFUSE_CONNECT.")
     }
 
-    override fun sendUpdate(connectionId: Long) {
-        val connection = getConnection(connectionId) ?: return
-        val packet = Packet.ofSendingData(connection, locationRepo.getCurrentLocation() ?: return)
+    override fun sendUpdate(connectionId: Long) = unitOnFail {
+        val connection = getConnection(connectionId)
+        if (connection == null) {
+            setFailure(Failable.Failure("Failed to send update. Cannot find connection of id $connectionId", true))
+            return@unitOnFail
+        }
 
-        sendPacket(connection.recipient?.address ?: return, packet)
+        val packet = Packet.ofSendingData(connection, locationRepo.getCurrentLocation() ?: return@unitOnFail)
+
+        sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
     }
-    override fun beSentUpdate(packet: Packet) {
+    override fun beSentUpdate(packet: Packet) = unitOnFail {
         val realm = Realm.getDefaultInstance()
 
         realm.where(Connection::class.java)
@@ -241,113 +263,110 @@ class LocationSupportServiceImpl(
             } ?: Timber.w("cannot find corresponding connection for TRANSFER_DATA.")
     }
 
-    override fun requestUpdate(connectionId: Long) {
-        val connection = getConnection(connectionId) ?: return
+    override fun requestUpdate(connectionId: Long) = unitOnFail {
+        val connection = getConnection(connectionId)
+        if (connection == null) {
+            setFailure(Failable.Failure("Failed to request update. Cannot find connection of id $connectionId", true))
+            return@unitOnFail
+        }
         val packet = Packet.ofRequestingUpdate(connection)
 
-        sendPacket(connection.recipient?.address ?: return, packet)
+        sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
 
         Timber.i("requested update")
     }
-    override fun beRequestedUpdate(packet: Packet) {
-         Realm.getDefaultInstance().where(Connection::class.java)
+    override fun beRequestedUpdate(packet: Packet) = unitOnFail {
+        Realm.getDefaultInstance().where(Connection::class.java)
             .equalTo("id", packet.connectionId)
             .findFirst()
             ?.let { sendUpdate(it.id) }
             ?: Timber.w("cannot find corresponding connection for REQUEST_DATA.")
     }
 
-    override fun requestDisconnect(connectionId: Long) {
-        val realm = Realm.getDefaultInstance()
-
-        val connection = getConnection(connectionId) ?: return
+    override fun requestDisconnect(connectionId: Long) = unitOnFail {
+        val connection = getConnection(connectionId)
+        if (connection == null) {
+            setFailure(Failable.Failure("Failed to request disconnect. Cannot find connection of id $connectionId", true))
+            return@unitOnFail
+        }
         val packet = Packet.ofRequestingDisconnect(connection)
 
         // stop sending
         unregisterTask(connection)
 
         // notify
-        sendPacket(connection.recipient?.address ?: return, packet)
+        sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
 
         // delete
-        realm.executeTransaction {
+        Realm.getDefaultInstance().executeTransaction {
             connection.deleteFromRealm()
         }
-
-        realm.close()
 
         Timber.i("requested disconnect")
     }
-    override fun beRequestedDisconnect(packet: Packet) {
-        val connection = getConnection(packet.connectionId) ?: return
+    override fun beRequestedDisconnect(packet: Packet) = unitOnFail {
+        val connection = getConnection(packet.connectionId) ?: return@unitOnFail
 
-        sendPacket(connection.recipient?.address ?: return, packet)
+        sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
 
-         Realm.getDefaultInstance().executeTransaction {
+        Realm.getDefaultInstance().executeTransaction {
             connection.deleteFromRealm()
         }
     }
 
 
-    override fun sendPacket(address: String, packet: Packet) {
-        try {
-            val serialized = serializePacket(packet) ?: return
+    override fun sendPacket(address: String, packet: Packet) = unitOnFail {
+        val serialized = serializePacket(packet) ?: return@unitOnFail
 
-            SmsManager.getDefault().sendTextMessage(
-                address,
-                null,
-                serialized,
-                null,
-                null
-            )
+        SmsManager.getDefault().sendTextMessage(
+            address,
+            null,
+            serialized,
+            null,
+            null
+        )
 
-            Timber.i("sent packet: \"$serialized\"")
-        } catch (e: Exception) {
-            Timber.w(e)
-        }
+        Timber.i("sent packet: \"$serialized\"")
     }
 
-    override fun receivePacket(address: String, body: String) {
-        try {
-            val packet = parsePacket(body)?.apply {
-                this.address = address
-            } ?: return
+    override fun receivePacket(address: String, body: String) = unitOnFail {
+        val packet = parsePacket(body)?.apply {
+            this.address = address
+        } ?: return@unitOnFail
 
-            Timber.i("Received packet is ${findType(packet.type).toString()}")
+        Timber.i("Received packet is ${findType(packet.type).toString()}")
 
-            when (packet.type) {
+        when (packet.type) {
 
-                Packet.PacketType.REQUEST_CONNECT.number -> {
-                    beRequestedNewConnection(packet)
-                }
-
-                Packet.PacketType.ACCEPT_CONNECT.number -> {
-                    beAcceptedConnectionRequest(packet)
-                }
-
-                Packet.PacketType.REFUSE_CONNECT.number -> {
-                    beRefusedConnectionRequest(packet)
-                }
-
-                Packet.PacketType.TRANSFER_DATA.number -> {
-                    beSentUpdate(packet)
-                }
-
-                Packet.PacketType.REQUEST_DATA.number -> {
-                    beRequestedUpdate(packet)
-                }
-
-                Packet.PacketType.REQUEST_DISCONNECT.number -> {
-                    beRequestedDisconnect(packet)
-                }
+            Packet.PacketType.REQUEST_CONNECT.number -> {
+                beRequestedNewConnection(packet)
             }
 
-            Timber.i("Successfully received packet.")
+            Packet.PacketType.ACCEPT_CONNECT.number -> {
+                beAcceptedConnectionRequest(packet)
+            }
 
-        } catch (e: Exception) {
-            Timber.w(e)
+            Packet.PacketType.REFUSE_CONNECT.number -> {
+                beRefusedConnectionRequest(packet)
+            }
+
+            Packet.PacketType.TRANSFER_DATA.number -> {
+                beSentUpdate(packet)
+            }
+
+            Packet.PacketType.REQUEST_DATA.number -> {
+                beRequestedUpdate(packet)
+            }
+
+            Packet.PacketType.REQUEST_DISCONNECT.number -> {
+                beRequestedDisconnect(packet)
+            }
         }
+
+        Timber.i("Successfully received packet.")
+
     }
+
 
     /**
      * Create a packet from a plain string.
@@ -361,13 +380,13 @@ class LocationSupportServiceImpl(
      * @see [serializePacket]
      * @see [Packet]
      */
-    override fun parsePacket(body: String): Packet? {
+    override fun parsePacket(body: String): Packet? = nullOnFail {
         /**
          * 예외처리
          */
-        if (!isValidPacket(body)) {
+        if (isValidPacket(body) != true) {
             Timber.w("not a LocationSupport packet.")
-            return null
+            return@nullOnFail null
         }
 
         /**
@@ -381,7 +400,7 @@ class LocationSupportServiceImpl(
          */
         if (payloadFields.size < 2) {
             Timber.w("necessary fields are missing.")
-            return null
+            return@nullOnFail null
         }
 
         /**
@@ -402,7 +421,7 @@ class LocationSupportServiceImpl(
          */
         if (type == null) {
             Timber.w("undefined type: $typeNumber")
-            return null
+            return@nullOnFail null
         }
 
         /**
@@ -433,7 +452,7 @@ class LocationSupportServiceImpl(
                     }
                 }
 
-                return null
+                return@nullOnFail null
             }
 
             json.addProperty(it.fieldName, value)
@@ -442,7 +461,7 @@ class LocationSupportServiceImpl(
         /**
          * Packet 객체 확보.
          */
-        return try {
+        return@nullOnFail try {
             Gson().fromJson(json, Types.typeOf<Packet>())
         }
         catch (e: Exception) {
@@ -454,7 +473,7 @@ class LocationSupportServiceImpl(
                     Timber.w("unknown error occurred while parsing json.")
                 }
             }
-            return null
+            return@nullOnFail null
         }
     }
 
@@ -465,14 +484,14 @@ class LocationSupportServiceImpl(
      * @see [parsePacket]
      * @see [Packet].
      */
-    override fun serializePacket(packet: Packet): String? {
+    override fun serializePacket(packet: Packet): String? = nullOnFail {
         val builder = StringBuilder().append(GEO_MMS_PREFIX)
 
         val type = Packet.PacketType.values().find { it.number == packet.type }
 
         if (type == null) {
             Timber.w("wrong packet type: ${packet.type}")
-            return null
+            return@nullOnFail null
         }
 
         type.fields.forEach {
@@ -481,7 +500,7 @@ class LocationSupportServiceImpl(
             }
             catch (e: Exception) {
                 Timber.w("error occurred while accessing property.")
-                return null
+                return@nullOnFail null
             }
 
             builder.append(value)
@@ -491,28 +510,28 @@ class LocationSupportServiceImpl(
             }
         }
 
-        return builder.toString()
+        return@nullOnFail builder.toString()
     }
 
-    override fun isValidPacket(body: String): Boolean {
-        if (body.isBlank())                     return false   /* 비어있는 메시지 */
-        if (!body.startsWith(GEO_MMS_PREFIX))   return false   /* 무관한 메시지 */
+    override fun isValidPacket(body: String): Boolean? = nullOnFail {
+        if (body.isBlank())                     return@nullOnFail false   /* 비어있는 메시지 */
+        if (!body.startsWith(GEO_MMS_PREFIX))   return@nullOnFail false   /* 무관한 메시지 */
 
-        return true
+        return@nullOnFail true
     }
 
-    private fun findType(typeNum: Number): Packet.PacketType? {
-        return Packet.PacketType.values().find { it.number == typeNum }
+    private fun findType(typeNum: Number): Packet.PacketType? = nullOnFail {
+        return@nullOnFail Packet.PacketType.values().find { it.number == typeNum }
     }
 
     /**
      * Only once when app started.
      * Add scheduled tasks for active connections.
      */
-    private fun restoreTasks() {
+    private fun restoreTasks() = unitOnFail {
         scheduler.cancelAll()
         Realm.getDefaultInstance().executeTransaction {
-            getConnections().forEach {
+            getConnections()?.forEach {
                 if (it.isExpired()) {
                     it.deleteFromRealm()
                 } else {
@@ -521,11 +540,11 @@ class LocationSupportServiceImpl(
             }
 
             // TODO find a way to remove outgoing requests.
-            getOutgoingRequests().deleteAllFromRealm()
+            getOutgoingRequests()?.deleteAllFromRealm()
         }
     }
 
-    private fun startLocationUpdates() {
+    private fun startLocationUpdates() = unitOnFail {
         locationRepo.startLocationUpdates()
     }
 
@@ -537,7 +556,7 @@ class LocationSupportServiceImpl(
      *
      * @param connection must be a realm managed object.
      */
-    private fun registerTask(connection: Connection) {
+    private fun registerTask(connection: Connection) = unitOnFail {
         scheduler.doOnEvery(connection.id, UPDATE_INTERVAL) {
             context.sendBroadcast(
                 Intent(context, SendUpdateReceiver::class.java)
@@ -549,7 +568,7 @@ class LocationSupportServiceImpl(
         }
 
         Timber.i("Task registered: connection ${connection.id}, for every ${Duration(UPDATE_INTERVAL).toShortenString()}")
-        Timber.i("Will be disconnected at ${DateTime(connection.due).toString()}")
+        Timber.i("Will be disconnected at ${DateTime(connection.due)}")
     }
 
     /**
@@ -557,7 +576,7 @@ class LocationSupportServiceImpl(
      *
      * @param connection must be a realm managed object.
      */
-    private fun unregisterTask(connection: Connection) {
+    private fun unregisterTask(connection: Connection) = unitOnFail {
         scheduler.cancel(connection.id)
 
         Timber.i("Task unregistered: connection ${connection.id}.")

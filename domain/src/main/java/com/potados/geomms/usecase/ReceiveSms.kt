@@ -46,10 +46,10 @@ class ReceiveSms(
                 .reduce { body, new -> body + new }
 
             messageRepo.insertReceivedSms(params.subId, address, body, time)
-                .threadId
-                .also { conversationRepo.updateConversations(it) }
-                .also { conversationRepo.getOrCreateConversation(it) }
-                .also { notificationManager.update(it) }
-                .also { updateBadge(Unit) }
+                ?.threadId
+                ?.also { conversationRepo.updateConversations(it) }
+                ?.also { conversationRepo.getOrCreateConversation(it) }
+                ?.also { notificationManager.update(it) }
+                ?.also { updateBadge(Unit) }
         }
 }

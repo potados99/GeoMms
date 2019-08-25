@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2017 Moez Bhatti <moez.bhatti@gmail.com>
- *
- * This file is part of QKSMS.
- *
- * QKSMS is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * QKSMS is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.potados.geomms.common.manager
 
 import android.annotation.SuppressLint
@@ -54,8 +36,7 @@ class NotificationManagerImplTest(
     private val conversationRepo: ConversationRepository,
     private val messageRepo: MessageRepository,
     private val permissionManager: PermissionManager
-
-) : com.potados.geomms.manager.NotificationManager {
+) : com.potados.geomms.manager.NotificationManager() {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -79,10 +60,10 @@ class NotificationManagerImplTest(
      * Updates the notification for a particular conversation
      */
     override fun update(threadId: Long) {
-        val messages = messageRepo.getUnreadUnseenMessages(threadId)
+        val messages = messageRepo.getUnreadUnseenMessages(threadId) ?: return
 
         // If there are no messages to be displayed, make sure that the notification is dismissed
-        if (messages.isEmpty()) {
+        if (messages.isEmpty() == true) {
             notificationManager.cancel(threadId.toInt())
             return
         }

@@ -29,7 +29,9 @@ import com.klinker.android.send_message.SmsManagerFactory
 import com.klinker.android.send_message.Transaction
 import com.potados.geomms.compat.TelephonyCompat
 import com.potados.geomms.extension.anyOf
+import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.tryOrNull
+import com.potados.geomms.extension.unitOnFail
 import com.potados.geomms.manager.ActiveConversationManager
 import com.potados.geomms.manager.KeyManager
 import com.potados.geomms.manager.KeyManagerImpl.Companion.CHANNEL_MESSAGE
@@ -56,8 +58,8 @@ class MessageRepositoryImpl(
     private val syncRepository: SyncRepository
 ) : MessageRepository() {
 
-    override fun getMessages(threadId: Long, query: String): RealmResults<Message> {
-        return Realm.getDefaultInstance()
+    override fun getMessages(threadId: Long, query: String): RealmResults<Message>? = nullOnFail {
+         return@nullOnFail Realm.getDefaultInstance()
             .where(Message::class.java)
             .equalTo("threadId", threadId)
             .let { if (query.isEmpty()) it else it.contains("body", query, Case.INSENSITIVE) }
@@ -65,22 +67,22 @@ class MessageRepositoryImpl(
             .findAllAsync()
     }
 
-    override fun getMessage(id: Long): Message? {
-        return Realm.getDefaultInstance()
+    override fun getMessage(id: Long): Message? = nullOnFail {
+         return@nullOnFail Realm.getDefaultInstance()
             .where(Message::class.java)
             .equalTo("id", id)
             .findFirst()
     }
 
-    override fun getMessageForPart(id: Long): Message? {
-        return Realm.getDefaultInstance()
+    override fun getMessageForPart(id: Long): Message? = nullOnFail {
+         return@nullOnFail Realm.getDefaultInstance()
             .where(Message::class.java)
             .equalTo("parts.id", id)
             .findFirst()
     }
 
-    override fun getUnreadCount(): Long {
-        return Realm.getDefaultInstance()
+    override fun getUnreadCount(): Long? = nullOnFail {
+         return@nullOnFail Realm.getDefaultInstance()
             .where(Conversation::class.java)
             .equalTo("archived", false)
             .equalTo("blocked", false)
@@ -88,15 +90,15 @@ class MessageRepositoryImpl(
             .count()
     }
 
-    override fun getPart(id: Long): MmsPart? {
-        return Realm.getDefaultInstance()
+    override fun getPart(id: Long): MmsPart? = nullOnFail {
+         return@nullOnFail Realm.getDefaultInstance()
             .where(MmsPart::class.java)
             .equalTo("id", id)
             .findFirst()
     }
 
-    override fun getPartsForConversation(threadId: Long): RealmResults<MmsPart> {
-        return Realm.getDefaultInstance()
+    override fun getPartsForConversation(threadId: Long): RealmResults<MmsPart>? = nullOnFail {
+         return@nullOnFail Realm.getDefaultInstance()
             .where(MmsPart::class.java)
             .equalTo("messages.threadId", threadId)
             .beginGroup()
@@ -112,8 +114,8 @@ class MessageRepositoryImpl(
      * Retrieves the list of messages which should be shown in the notification
      * for a given conversation
      */
-    override fun getUnreadUnseenMessages(threadId: Long): RealmResults<Message> {
-        return Realm.getDefaultInstance()
+    override fun getUnreadUnseenMessages(threadId: Long): RealmResults<Message>? = nullOnFail {
+         return@nullOnFail Realm.getDefaultInstance()
             .also { it.refresh() }
             .where(Message::class.java)
             .equalTo("seen", false)
@@ -123,8 +125,8 @@ class MessageRepositoryImpl(
             .findAll()
     }
 
-    override fun getUnreadMessages(threadId: Long): RealmResults<Message> {
-        return Realm.getDefaultInstance()
+    override fun getUnreadMessages(threadId: Long): RealmResults<Message>? = nullOnFail {
+         return@nullOnFail Realm.getDefaultInstance()
             .where(Message::class.java)
             .equalTo("read", false)
             .equalTo("threadId", threadId)
@@ -132,14 +134,14 @@ class MessageRepositoryImpl(
             .findAll()
     }
 
-    override fun markAllSeen() {
+    override fun markAllSeen() = unitOnFail {
         val realm = Realm.getDefaultInstance()
         val messages = realm.where(Message::class.java).equalTo("seen", false).findAll()
         realm.executeTransaction { messages.forEach { message -> message.seen = true } }
         realm.close()
     }
 
-    override fun markSeen(threadId: Long) {
+    override fun markSeen(threadId: Long) = unitOnFail {
         val realm = Realm.getDefaultInstance()
         val messages = realm.where(Message::class.java)
             .equalTo("threadId", threadId)
@@ -154,7 +156,7 @@ class MessageRepositoryImpl(
         realm.close()
     }
 
-    override fun markRead(vararg threadIds: Long) {
+    override fun markRead(vararg threadIds: Long) = unitOnFail {
         /**
          * Realm 업데이트
          */
@@ -193,7 +195,7 @@ class MessageRepositoryImpl(
         }
     }
 
-    override fun markUnread(vararg threadIds: Long) {
+    override fun markUnread(vararg threadIds: Long) = unitOnFail {
         Realm.getDefaultInstance()?.use { realm ->
             val conversation = realm.where(Conversation::class.java)
                 .anyOf("id", threadIds)
@@ -212,13 +214,12 @@ class MessageRepositoryImpl(
         addresses: List<String>,
         body: String,
         attachments: List<Attachment>
-    ) {
+    ) = unitOnFail {
         if (addresses.size == 1 && attachments.isEmpty()) {
-            /** SMS */
-            val message = insertSentSms(subId, threadId, addresses.first(), body, System.currentTimeMillis())
-            sendSms(message)
+            // SMS
+            insertSentSms(subId, threadId, addresses.first(), body, System.currentTimeMillis())?.let(::sendSms)
         } else {
-            /** MMS */
+            // MMS
             val parts = arrayListOf<MMSPart>()
 
             if (body.isNotBlank()) {
@@ -258,7 +259,7 @@ class MessageRepositoryImpl(
         }
     }
 
-    override fun sendSms(message: Message) {
+    override fun sendSms(message: Message) = unitOnFail {
         val smsManager = message.subId.takeIf { it != -1 }
             ?.let(SmsManagerFactory::createSmsManager)
             ?: SmsManager.getDefault()
@@ -292,7 +293,7 @@ class MessageRepositoryImpl(
         }
     }
 
-    override fun insertSentSms(subId: Int, threadId: Long, address: String, body: String, date: Long): Message {
+    override fun insertSentSms(subId: Int, threadId: Long, address: String, body: String, date: Long): Message? = nullOnFail {
 
         // Insert the message to Realm
         val message = Message().apply {
@@ -340,10 +341,10 @@ class MessageRepositoryImpl(
             uri?.let(syncRepository::syncMessage)
         }
 
-        return message
+         return@nullOnFail message
     }
 
-    override fun insertReceivedSms(subId: Int, address: String, body: String, sentTime: Long): Message {
+    override fun insertReceivedSms(subId: Int, address: String, body: String, sentTime: Long): Message? = nullOnFail {
 
         // Insert the message to Realm
         val message = Message().apply {
@@ -378,13 +379,13 @@ class MessageRepositoryImpl(
 
         realm.close()
 
-        return message
+        return@nullOnFail message
     }
 
     /**
      * Marks the message as sending, in case we need to retry sending it
      */
-    override fun markSending(id: Long) {
+    override fun markSending(id: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             realm.refresh()
 
@@ -403,7 +404,7 @@ class MessageRepositoryImpl(
         }
     }
 
-    override fun markSent(id: Long) {
+    override fun markSent(id: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             realm.refresh()
 
@@ -422,7 +423,7 @@ class MessageRepositoryImpl(
         }
     }
 
-    override fun markFailed(id: Long, resultCode: Int) {
+    override fun markFailed(id: Long, resultCode: Int) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             realm.refresh()
 
@@ -443,7 +444,7 @@ class MessageRepositoryImpl(
         }
     }
 
-    override fun markDelivered(id: Long) {
+    override fun markDelivered(id: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             realm.refresh()
 
@@ -466,7 +467,7 @@ class MessageRepositoryImpl(
         }
     }
 
-    override fun markDeliveryFailed(id: Long, resultCode: Int) {
+    override fun markDeliveryFailed(id: Long, resultCode: Int) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             realm.refresh()
 
@@ -491,7 +492,7 @@ class MessageRepositoryImpl(
         }
     }
 
-    override fun deleteMessages(vararg messageIds: Long) {
+    override fun deleteMessages(vararg messageIds: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             realm.refresh()
 

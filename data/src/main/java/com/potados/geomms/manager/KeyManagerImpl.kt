@@ -23,7 +23,7 @@ import com.potados.geomms.model.Message
 import io.realm.Realm
 import kotlin.random.Random
 
-class KeyManagerImpl: KeyManager {
+class KeyManagerImpl: KeyManager() {
 
     data class Channel(var initialized: Boolean, var maxId: Long)
 

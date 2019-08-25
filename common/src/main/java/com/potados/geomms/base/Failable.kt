@@ -17,5 +17,5 @@ interface Failable {
      */
     fun setFailure(failure: Failure)
 
-    data class Failure(val message: String)
+    data class Failure(val message: String, val show: Boolean = false)
 }

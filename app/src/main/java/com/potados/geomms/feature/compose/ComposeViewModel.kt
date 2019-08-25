@@ -4,8 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.feature.compose.filter.ContactFilter
+import com.potados.geomms.functional.Result
 import com.potados.geomms.manager.ActiveConversationManager
 import com.potados.geomms.model.*
 import com.potados.geomms.repository.ContactRepository
@@ -81,7 +83,11 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
             messages.value = messageRepo.getMessages(threadId)
 
             activeConversationManager.setActiveConversation(threadId)
-            markRead(listOf(threadId))
+            markRead(listOf(threadId)) {
+                if (it is Result.Error) {
+                    setFailure(Failable.Failure("Failed to mark as read.", true))
+                }
+            }
 
             sharedText = intent.extras?.getString(Intent.EXTRA_TEXT) ?: ""
 
@@ -105,22 +111,34 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
     }
 
     fun getContacts(query: String = ""): List<Contact> {
-        return contactRepo.getUnmanagedContacts().filter {
+        val contacts = contactRepo.getUnmanagedContacts()?.filter {
             contactFilter.filter(it, query)
         }
+
+        if (contacts == null) {
+            setFailure(Failable.Failure("Failed to get contacts.", true))
+            return listOf()
+        }
+
+        return contacts
     }
 
     /* 임시 TODO */
     fun sendSms(body: String) {
-        conversation.value?.let {
-            sendMessage(
-                SendMessage.Params(
-                    subId = -1,
-                    threadId = it.id,
-                    addresses = it.recipients.map { recipient -> recipient.address },
-                    body = body,
-                    attachments = listOf()
-                ))
+        val conversation = conversation.value ?: return
+
+        val params = SendMessage.Params(
+            subId = -1,
+            threadId = conversation.id,
+            addresses = conversation.recipients.map { recipient -> recipient.address },
+            body = body,
+            attachments = listOf()
+        )
+
+        sendMessage(params) {
+            if (it is Result.Error) {
+                setFailure(Failable.Failure("Failed to send SMS.", true))
+            }
         }
     }
 }

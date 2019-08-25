@@ -1,5 +1,6 @@
 package com.potados.geomms.common.base
 
+import androidx.annotation.CallSuper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,6 +33,7 @@ abstract class BaseViewModel : ViewModel(), Startable, Failable, FailableContain
         return failure
     }
 
+    @CallSuper
     override fun start() {
         Timber.v("${this::class.java.name} started.")
     }

@@ -26,7 +26,7 @@ abstract class ContactRepository : Repository() {
 
     abstract fun findContactUri(address: String): Uri?
 
-    abstract fun getContacts(): RealmResults<Contact>
+    abstract fun getContacts(): RealmResults<Contact>?
 
-    abstract fun getUnmanagedContacts(): List<Contact>
+    abstract fun getUnmanagedContacts(): List<Contact>?
 }

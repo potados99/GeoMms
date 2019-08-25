@@ -7,29 +7,29 @@ import io.realm.RealmResults
 
 abstract class MessageRepository : Repository() {
 
-    abstract fun getMessages(threadId: Long, query: String = ""): RealmResults<Message>
+    abstract fun getMessages(threadId: Long, query: String = ""): RealmResults<Message>?
 
     abstract fun getMessage(id: Long): Message?
 
     abstract fun getMessageForPart(id: Long): Message?
 
-    abstract fun getUnreadCount(): Long
+    abstract fun getUnreadCount(): Long?
 
     abstract fun getPart(id: Long): MmsPart?
 
-    abstract fun getPartsForConversation(threadId: Long): RealmResults<MmsPart>
+    abstract fun getPartsForConversation(threadId: Long): RealmResults<MmsPart>?
 
     /**
      * Retrieves the list of messages which should be shown in the notification
      * for a given conversation
      */
-    abstract fun getUnreadUnseenMessages(threadId: Long): RealmResults<Message>
+    abstract fun getUnreadUnseenMessages(threadId: Long): RealmResults<Message>?
 
     /**
      * Retrieves the list of messages which should be shown in the quickreply popup
      * for a given conversation
      */
-    abstract fun getUnreadMessages(threadId: Long): RealmResults<Message>
+    abstract fun getUnreadMessages(threadId: Long): RealmResults<Message>?
 
     abstract fun markAllSeen()
 
@@ -52,9 +52,9 @@ abstract class MessageRepository : Repository() {
      */
     abstract fun sendSms(message: Message)
 
-    abstract fun insertSentSms(subId: Int, threadId: Long, address: String, body: String, date: Long): Message
+    abstract fun insertSentSms(subId: Int, threadId: Long, address: String, body: String, date: Long): Message?
 
-    abstract fun insertReceivedSms(subId: Int, address: String, body: String, sentTime: Long): Message
+    abstract fun insertReceivedSms(subId: Int, address: String, body: String, sentTime: Long): Message?
 
     /**
      * Marks the message as sending, in case we need to retry sending it

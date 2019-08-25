@@ -1,20 +1,5 @@
-/*
- * Copyright (C) 2017 Moez Bhatti <moez.bhatti@gmail.com>
+/**
  *
- * This file is part of QKSMS.
- *
- * QKSMS is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * QKSMS is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.potados.geomms.repository
 
@@ -24,18 +9,14 @@ import android.provider.BaseColumns
 import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.Phone
+import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.model.Contact
 import io.realm.Realm
 import io.realm.RealmResults
-import timber.log.Timber
 
 class ContactRepositoryImpl(private val context: Context) : ContactRepository() {
 
-    override fun start() {
-        Timber.i("ContactRepositoryImpl started.")
-    }
-
-    override fun findContactUri(address: String): Uri? {
+    override fun findContactUri(address: String): Uri? = nullOnFail {
         val uri = when {
             address.contains('@') -> {
                 Uri.withAppendedPath(Email.CONTENT_FILTER_URI, Uri.encode(address))
@@ -50,28 +31,28 @@ class ContactRepositoryImpl(private val context: Context) : ContactRepository() 
             uri, arrayOf(BaseColumns._ID), null, null, null
         )
 
-        return cursor?.use {
+        return@nullOnFail cursor?.use {
             val id = cursor.getString(cursor.getColumnIndexOrThrow(BaseColumns._ID))
 
             Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, id)
         }
     }
 
-    override fun getContacts(): RealmResults<Contact> {
+    override fun getContacts(): RealmResults<Contact>? = nullOnFail {
         val realm = Realm.getDefaultInstance()
-        return realm.where(Contact::class.java)
-                .sort("name")
-                .findAll()
+        return@nullOnFail realm.where(Contact::class.java)
+            .sort("name")
+            .findAll()
     }
 
-    override fun getUnmanagedContacts(): List<Contact> {
+    override fun getUnmanagedContacts(): List<Contact>? = nullOnFail {
         val realm = Realm.getDefaultInstance()
 
         val mobileLabel by lazy {
             Phone.getTypeLabel(context.resources, Phone.TYPE_MOBILE, "Mobile").toString()
         }
 
-        return realm.where(Contact::class.java)
+        return@nullOnFail realm.where(Contact::class.java)
             .contains("numbers.type", mobileLabel)
             .sort("name")
             .findAll()

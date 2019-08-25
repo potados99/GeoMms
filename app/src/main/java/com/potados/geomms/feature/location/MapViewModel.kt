@@ -61,10 +61,12 @@ class MapViewModel : BaseViewModel(), KoinComponent {
             listOf(locationService)
         )
 
-        // Setting chagne listener does not invoke it on register time.
-        // Do it for one time manually.
-        connections.addChangeListener(refreshMarkers)
-        refreshMarkers(connections)
+        connections?.let {
+            // Setting chagne listener does not invoke it on register time.
+            // Do it for one time manually.
+            it.addChangeListener(refreshMarkers)
+            refreshMarkers(it)
+        }
     }
 
     fun request(address: String) {

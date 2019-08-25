@@ -6,6 +6,8 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.potados.geomms.extension.nullOnFail
+import com.potados.geomms.extension.unitOnFail
 import timber.log.Timber
 
 @SuppressWarnings("MissingPermission")
@@ -24,10 +26,10 @@ class LocationRepositoryImpl(
     }
 
     private val locationCallback = object: LocationCallback() {
-        override fun onLocationResult(result: LocationResult?) {
+        override fun onLocationResult(result: LocationResult?) = unitOnFail {
             if (result == null) {
                 Timber.i("Location Result is null.")
-                return
+                return@unitOnFail
             }
 
             // Get average of location data.
@@ -38,18 +40,19 @@ class LocationRepositoryImpl(
         }
     }
 
-    override fun getCurrentLocation(): Location? {
+    override fun getCurrentLocation(): Location? = nullOnFail {
         if (currentLocation == null) {
             Timber.i("Current location is null.")
         }
-        return currentLocation
+
+        return@nullOnFail currentLocation
     }
 
-    override fun startLocationUpdates() {
+    override fun startLocationUpdates() = unitOnFail {
         locationClient.requestLocationUpdates(request, locationCallback, null)
     }
 
-    override fun stopLocationUpdates() {
+    override fun stopLocationUpdates() = unitOnFail{
         locationClient.removeLocationUpdates(locationCallback)
     }
 }

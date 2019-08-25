@@ -1,6 +1,7 @@
 package com.potados.geomms.feature.location
 
 import androidx.lifecycle.ViewModel
+import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.feature.compose.filter.ContactFilter
 import com.potados.geomms.model.Contact
@@ -15,13 +16,20 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
     private val contactFilter: ContactFilter by inject()
 
     override fun start() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        super.start()
     }
 
     fun getContacts(query: String = ""): List<Contact> {
-        return contactRepo.getUnmanagedContacts().filter {
+        val contacts = contactRepo.getUnmanagedContacts()?.filter {
             contactFilter.filter(it, query)
         }
+
+        if (contacts == null) {
+            setFailure(Failable.Failure("Failed to get contacts.", true))
+            return listOf()
+        }
+
+        return contacts
     }
 
     // TODO

@@ -1,7 +1,9 @@
 package com.potados.geomms.feature.conversations
 
 import androidx.lifecycle.ViewModel
+import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
+import com.potados.geomms.functional.Result
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.SyncLog
 import com.potados.geomms.repository.ConversationRepository
@@ -65,7 +67,11 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
         // when upgrading from 2.7.3, or if the app's data was cleared
         val lastSync = Realm.getDefaultInstance().use { realm -> realm.where(SyncLog::class.java)?.max("date") ?: 0 }
         if (lastSync == 0 && permissionManager.isDefaultSms() && permissionManager.hasReadSms() && permissionManager.hasContacts()) {
-            syncMessages(Unit)
+            syncMessages(Unit) {
+                if (it is Result.Error) {
+                    setFailure(Failable.Failure("Failed to sync messages.", true))
+                }
+            }
         }
     }
 }

@@ -23,9 +23,7 @@ import android.content.Context
 import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
 import com.potados.geomms.compat.TelephonyCompat
-import com.potados.geomms.extension.anyOf
-import com.potados.geomms.extension.map
-import com.potados.geomms.extension.tryOrNull
+import com.potados.geomms.extension.*
 import com.potados.geomms.mapper.CursorToConversation
 import com.potados.geomms.mapper.CursorToRecipient
 import com.potados.geomms.model.Contact
@@ -42,21 +40,21 @@ class ConversationRepositoryImpl(
     private val cursorToRecipient: CursorToRecipient
 ) : ConversationRepository() {
 
-    override fun getConversations(archived: Boolean): RealmResults<Conversation> {
-        return Realm.getDefaultInstance()
-            .where(Conversation::class.java)
-            .notEqualTo("id", 0L)
-            .greaterThan("count", 0)
-            .equalTo("archived", archived)
-            .equalTo("blocked", false)
-            .isNotEmpty("recipients")
-            .sort("pinned", Sort.DESCENDING, "date", Sort.DESCENDING)
-            .findAllAsync()
-    }
+    override fun getConversations(archived: Boolean): RealmResults<Conversation>? = nullOnFail{
+            return@nullOnFail Realm.getDefaultInstance()
+                .where(Conversation::class.java)
+                .notEqualTo("id", 0L)
+                .greaterThan("count", 0)
+                .equalTo("archived", archived)
+                .equalTo("blocked", false)
+                .isNotEmpty("recipients")
+                .sort("pinned", Sort.DESCENDING, "date", Sort.DESCENDING)
+                .findAllAsync()
+        }
 
-    override fun getConversationsSnapshot(): List<Conversation> {
+    override fun getConversationsSnapshot(): List<Conversation>? = nullOnFail {
         val realm = Realm.getDefaultInstance()
-        return realm.copyFromRealm(
+        return@nullOnFail realm.copyFromRealm(
             realm.where(Conversation::class.java)
                 .notEqualTo("id", 0L)
                 .greaterThan("count", 0)
@@ -68,9 +66,9 @@ class ConversationRepositoryImpl(
         )
     }
 
-    override fun getTopConversations(): List<Conversation> {
+    override fun getTopConversations(): List<Conversation>? = nullOnFail {
         val realm = Realm.getDefaultInstance()
-        return realm.copyFromRealm(
+        return@nullOnFail realm.copyFromRealm(
             realm.where(Conversation::class.java)
                 .notEqualTo("id", 0L)
                 .greaterThan("count", 0)
@@ -83,7 +81,7 @@ class ConversationRepositoryImpl(
         )
     }
 
-    override fun setConversationName(id: Long, name: String) {
+    override fun setConversationName(id: Long, name: String) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             realm.executeTransaction {
                 realm.where(Conversation::class.java)
@@ -94,33 +92,33 @@ class ConversationRepositoryImpl(
         }
     }
 
-    override fun getBlockedConversations(): RealmResults<Conversation> {
-        return Realm.getDefaultInstance()
+    override fun getBlockedConversations(): RealmResults<Conversation>? = nullOnFail {
+        return@nullOnFail Realm.getDefaultInstance()
             .where(Conversation::class.java)
             .equalTo("blocked", true)
             .findAllAsync()
     }
 
-    override fun getConversationAsync(threadId: Long): Conversation {
-        return Realm.getDefaultInstance()
+    override fun getConversationAsync(threadId: Long): Conversation? = nullOnFail {
+        return@nullOnFail Realm.getDefaultInstance()
             .where(Conversation::class.java)
             .equalTo("id", threadId)
             .findFirstAsync()
     }
 
-    override fun getConversation(threadId: Long): Conversation? {
-        return Realm.getDefaultInstance()
+    override fun getConversation(threadId: Long): Conversation? = nullOnFail {
+        return@nullOnFail Realm.getDefaultInstance()
             .where(Conversation::class.java)
             .equalTo("id", threadId)
             .findFirst()
     }
 
-    override fun getThreadId(recipient: String): Long? {
-        return getThreadId(listOf(recipient))
+    override fun getThreadId(recipient: String): Long? = nullOnFail {
+        return@nullOnFail getThreadId(listOf(recipient))
     }
 
-    override fun getThreadId(recipients: Collection<String>): Long? {
-        return Realm.getDefaultInstance().use { realm ->
+    override fun getThreadId(recipients: Collection<String>): Long? = nullOnFail {
+        return@nullOnFail Realm.getDefaultInstance().use { realm ->
             realm.where(Conversation::class.java)
                 .findAll()
                 .firstOrNull { conversation ->
@@ -132,16 +130,16 @@ class ConversationRepositoryImpl(
         }
     }
 
-    override fun getOrCreateConversation(threadId: Long): Conversation? {
-        return getConversation(threadId) ?: updateConversationFromCp(threadId)
+    override fun getOrCreateConversation(threadId: Long): Conversation? = nullOnFail {
+        return@nullOnFail getConversation(threadId) ?: updateConversationFromCp(threadId)
     }
 
-    override fun getOrCreateConversation(address: String): Conversation? {
-        return getOrCreateConversation(listOf(address))
+    override fun getOrCreateConversation(address: String): Conversation? = nullOnFail {
+        return@nullOnFail getOrCreateConversation(listOf(address))
     }
 
-    override fun getOrCreateConversation(addresses: List<String>): Conversation? {
-        return tryOrNull {
+    override fun getOrCreateConversation(addresses: List<String>): Conversation? = nullOnFail {
+        return@nullOnFail tryOrNull {
             TelephonyCompat.getOrCreateThreadId(
                 context,
                 addresses.toSet()
@@ -160,7 +158,7 @@ class ConversationRepositoryImpl(
             }
     }
 
-    override fun saveDraft(threadId: Long, draft: String) {
+    override fun saveDraft(threadId: Long, draft: String) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             realm.refresh()
 
@@ -174,15 +172,12 @@ class ConversationRepositoryImpl(
         }
     }
 
-    override fun updateConversations(vararg threadIds: Long) {
+    override fun updateConversations(vararg threadIds: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             realm.refresh()
 
             threadIds.forEach { threadId ->
-                val conversation = realm
-                    .where(Conversation::class.java)
-                    .equalTo("id", threadId)
-                    .findFirst() ?: return
+                val conversation = getConversation(threadId) ?: return@forEach
 
                 val messages = realm
                     .where(Message::class.java)
@@ -203,7 +198,7 @@ class ConversationRepositoryImpl(
         }
     }
 
-    override fun markArchived(vararg threadIds: Long) {
+    override fun markArchived(vararg threadIds: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             val conversations = realm.where(Conversation::class.java)
                 .anyOf("id", threadIds)
@@ -215,7 +210,7 @@ class ConversationRepositoryImpl(
         }
     }
 
-    override fun markUnarchived(vararg threadIds: Long) {
+    override fun markUnarchived(vararg threadIds: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             val conversations = realm.where(Conversation::class.java)
                 .anyOf("id", threadIds)
@@ -227,7 +222,7 @@ class ConversationRepositoryImpl(
         }
     }
 
-    override fun markPinned(vararg threadIds: Long) {
+    override fun markPinned(vararg threadIds: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             val conversations = realm.where(Conversation::class.java)
                 .anyOf("id", threadIds)
@@ -239,7 +234,7 @@ class ConversationRepositoryImpl(
         }
     }
 
-    override fun markUnpinned(vararg threadIds: Long) {
+    override fun markUnpinned(vararg threadIds: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             val conversations = realm.where(Conversation::class.java)
                 .anyOf("id", threadIds)
@@ -251,7 +246,7 @@ class ConversationRepositoryImpl(
         }
     }
 
-    override fun markBlocked(vararg threadIds: Long) {
+    override fun markBlocked(vararg threadIds: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             val conversations = realm.where(Conversation::class.java)
                 .anyOf("id", threadIds)
@@ -263,7 +258,7 @@ class ConversationRepositoryImpl(
         }
     }
 
-    override fun markUnblocked(vararg threadIds: Long) {
+    override fun markUnblocked(vararg threadIds: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             val conversations = realm.where(Conversation::class.java)
                 .anyOf("id", threadIds)
@@ -275,7 +270,7 @@ class ConversationRepositoryImpl(
         }
     }
 
-    override fun deleteConversations(vararg threadIds: Long) {
+    override fun deleteConversations(vararg threadIds: Long) = unitOnFail {
         Realm.getDefaultInstance().use { realm ->
             val conversation = realm.where(Conversation::class.java).anyOf("id", threadIds).findAll()
             val messages = realm.where(Message::class.java).anyOf("threadId", threadIds).findAll()
@@ -299,8 +294,8 @@ class ConversationRepositoryImpl(
      * we can return a [Conversation]. On some devices, the ContentProvider won't return the
      * conversation unless it contains at least 1 message
      */
-    private fun updateConversationFromCp(threadId: Long): Conversation? {
-        return cursorToConversation.getConversationsCursor()
+    private fun updateConversationFromCp(threadId: Long): Conversation? = nullOnFail {
+        return@nullOnFail cursorToConversation.getConversationsCursor()
             ?.map(cursorToConversation::map)
             ?.firstOrNull { it.id == threadId }
             ?.let { conversation ->
@@ -331,5 +326,4 @@ class ConversationRepositoryImpl(
                 conversation
             }
     }
-
 }

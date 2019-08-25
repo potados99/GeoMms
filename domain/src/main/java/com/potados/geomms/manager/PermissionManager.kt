@@ -1,9 +1,8 @@
 package com.potados.geomms.manager
 
 import androidx.lifecycle.LiveData
-import com.potados.geomms.base.FailableComponent
 
-abstract class PermissionManager : FailableComponent() {
+abstract class PermissionManager : Manager() {
 
     abstract fun refresh()
 

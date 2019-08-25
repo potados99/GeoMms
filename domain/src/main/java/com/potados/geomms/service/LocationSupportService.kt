@@ -1,11 +1,13 @@
 package com.potados.geomms.service
 
+import androidx.annotation.CallSuper
 import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.base.Startable
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.model.Packet
 import io.realm.RealmResults
+import timber.log.Timber
 
 /**
  * Do communication thing.
@@ -15,15 +17,15 @@ import io.realm.RealmResults
  *      I       The user of this app.
  *      YOU     The other user. Could be a friend.
  */
-abstract class LocationSupportService : Startable, FailableComponent() {
+abstract class LocationSupportService : Service() {
 
-    abstract fun getConnections(): RealmResults<Connection>
+    abstract fun getConnections(): RealmResults<Connection>?
 
     abstract fun getConnection(id: Long): Connection?
 
-    abstract fun getIncomingRequests(): RealmResults<ConnectionRequest>
+    abstract fun getIncomingRequests(): RealmResults<ConnectionRequest>?
 
-    abstract fun getOutgoingRequests(): RealmResults<ConnectionRequest>
+    abstract fun getOutgoingRequests(): RealmResults<ConnectionRequest>?
 
 
     /** I request YOU to join. */
@@ -65,5 +67,5 @@ abstract class LocationSupportService : Startable, FailableComponent() {
 
     abstract fun serializePacket(packet: Packet): String?
 
-    abstract fun isValidPacket(body: String): Boolean
+    abstract fun isValidPacket(body: String): Boolean?
 }

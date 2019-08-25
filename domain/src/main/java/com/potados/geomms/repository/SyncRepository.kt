@@ -51,6 +51,6 @@ abstract class SyncRepository : Repository() {
      *
      * Return false if the contact couldn't be found
      */
-    abstract fun syncContact(address: String): Boolean
+    abstract fun syncContact(address: String): Boolean?
 
 }
