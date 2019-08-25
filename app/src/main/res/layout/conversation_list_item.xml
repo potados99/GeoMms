@@ -84,7 +84,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/snippet"
             tools:visibility="visible"
-            android:contentDescription="@string/description_unread_image" />
+            android:contentDescription="@string/description_unread_icon" />
 
     <com.potados.geomms.common.widget.QkTextView
         android:id="@+id/date"

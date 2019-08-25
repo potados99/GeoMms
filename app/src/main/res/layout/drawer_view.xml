@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2017 Moez Bhatti <moez.bhatti@gmail.com>
-  ~
-  ~ This file is part of QKSMS.
-  ~
-  ~ QKSMS is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ QKSMS is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+
 <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -33,9 +16,10 @@
         <!-- Header -->
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:background="?attr/tintPrimary">
 
+            <!-- App name -->
             <TextView
                     android:id="@+id/app_name"
                     style="@style/DrawerHeader"
@@ -47,6 +31,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/app_icon" />
 
+            <!-- App icon -->
             <ImageView
                     android:id="@+id/app_icon"
                     android:layout_width="wrap_content"
@@ -58,30 +43,23 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@mipmap/ic_launcher_round" />
 
+            <!-- Current version -->
             <TextView
                     android:id="@+id/current_version"
-                    android:textSize="@dimen/textSecondary"
-                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
                     android:text="@string/version"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
+                    android:textSize="@dimen/textSecondary"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/app_name"
                     tools:text="Version 0.1.0" />
 
-            <TextView
-                    android:id="@+id/powered_by"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:text="@string/powered_by"
-                    android:textColor="?android:attr/textColorSecondaryInverse"
-                    android:textSize="@dimen/textTertiary"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+            <!-- Powered by QKSMS. -->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -91,13 +69,14 @@
             style="@style/DrawerRow">
 
             <ImageView
-                style="@style/DrawerIcon"
-                android:src="@drawable/ic_settings_black_24dp"
-                android:tint="?android:attr/textColorSecondary" />
+                    style="@style/DrawerIcon"
+                    android:src="@drawable/ic_settings_black_24dp"
+                    android:tint="?android:attr/textColorSecondary"
+                    android:contentDescription="@string/description_settings_icon"/>
 
             <TextView
-                style="@style/DrawerText"
-                android:text="@string/drawer_settings" />
+                    style="@style/DrawerText"
+                    android:text="@string/drawer_settings" />
 
         </LinearLayout>
 
@@ -107,13 +86,14 @@
             style="@style/DrawerRow">
 
             <ImageView
-                style="@style/DrawerIcon"
-                android:src="@drawable/ic_help_black_24dp"
-                android:tint="?android:attr/textColorSecondary" />
+                    style="@style/DrawerIcon"
+                    android:src="@drawable/ic_help_black_24dp"
+                    android:tint="?android:attr/textColorSecondary"
+                    android:contentDescription="@string/description_help_icon" />
 
             <TextView
-                style="@style/DrawerText"
-                android:text="@string/drawer_help" />
+                    style="@style/DrawerText"
+                    android:text="@string/drawer_help" />
 
         </LinearLayout>
 

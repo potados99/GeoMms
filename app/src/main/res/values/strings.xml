@@ -309,6 +309,8 @@
     <string name="open_drawer">Open drawer</string>
     <string name="version">Version %s</string>
     <string name="powered_by" translatable="false">Powered by QKSMS.</string>
-    <string name="description_unread_image">This is an image that indicates the conversation has unread message(s).</string>
+    <string name="description_unread_icon">This is an image that indicates the conversation has unread message(s).</string>
+    <string name="description_settings_icon">This is a settings icon.</string>
+    <string name="description_help_icon">This is a help icon.</string>
 
 </resources>

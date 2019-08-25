@@ -271,6 +271,9 @@
     <string name="close_drawer">메뉴 닫기</string>
     <string name="open_drawer">메뉴 열기</string>
     <string name="version">버전 %s</string>
+    <string name="description_unread_icon">읽지 않은 메시지가 있음을 나타내는 이미지입니다.</string>
+    <string name="description_settings_icon">설정 아이콘입니다.</string>
+    <string name="description_help_icon">도움 아이콘입니다.</string>
 
 
 </resources>
