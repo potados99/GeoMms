@@ -7,6 +7,6 @@ import timber.log.Timber
 class UpdateBadge : UseCase<Unit>() {
     override suspend fun run(params: Unit): Result<*> =
         Result.of{
-            Timber.d("UpdateBadge:buildObservable")
+            Timber.i("TODO: Do update badge")
         }
 }

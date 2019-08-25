@@ -14,9 +14,10 @@ class SyncMessages(
 
     override suspend fun run(params: Unit): Result<*> =
         Result.of {
-            val elapsed = TimeUnit.MILLISECONDS.toSeconds(elapsedTimeMillis(syncRepo::syncMessages))
+            val elapsedMillis = elapsedTimeMillis(syncRepo::syncMessages)
+            val elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedMillis)
 
-            Timber.i("Completed sync in $elapsed seconds.")
+            Timber.i("Completed sync in $elapsedSeconds seconds.")
 
             updateBadge(Unit)
         }

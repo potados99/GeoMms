@@ -12,6 +12,7 @@ import com.potados.geomms.databinding.ConversationsFragmentBinding
 import com.potados.geomms.manager.PermissionManager
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
 import kotlinx.android.synthetic.main.main_hint.*
+import kotlinx.android.synthetic.main.main_hint.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -66,14 +67,16 @@ class ConversationsFragment : NavigationFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
 
         when (item.itemId) {
             R.id.write -> {
                 navigator.showCompose()
+
             }
         }
 
-        return true // super.onOptionsItemSelected(item)
+        return true
     }
 
     override fun onShow() {
@@ -91,8 +94,8 @@ class ConversationsFragment : NavigationFragment() {
 
     private fun initializeView(view: View) {
 
-        with(view.snackbar) {
-            button.setOnClickListener {
+        with(view.button) {
+            setOnClickListener {
                 navigator.showDefaultSmsDialog()
             }
         }

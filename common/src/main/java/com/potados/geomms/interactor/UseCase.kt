@@ -20,7 +20,7 @@ abstract class UseCase<in Params> {
     abstract suspend fun run(params: Params): Result<*>
 
     /**
-     * Execute [run] in Global Scope co-routine and launch onResult on Main conversation.
+     * Execute [run] in Global Scope co-routine and launch onResult on Main thread.
      */
     operator fun invoke(params: Params, onResult: (Result<*>) -> Unit = {}) {
         val job = GlobalScope.async { run(params) }
