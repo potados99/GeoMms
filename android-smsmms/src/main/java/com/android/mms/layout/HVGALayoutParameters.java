@@ -17,6 +17,7 @@
 package com.android.mms.layout;
 
 import android.content.Context;
+
 import timber.log.Timber;
 
 public class HVGALayoutParameters implements LayoutParameters {

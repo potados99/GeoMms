@@ -19,6 +19,7 @@ package com.android.mms.transaction;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 import com.android.mms.util.SendingProgressTokenManager;
 import com.google.android.mms.MmsException;
 import com.klinker.android.send_message.Utils;

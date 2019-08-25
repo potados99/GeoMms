@@ -21,7 +21,6 @@ package com.potados.geomms.usecase
 import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.repository.MessageRepository
-import io.reactivex.Flowable
 
 class MarkSeen(private val messageRepo: MessageRepository) : UseCase<Long>() {
 

@@ -24,6 +24,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.widget.Toast;
+
 import timber.log.Timber;
 
 public final class SqliteWrapper {

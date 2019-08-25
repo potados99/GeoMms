@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.provider.Telephony.Mms;
 import android.provider.Telephony.Mms.Sent;
 import android.text.TextUtils;
+
 import com.android.mms.util.RateController;
 import com.android.mms.util.SendingProgressTokenManager;
 import com.google.android.mms.pdu_alt.EncodedStringValue;
@@ -36,9 +37,10 @@ import com.google.android.mms.pdu_alt.SendConf;
 import com.google.android.mms.pdu_alt.SendReq;
 import com.klinker.android.send_message.BroadcastUtils;
 import com.klinker.android.send_message.Utils;
-import timber.log.Timber;
 
 import java.util.Arrays;
+
+import timber.log.Timber;
 
 /**
  * The SendTransaction is responsible for sending multimedia messages

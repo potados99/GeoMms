@@ -1,16 +1,11 @@
 package com.potados.geomms.feature.conversations
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.manager.PermissionManager
-import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.SyncLog
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.SyncRepository
-import com.potados.geomms.usecase.SyncMessages
 import io.realm.Realm
-import io.realm.RealmResults
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import android.provider.Telephony;
+
 import com.google.android.mms.util_alt.SqliteWrapper;
+
 import timber.log.Timber;
 
 class SubscriptionIdChecker {

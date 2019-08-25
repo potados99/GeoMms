@@ -17,10 +17,11 @@
 package com.android.mms.service_alt;
 
 import android.content.Context;
-import dalvik.system.DexFile;
 
 import java.io.File;
 import java.lang.reflect.Method;
+
+import dalvik.system.DexFile;
 
 public class SystemPropertiesProxy {
 

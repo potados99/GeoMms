@@ -31,7 +31,6 @@ import com.potados.geomms.manager.KeyManagerImpl.Companion.CHANNEL_MESSAGE
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Message
 import com.potados.geomms.util.SqliteWrapper
-import timber.log.Timber
 
 class CursorToMessageImpl(
     private val context: Context,

@@ -1,10 +1,5 @@
 package com.potados.geomms.feature.location
 
-import android.content.Intent
-import androidx.databinding.Observable
-import androidx.databinding.ObservableField
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.potados.geomms.feature.compose.filter.ContactFilter
 import com.potados.geomms.model.Contact

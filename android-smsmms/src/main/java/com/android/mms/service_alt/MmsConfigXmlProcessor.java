@@ -17,11 +17,13 @@
 package com.android.mms.service_alt;
 
 import android.content.ContentValues;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import timber.log.Timber;
 
 import java.io.IOException;
+
+import timber.log.Timber;
 
 /*
  * XML processor for mms_config.xml

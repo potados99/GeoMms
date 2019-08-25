@@ -22,7 +22,6 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import com.potados.geomms.manager.PermissionManager
-import com.potados.geomms.mapper.CursorToRecipient
 import com.potados.geomms.model.Recipient
 
 class CursorToRecipientImpl(

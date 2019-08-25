@@ -24,14 +24,16 @@ import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Base64;
+
 import com.klinker.android.send_message.R;
-import timber.log.Timber;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import timber.log.Timber;
 
 /**
  * This class manages a cached copy of current MMS configuration key values

@@ -3,11 +3,9 @@ package com.potados.geomms.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.potados.geomms.functional.Result
 import com.potados.geomms.usecase.SendUpdate
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import timber.log.Timber
 
 /**
  * Manifest registered.

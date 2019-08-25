@@ -16,9 +16,9 @@
 
 package com.android.mms.util;
 
-import timber.log.Timber;
-
 import java.util.HashMap;
+
+import timber.log.Timber;
 
 public class SendingProgressTokenManager {
     private static final boolean LOCAL_LOGV = false;

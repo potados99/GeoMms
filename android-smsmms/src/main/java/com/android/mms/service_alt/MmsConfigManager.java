@@ -25,10 +25,11 @@ import android.os.Build;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.util.ArrayMap;
-import timber.log.Timber;
 
 import java.util.List;
 import java.util.Map;
+
+import timber.log.Timber;
 
 /**
  * This class manages cached copies of all the MMS configuration for each subscription ID.

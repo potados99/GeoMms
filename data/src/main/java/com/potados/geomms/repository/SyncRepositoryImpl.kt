@@ -25,7 +25,6 @@ import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.potados.geomms.extension.insertOrUpdate
 import com.potados.geomms.extension.map
 import com.potados.geomms.extension.tryOrNull
@@ -36,13 +35,9 @@ import com.potados.geomms.mapper.CursorToConversation
 import com.potados.geomms.mapper.CursorToMessage
 import com.potados.geomms.mapper.CursorToRecipient
 import com.potados.geomms.model.*
-import com.potados.geomms.util.Types
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
 import io.realm.Realm
 import io.realm.Sort
 import timber.log.Timber
-import java.lang.RuntimeException
 
 class SyncRepositoryImpl(
     private val contentResolver: ContentResolver,

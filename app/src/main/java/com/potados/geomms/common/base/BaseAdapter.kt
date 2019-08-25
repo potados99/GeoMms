@@ -23,10 +23,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.potados.geomms.common.extension.isVisible
 import com.potados.geomms.common.extension.setVisible
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
 
 /**
  * Base RecyclerView.Adapter that provides some convenience when creating a new Adapter, such as

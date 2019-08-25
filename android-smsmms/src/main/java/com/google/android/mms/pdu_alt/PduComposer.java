@@ -19,7 +19,6 @@ package com.google.android.mms.pdu_alt;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.text.TextUtils;
-import timber.log.Timber;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -27,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import timber.log.Timber;
 
 public class PduComposer {
     /**

@@ -1,8 +1,5 @@
 package com.potados.geomms.extension
 
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
-
 fun <R> elapsedTimeMillis(action: () -> R): Long {
     val startTime = System.currentTimeMillis()
     action()

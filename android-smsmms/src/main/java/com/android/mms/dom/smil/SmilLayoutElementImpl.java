@@ -18,6 +18,7 @@
 package com.android.mms.dom.smil;
 
 import com.android.mms.layout.LayoutManager;
+
 import org.w3c.dom.NodeList;
 import org.w3c.dom.smil.SMILLayoutElement;
 import org.w3c.dom.smil.SMILRootLayoutElement;

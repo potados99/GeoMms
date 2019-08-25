@@ -25,12 +25,12 @@ import android.telephony.PhoneNumberUtils
 import com.potados.geomms.compat.TelephonyCompat
 import com.potados.geomms.extension.anyOf
 import com.potados.geomms.extension.map
-import com.potados.geomms.model.Contact
-import com.potados.geomms.model.Conversation
-import com.potados.geomms.model.Message
 import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.mapper.CursorToConversation
 import com.potados.geomms.mapper.CursorToRecipient
+import com.potados.geomms.model.Contact
+import com.potados.geomms.model.Conversation
+import com.potados.geomms.model.Message
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort

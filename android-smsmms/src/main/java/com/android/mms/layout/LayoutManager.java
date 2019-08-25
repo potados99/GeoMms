@@ -18,6 +18,7 @@ package com.android.mms.layout;
 
 import android.content.Context;
 import android.content.res.Configuration;
+
 import timber.log.Timber;
 
 /**

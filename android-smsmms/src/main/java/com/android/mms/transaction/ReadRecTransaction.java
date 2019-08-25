@@ -19,15 +19,17 @@ package com.android.mms.transaction;
 import android.content.Context;
 import android.net.Uri;
 import android.provider.Telephony.Mms.Sent;
+
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.EncodedStringValue;
 import com.google.android.mms.pdu_alt.PduComposer;
 import com.google.android.mms.pdu_alt.PduPersister;
 import com.google.android.mms.pdu_alt.ReadRecInd;
 import com.klinker.android.send_message.Utils;
-import timber.log.Timber;
 
 import java.io.IOException;
+
+import timber.log.Timber;
 
 /**
  * The ReadRecTransaction is responsible for sending read report

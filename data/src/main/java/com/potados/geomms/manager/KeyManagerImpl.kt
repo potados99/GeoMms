@@ -19,11 +19,8 @@
 package com.potados.geomms.manager
 
 import android.util.SparseArray
-import com.potados.geomms.model.Connection
-import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.model.Message
 import io.realm.Realm
-import kotlin.math.max
 import kotlin.random.Random
 
 class KeyManagerImpl: KeyManager {

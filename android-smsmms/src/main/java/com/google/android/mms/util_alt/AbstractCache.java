@@ -16,9 +16,9 @@
 
 package com.google.android.mms.util_alt;
 
-import timber.log.Timber;
-
 import java.util.HashMap;
+
+import timber.log.Timber;
 
 public abstract class AbstractCache<K, V> {
     private static final boolean DEBUG = false;

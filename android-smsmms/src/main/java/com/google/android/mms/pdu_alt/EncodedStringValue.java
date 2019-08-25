@@ -16,12 +16,12 @@
 
 package com.google.android.mms.pdu_alt;
 
-import timber.log.Timber;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 /**
  * Encoded-string-value = Text-string | Value-length Char-set Text-string

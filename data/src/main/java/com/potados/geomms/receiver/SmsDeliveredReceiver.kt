@@ -22,6 +22,7 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.potados.geomms.receiver.SmsDeliveredReceiver.Companion.ACTION
 import com.potados.geomms.receiver.SmsSentReceiver.Companion.ACTION
 import com.potados.geomms.usecase.MarkDelivered
 import com.potados.geomms.usecase.MarkDeliveryFailed

@@ -17,13 +17,14 @@
 package android.net;
 
 import android.text.TextUtils;
-import timber.log.Timber;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+
+import timber.log.Timber;
 
 /**
  * A simple object for retrieving the results of a DHCP request.

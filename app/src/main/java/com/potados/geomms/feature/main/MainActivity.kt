@@ -2,24 +2,21 @@ package com.potados.geomms.feature.main
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.ActionBarDrawerToggle
 import com.potados.geomms.BuildConfig
 import com.potados.geomms.R
-import com.potados.geomms.feature.location.MapFragment
-import com.potados.geomms.feature.conversations.ConversationsFragment
 import com.potados.geomms.common.base.NavigationActivity
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.navigation.Navigator
-import com.potados.geomms.extension.withNonNull
+import com.potados.geomms.feature.conversations.ConversationsFragment
+import com.potados.geomms.feature.location.MapFragment
 import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.util.Notify
 import kotlinx.android.synthetic.main.drawer_view.*
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import timber.log.Timber
 
 /**
  * 권한 획득과 기본 앱 설정 후 나타나는 주 액티비티입니다.

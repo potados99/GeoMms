@@ -3,10 +3,6 @@ package com.potados.geomms.common.extension
 import android.content.Context
 import android.view.Menu
 import android.view.MenuItem
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
-import com.potados.geomms.R
 
 
 /** Returns a [MutableIterator] over the items in this menu. */

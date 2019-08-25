@@ -18,11 +18,12 @@ package com.google.android.mms.util_alt;
 import android.content.Context;
 import android.drm.DrmConvertedStatus;
 import android.drm.DrmManagerClient;
-import timber.log.Timber;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+
+import timber.log.Timber;
 
 
 public class DrmConvertSession {

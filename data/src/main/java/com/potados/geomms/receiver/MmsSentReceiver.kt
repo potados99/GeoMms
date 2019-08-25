@@ -19,11 +19,7 @@
 package com.potados.geomms.receiver
 
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.ContentUris
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.net.Uri
 import android.provider.Telephony
 import com.google.android.mms.MmsException

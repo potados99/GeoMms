@@ -23,7 +23,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.widget.Toast;
+
 import org.jetbrains.annotations.Nullable;
+
 import timber.log.Timber;
 
 /**

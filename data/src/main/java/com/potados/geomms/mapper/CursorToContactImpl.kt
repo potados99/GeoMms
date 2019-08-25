@@ -22,7 +22,6 @@ import android.content.Context
 import android.database.Cursor
 import android.provider.ContactsContract.CommonDataKinds.Phone.*
 import com.potados.geomms.manager.PermissionManager
-import com.potados.geomms.mapper.CursorToContact
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.PhoneNumber
 

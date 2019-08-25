@@ -1,6 +1,5 @@
 package com.potados.geomms.model
 
-import android.provider.Telephony
 import androidx.core.net.toUri
 import io.realm.RealmObject
 import io.realm.RealmResults

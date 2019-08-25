@@ -20,9 +20,11 @@ import android.content.Context;
 import android.net.NetworkUtilsHelper;
 import android.provider.Telephony;
 import android.text.TextUtils;
+
 import com.android.mms.MmsConfig;
 import com.klinker.android.send_message.Transaction;
 import com.klinker.android.send_message.Utils;
+
 import timber.log.Timber;
 
 /**

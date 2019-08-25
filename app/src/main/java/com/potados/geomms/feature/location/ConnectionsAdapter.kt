@@ -1,24 +1,18 @@
 package com.potados.geomms.feature.location
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Connection
-import io.realm.OrderedRealmCollection
-import io.realm.Realm
-import io.realm.RealmResults
 import kotlinx.android.synthetic.main.connection_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import timber.log.Timber
 import java.util.*
 
 class ConnectionsAdapter(

@@ -20,10 +20,11 @@ import android.content.ContentUris;
 import android.content.UriMatcher;
 import android.net.Uri;
 import android.provider.Telephony.Mms;
-import timber.log.Timber;
 
 import java.util.HashMap;
 import java.util.HashSet;
+
+import timber.log.Timber;
 
 public final class PduCache extends AbstractCache<Uri, PduCacheEntry> {
 

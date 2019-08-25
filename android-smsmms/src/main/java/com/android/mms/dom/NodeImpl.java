@@ -18,6 +18,7 @@
 package com.android.mms.dom;
 
 import com.android.mms.dom.events.EventTargetImpl;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;

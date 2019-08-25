@@ -6,11 +6,11 @@
  */
 package com.potados.geomms.interactor
 
+import com.potados.geomms.functional.Result
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import com.potados.geomms.functional.Result
 
 /**
  * Abstract class for Use Case (Interactor in terms of Clean Architecture).

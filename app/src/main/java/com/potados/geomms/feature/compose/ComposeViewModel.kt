@@ -2,7 +2,6 @@ package com.potados.geomms.feature.compose
 
 import android.content.Intent
 import android.net.Uri
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.potados.geomms.feature.compose.filter.ContactFilter
@@ -13,12 +12,10 @@ import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.usecase.MarkRead
 import com.potados.geomms.usecase.SendMessage
-import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
-import kotlin.concurrent.thread
 
 /**
  * ConversationActivity를 보조할 뷰모델입니다.

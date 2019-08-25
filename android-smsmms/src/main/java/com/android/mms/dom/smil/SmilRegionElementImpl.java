@@ -19,6 +19,7 @@ package com.android.mms.dom.smil;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.smil.SMILDocument;
 import org.w3c.dom.smil.SMILRegionElement;
+
 import timber.log.Timber;
 
 public class SmilRegionElementImpl extends SmilElementImpl implements

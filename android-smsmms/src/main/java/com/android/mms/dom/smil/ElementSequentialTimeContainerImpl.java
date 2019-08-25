@@ -18,6 +18,7 @@
 package com.android.mms.dom.smil;
 
 import com.android.mms.dom.NodeListImpl;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.smil.ElementSequentialTimeContainer;

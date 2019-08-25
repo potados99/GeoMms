@@ -20,8 +20,6 @@ package com.potados.geomms.repository
 
 import android.net.Uri
 import com.potados.geomms.model.Contact
-import io.reactivex.Flowable
-import io.reactivex.Single
 import io.realm.RealmResults
 
 interface ContactRepository {

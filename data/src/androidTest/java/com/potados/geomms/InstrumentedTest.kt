@@ -1,7 +1,6 @@
 package com.potados.geomms
 
 import android.Manifest
-import android.app.Instrumentation
 import android.content.Context
 import android.location.LocationManager
 import androidx.test.core.app.ApplicationProvider
@@ -19,20 +18,14 @@ import com.potados.geomms.service.LocationSupportServiceImpl
 import com.potados.geomms.usecase.*
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
-
 import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
 import org.koin.core.inject
 import org.koin.dsl.module
 import org.koin.test.KoinTest
 import timber.log.Timber
-import java.lang.RuntimeException
 
 
 /**

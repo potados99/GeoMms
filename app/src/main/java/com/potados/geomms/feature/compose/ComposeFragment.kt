@@ -9,12 +9,10 @@ import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.databinding.ComposeFragmentBinding
-import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.PhoneNumber
 import io.realm.RealmList
 import kotlinx.android.synthetic.main.compose_fragment.view.*
-import kotlinx.android.synthetic.main.compose_fragment.view.toolbar
 import timber.log.Timber
 import java.util.*
 

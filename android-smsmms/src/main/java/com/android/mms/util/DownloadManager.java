@@ -27,6 +27,7 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.provider.Telephony.Mms;
 import android.widget.Toast;
+
 import com.android.internal.telephony.TelephonyProperties;
 import com.android.mms.service_alt.SystemPropertiesProxy;
 import com.google.android.mms.MmsException;
@@ -34,6 +35,7 @@ import com.google.android.mms.pdu_alt.EncodedStringValue;
 import com.google.android.mms.pdu_alt.NotificationInd;
 import com.google.android.mms.pdu_alt.PduPersister;
 import com.klinker.android.send_message.R;
+
 import timber.log.Timber;
 
 public class DownloadManager {

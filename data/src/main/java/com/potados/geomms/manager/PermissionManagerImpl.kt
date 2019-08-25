@@ -7,7 +7,6 @@ import android.provider.Telephony
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.Flowable
 import timber.log.Timber
 
 class PermissionManagerImpl(

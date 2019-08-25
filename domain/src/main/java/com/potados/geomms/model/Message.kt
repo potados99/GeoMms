@@ -2,9 +2,7 @@ package com.potados.geomms.model
 
 import android.content.ContentUris
 import android.net.Uri
-import android.provider.Telephony.Sms
-import android.provider.Telephony.Mms
-import android.provider.Telephony.MmsSms
+import android.provider.Telephony.*
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.Index

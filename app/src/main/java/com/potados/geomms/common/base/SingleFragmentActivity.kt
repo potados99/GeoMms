@@ -2,10 +2,8 @@ package com.potados.geomms.common.base
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.potados.geomms.R
-import com.potados.geomms.common.extension.addAll
 import com.potados.geomms.common.extension.inImmediateTransaction
 
 abstract class SingleFragmentActivity : BaseActivity() {

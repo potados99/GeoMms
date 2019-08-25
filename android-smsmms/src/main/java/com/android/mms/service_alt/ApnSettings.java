@@ -25,11 +25,13 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.Telephony;
 import android.text.TextUtils;
+
 import com.android.mms.service_alt.exception.ApnException;
-import timber.log.Timber;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import timber.log.Timber;
 
 /**
  * APN settings used for MMS transactions

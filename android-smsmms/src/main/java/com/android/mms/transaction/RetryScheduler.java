@@ -31,11 +31,13 @@ import android.net.Uri;
 import android.provider.Telephony.Mms;
 import android.provider.Telephony.MmsSms;
 import android.provider.Telephony.MmsSms.PendingMessages;
+
 import com.android.mms.util.DownloadManager;
 import com.google.android.mms.pdu_alt.PduHeaders;
 import com.google.android.mms.pdu_alt.PduPersister;
 import com.klinker.android.send_message.BroadcastUtils;
 import com.klinker.android.send_message.R;
+
 import timber.log.Timber;
 
 public class RetryScheduler implements Observer {

@@ -33,7 +33,6 @@ import android.telephony.PhoneNumberUtils
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
-import androidx.core.app.RemoteInput
 import androidx.core.app.TaskStackBuilder
 import androidx.core.graphics.drawable.IconCompat
 import com.bumptech.glide.Glide
@@ -45,12 +44,10 @@ import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.mapper.CursorToPartImpl
-import com.potados.geomms.preference.Preferences
 import com.potados.geomms.receiver.MarkReadReceiver
 import com.potados.geomms.receiver.MarkSeenReceiver
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
-import timber.log.Timber
 
 class NotificationManagerImplTest(
     private val context: Context,

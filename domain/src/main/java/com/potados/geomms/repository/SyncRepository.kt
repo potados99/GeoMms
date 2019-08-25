@@ -21,7 +21,6 @@ package com.potados.geomms.repository
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.potados.geomms.model.Message
-import io.reactivex.Observable
 import timber.log.Timber
 
 interface SyncRepository {

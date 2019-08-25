@@ -1,7 +1,5 @@
 package com.potados.geomms.model
 
-import android.location.Location
-import com.potados.geomms.util.DateTime
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 

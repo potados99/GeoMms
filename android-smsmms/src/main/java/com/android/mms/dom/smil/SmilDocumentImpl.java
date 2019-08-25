@@ -18,6 +18,7 @@ package com.android.mms.dom.smil;
 
 import com.android.mms.dom.DocumentImpl;
 import com.android.mms.dom.events.EventImpl;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

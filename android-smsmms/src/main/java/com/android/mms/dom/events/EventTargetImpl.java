@@ -20,9 +20,10 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventException;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
-import timber.log.Timber;
 
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 public class EventTargetImpl implements EventTarget {
     private ArrayList<EventListenerEntry> mListenerEntries;

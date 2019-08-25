@@ -18,13 +18,14 @@ package com.google.android.mms.pdu_alt;
 
 import com.google.android.mms.ContentType;
 import com.google.android.mms.InvalidHeaderValueException;
-import timber.log.Timber;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import timber.log.Timber;
 
 public class PduParser {
     /**

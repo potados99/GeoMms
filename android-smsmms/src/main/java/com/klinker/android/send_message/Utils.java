@@ -14,10 +14,10 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+
 import com.android.mms.service_alt.MmsNetworkManager;
 import com.android.mms.service_alt.exception.MmsNetworkException;
 import com.google.android.mms.util_alt.SqliteWrapper;
-import timber.log.Timber;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -28,6 +28,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import timber.log.Timber;
 
 /**
  * Common methods to be used for data connectivity/sending messages ect

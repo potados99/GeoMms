@@ -2,27 +2,17 @@ package com.potados.geomms.feature.conversations
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuItemCompat
-import androidx.lifecycle.Observer
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
-import com.potados.geomms.common.extension.*
+import com.potados.geomms.common.extension.autoScrollToStart
+import com.potados.geomms.common.extension.getViewModel
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
-import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.manager.PermissionManager
-import com.potados.geomms.model.Conversation
-import com.potados.geomms.model.SyncLog
-import com.potados.geomms.repository.SyncRepository
-import com.potados.geomms.usecase.SyncMessages
-import io.realm.Realm
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
-import kotlinx.android.synthetic.main.main_activity.*
-import kotlinx.android.synthetic.main.main_permission_hint.view.*
+import kotlinx.android.synthetic.main.main_hint.*
 import org.koin.android.ext.android.inject
-import org.koin.core.inject
 import timber.log.Timber
 
 /**

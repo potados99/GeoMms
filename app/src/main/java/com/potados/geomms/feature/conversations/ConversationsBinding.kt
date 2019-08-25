@@ -7,7 +7,6 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.isVisible
-import com.potados.geomms.common.widget.QkTextView
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.repository.SyncRepository
 import io.realm.RealmResults

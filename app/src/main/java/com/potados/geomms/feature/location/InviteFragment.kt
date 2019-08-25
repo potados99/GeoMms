@@ -19,8 +19,6 @@ import com.potados.geomms.model.Contact
 import com.potados.geomms.model.PhoneNumber
 import io.realm.RealmList
 import kotlinx.android.synthetic.main.invite_fragment.view.*
-import kotlinx.android.synthetic.main.invite_fragment.view.chips
-import kotlinx.android.synthetic.main.invite_fragment.view.toolbar
 import java.util.*
 
 class InviteFragment : BaseFragment() {

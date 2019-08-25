@@ -18,10 +18,10 @@
  */
 package com.potados.geomms.usecase
 
-import com.potados.geomms.functional.Result
 import android.content.Context
-import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.compat.TelephonyCompat
+import com.potados.geomms.functional.Result
+import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.model.Attachment
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository

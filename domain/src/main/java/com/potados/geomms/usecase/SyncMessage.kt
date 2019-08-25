@@ -1,7 +1,7 @@
 package com.potados.geomms.usecase
 
-import com.potados.geomms.functional.Result
 import android.net.Uri
+import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.SyncRepository

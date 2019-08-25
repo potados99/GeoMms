@@ -30,9 +30,11 @@ import android.provider.Settings;
 import android.service.carrier.CarrierMessagingService;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
+
 import com.android.mms.service_alt.exception.ApnException;
 import com.android.mms.service_alt.exception.MmsHttpException;
 import com.klinker.android.send_message.Utils;
+
 import timber.log.Timber;
 
 /**

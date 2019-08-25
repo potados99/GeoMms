@@ -18,13 +18,15 @@ package com.android.mms.service_alt;
 
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+
 import com.android.i18n.phonenumbers.NumberParseException;
 import com.android.i18n.phonenumbers.PhoneNumberUtil;
 import com.android.i18n.phonenumbers.Phonenumber;
-import timber.log.Timber;
 
 import java.lang.reflect.Method;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 /**
  * Utility to handle phone numbers.

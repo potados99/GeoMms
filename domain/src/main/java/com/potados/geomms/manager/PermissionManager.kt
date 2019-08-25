@@ -1,7 +1,6 @@
 package com.potados.geomms.manager
 
 import androidx.lifecycle.LiveData
-import io.reactivex.Flowable
 
 interface PermissionManager {
 

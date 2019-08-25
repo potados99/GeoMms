@@ -25,12 +25,14 @@ import android.net.NetworkRequest;
 import android.net.SSLCertificateSocketFactory;
 import android.os.Build;
 import android.os.SystemClock;
+
 import com.android.mms.service_alt.exception.MmsNetworkException;
 import com.squareup.okhttp.ConnectionPool;
-import timber.log.Timber;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
+import timber.log.Timber;
 
 public class MmsNetworkManager implements com.squareup.okhttp.internal.Network {
 

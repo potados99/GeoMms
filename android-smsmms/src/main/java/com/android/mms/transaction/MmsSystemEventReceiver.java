@@ -23,7 +23,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.Telephony.Mms;
+
 import com.klinker.android.send_message.Utils;
+
 import timber.log.Timber;
 
 /**

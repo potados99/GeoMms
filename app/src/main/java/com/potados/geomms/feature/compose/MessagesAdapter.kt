@@ -29,7 +29,7 @@ import com.potados.geomms.model.Recipient
 import kotlinx.android.synthetic.main.message_list_item_in.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import java.util.HashMap
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MessagesAdapter(

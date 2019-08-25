@@ -1,15 +1,10 @@
 package com.potados.geomms.injection
 
 import android.Manifest
-import android.content.Context
-import android.location.LocationManager
 import androidx.preference.PreferenceManager
-import com.potados.geomms.common.navigation.Navigator
-import com.potados.geomms.preference.Preferences
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.potados.geomms.common.manager.NotificationManagerImplTest
+import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.feature.compose.filter.ContactFilter
 import com.potados.geomms.feature.compose.filter.ConversationFilter
@@ -17,11 +12,14 @@ import com.potados.geomms.feature.compose.filter.PhoneNumberFilter
 import com.potados.geomms.feature.compose.filter.RecipientFilter
 import com.potados.geomms.manager.*
 import com.potados.geomms.mapper.*
+import com.potados.geomms.preference.Preferences
 import com.potados.geomms.repository.*
 import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.service.LocationSupportServiceImpl
 import com.potados.geomms.usecase.*
 import com.potados.geomms.util.Scheduler
+import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
 
 val permissions = arrayOf(
     Manifest.permission.READ_SMS,

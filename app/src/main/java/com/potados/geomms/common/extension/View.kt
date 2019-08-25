@@ -15,7 +15,6 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior

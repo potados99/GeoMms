@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import com.potados.geomms.R
-import com.potados.geomms.common.extension.*
+import com.potados.geomms.common.extension.findFragmentByNavigationId
+import com.potados.geomms.common.extension.setTitle
 import com.potados.geomms.extension.withNonNull
 import kotlinx.android.synthetic.main.main_activity.*
-import kotlinx.android.synthetic.main.navigation_activity.*
 import kotlinx.android.synthetic.main.navigation_activity.nav_view
 import timber.log.Timber
 

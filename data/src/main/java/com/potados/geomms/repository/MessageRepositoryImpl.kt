@@ -19,11 +19,7 @@
 package com.potados.geomms.repository
 
 import android.app.PendingIntent
-import android.content.ContentUris
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
@@ -33,18 +29,18 @@ import com.klinker.android.send_message.SmsManagerFactory
 import com.klinker.android.send_message.Transaction
 import com.potados.geomms.compat.TelephonyCompat
 import com.potados.geomms.extension.anyOf
+import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.manager.ActiveConversationManager
 import com.potados.geomms.manager.KeyManager
+import com.potados.geomms.manager.KeyManagerImpl.Companion.CHANNEL_MESSAGE
 import com.potados.geomms.model.Attachment
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.Message
 import com.potados.geomms.model.MmsPart
 import com.potados.geomms.preference.Preferences
 import com.potados.geomms.receiver.SmsDeliveredReceiver
-import com.potados.geomms.util.ImageUtils
-import com.potados.geomms.extension.tryOrNull
-import com.potados.geomms.manager.KeyManagerImpl.Companion.CHANNEL_MESSAGE
 import com.potados.geomms.receiver.SmsSentReceiver
+import com.potados.geomms.util.ImageUtils
 import io.realm.Case
 import io.realm.Realm
 import io.realm.RealmResults

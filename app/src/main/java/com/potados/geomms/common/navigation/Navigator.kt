@@ -5,12 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Telephony
 import com.potados.geomms.common.GiveMePermissionActivity
-import com.potados.geomms.feature.main.MainActivity
-import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.common.MakeMeDefaultAppActivity
+import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.feature.location.InviteActivity
+import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.settings.SettingsActivity
-import com.potados.geomms.model.Conversation
 import timber.log.Timber
 
 /**

@@ -27,6 +27,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.text.TextUtils;
+
 import com.android.mms.service_alt.exception.MmsHttpException;
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.GenericPdu;
@@ -37,6 +38,7 @@ import com.google.android.mms.pdu_alt.RetrieveConf;
 import com.google.android.mms.util_alt.SqliteWrapper;
 import com.klinker.android.send_message.BroadcastUtils;
 import com.klinker.android.send_message.Transaction;
+
 import timber.log.Timber;
 
 /**

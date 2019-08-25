@@ -11,7 +11,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/toolbar"
         style="@style/Toolbar">
-    
+
     <TextView
         android:id="@+id/toolbar_title"
         style="@style/ToolbarText"

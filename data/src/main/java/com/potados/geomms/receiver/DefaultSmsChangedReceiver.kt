@@ -25,7 +25,6 @@ import android.os.Build
 import android.provider.Telephony
 import androidx.annotation.RequiresApi
 import com.potados.geomms.manager.PermissionManager
-import com.potados.geomms.usecase.DeleteMessages
 import com.potados.geomms.usecase.SyncMessages
 import org.koin.core.KoinComponent
 import org.koin.core.inject
