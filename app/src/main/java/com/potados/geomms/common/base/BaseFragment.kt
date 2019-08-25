@@ -25,7 +25,7 @@ abstract class BaseFragment : Fragment(), FailableHandler {
 
     @CallSuper
     override fun onFail(failure: Failable.Failure) {
-        notify(failure.message)
+        notify(failure.message, long = true)
         Timber.w("Failure with message: $failure")
     }
 
@@ -51,6 +51,8 @@ abstract class BaseFragment : Fragment(), FailableHandler {
 
     final override fun addFailables(failables: List<Failable>) {
         failables.forEach { failable ->
+            // remove before observe to prevent double observing.
+            failable.getFailure().removeObservers(this)
             observe(failable.getFailure()) { failure -> failure?.let(::onFail) }
         }
     }

@@ -117,7 +117,10 @@ class LocationSupportServiceImpl(
             .equalTo("id", packet.connectionId)
             .findFirst()
 
-        if (found != null) return@unitOnFail
+        if (found != null) {
+            Timber.i("Connection that has same id with incoming request already exist. Ignore.")
+            return@unitOnFail
+        }
 
         val request = ConnectionRequest(
             connectionId = packet.connectionId,
@@ -363,8 +366,7 @@ class LocationSupportServiceImpl(
             }
         }
 
-        Timber.i("Successfully received packet.")
-
+        Timber.i("Successfully handled packet.")
     }
 
 

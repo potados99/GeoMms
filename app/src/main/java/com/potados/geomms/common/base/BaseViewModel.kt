@@ -25,7 +25,7 @@ abstract class BaseViewModel : ViewModel(), Startable, Failable, FailableContain
     override val failables: MutableList<Failable> = mutableListOf()
 
     final override fun setFailure(failure: Failable.Failure) {
-        this.failure.value = failure
+        this.failure.postValue(failure)
         Timber.v("A failure is set: ${failure.message}")
     }
 

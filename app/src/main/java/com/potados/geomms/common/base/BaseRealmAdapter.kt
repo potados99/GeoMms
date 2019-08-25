@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.base.Failable
 import com.potados.geomms.common.extension.setVisible
 import io.realm.*
+import timber.log.Timber
 
 abstract class BaseRealmAdapter<T: RealmModel>
     : RealmRecyclerViewAdapter<T, BaseViewHolder>(null, true), Failable
@@ -15,7 +16,8 @@ abstract class BaseRealmAdapter<T: RealmModel>
     private val failure = MutableLiveData<Failable.Failure>()
 
     final override fun setFailure(failure: Failable.Failure) {
-        this.failure.value = failure
+        this.failure.postValue(failure)
+        Timber.v("A failure is set: ${failure.message}")
     }
 
     final override fun getFailure(): LiveData<Failable.Failure> {

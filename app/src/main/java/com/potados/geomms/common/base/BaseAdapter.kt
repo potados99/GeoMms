@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.base.Failable
 import com.potados.geomms.common.extension.setVisible
+import timber.log.Timber
 
 /**
  * Base RecyclerView.Adapter that provides some convenience when creating a new Adapter, such as
@@ -35,7 +36,8 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable
     private val failure = MutableLiveData<Failable.Failure>()
 
     final override fun setFailure(failure: Failable.Failure) {
-        this.failure.value = failure
+        this.failure.postValue(failure)
+        Timber.v("A failure is set: ${failure.message}")
     }
 
     final override fun getFailure(): LiveData<Failable.Failure> {
