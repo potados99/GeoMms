@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ main_activity.xml
+  ~
+  ~ This file is part of GeoMms.
+  ~ Copyright (C) 2019 Song Byeong Jun <potados@gmail.com>
+-->
+
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -22,6 +29,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+            <!-- Toolbar title -->
             <TextView
                     android:id="@+id/toolbar_title"
                     style="@style/ToolbarText"

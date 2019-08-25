@@ -20,21 +20,15 @@ package com.potados.geomms.feature.compose.part
 
 import android.content.ContentUris
 import android.content.Context
-import android.view.Gravity
 import android.view.View
-import android.widget.FrameLayout
 import com.potados.geomms.R
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.extension.isVCard
-import com.potados.geomms.extension.mapNotNull
 import com.potados.geomms.feature.compose.BubbleUtils
 import com.potados.geomms.mapper.CursorToPartImpl
 import com.potados.geomms.model.Message
 import com.potados.geomms.model.MmsPart
 import ezvcard.Ezvcard
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.mms_vcard_list_item.view.*
 
 class VCardBinder(
@@ -57,7 +51,7 @@ class VCardBinder(
         val bubble = BubbleUtils.getBubble(canGroupWithPrevious, canGroupWithNext, message.isMe())
 
         view.setOnClickListener { navigator.saveVcard(uri) }
-        view.vCardBackground.setBackgroundResource(bubble)
+        view.vcard_background.setBackgroundResource(bubble)
 
         // TODO: do on background
         context.contentResolver.openInputStream(uri)

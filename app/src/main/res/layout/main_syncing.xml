@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 0819 confirm -->
+<!--
+  ~ main_syncing.xml
+  ~
+  ~ This file is part of GeoMms.
+  ~ Copyright (C) 2019 Song Byeong Jun <potados@gmail.com>
+-->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -14,12 +20,14 @@
             android:orientation="vertical"
             app:syncState="@{vm.syncState}">
 
+        <!-- Separator -->
         <View
                 android:id="@+id/bottom"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="?android:attr/divider"/>
 
+        <!-- Title -->
         <com.potados.geomms.common.widget.QkTextView
                 android:id="@+id/title"
                 style="@style/TextPrimary"
@@ -31,6 +39,7 @@
                 android:text="@string/main_syncing"
                 android:textStyle="bold" />
 
+        <!-- Progress -->
         <ProgressBar
                 android:id="@+id/progress"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"

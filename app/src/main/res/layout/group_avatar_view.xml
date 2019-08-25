@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2017 Moez Bhatti <moez.bhatti@gmail.com>
+  ~ group_avatar_view.xml
   ~
-  ~ This file is part of QKSMS.
-  ~
-  ~ QKSMS is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ QKSMS is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+  ~ This file is part of GeoMms.
+  ~ Copyright (C) 2019 Song Byeong Jun <potados@gmail.com>
+-->
+
 <merge
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -26,6 +15,7 @@
         android:orientation="horizontal"
         tools:parentTag="com.potados.geomms.common.widget.GroupAvatarView">
 
+    <!-- Avatar 1 -->
     <com.potados.geomms.common.widget.AvatarView
         android:id="@+id/avatar1"
         android:layout_width="0dp"
@@ -35,6 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Avatar 2 -->
     <com.potados.geomms.common.widget.AvatarView
         android:id="@+id/avatar2"
         android:layout_width="0dp"
@@ -44,6 +35,7 @@
         app:layout_constraintStart_toEndOf="@+id/avatar1"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Avatar 3 -->
     <com.potados.geomms.common.widget.AvatarView
         android:id="@+id/avatar3"
         android:layout_width="0dp"

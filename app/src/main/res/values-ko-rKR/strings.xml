@@ -274,6 +274,9 @@
     <string name="description_unread_icon">읽지 않은 메시지가 있음을 나타내는 이미지입니다.</string>
     <string name="description_settings_icon">설정 아이콘입니다.</string>
     <string name="description_help_icon">도움 아이콘입니다.</string>
+    <string name="description_detach_button_icon">첨부파일 삭제 버튼입니다.</string>
+    <string name="title_incoming_requests">연결 요청</string>
+    <string name="description_vcard_avatar">연락처 사진입니다.</string>
 
 
 </resources>

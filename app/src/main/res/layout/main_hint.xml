@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 0819 confirm -->
+<!--
+  ~ main_hint.xml
+  ~
+  ~ This file is part of GeoMms.
+  ~ Copyright (C) 2019 Song Byeong Jun <potados@gmail.com>
+-->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable name="vm" type="com.potados.geomms.feature.conversations.ConversationsViewModel"/>
     </data>
 
-    <!-- 컨텐츠 레이아웃 -->
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:defaultSmsState="@{vm.defaultSmsState}">
 
+        <!-- Title -->
         <com.potados.geomms.common.widget.QkTextView
                 android:id="@+id/title"
                 style="@style/TextPrimary"
@@ -28,6 +34,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:text="@string/main_default_sms_title"/>
 
+        <!-- Message -->
         <com.potados.geomms.common.widget.QkTextView
                 android:id="@+id/message"
                 style="@style/TextSecondary"
@@ -42,6 +49,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:text="@string/main_default_sms_message"/>
 
+        <!-- Button -->
         <com.potados.geomms.common.widget.QkTextView
                 android:id="@+id/button"
                 style="@style/TextSecondary"
@@ -57,6 +65,7 @@
                 app:layout_constraintTop_toTopOf="@id/title"
                 android:text="@string/main_default_sms_change" />
 
+        <!-- Separator -->
         <View
                 android:id="@+id/bottom"
                 android:layout_width="match_parent"

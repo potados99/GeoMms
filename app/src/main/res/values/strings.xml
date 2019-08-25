@@ -312,5 +312,8 @@
     <string name="description_unread_icon">This is an image that indicates the conversation has unread message(s).</string>
     <string name="description_settings_icon">This is a settings icon.</string>
     <string name="description_help_icon">This is a help icon.</string>
+    <string name="description_detach_button_icon">This is a detach button.</string>
+    <string name="title_incoming_requests">Incoming Requests</string>
+    <string name="description_vcard_avatar">This is a contact card avatar.</string>
 
 </resources>

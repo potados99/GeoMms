@@ -1,44 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2017 Moez Bhatti <moez.bhatti@gmail.com>
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ mms_vcard_list_item.xml
   ~
-  ~ This file is part of QKSMS.
-  ~
-  ~ QKSMS is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ QKSMS is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="2dp">
+  ~ This file is part of GeoMms.
+  ~ Copyright (C) 2019 Song Byeong Jun <potados@gmail.com>
+-->
+
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/vCardBackground"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+            android:id="@+id/vcard_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
+        <!-- Avatar -->
         <ImageView
-            android:id="@+id/vCardAvatar"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="12dp"
-            android:src="@drawable/ic_person_black_24dp"
-            android:tint="?android:attr/textColorSecondary"
-            app:layout_constraintBottom_toBottomOf="@id/vCardBackground"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/vCardBackground" />
+                android:id="@+id/avatar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/ic_person_black_24dp"
+                android:tint="?android:attr/textColorSecondary"
+                app:layout_constraintBottom_toBottomOf="@id/vcard_background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/vcard_background"
+                android:contentDescription="@string/description_vcard_avatar" />
 
+        <!-- Name -->
         <com.potados.geomms.common.widget.QkTextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
@@ -47,22 +41,24 @@
                 android:paddingTop="8dp"
                 android:paddingEnd="12dp"
                 android:textColor="?android:attr/textColorPrimary"
-                app:layout_constraintStart_toEndOf="@id/vCardAvatar"
+                app:layout_constraintStart_toEndOf="@id/avatar"
                 app:textSize="primary"
-                tools:text="@tools:sample/full_names" app:layout_constraintTop_toTopOf="parent"/>
+                tools:text="@tools:sample/full_names"
+                app:layout_constraintTop_toTopOf="parent"/>
 
+        <!-- Label -->
         <com.potados.geomms.common.widget.QkTextView
-            android:id="@+id/label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="8dp"
-            android:text="Contact card"
-            android:textColor="?android:attr/textColorTertiary"
-            app:layout_constraintStart_toStartOf="@id/name"
-            app:layout_constraintTop_toBottomOf="@id/name"
-            app:textSize="secondary" />
+                android:id="@+id/label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="8dp"
+                tools:text="Contact card"
+                android:textColor="?android:attr/textColorTertiary"
+                app:layout_constraintStart_toStartOf="@id/name"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                app:textSize="secondary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

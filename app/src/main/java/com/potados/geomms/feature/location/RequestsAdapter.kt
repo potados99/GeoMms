@@ -38,7 +38,7 @@ class RequestsAdapter(
         val connection = getItem(position) ?: return
         val view = holder.containerView
 
-        view.title.text = connection.recipient?.getDisplayName()
+        view.name.text = connection.recipient?.getDisplayName()
         view.avatar.setContact(connection.recipient)
     }
 

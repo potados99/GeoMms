@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ bottom_sheet.xml
+  ~
+  ~ This file is part of GeoMms.
+  ~ Copyright (C) 2019 Song Byeong Jun <potados@gmail.com>
+-->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
@@ -13,7 +20,7 @@
             android:layout_height="match_parent"
             android:id="@+id/root_layout">
 
-        <!--그립-->
+        <!-- Bottom sheet grip-->
         <View
                 android:layout_width="40dp"
                 android:layout_height="5dp"
@@ -24,7 +31,7 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!--친구가없어-->
+        <!-- Empty view -->
         <TextView
                 android:id="@+id/empty_view"
                 android:layout_width="wrap_content"
@@ -37,7 +44,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/connections" />
 
-        <!--들어오는 요청-->
+        <!-- Incoming requests -->
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/incoming_requests_layout"
                 android:layout_width="0dp"
@@ -46,18 +53,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-            <!--요청목록 텍스트뷰-->
+            <!-- Incoming requests title -->
             <TextView
                     android:id="@+id/incoming_requests_text"
                     style="@style/TextSecondary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Incoming Requests"
+                    android:text="@string/title_incoming_requests"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp"/>
 
-            <!--요청목록-->
+            <!-- Requests -->
             <androidx.recyclerview.widget.RecyclerView
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
@@ -74,7 +81,7 @@
                     app:incoming_requests="@{vm.incomingRequests}"
                     tools:listitem="@layout/request_list_item"/>
 
-            <!--요청목록 마감-->
+            <!-- Separator -->
             <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
@@ -89,7 +96,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--연결목록-->
+        <!-- Connections -->
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/connections"
                 android:layout_width="0dp"

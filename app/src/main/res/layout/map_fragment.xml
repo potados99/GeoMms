@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ map_fragment.xml
+  ~
+  ~ This file is part of GeoMms.
+  ~ Copyright (C) 2019 Song Byeong Jun <potados@gmail.com>
+-->
+
 <layout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
@@ -12,17 +19,17 @@
             android:layout_height="match_parent"
             android:id="@+id/root_layout">
 
-        <!--컨텐츠-->
+        <!-- Content -->
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/content_layout">
 
-            <!--지도-->
+            <!-- Map -->
             <com.google.android.gms.maps.MapView
+                    android:id="@+id/map_view"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:id="@+id/map_view"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -30,8 +37,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-        <!--바텀쉿-->
+        <!-- Bottom sheet -->
         <FrameLayout android:id="@+id/sheet"
                      android:layout_width="match_parent"
                      android:layout_height="match_parent"
