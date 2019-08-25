@@ -47,7 +47,7 @@ class SyncRepositoryImpl(
     private val cursorToRecipient: CursorToRecipient,
     private val cursorToContact: CursorToContact,
     private val keys: KeyManager
-) : SyncRepository {
+) : SyncRepository() {
 
     /**
      * Holds data that should be persisted across full syncs

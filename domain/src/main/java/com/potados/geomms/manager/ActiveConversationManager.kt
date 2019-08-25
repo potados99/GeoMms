@@ -18,15 +18,15 @@
  */
 package com.potados.geomms.manager
 
+import com.potados.geomms.base.FailableComponent
+
 /**
  * Keeps track of the conversation that the user is currently viewing. This is useful when we
  * receive a message, because it allows us to immediately mark the message read and not display
  * a notification
  */
-interface ActiveConversationManager {
+abstract class ActiveConversationManager : FailableComponent() {
+    abstract fun setActiveConversation(threadId: Long?)
 
-    fun setActiveConversation(threadId: Long?)
-
-    fun getActiveConversation(): Long?
-
+    abstract fun getActiveConversation(): Long?
 }

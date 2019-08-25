@@ -40,7 +40,7 @@ class ConversationRepositoryImpl(
     private val context: Context,
     private val cursorToConversation: CursorToConversation,
     private val cursorToRecipient: CursorToRecipient
-) : ConversationRepository {
+) : ConversationRepository() {
 
     override fun getConversations(archived: Boolean): RealmResults<Conversation> {
         return Realm.getDefaultInstance()

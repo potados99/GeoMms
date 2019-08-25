@@ -21,10 +21,8 @@ package com.potados.geomms.repository
 import android.graphics.Bitmap
 import android.net.Uri
 
-interface ImageRepository {
+abstract class ImageRepository : Repository() {
+    abstract fun loadImage(uri: Uri): Bitmap?
 
-    fun loadImage(uri: Uri): Bitmap?
-
-    fun saveImage(uri: Uri)
-
+    abstract fun saveImage(uri: Uri)
 }

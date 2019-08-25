@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import com.potados.geomms.R
+import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.databinding.ComposeFragmentBinding
@@ -27,13 +28,20 @@ class ComposeFragment : BaseFragment() {
     private lateinit var contactAdapter: ContactAdapter
     private lateinit var messagesAdapter: MessagesAdapter
 
+    override fun onFail(failure: Failable.Failure) {
+        super.onFail(failure)
+        // do some
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         chipsAdapter = ChipsAdapter(context!!)
         messagesAdapter = MessagesAdapter(context!!)
-        composeViewModel = getViewModel { activity?.intent?.let(::start) }
+        composeViewModel = getViewModel { activity?.intent?.let(::startWithIntent) }
         contactAdapter = ContactAdapter(composeViewModel::setConversationByContact)
+
+        addFailables(composeViewModel.failables + listOf<Failable>(chipsAdapter, contactAdapter, messagesAdapter))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

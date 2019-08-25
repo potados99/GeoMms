@@ -19,7 +19,7 @@
 package com.potados.geomms.manager
 
 
-class ActiveConversationManagerImpl: ActiveConversationManager {
+class ActiveConversationManagerImpl: ActiveConversationManager() {
 
     private var threadId: Long? = null
 

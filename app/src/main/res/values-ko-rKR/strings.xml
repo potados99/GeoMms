@@ -15,7 +15,7 @@
     <string name="failure_query">메시지를 불러오는 데에 실패했습니다.</string>
     <string name="retry">다시 시도</string>
     <string name="cannot_send_message">메시지를 보내는 데에 실패했습니다.</string>
-    <string name="no_friends">친구가 없어요 :(</string>
+    <string name="connections_empty">친구를 초대해보세요!</string>
 
 
     <string name="title_settings">설정</string>
@@ -277,6 +277,8 @@
     <string name="description_detach_button_icon">첨부파일 삭제 버튼입니다.</string>
     <string name="title_incoming_requests">연결 요청</string>
     <string name="description_vcard_avatar">연락처 사진입니다.</string>
+    <string name="delete_conversation_title">대화 삭제</string>
+    <string name="delete_conversation_message">%s님과의 대화를 삭제하시겠습니까?</string>
 
 
 </resources>

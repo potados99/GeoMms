@@ -22,11 +22,11 @@ import android.net.Uri
 import com.potados.geomms.model.Contact
 import io.realm.RealmResults
 
-interface ContactRepository {
+abstract class ContactRepository : Repository() {
 
-    fun findContactUri(address: String): Uri?
+    abstract fun findContactUri(address: String): Uri?
 
-    fun getContacts(): RealmResults<Contact>
+    abstract fun getContacts(): RealmResults<Contact>
 
-    fun getUnmanagedContacts(): List<Contact>
+    abstract fun getUnmanagedContacts(): List<Contact>
 }

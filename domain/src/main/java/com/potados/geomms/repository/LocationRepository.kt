@@ -2,10 +2,10 @@ package com.potados.geomms.repository
 
 import android.location.Location
 
-interface LocationRepository {
-    fun getCurrentLocation(): Location?
+abstract class LocationRepository : Repository() {
+    abstract fun getCurrentLocation(): Location?
 
-    fun startLocationUpdates()
+    abstract fun startLocationUpdates()
 
-    fun stopLocationUpdates()
+    abstract fun stopLocationUpdates()
 }

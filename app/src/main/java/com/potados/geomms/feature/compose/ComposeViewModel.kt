@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.feature.compose.filter.ContactFilter
 import com.potados.geomms.manager.ActiveConversationManager
 import com.potados.geomms.model.*
@@ -20,7 +21,7 @@ import timber.log.Timber
 /**
  * ConversationActivity를 보조할 뷰모델입니다.
  */
-class ComposeViewModel : ViewModel(), KoinComponent {
+class ComposeViewModel : BaseViewModel(), KoinComponent {
 
     // Use case
     private val sendMessage: SendMessage by inject()
@@ -45,8 +46,25 @@ class ComposeViewModel : ViewModel(), KoinComponent {
     val conversation = MutableLiveData<Conversation>()      // null on empty
     val messages = MutableLiveData<RealmResults<Message>>() // null on empty
 
+    override fun start() {
+        super.start()
+
+        failables.addAll(
+            listOf(
+                activeConversationManager,
+                conversationRepo,
+                messageRepo,
+                contactRepo,
+                contactFilter
+            )
+        )
+    }
+
     // Setup fragment with Intent of parent Activity.
-    fun start(intent: Intent) {
+    fun startWithIntent(intent: Intent) {
+
+        // Not a direct call from Fragment, but it's okay.
+        start()
 
         val threadId = intent.extras?.getLong("threadId") ?: 0L
 

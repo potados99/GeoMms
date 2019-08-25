@@ -10,6 +10,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.potados.geomms.R
+import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
@@ -59,6 +60,11 @@ class MapFragment : NavigationFragment(),
 
     private var map: GoogleMap? = null
 
+    override fun onFail(failure: Failable.Failure) {
+        super.onFail(failure)
+        // do some...
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -66,6 +72,8 @@ class MapFragment : NavigationFragment(),
 
         mapViewModel = getViewModel { start() }
         context?.registerReceiver(receiver, IntentFilter(ACTION_SET_ADDRESS))
+
+        addFailables(mapViewModel.failables + listOf(navigator, locationRepo, connectionsAdapter, requestsAdapter))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -18,7 +18,9 @@
  */
 package com.potados.geomms.feature.compose.filter
 
-abstract class Filter<in T> {
+import com.potados.geomms.base.FailableComponent
+
+abstract class Filter<in T> : FailableComponent() {
 
     abstract fun filter(item: T, query: CharSequence): Boolean
 

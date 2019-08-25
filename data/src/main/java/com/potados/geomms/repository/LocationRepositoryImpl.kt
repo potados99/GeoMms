@@ -11,7 +11,7 @@ import timber.log.Timber
 @SuppressWarnings("MissingPermission")
 class LocationRepositoryImpl(
     context: Context
-) : LocationRepository {
+) : LocationRepository() {
 
     private var currentLocation: Location? = null
 

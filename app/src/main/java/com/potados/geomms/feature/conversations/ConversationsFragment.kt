@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import com.potados.geomms.R
+import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.autoScrollToStart
 import com.potados.geomms.common.extension.getViewModel
@@ -33,10 +34,17 @@ class ConversationsFragment : NavigationFragment() {
 
     private val conversationsAdapter = ConversationsAdapter()
 
+    override fun onFail(failure: Failable.Failure) {
+        super.onFail(failure)
+        // do some...
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        conversationsViewModel = getViewModel()
+        conversationsViewModel = getViewModel { start() }
+
+        addFailables(conversationsViewModel.failables + listOf(navigator, permissionManager))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

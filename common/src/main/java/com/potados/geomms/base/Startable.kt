@@ -1,4 +1,4 @@
-package com.potados.geomms.common.base
+package com.potados.geomms.base
 
 /**
  * Represents a component that can be started.

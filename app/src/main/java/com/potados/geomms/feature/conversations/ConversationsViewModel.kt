@@ -18,10 +18,10 @@ import org.koin.core.inject
  */
 class ConversationsViewModel : BaseViewModel(), KoinComponent {
 
+    private val syncMessages: SyncMessages by inject()
+
     private val conversationRepo: ConversationRepository by inject()
     private val syncRepo: SyncRepository by inject()
-
-    private val syncMessages: SyncMessages by inject()
 
     private val permissionManager: PermissionManager by inject()
 
@@ -44,6 +44,16 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
     val syncState = syncRepo.syncProgress
 
     override fun start() {
+        super.start()
+
+        failables.addAll(
+            listOf(
+                conversationRepo,
+                syncRepo,
+                permissionManager
+            )
+        )
+
         sync()
     }
 

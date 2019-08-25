@@ -12,7 +12,7 @@ import timber.log.Timber
 class PermissionManagerImpl(
     private val context: Context,
     val permissions: Array<String>
-) : PermissionManager {
+) : PermissionManager() {
 
     private val _isDefaultSms = MutableLiveData<Boolean>()
 

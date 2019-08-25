@@ -23,7 +23,7 @@ import androidx.lifecycle.LiveData
 import com.potados.geomms.model.Message
 import timber.log.Timber
 
-interface SyncRepository {
+abstract class SyncRepository : Repository() {
 
     sealed class SyncProgress {
         class Idle : SyncProgress() {
@@ -38,19 +38,19 @@ interface SyncRepository {
         }
     }
 
-    val syncProgress: LiveData<SyncProgress>
+    abstract val syncProgress: LiveData<SyncProgress>
 
-    fun syncMessages()
+    abstract fun syncMessages()
 
-    fun syncMessage(uri: Uri): Message?
+    abstract fun syncMessage(uri: Uri): Message?
 
-    fun syncContacts()
+    abstract fun syncContacts()
 
     /**
      * Syncs a single contact to the Realm
      *
      * Return false if the contact couldn't be found
      */
-    fun syncContact(address: String): Boolean
+    abstract fun syncContact(address: String): Boolean
 
 }

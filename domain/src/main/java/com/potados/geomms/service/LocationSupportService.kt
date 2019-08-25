@@ -1,5 +1,7 @@
 package com.potados.geomms.service
 
+import com.potados.geomms.base.FailableComponent
+import com.potados.geomms.base.Startable
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.model.Packet
@@ -8,62 +10,60 @@ import io.realm.RealmResults
 /**
  * Do communication thing.
  *
- * FORWARD:
+ * FORWARD
  *  Terms:
  *      I       The user of this app.
  *      YOU     The other user. Could be a friend.
  */
-interface LocationSupportService {
+abstract class LocationSupportService : Startable, FailableComponent() {
 
-    fun start()
+    abstract fun getConnections(): RealmResults<Connection>
 
-    fun getConnections(): RealmResults<Connection>
+    abstract fun getConnection(id: Long): Connection?
 
-    fun getConnection(id: Long): Connection?
+    abstract fun getIncomingRequests(): RealmResults<ConnectionRequest>
 
-    fun getIncomingRequests(): RealmResults<ConnectionRequest>
-
-    fun getOutgoingRequests(): RealmResults<ConnectionRequest>
+    abstract fun getOutgoingRequests(): RealmResults<ConnectionRequest>
 
 
     /** I request YOU to join. */
-    fun requestNewConnection(address: String, duration: Long)
+    abstract fun requestNewConnection(address: String, duration: Long)
     /** YOU requested me to join. So I handle it. */
-    fun beRequestedNewConnection(packet: Packet)
+    abstract fun beRequestedNewConnection(packet: Packet)
 
     /** I accept YOUr request. */
-    fun acceptConnectionRequest(request: ConnectionRequest)
+    abstract fun acceptConnectionRequest(request: ConnectionRequest)
     /** YOU accepted my request. I handle it. */
-    fun beAcceptedConnectionRequest(packet: Packet)
+    abstract fun beAcceptedConnectionRequest(packet: Packet)
 
     /** I refuse YOUr request. */
-    fun refuseConnectionRequest(request: ConnectionRequest)
+    abstract fun refuseConnectionRequest(request: ConnectionRequest)
     /** YOU refused my request!. I handle it. */
-    fun beRefusedConnectionRequest(packet: Packet)
+    abstract fun beRefusedConnectionRequest(packet: Packet)
 
     /** I send you an update. */
-    fun sendUpdate(connectionId: Long)
+    abstract fun sendUpdate(connectionId: Long)
     /** YOU sent me an update. I take it. */
-    fun beSentUpdate(packet: Packet)
+    abstract fun beSentUpdate(packet: Packet)
 
     /** I request you to send me an update. */
-    fun requestUpdate(connectionId: Long)
+    abstract fun requestUpdate(connectionId: Long)
     /** YOU requested me to send an update. I take care of it. */
-    fun beRequestedUpdate(packet: Packet)
+    abstract fun beRequestedUpdate(packet: Packet)
 
     /** I request YOU to disconnect. I already deleted the connection. */
-    fun requestDisconnect(connectionId: Long)
+    abstract fun requestDisconnect(connectionId: Long)
     /** YOU requested me to disconnect. I handle it. */
-    fun beRequestedDisconnect(packet: Packet)
+    abstract fun beRequestedDisconnect(packet: Packet)
 
     /** I send a packet to YOU. */
-    fun sendPacket(address: String, packet: Packet)
+    abstract fun sendPacket(address: String, packet: Packet)
     /** YOU sent me a packet. I handle it and call methods above. */
-    fun receivePacket(address: String, body: String)
+    abstract fun receivePacket(address: String, body: String)
 
-    fun parsePacket(body: String): Packet?
+    abstract fun parsePacket(body: String): Packet?
 
-    fun serializePacket(packet: Packet): String?
+    abstract fun serializePacket(packet: Packet): String?
 
-    fun isValidPacket(body: String): Boolean
+    abstract fun isValidPacket(body: String): Boolean
 }

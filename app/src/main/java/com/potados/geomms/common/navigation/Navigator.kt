@@ -4,12 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Telephony
+import com.potados.geomms.R
+import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.common.GiveMePermissionActivity
 import com.potados.geomms.common.MakeMeDefaultAppActivity
 import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.feature.location.InviteActivity
 import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.settings.SettingsActivity
+import com.potados.geomms.model.Conversation
+import com.potados.geomms.usecase.DeleteConversations
+import com.potados.geomms.util.Popup
+import io.realm.Realm
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 
 /**
@@ -18,7 +26,7 @@ import timber.log.Timber
 class Navigator (
     private val context: Context,
     private val permissionManager: com.potados.geomms.manager.PermissionManager
-){
+) : FailableComponent(), KoinComponent {
 
     fun showMain() {
         whenPossible {
@@ -47,6 +55,25 @@ class Navigator (
 
             startActivityWithFlag(intent)
         }
+    }
+
+    fun showAskDeleteConversation(threadId: Long) {
+        val deleteConversations: DeleteConversations by inject()
+
+        val conversation = Realm.getDefaultInstance()
+            .where(Conversation::class.java)
+            .findFirst() ?: return
+
+        Popup(context)
+            .withTitle(context.getString(R.string.delete_conversation_title))
+            .withMessage(context.getString(R.string.delete_conversation_message, conversation.getTitle()))
+            .withPositiveButton(context.getString(R.string.button_delete)) { _, _ ->
+                deleteConversations(listOf(conversation.id))
+            }
+            .withNegativeButton(context.getString(R.string.button_cancel)) { _, _ ->
+                // do nothing
+            }
+            .show()
     }
 
     fun showDefaultSmsDialog() {

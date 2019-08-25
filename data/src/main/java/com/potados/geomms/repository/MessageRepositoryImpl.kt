@@ -54,7 +54,7 @@ class MessageRepositoryImpl(
     private val imageRepository: ImageRepository,
     private val prefs: Preferences,
     private val syncRepository: SyncRepository
-) : MessageRepository {
+) : MessageRepository() {
 
     override fun getMessages(threadId: Long, query: String): RealmResults<Message> {
         return Realm.getDefaultInstance()

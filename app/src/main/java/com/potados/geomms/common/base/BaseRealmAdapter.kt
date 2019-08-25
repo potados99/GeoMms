@@ -1,11 +1,26 @@
 package com.potados.geomms.common.base
 
 import android.view.View
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import com.potados.geomms.base.Failable
 import com.potados.geomms.common.extension.setVisible
 import io.realm.*
 
-abstract class BaseRealmAdapter<T: RealmModel> : RealmRecyclerViewAdapter<T, BaseViewHolder>(null, true) {
+abstract class BaseRealmAdapter<T: RealmModel>
+    : RealmRecyclerViewAdapter<T, BaseViewHolder>(null, true), Failable
+{
+
+    private val failure = MutableLiveData<Failable.Failure>()
+
+    final override fun setFailure(failure: Failable.Failure) {
+        this.failure.value = failure
+    }
+
+    final override fun getFailure(): LiveData<Failable.Failure> {
+        return failure
+    }
 
     var emptyView: View? = null
         set(value) {

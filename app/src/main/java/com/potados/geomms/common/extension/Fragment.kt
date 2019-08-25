@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.extension.withNonNull
+import com.potados.geomms.util.Notify
 import kotlinx.android.synthetic.main.single_fragment_activity.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -130,5 +131,13 @@ fun Fragment.setSupportActionBar(toolbar: Toolbar, title: Boolean = false, upBut
 fun Fragment.setTitle(title: String?) {
     withNonNull(activity as? AppCompatActivity) {
         toolbar_title.text = title
+    }
+}
+
+fun Fragment.notify(message: String?, long: Boolean = false) {
+    message?.let {
+        with(Notify(context)) {
+            if (long) long(it) else short(it)
+        }
     }
 }

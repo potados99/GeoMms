@@ -2,12 +2,10 @@ package com.potados.geomms.feature.location
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.common.base.BaseViewModel
-import com.potados.geomms.common.base.Startable
 import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
@@ -57,6 +55,12 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     }
 
     override fun start() {
+        super.start()
+
+        failables.addAll(
+            listOf(locationService)
+        )
+
         // Setting chagne listener does not invoke it on register time.
         // Do it for one time manually.
         connections.addChangeListener(refreshMarkers)

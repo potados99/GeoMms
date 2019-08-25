@@ -21,54 +21,54 @@ package com.potados.geomms.repository
 import com.potados.geomms.model.Conversation
 import io.realm.RealmResults
 
-interface ConversationRepository {
+abstract class ConversationRepository : Repository() {
 
-    fun getConversations(archived: Boolean = false): RealmResults<Conversation>
+    abstract fun getConversations(archived: Boolean = false): RealmResults<Conversation>
 
-    fun getConversationsSnapshot(): List<Conversation>
+    abstract fun getConversationsSnapshot(): List<Conversation>
 
     /**
      * Returns the top conversations that were active in the last week
      */
-    fun getTopConversations(): List<Conversation>
+    abstract fun getTopConversations(): List<Conversation>
 
-    fun setConversationName(id: Long, name: String)
+    abstract fun setConversationName(id: Long, name: String)
 
-    fun getBlockedConversations(): RealmResults<Conversation>
+    abstract fun getBlockedConversations(): RealmResults<Conversation>
 
-    fun getConversationAsync(threadId: Long): Conversation
+    abstract fun getConversationAsync(threadId: Long): Conversation
 
-    fun getConversation(threadId: Long): Conversation?
+    abstract fun getConversation(threadId: Long): Conversation?
 
-    fun getThreadId(recipient: String): Long?
+    abstract fun getThreadId(recipient: String): Long?
 
-    fun getThreadId(recipients: Collection<String>): Long?
+    abstract fun getThreadId(recipients: Collection<String>): Long?
 
-    fun getOrCreateConversation(threadId: Long): Conversation?
+    abstract fun getOrCreateConversation(threadId: Long): Conversation?
 
-    fun getOrCreateConversation(address: String): Conversation?
+    abstract fun getOrCreateConversation(address: String): Conversation?
 
-    fun getOrCreateConversation(addresses: List<String>): Conversation?
+    abstract fun getOrCreateConversation(addresses: List<String>): Conversation?
 
-    fun saveDraft(threadId: Long, draft: String)
+    abstract fun saveDraft(threadId: Long, draft: String)
 
     /**
      * Updates message-related fields in the conversation, like the date and snippet
      */
-    fun updateConversations(vararg threadIds: Long)
+    abstract fun updateConversations(vararg threadIds: Long)
 
-    fun markArchived(vararg threadIds: Long)
+    abstract fun markArchived(vararg threadIds: Long)
 
-    fun markUnarchived(vararg threadIds: Long)
+    abstract fun markUnarchived(vararg threadIds: Long)
 
-    fun markPinned(vararg threadIds: Long)
+    abstract fun markPinned(vararg threadIds: Long)
 
-    fun markUnpinned(vararg threadIds: Long)
+    abstract fun markUnpinned(vararg threadIds: Long)
 
-    fun markBlocked(vararg threadIds: Long)
+    abstract fun markBlocked(vararg threadIds: Long)
 
-    fun markUnblocked(vararg threadIds: Long)
+    abstract fun markUnblocked(vararg threadIds: Long)
 
-    fun deleteConversations(vararg threadIds: Long)
+    abstract fun deleteConversations(vararg threadIds: Long)
 
 }

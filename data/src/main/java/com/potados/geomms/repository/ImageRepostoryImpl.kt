@@ -33,7 +33,7 @@ import java.io.IOException
 
 class ImageRepostoryImpl(
     private val context: Context
-) : ImageRepository {
+) : ImageRepository() {
 
     override fun loadImage(uri: Uri): Bitmap? {
         val exif = ExifInterface(context.contentResolver.openInputStream(uri))

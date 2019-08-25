@@ -27,7 +27,7 @@ class LocationSupportServiceImpl(
     private val locationRepo: LocationRepository,
     private val scheduler: Scheduler,
     private val keyManager: KeyManager
-) : LocationSupportService {
+) : LocationSupportService() {
 
     private var started = false
 

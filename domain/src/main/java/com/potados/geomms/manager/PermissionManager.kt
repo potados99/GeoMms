@@ -1,26 +1,27 @@
 package com.potados.geomms.manager
 
 import androidx.lifecycle.LiveData
+import com.potados.geomms.base.FailableComponent
 
-interface PermissionManager {
+abstract class PermissionManager : FailableComponent() {
 
-    fun refresh()
+    abstract fun refresh()
 
-    fun isAllGranted(): Boolean
+    abstract fun isAllGranted(): Boolean
 
-    fun ungrantedPermissions(): Array<String>
+    abstract fun ungrantedPermissions(): Array<String>
 
-    fun isDefaultSms(): Boolean
+    abstract fun isDefaultSms(): Boolean
 
-    fun isDefaultSmsLiveData(): LiveData<Boolean>
+    abstract fun isDefaultSmsLiveData(): LiveData<Boolean>
 
-    fun hasReadSms(): Boolean
+    abstract fun hasReadSms(): Boolean
 
-    fun hasSendSms(): Boolean
+    abstract fun hasSendSms(): Boolean
 
-    fun hasContacts(): Boolean
+    abstract fun hasContacts(): Boolean
 
-    fun hasPhone(): Boolean
+    abstract fun hasPhone(): Boolean
 
-    fun hasLocation(): Boolean
+    abstract fun hasLocation(): Boolean
 }

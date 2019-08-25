@@ -5,41 +5,41 @@ import com.potados.geomms.model.Message
 import com.potados.geomms.model.MmsPart
 import io.realm.RealmResults
 
-interface MessageRepository {
+abstract class MessageRepository : Repository() {
 
-    fun getMessages(threadId: Long, query: String = ""): RealmResults<Message>
+    abstract fun getMessages(threadId: Long, query: String = ""): RealmResults<Message>
 
-    fun getMessage(id: Long): Message?
+    abstract fun getMessage(id: Long): Message?
 
-    fun getMessageForPart(id: Long): Message?
+    abstract fun getMessageForPart(id: Long): Message?
 
-    fun getUnreadCount(): Long
+    abstract fun getUnreadCount(): Long
 
-    fun getPart(id: Long): MmsPart?
+    abstract fun getPart(id: Long): MmsPart?
 
-    fun getPartsForConversation(threadId: Long): RealmResults<MmsPart>
+    abstract fun getPartsForConversation(threadId: Long): RealmResults<MmsPart>
 
     /**
      * Retrieves the list of messages which should be shown in the notification
      * for a given conversation
      */
-    fun getUnreadUnseenMessages(threadId: Long): RealmResults<Message>
+    abstract fun getUnreadUnseenMessages(threadId: Long): RealmResults<Message>
 
     /**
      * Retrieves the list of messages which should be shown in the quickreply popup
      * for a given conversation
      */
-    fun getUnreadMessages(threadId: Long): RealmResults<Message>
+    abstract fun getUnreadMessages(threadId: Long): RealmResults<Message>
 
-    fun markAllSeen()
+    abstract fun markAllSeen()
 
-    fun markSeen(threadId: Long)
+    abstract fun markSeen(threadId: Long)
 
-    fun markRead(vararg threadIds: Long)
+    abstract fun markRead(vararg threadIds: Long)
 
-    fun markUnread(vararg threadIds: Long)
+    abstract fun markUnread(vararg threadIds: Long)
 
-    fun sendMessage(
+    abstract fun sendMessage(
         subId: Int,
         threadId: Long,
         addresses: List<String>,
@@ -50,24 +50,24 @@ interface MessageRepository {
     /**
      * Attempts to send the SMS message. This can be called if the message has already been persisted
      */
-    fun sendSms(message: Message)
+    abstract fun sendSms(message: Message)
 
-    fun insertSentSms(subId: Int, threadId: Long, address: String, body: String, date: Long): Message
+    abstract fun insertSentSms(subId: Int, threadId: Long, address: String, body: String, date: Long): Message
 
-    fun insertReceivedSms(subId: Int, address: String, body: String, sentTime: Long): Message
+    abstract fun insertReceivedSms(subId: Int, address: String, body: String, sentTime: Long): Message
 
     /**
      * Marks the message as sending, in case we need to retry sending it
      */
-    fun markSending(id: Long)
+    abstract fun markSending(id: Long)
 
-    fun markSent(id: Long)
+    abstract fun markSent(id: Long)
 
-    fun markFailed(id: Long, resultCode: Int)
+    abstract fun markFailed(id: Long, resultCode: Int)
 
-    fun markDelivered(id: Long)
+    abstract fun markDelivered(id: Long)
 
-    fun markDeliveryFailed(id: Long, resultCode: Int)
+    abstract fun markDeliveryFailed(id: Long, resultCode: Int)
 
-    fun deleteMessages(vararg messageIds: Long)
+    abstract fun deleteMessages(vararg messageIds: Long)
 }

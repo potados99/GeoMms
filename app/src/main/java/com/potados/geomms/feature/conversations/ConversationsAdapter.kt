@@ -52,6 +52,13 @@ class ConversationsAdapter : BaseRealmAdapter<Conversation>(), KoinComponent {
 
                 navigator.showConversation(conversation.id)
             }
+            view.setOnLongClickListener {
+                if (adapterPosition < 0) return@setOnLongClickListener false
+                val conversation = getItem(adapterPosition) ?: return@setOnLongClickListener false
+
+                navigator.showAskDeleteConversation(conversation.id)
+                true
+            }
         }
     }
 

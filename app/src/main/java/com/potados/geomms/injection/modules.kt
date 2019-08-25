@@ -186,6 +186,14 @@ val myModules = module {
      **********************************************************/
 
     /** Delete Conversations */
+    single {
+        DeleteConversations(
+            conversationRepo = get(),
+            notificationManager = get(),
+            updateBadge = get()
+        )
+    }
+
     /** Delete Messages */
 
     /** Mark Delivered */

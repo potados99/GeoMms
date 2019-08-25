@@ -27,8 +27,13 @@ import android.provider.ContactsContract.CommonDataKinds.Phone
 import com.potados.geomms.model.Contact
 import io.realm.Realm
 import io.realm.RealmResults
+import timber.log.Timber
 
-class ContactRepositoryImpl(private val context: Context) : ContactRepository {
+class ContactRepositoryImpl(private val context: Context) : ContactRepository() {
+
+    override fun start() {
+        Timber.i("ContactRepositoryImpl started.")
+    }
 
     override fun findContactUri(address: String): Uri? {
         val uri = when {

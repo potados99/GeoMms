@@ -63,6 +63,7 @@ class MainActivity : NavigationActivity(), KoinComponent {
             root_layout.closeDrawers()
         }
         help.setOnClickListener {
+            // TODO Implement it
             Notify(this).short("Not implemented yet.")
         }
     }
