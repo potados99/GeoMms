@@ -190,7 +190,13 @@ class LocationSupportServiceImpl(
      */
     override fun refuseConnectionRequest(request: ConnectionRequest) {
         if (!request.isInbound) throw IllegalAccessError("Cannot refuse request not heading to isInbound.")
-        if (request.recipient == null) throw IllegalArgumentException("Request without recipient is impossible.")
+        if (request.recipient == null) {
+            // delete
+            Realm.getDefaultInstance().executeTransaction {
+                request.deleteFromRealm()
+            }
+            throw IllegalArgumentException("Request without recipient is impossible.")
+        }
 
         // let you know
         request.recipient?.let {
@@ -232,7 +238,7 @@ class LocationSupportServiceImpl(
 
                 Timber.i("Received data updated.")
 
-            } ?: Timber.w("cannot find corresponding connection for DATA.")
+            } ?: Timber.w("cannot find corresponding connection for TRANSFER_DATA.")
     }
 
     override fun requestUpdate(connectionId: Long) {
@@ -323,7 +329,7 @@ class LocationSupportServiceImpl(
                     beRefusedConnectionRequest(packet)
                 }
 
-                Packet.PacketType.DATA.number -> {
+                Packet.PacketType.TRANSFER_DATA.number -> {
                     beSentUpdate(packet)
                 }
 

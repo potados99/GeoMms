@@ -10,15 +10,14 @@ class Packet(
     var longitude: Double = 0.0,
 
     var address: String = "",
-    var date: Long = 0, // 받은 시점
-    var dateSent: Long = 0, // 보낸 시점
+    var date: Long = 0,         // 받은 시점
+    var dateSent: Long = 0,     // 보낸 시점
 
     var isInbound: Boolean = false
 
 ) {
 
     companion object {
-
         fun ofRequestingNewConnection(request: ConnectionRequest) =
             Packet(
                 type = PacketType.REQUEST_CONNECT.number,
@@ -52,122 +51,102 @@ class Packet(
 
         fun ofSendingData(connection: Connection, location: Location) =
             Packet(
-                type = PacketType.DATA.number,
+                type = PacketType.TRANSFER_DATA.number,
                 connectionId = connection.id,
                 latitude = location.latitude,
                 longitude = location.longitude
             )
     }
 
-    enum class PacketType(
-        val number: Int,
-        val fields: Array<Field>
-    ) {
+    /**
+     * NUM      NAME                    DESCRIPTION
+     * 1        REQUEST_CONNECT         연결 요청
+     * 2        ACCEPT_CONNECT          연결 요청 수락
+     * 3        REFUSE_CONNECT          연결 요청 거절
+     * 4        TRANSFER_DATA           데이터 보내기/받기
+     * 5        REQUEST_DATA            데이터 요청
+     * 6        REQUEST_DISCONNECT      연결 해제 요청
+     */
+    enum class PacketType(val number: Int, val fields: Array<Field>) {
 
-        /**
-         * 연결 요청 보내는 패킷
-         */
-        REQUEST_CONNECT(1, arrayOf(
-            Field.TYPE,
-            Field.ID,
-            Field.DURATION
-        )
+        REQUEST_CONNECT(1,
+            arrayOf(
+                Field.TYPE,
+                Field.ID,
+                Field.DURATION
+            )
         ),
-
-        /**
-         * 연결 요청 수락하는 패킷
-         */
-        ACCEPT_CONNECT(2, arrayOf(
-            Field.TYPE,
-            Field.ID
-        )
+        ACCEPT_CONNECT(2,
+            arrayOf(
+                Field.TYPE,
+                Field.ID
+            )
         ),
-
-        /**
-         * 연결 요청 거절하는 패킷
-         */
-        REFUSE_CONNECT(3, arrayOf(
-            Field.TYPE,
-            Field.ID
-        )
+        REFUSE_CONNECT(3,
+            arrayOf(
+                Field.TYPE,
+                Field.ID
+            )
         ),
-
-        /**
-         * 데이터 보내는 패킷.
-         */
-        DATA(4, arrayOf(
-            Field.TYPE,
-            Field.ID,
-            Field.LATITUDE,
-            Field.LONGITUDE
-        )
+        TRANSFER_DATA(4,
+            arrayOf(
+                Field.TYPE,
+                Field.ID,
+                Field.LATITUDE,
+                Field.LONGITUDE
+            )
         ),
-
-        /**
-         * 데이터 지금 당장 보내라고 보채는 패킷.
-         */
-        REQUEST_DATA(5, arrayOf(
-            Field.TYPE,
-            Field.ID
-        )),
-
-        /**
-         * 연결 종료를 요청하는 패킷.
-         */
-        REQUEST_DISCONNECT(6, arrayOf(
-            Field.TYPE,
-            Field.ID
-        ))
+        REQUEST_DATA(5,
+            arrayOf(
+                Field.TYPE,
+                Field.ID
+            )
+        ),
+        REQUEST_DISCONNECT(6,
+            arrayOf(
+                Field.TYPE,
+                Field.ID
+            )
+        )
     }
 
-    enum class Field(
-        val positionInPayload: Int,         /* 직렬화된 페이로드에서 해당 필드의 위치. */
-        val fieldName: String,              /* 해당 필드의 이름. */
-        val convert: (String) -> Number     /* 해당 필드를 숫자로 바꾸기 위한 람다식. */
-    ) {
+    /**
+     * INDEX    NAME                    DESCRIPTION
+     * 0        TYPE                    패킷의 종류
+     * 1        ID                      연결 식별
+     * 2        DURATION                연결의 지속 시간
+     * 2        LATITUDE                위도
+     * 3        LONGITUDE               경도
+     */
+    enum class Field(val positionInPayload: Int, val fieldName: String, val convert: String.() -> Number) {
 
-        /******************************
-         * 고정 필드
-         ******************************/
-
-        /** 패킷의 종류. */
+        /** Fixed */
         TYPE(
             0,
             "type",
-            {str -> str.toInt()}
+            { toInt() }
         ),
-
-        /** 연결 connectionId. */
         ID(
             1,
             "connectionId",
-            {str -> str.toInt()}
+            { toInt() }
         ),
 
-
-        /******************************
-         * 가변 필드
-         ******************************/
-
-        /** 연결 요청할 때에 사용할 연결시간. */
+        /** Optional */
         DURATION(
             2,
             "duration",
-            {str -> str.toLong()}
+            { toLong() }
         ),
-
-        /** 위치 데이터 보낼 때에 사용할 경도 필드. */
         LATITUDE(
             2,
             "latitude",
-            {str -> str.toDouble()}
+            { toDouble() }
         ),
-
-        /** 위치 데이터 보낼 때에 사용할 위도 필드. */
         LONGITUDE(
             3,
             "longitude",
-            {str -> str.toDouble()}
+            { toDouble() }
         ),
     }
 }
