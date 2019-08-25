@@ -25,7 +25,7 @@ abstract class BaseFragment : Fragment() {
 
         optionMenuId?.let {
             inflater.inflate(it, menu)
-            Timber.d("inflate option menu")
+            Timber.d("Inflate option menu")
         }
 
         context?.let {
