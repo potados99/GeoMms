@@ -73,17 +73,18 @@
 
     <ImageView
             android:id="@+id/unread"
-            android:layout_width="20dp"
+            android:layout_width="16dp"
             android:layout_height="16sp"
             android:paddingStart="8dp"
             android:paddingTop="2dp"
+            android:paddingEnd="0dp"
             android:paddingBottom="2dp"
             android:src="@drawable/circle"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/snippet"
             tools:visibility="visible"
-            android:paddingEnd="0dp"/>
+            android:contentDescription="@string/description_unread_image" />
 
     <com.potados.geomms.common.widget.QkTextView
         android:id="@+id/date"
