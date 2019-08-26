@@ -14,7 +14,7 @@
     <string name="failure_query">Failed to load messages.</string>
     <string name="retry">Retry</string>
     <string name="cannot_send_message">Failed to send message.</string>
-    <string name="connections_empty">No connections yet. Invite friends!</string>
+    <string name="connections_empty">No connections yet. Invite your friends!</string>
 
 
     <string name="title_settings">Settings</string>
