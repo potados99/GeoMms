@@ -16,14 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.potados.geomms.feature.compose.filter
+package com.potados.geomms.filter
 
-import com.potados.geomms.model.Conversation
+import com.potados.geomms.extension.removeAccents
+import com.potados.geomms.model.Contact
 
-class ConversationFilter(private val recipientFilter: RecipientFilter) : Filter<Conversation>() {
+class ContactFilter(private val phoneNumberFilter: PhoneNumberFilter) : Filter<Contact>() {
 
-    override fun filter(item: Conversation, query: CharSequence): Boolean {
-        return item.recipients.any { recipient -> recipientFilter.filter(recipient, query) }
+    override fun filter(item: Contact, query: CharSequence): Boolean {
+        return item.name.removeAccents().contains(query, true) || // Name
+                item.numbers.map { it.address }.any { address -> phoneNumberFilter.filter(address, query) } // Number
     }
 
 }

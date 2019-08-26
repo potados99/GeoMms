@@ -1,4 +1,4 @@
-package com.potados.geomms.common.extension
+package com.potados.geomms.extension
 
 import java.text.Normalizer
 

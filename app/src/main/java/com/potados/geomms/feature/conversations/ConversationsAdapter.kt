@@ -70,7 +70,7 @@ class ConversationsAdapter : BaseRealmAdapter<Conversation>(), KoinComponent {
             avatars.contacts = conversation.recipients
             title.collapseEnabled = conversation.recipients.isNotEmpty()
             title.text = conversation.getTitle()
-            date.text = dateFormatter.getConversationTimestamp(conversation.date)
+            date.text = dateFormatter.getConversationTimestamp(conversation.date).takeIf { conversation.date != 0L }
             snippet.text = conversation.snippet
         }
     }

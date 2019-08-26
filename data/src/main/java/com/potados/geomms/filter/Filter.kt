@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.potados.geomms.feature.compose.filter
+package com.potados.geomms.filter
 
 import com.potados.geomms.base.FailableComponent
 

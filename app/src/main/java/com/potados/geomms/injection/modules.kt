@@ -6,10 +6,10 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.potados.geomms.common.manager.NotificationManagerImplTest
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
-import com.potados.geomms.feature.compose.filter.ContactFilter
-import com.potados.geomms.feature.compose.filter.ConversationFilter
-import com.potados.geomms.feature.compose.filter.PhoneNumberFilter
-import com.potados.geomms.feature.compose.filter.RecipientFilter
+import com.potados.geomms.filter.ContactFilter
+import com.potados.geomms.filter.ConversationFilter
+import com.potados.geomms.filter.PhoneNumberFilter
+import com.potados.geomms.filter.RecipientFilter
 import com.potados.geomms.manager.*
 import com.potados.geomms.mapper.*
 import com.potados.geomms.preference.Preferences
@@ -148,7 +148,8 @@ val myModules = module {
         ConversationRepositoryImpl(
             context = get(),
             cursorToConversation = get(),
-            cursorToRecipient = get()
+            cursorToRecipient = get(),
+            conversationFilter = get()
         ) as ConversationRepository
     }
 

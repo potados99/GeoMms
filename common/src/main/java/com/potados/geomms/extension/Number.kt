@@ -16,16 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.potados.geomms.feature.compose.filter
+package com.potados.geomms.extension
 
-import com.potados.geomms.common.extension.removeAccents
-import com.potados.geomms.model.Contact
+import android.content.Context
+import android.graphics.Color
+import android.util.TypedValue
 
-class ContactFilter(private val phoneNumberFilter: PhoneNumberFilter) : Filter<Contact>() {
 
-    override fun filter(item: Contact, query: CharSequence): Boolean {
-        return item.name.removeAccents().contains(query, true) || // Name
-                item.numbers.map { it.address }.any { address -> phoneNumberFilter.filter(address, query) } // Number
+fun Int.dpToPx(context: Context): Int {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), context.resources.displayMetrics).toInt()
+}
+
+fun Int.withAlpha(alpha: Int): Int {
+    return Color.argb(alpha, Color.red(this), Color.green(this), Color.blue(this))
+}
+
+fun Int.forEach(action: (Int) -> Unit) {
+    for (index in 0 until this) {
+        action(index)
     }
+}
 
+fun Float.within(min: Float, max: Float): Float {
+    return Math.min(max, Math.max(min, this))
 }

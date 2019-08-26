@@ -1,9 +1,8 @@
 package com.potados.geomms.feature.location
 
-import androidx.lifecycle.ViewModel
 import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
-import com.potados.geomms.feature.compose.filter.ContactFilter
+import com.potados.geomms.filter.ContactFilter
 import com.potados.geomms.model.Contact
 import com.potados.geomms.repository.ContactRepository
 import org.koin.core.KoinComponent

@@ -3,10 +3,9 @@ package com.potados.geomms.feature.compose
 import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
-import com.potados.geomms.feature.compose.filter.ContactFilter
+import com.potados.geomms.filter.ContactFilter
 import com.potados.geomms.functional.Result
 import com.potados.geomms.manager.ActiveConversationManager
 import com.potados.geomms.model.*

@@ -8,6 +8,7 @@ import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.autoScrollToStart
 import com.potados.geomms.common.extension.getViewModel
+import com.potados.geomms.common.extension.observe
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
 import com.potados.geomms.manager.PermissionManager
@@ -33,6 +34,7 @@ class ConversationsFragment : NavigationFragment() {
     private lateinit var viewDataBinding: ConversationsFragmentBinding
 
     private val conversationsAdapter = ConversationsAdapter()
+    private val searchAdapter = SearchAdapter()
 
     override fun onFail(failure: Failable.Failure) {
         super.onFail(failure)
@@ -63,12 +65,12 @@ class ConversationsFragment : NavigationFragment() {
         val searchView = menu.findItem(R.id.search).actionView as SearchView
 
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            // TODO implement
             override fun onQueryTextChange(newText: String?): Boolean {
+                conversationsViewModel.typeQuery(newText)
                 return true
             }
-
             override fun onQueryTextSubmit(query: String?): Boolean {
+                conversationsViewModel.typeQuery(query)
                 return true
             }
         })
@@ -80,7 +82,6 @@ class ConversationsFragment : NavigationFragment() {
         when (item.itemId) {
             R.id.write -> {
                 navigator.showCompose()
-
             }
         }
 
@@ -101,7 +102,6 @@ class ConversationsFragment : NavigationFragment() {
     }
 
     private fun initializeView(view: View) {
-
         with(view.button) {
             setOnClickListener {
                 navigator.showDefaultSmsDialog()
@@ -112,6 +112,20 @@ class ConversationsFragment : NavigationFragment() {
             setHasFixedSize(true)
             conversationsAdapter.autoScrollToStart(this@with)
             adapter = conversationsAdapter
+
+            // Change adapter when search state changes.
+            observe(conversationsViewModel.searching) {
+                when(it) {
+                    true -> {
+                        Timber.i("Searching...")
+                        adapter = searchAdapter
+                    }
+                    false -> {
+                        Timber.i("Searching finished.")
+                        adapter = conversationsAdapter
+                    }
+                }
+            }
         }
     }
 }

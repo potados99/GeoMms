@@ -24,11 +24,14 @@ import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
 import com.potados.geomms.compat.TelephonyCompat
 import com.potados.geomms.extension.*
+import com.potados.geomms.filter.ConversationFilter
 import com.potados.geomms.mapper.CursorToConversation
 import com.potados.geomms.mapper.CursorToRecipient
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.Message
+import com.potados.geomms.model.SearchResult
+import io.realm.Case
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
@@ -37,10 +40,11 @@ import java.util.concurrent.TimeUnit
 class ConversationRepositoryImpl(
     private val context: Context,
     private val cursorToConversation: CursorToConversation,
-    private val cursorToRecipient: CursorToRecipient
+    private val cursorToRecipient: CursorToRecipient,
+    private val conversationFilter: ConversationFilter
 ) : ConversationRepository() {
 
-    override fun getConversations(archived: Boolean): RealmResults<Conversation>? = nullOnFail{
+    override fun getConversations(archived: Boolean): RealmResults<Conversation>? = nullOnFail {
             return@nullOnFail Realm.getDefaultInstance()
                 .where(Conversation::class.java)
                 .notEqualTo("id", 0L)
@@ -97,6 +101,25 @@ class ConversationRepositoryImpl(
             .where(Conversation::class.java)
             .equalTo("blocked", true)
             .findAllAsync()
+    }
+
+    override fun searchConversations(query: String): List<SearchResult>? = nullOnFail {
+        val conversations = getConversationsSnapshot() ?: return@nullOnFail null
+
+        val messagesByConversation = Realm.getDefaultInstance()
+            .where(Message::class.java)
+            .contains("body", query, Case.INSENSITIVE)
+            .findAll()
+            .groupBy { message -> message.threadId }
+            .filter { (threadId, _) -> conversations.firstOrNull { it.id == threadId } != null }
+            .map { (threadId, messages) -> Pair(conversations.first { it.id == threadId }, messages.size) }
+            .map { (conversation, messages) -> SearchResult(query, conversation, messages) }
+            .sortedByDescending { result -> result.messages }
+
+        return@nullOnFail conversations
+            .filter { conversation -> conversationFilter.filter(conversation, query) }
+            .map { conversation -> SearchResult(query, conversation, 0) }
+            .plus(messagesByConversation)
     }
 
     override fun getConversationAsync(threadId: Long): Conversation? = nullOnFail {

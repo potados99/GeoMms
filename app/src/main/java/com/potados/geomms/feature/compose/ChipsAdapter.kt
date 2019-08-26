@@ -28,7 +28,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseAdapter
 import com.potados.geomms.common.base.BaseViewHolder
-import com.potados.geomms.common.extension.dpToPx
+import com.potados.geomms.extension.dpToPx
 import com.potados.geomms.common.extension.resolveThemeColor
 import com.potados.geomms.common.extension.showKeyboard
 import com.potados.geomms.model.Contact

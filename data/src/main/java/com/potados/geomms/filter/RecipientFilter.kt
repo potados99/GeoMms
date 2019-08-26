@@ -16,27 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.potados.geomms.common.extension
+package com.potados.geomms.filter
 
-import android.content.Context
-import android.graphics.Color
-import android.util.TypedValue
+import com.potados.geomms.model.Recipient
 
+class RecipientFilter(
+    private val contactFilter: ContactFilter,
+    private val phoneNumberFilter: PhoneNumberFilter
+) : Filter<Recipient>() {
 
-fun Int.dpToPx(context: Context): Int {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this.toFloat(), context.resources.displayMetrics).toInt()
-}
-
-fun Int.withAlpha(alpha: Int): Int {
-    return Color.argb(alpha, Color.red(this), Color.green(this), Color.blue(this))
-}
-
-fun Int.forEach(action: (Int) -> Unit) {
-    for (index in 0 until this) {
-        action(index)
+    override fun filter(item: Recipient, query: CharSequence) = when {
+        item.contact?.let { contactFilter.filter(it, query) } == true -> true
+        phoneNumberFilter.filter(item.address, query) -> true
+        else -> false
     }
-}
 
-fun Float.within(min: Float, max: Float): Float {
-    return Math.min(max, Math.max(min, this))
 }

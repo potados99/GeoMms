@@ -17,6 +17,7 @@ import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
+import com.potados.geomms.extension.dpToPx
 import com.potados.geomms.extension.isImage
 import com.potados.geomms.extension.isVCard
 import com.potados.geomms.extension.isVideo

@@ -8,6 +8,7 @@ package com.potados.geomms.common.extension
 
 import android.content.Context
 import android.view.View
+import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
+import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.util.Notify
@@ -130,7 +132,7 @@ fun Fragment.setSupportActionBar(toolbar: Toolbar, title: Boolean = false, upBut
 
 fun Fragment.setTitle(title: String?) {
     withNonNull(activity as? AppCompatActivity) {
-        toolbar_title.text = title
+        findViewById<TextView>(R.id.toolbar_title)?.text = title
     }
 }
 

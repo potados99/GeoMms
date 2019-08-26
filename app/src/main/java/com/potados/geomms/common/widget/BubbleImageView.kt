@@ -24,7 +24,7 @@ import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.widget.ImageView
-import com.potados.geomms.common.extension.dpToPx
+import com.potados.geomms.extension.dpToPx
 
 class BubbleImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ImageView(context, attrs) {
 

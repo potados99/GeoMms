@@ -19,6 +19,7 @@
 package com.potados.geomms.repository
 
 import com.potados.geomms.model.Conversation
+import com.potados.geomms.model.SearchResult
 import io.realm.RealmResults
 
 abstract class ConversationRepository : Repository() {
@@ -35,6 +36,8 @@ abstract class ConversationRepository : Repository() {
     abstract fun setConversationName(id: Long, name: String)
 
     abstract fun getBlockedConversations(): RealmResults<Conversation>?
+
+    abstract fun searchConversations(query: String): List<SearchResult>?
 
     abstract fun getConversationAsync(threadId: Long): Conversation?
 

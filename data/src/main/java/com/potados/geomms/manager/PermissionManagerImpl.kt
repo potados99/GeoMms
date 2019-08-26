@@ -21,7 +21,7 @@ class PermissionManagerImpl(
     }
 
     override fun refresh() {
-        _isDefaultSms.value = isDefaultSms()
+        _isDefaultSms.postValue(isDefaultSms())
 
         Timber.i("value posted to _isDefaultSms")
     }
