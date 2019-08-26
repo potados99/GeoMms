@@ -20,7 +20,9 @@ import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.repository.LocationRepository
+import com.potados.geomms.util.Duration
 import com.potados.geomms.util.Notify
+import com.potados.geomms.util.Popup
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 import org.koin.android.ext.android.inject
@@ -53,8 +55,9 @@ class MapFragment : NavigationFragment(),
      */
     private val receiver = createBroadcastReceiver {
         it?.getStringExtra(EXTRA_ADDRESS)?.let { address ->
-            mapViewModel.request(address)
-            Notify(context).short("New request to $address")
+            if (mapViewModel.request(address)) {
+                Notify(context).short("Request sent to $address")
+            }
         }
     }
 
@@ -209,29 +212,62 @@ class MapFragment : NavigationFragment(),
     }
 
     override fun onConnectionClick(connection: Connection) {
+        if (connection.isTemporal) {
+            Notify(context).short("Request is not yet accepted.")
+            return
+        }
+
         withNonNull(map) {
             if (connection.lastUpdate != 0L) {
                 moveTo(connection.latitude, connection.longitude, 15f)
+            } else {
+                Notify(context).short("Location data not yet arrived.")
             }
         }
     }
 
     override fun onConnectionLongClick(connection: Connection) {
-        mapViewModel.delete(connection)
+        if (connection.isTemporal) {
+            Popup(baseActivity)
+                .withTitle("Cancel request")
+                .withMessage("Do you want to cancel request to ${connection.recipient?.getDisplayName()}?")
+                .withPositiveButton("Yes") { _, _ ->
+                    mapViewModel.cancel(connection)
+                }
+                .withNegativeButton("No") { _, _ -> }
+                .show()
 
-        Notify(context).short("Deleted connection.")
+        } else {
+            Popup(baseActivity)
+                .withTitle("Disconnect")
+                .withMessage("Do you want to stop sharing location with ${connection.recipient?.getDisplayName()}?")
+                .withPositiveButton("Disconnect") { _, _ ->
+                    mapViewModel.delete(connection)
+                }
+                .withNegativeButton("Cancel") { _, _ -> }
+                .show()
+        }
     }
 
     override fun onRequestClick(request: ConnectionRequest) {
-        mapViewModel.accept(request)
-
-        Notify(context).short("Accept.")
+        Popup(baseActivity)
+            .withTitle("Request")
+            .withMessage("${request.recipient?.getDisplayName()} wants to share location for ${Duration(request.duration).toShortenString()} ")
+            .withPositiveButton("Accept") { _, _ ->
+                mapViewModel.accept(request)
+            }
+            .withNegativeButton("Later") { _, _ -> }
+            .show()
     }
 
     override fun onRequestLongClick(request: ConnectionRequest) {
-        mapViewModel.refuse(request)
-
-        Notify(context).short("Refuse.")
+        Popup(baseActivity)
+            .withTitle("Refust request")
+            .withMessage("Do you want to refuse request from ${request.recipient?.getDisplayName()}?")
+            .withPositiveButton("Refuse") { _, _ ->
+                mapViewModel.refuse(request)            }
+            .withNegativeButton("Cancel") { _, _ -> }
+            .show()
     }
 
 

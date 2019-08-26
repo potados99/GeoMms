@@ -16,6 +16,14 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
 
     override fun start() {
         super.start()
+
+        failables.addAll(
+            listOf(
+                this,
+                contactRepo,
+                contactFilter
+            )
+        )
     }
 
     fun getContacts(query: String = ""): List<Contact> {

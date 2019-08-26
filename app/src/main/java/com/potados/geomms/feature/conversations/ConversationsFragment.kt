@@ -5,8 +5,10 @@ import android.view.*
 import androidx.appcompat.widget.SearchView
 import com.potados.geomms.R
 import com.potados.geomms.base.Failable
+import com.potados.geomms.common.base.BaseActivity
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.autoScrollToStart
+import com.potados.geomms.common.extension.baseActivity
 import com.potados.geomms.common.extension.getViewModel
 import com.potados.geomms.common.extension.observe
 import com.potados.geomms.common.navigation.Navigator
@@ -33,7 +35,9 @@ class ConversationsFragment : NavigationFragment() {
     private lateinit var conversationsViewModel: ConversationsViewModel
     private lateinit var viewDataBinding: ConversationsFragmentBinding
 
-    private val conversationsAdapter = ConversationsAdapter()
+    private val conversationsAdapter = ConversationsAdapter {
+        navigator.showAskDeleteConversation(it.id, baseActivity!!)
+    }
     private val searchAdapter = SearchAdapter()
 
     override fun onFail(failure: Failable.Failure) {

@@ -112,6 +112,8 @@
                 app:connections="@{vm.connections}"
                 tools:listitem="@layout/connection_list_item"/>
 
+        <!-- Outgoing requests -->
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

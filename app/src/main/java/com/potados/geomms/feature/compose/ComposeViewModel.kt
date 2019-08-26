@@ -52,6 +52,7 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
 
         failables.addAll(
             listOf(
+                this,
                 activeConversationManager,
                 conversationRepo,
                 messageRepo,

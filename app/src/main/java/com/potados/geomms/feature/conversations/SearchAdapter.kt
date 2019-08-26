@@ -63,10 +63,7 @@ class SearchAdapter : BaseAdapter<SearchResult>(), KoinComponent {
             true -> {
                 view.date.setVisible(true)
                 view.date.text = dateFormatter.getConversationTimestamp(result.conversation.date)
-                view.snippet.text = when (result.conversation.me) {
-                    true -> context.getString(R.string.main_sender_you, result.conversation.snippet)
-                    false -> result.conversation.snippet
-                }
+                view.snippet.text = result.conversation.snippet
             }
 
             false -> {

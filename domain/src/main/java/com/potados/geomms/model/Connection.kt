@@ -1,6 +1,7 @@
 package com.potados.geomms.model
 
 import io.realm.RealmObject
+import io.realm.annotations.Index
 import io.realm.annotations.PrimaryKey
 
 open class Connection(
@@ -11,7 +12,9 @@ open class Connection(
     var lastUpdate: Long = 0,
     var lastSent: Long = 0,
     var latitude: Double = 0.0,
-    var longitude: Double = 0.0
+    var longitude: Double = 0.0,
+
+    @Index var isTemporal: Boolean = false // is isTemporal when not accepted yet.
 
 ) : RealmObject() {
 

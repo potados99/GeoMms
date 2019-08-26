@@ -17,17 +17,22 @@ import com.potados.geomms.feature.location.MapFragment.Companion.ACTION_SET_ADDR
 import com.potados.geomms.feature.location.MapFragment.Companion.EXTRA_ADDRESS
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.PhoneNumber
+import com.potados.geomms.service.LocationSupportService
 import io.realm.RealmList
 import kotlinx.android.synthetic.main.invite_fragment.view.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.*
 
-class InviteFragment : BaseFragment() {
+class InviteFragment : BaseFragment(), KoinComponent {
 
     private lateinit var inviteViewModel: InviteViewModel
     private lateinit var viewDataBinding: InviteFragmentBinding
 
     private lateinit var chipsAdapter: ChipsAdapter
     private lateinit var contactAdapter: ContactAdapter
+
+    private val service: LocationSupportService by inject()
 
     /**
      * Invoked when user select contact
@@ -65,6 +70,7 @@ class InviteFragment : BaseFragment() {
                 val query = it.toString()
 
                 var contacts = inviteViewModel.getContacts(query)
+                val sentReqs = service.getOutgoingRequests()
 
                 if (PhoneNumberUtils.isWellFormedSmsAddress(query)) {
                     val newAddress = PhoneNumberUtils.formatNumber(query, Locale.getDefault().country)

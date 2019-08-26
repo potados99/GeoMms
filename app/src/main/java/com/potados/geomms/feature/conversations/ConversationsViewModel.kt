@@ -69,6 +69,7 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
 
         failables.addAll(
             listOf(
+                this,
                 conversationRepo,
                 syncRepo,
                 permissionManager

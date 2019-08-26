@@ -43,6 +43,11 @@ abstract class LocationSupportService : Service() {
     /** YOU refused my request!. I handle it. */
     abstract fun beRefusedConnectionRequest(packet: Packet)
 
+    /** I cancel my request to YOU */
+    abstract fun cancelConnectionRequest(request: ConnectionRequest)
+    /** YOU canceled YOUr request to me. */
+    abstract fun beCanceledConnectionRequest(packer: Packet)
+
     /** I send you an update. */
     abstract fun sendUpdate(connectionId: Long)
     /** YOU sent me an update. I take it. */

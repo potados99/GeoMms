@@ -37,6 +37,12 @@ class Packet(
                 connectionId = request.connectionId
             )
 
+        fun ofCancelingRequest(request: ConnectionRequest) =
+            Packet(
+                type = PacketType.CANCEL_CONNECT.number,
+                connectionId = request.connectionId
+            )
+
         fun ofRequestingUpdate(connection: Connection) =
             Packet(
                 type = PacketType.REQUEST_DATA.number,
@@ -63,9 +69,10 @@ class Packet(
      * 1        REQUEST_CONNECT         연결 요청
      * 2        ACCEPT_CONNECT          연결 요청 수락
      * 3        REFUSE_CONNECT          연결 요청 거절
-     * 4        TRANSFER_DATA           데이터 보내기/받기
-     * 5        REQUEST_DATA            데이터 요청
-     * 6        REQUEST_DISCONNECT      연결 해제 요청
+     * 4        CANCEL_CONNECT          연결 요청 취소
+     * 5        TRANSFER_DATA           데이터 보내기/받기
+     * 6        REQUEST_DATA            데이터 요청
+     * 7        REQUEST_DISCONNECT      연결 해제 요청
      */
     enum class PacketType(val number: Int, val fields: Array<Field>) {
 
@@ -88,7 +95,13 @@ class Packet(
                 Field.ID
             )
         ),
-        TRANSFER_DATA(4,
+        CANCEL_CONNECT(4,
+            arrayOf(
+                Field.TYPE,
+                Field.ID
+            )
+        ),
+        TRANSFER_DATA(5,
             arrayOf(
                 Field.TYPE,
                 Field.ID,
@@ -96,13 +109,13 @@ class Packet(
                 Field.LONGITUDE
             )
         ),
-        REQUEST_DATA(5,
+        REQUEST_DATA(6,
             arrayOf(
                 Field.TYPE,
                 Field.ID
             )
         ),
-        REQUEST_DISCONNECT(6,
+        REQUEST_DISCONNECT(7,
             arrayOf(
                 Field.TYPE,
                 Field.ID

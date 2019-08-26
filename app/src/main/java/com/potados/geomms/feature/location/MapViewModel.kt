@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.service.LocationSupportService
+import io.realm.Realm
 import io.realm.RealmResults
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -58,7 +60,7 @@ class MapViewModel : BaseViewModel(), KoinComponent {
         super.start()
 
         failables.addAll(
-            listOf(locationService)
+            listOf(this, locationService)
         )
 
         connections?.let {
@@ -69,25 +71,76 @@ class MapViewModel : BaseViewModel(), KoinComponent {
         }
     }
 
-    fun request(address: String) {
-        locationService.requestNewConnection(address, 1800000)
+    /**
+     * Add a non-accepted outgoing request as a disabled connection
+     * to a connections list.
+     */
+    fun request(address: String): Boolean {
+        return tryOrNull {
+            locationService.requestNewConnection(address, 1800000)
+            return@tryOrNull true
+        } ?: false
     }
 
-    fun accept(request: ConnectionRequest) {
-        tryOrNull {
+    /**
+     * Accept connection request.
+     */
+    fun accept(request: ConnectionRequest): Boolean {
+        return tryOrNull {
             locationService.acceptConnectionRequest(request)
-        }
+            return@tryOrNull true
+        } ?: false
     }
 
-    fun refuse(request: ConnectionRequest) {
-        tryOrNull {
+    /**
+     * Refuse connection request.
+     */
+    fun refuse(request: ConnectionRequest): Boolean {
+        return tryOrNull {
             locationService.refuseConnectionRequest(request)
-        }
+            return@tryOrNull true
+        } ?: false
     }
 
-    fun delete(connection: Connection) {
-        tryOrNull {
+    /**
+     * Disconnect
+     */
+    fun delete(connection: Connection): Boolean {
+        return tryOrNull {
             locationService.requestDisconnect(connection.id)
-        }
+            return@tryOrNull true
+        } ?: false
+    }
+
+    /**
+     * Cancel request
+     */
+    fun cancel(connection: Connection): Boolean {
+        return tryOrNull {
+            if (!connection.isTemporal) {
+                setFailure(Failable.Failure("Cannot cancel already established connection.", true))
+                return@tryOrNull false
+            }
+
+            val request = Realm.getDefaultInstance()
+                .where(ConnectionRequest::class.java)
+                .equalTo("connectionId", connection.id)
+                .findFirst()
+
+            if (request == null) {
+                setFailure(Failable.Failure("Cannot find request to cancel.", true))
+
+                Timber.i("There exists a temporal connection but not the request. Remove the teomporal connection.")
+                Realm.getDefaultInstance().executeTransaction {
+                    connection.deleteFromRealm()
+                }
+
+                return@tryOrNull false
+            }
+
+            locationService.cancelConnectionRequest(request)
+
+            return@tryOrNull true
+        } ?: false
     }
 }

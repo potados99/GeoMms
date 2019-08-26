@@ -15,7 +15,9 @@ import kotlinx.android.synthetic.main.conversation_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class ConversationsAdapter : BaseRealmAdapter<Conversation>(), KoinComponent {
+class ConversationsAdapter(
+    private val onLongClick: (Conversation) -> Unit
+) : BaseRealmAdapter<Conversation>(), KoinComponent {
 
     private val dateFormatter: DateFormatter by inject()
     private val navigator: Navigator by inject()
@@ -56,7 +58,7 @@ class ConversationsAdapter : BaseRealmAdapter<Conversation>(), KoinComponent {
                 if (adapterPosition < 0) return@setOnLongClickListener false
                 val conversation = getItem(adapterPosition) ?: return@setOnLongClickListener false
 
-                navigator.showAskDeleteConversation(conversation.id)
+                onLongClick(conversation)
                 true
             }
         }

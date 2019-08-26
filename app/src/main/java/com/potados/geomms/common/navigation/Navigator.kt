@@ -1,9 +1,11 @@
 package com.potados.geomms.common.navigation
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Telephony
+import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.R
 import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.common.GiveMePermissionActivity
@@ -57,14 +59,15 @@ class Navigator (
         }
     }
 
-    fun showAskDeleteConversation(threadId: Long) {
+    fun showAskDeleteConversation(threadId: Long, activity: Activity) {
         val deleteConversations: DeleteConversations by inject()
 
         val conversation = Realm.getDefaultInstance()
             .where(Conversation::class.java)
+            .equalTo("id", threadId)
             .findFirst() ?: return
 
-        Popup(context)
+        Popup(activity)
             .withTitle(context.getString(R.string.delete_conversation_title))
             .withMessage(context.getString(R.string.delete_conversation_message, conversation.getTitle()))
             .withPositiveButton(context.getString(R.string.button_delete)) { _, _ ->

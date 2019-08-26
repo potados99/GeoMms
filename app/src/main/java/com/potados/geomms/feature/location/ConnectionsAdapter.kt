@@ -49,29 +49,37 @@ class ConnectionsAdapter(
 
         view.name.text = connection.recipient?.getDisplayName()
         view.avatar.setContact(connection.recipient)
-        view.status.text = when (connection.lastUpdate == 0L) {
-            true -> "-"
-            else -> dateFormatter.getConversationTimestamp(connection.lastUpdate)
-        }
 
-        (holder as TimerViewHolder).apply {
-            timer?.cancel()
-            timer = Timer()
+        if (connection.isTemporal) {
+            // haze view of the temporal connection
+            view.name.alpha = 0.5f
+            view.status.alpha = 0.5f
+            view.status.text = "Request sent."
+        } else {
+            view.status.text = when (connection.lastUpdate == 0L) {
+                true -> "-"
+                else -> dateFormatter.getConversationTimestamp(connection.lastUpdate)
+            }
 
-            timer?.schedule(object: TimerTask() {
-                override fun run() {
-                    handler.post {
-                        if (!connection.isValid) {
-                            timer = null
-                            return@post
-                        }
-                        with(view.time_left) {
-                            max = connection.duration.toInt()
-                            progress = (connection.due - System.currentTimeMillis()).toInt()
+            (holder as TimerViewHolder).apply {
+                timer?.cancel()
+                timer = Timer()
+
+                timer?.schedule(object: TimerTask() {
+                    override fun run() {
+                        handler.post {
+                            if (!connection.isValid) {
+                                timer = null
+                                return@post
+                            }
+                            with(view.time_left) {
+                                max = connection.duration.toInt()
+                                progress = (connection.due - System.currentTimeMillis()).toInt()
+                            }
                         }
                     }
-                }
-            }, 0, 1000)
+                }, 0, 1000)
+            }
         }
     }
 
