@@ -54,10 +54,10 @@ class ConnectionsAdapter(
             // haze view of the temporal connection
             view.name.alpha = 0.5f
             view.status.alpha = 0.5f
-            view.status.text = "Request sent."
+            view.status.text = "Request sent." // TODO hardcoded string
         } else {
             view.status.text = when (connection.lastUpdate == 0L) {
-                true -> "-"
+                true -> "No location data" // TODO hardcoded string
                 else -> dateFormatter.getConversationTimestamp(connection.lastUpdate)
             }
 

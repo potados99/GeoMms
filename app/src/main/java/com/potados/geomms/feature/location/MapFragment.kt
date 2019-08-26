@@ -54,6 +54,7 @@ class MapFragment : NavigationFragment(),
      * Invoked when ACTION_SET_ADDRESS intent received.
      */
     private val receiver = createBroadcastReceiver {
+        // TODO hardcoded string
         it?.getStringExtra(EXTRA_ADDRESS)?.let { address ->
             if (mapViewModel.request(address)) {
                 Notify(context).short("Request sent to $address")
@@ -212,6 +213,7 @@ class MapFragment : NavigationFragment(),
     }
 
     override fun onConnectionClick(connection: Connection) {
+        // TODO hardcoded string
         if (connection.isTemporal) {
             Notify(context).short("Request is not yet accepted.")
             return
@@ -227,6 +229,7 @@ class MapFragment : NavigationFragment(),
     }
 
     override fun onConnectionLongClick(connection: Connection) {
+        // TODO hardcoded string
         if (connection.isTemporal) {
             Popup(baseActivity)
                 .withTitle("Cancel request")
@@ -250,6 +253,7 @@ class MapFragment : NavigationFragment(),
     }
 
     override fun onRequestClick(request: ConnectionRequest) {
+        // TODO hardcoded string
         Popup(baseActivity)
             .withTitle("Request")
             .withMessage("${request.recipient?.getDisplayName()} wants to share location for ${Duration(request.duration).toShortenString()} ")
@@ -261,6 +265,7 @@ class MapFragment : NavigationFragment(),
     }
 
     override fun onRequestLongClick(request: ConnectionRequest) {
+        // TODO hardcoded string
         Popup(baseActivity)
             .withTitle("Refust request")
             .withMessage("Do you want to refuse request from ${request.recipient?.getDisplayName()}?")
