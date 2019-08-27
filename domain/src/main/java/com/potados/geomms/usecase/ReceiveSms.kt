@@ -34,7 +34,7 @@ class ReceiveSms(
 
     class Params(val subId: Int, val messages: Array<SmsMessage>)
 
-    override suspend fun run(params: Params): Result<*> =
+    override fun run(params: Params): Result<*> =
         Result.of {
             if (params.messages.isEmpty()) return@of
 

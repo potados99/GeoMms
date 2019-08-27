@@ -12,7 +12,7 @@ class MarkFailed(
 
     data class Params(val id: Long, val resultCode: Int)
 
-    override suspend fun run(params: Params): Result<*> =
+    override fun run(params: Params): Result<*> =
         Result.of {
             messageRepo.markFailed(params.id, params.resultCode)
             notificationMgr.notifyFailed(params.id)

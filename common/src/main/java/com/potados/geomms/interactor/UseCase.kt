@@ -6,27 +6,31 @@
  */
 package com.potados.geomms.interactor
 
+import android.os.Handler
+import android.os.Looper
 import com.potados.geomms.functional.Result
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import timber.log.Timber
 
 /**
  * Abstract class for Use Case (Interactor in terms of Clean Architecture).
  * Any use case in this application should implement this.
  */
 abstract class UseCase<in Params> {
-    abstract suspend fun run(params: Params): Result<*>
+    abstract fun run(params: Params): Result<*>
 
     /**
-     * Execute [run] in Global Scope co-routine and launch onResult on Main thread.
+     * Use thread instead of coroutine because it ruins Realm.
      */
     operator fun invoke(params: Params, onResult: (Result<*>) -> Unit = {}) {
-        val job = GlobalScope.async { run(params) }
-
-        MainScope().launch {
-            onResult(job.await())
-        }
+        Thread {
+            try {
+                val result = run(params)
+                Handler(Looper.getMainLooper()).post { onResult(result) }
+            } catch (e: Exception) {
+                Timber.w("Exception inside another thread.")
+                Timber.w(e)
+            }
+        }.run()
     }
 }

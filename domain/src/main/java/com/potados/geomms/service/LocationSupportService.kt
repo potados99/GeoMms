@@ -21,7 +21,9 @@ abstract class LocationSupportService : Service() {
 
     abstract fun getConnections(): RealmResults<Connection>?
 
-    abstract fun getConnection(id: Long): Connection?
+    abstract fun getConnection(id: Long, temporal: Boolean, showError: Boolean = true): Connection?
+
+    abstract fun getRequest(connectionId: Long, inbound: Boolean): ConnectionRequest?
 
     abstract fun getIncomingRequests(): RealmResults<ConnectionRequest>?
 
@@ -46,7 +48,7 @@ abstract class LocationSupportService : Service() {
     /** I cancel my request to YOU */
     abstract fun cancelConnectionRequest(request: ConnectionRequest)
     /** YOU canceled YOUr request to me. */
-    abstract fun beCanceledConnectionRequest(packer: Packet)
+    abstract fun beCanceledConnectionRequest(packet: Packet)
 
     /** I send you an update. */
     abstract fun sendUpdate(connectionId: Long)

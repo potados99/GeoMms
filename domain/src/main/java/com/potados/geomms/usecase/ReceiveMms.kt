@@ -36,7 +36,7 @@ class ReceiveMms(
     private val updateBadge: UpdateBadge
 ) : UseCase<Uri>() {
 
-    override suspend fun run(params: Uri): Result<*> =
+    override fun run(params: Uri): Result<*> =
         Result.of {
             val message = syncRepo.syncMessage(params) ?: return@of
 

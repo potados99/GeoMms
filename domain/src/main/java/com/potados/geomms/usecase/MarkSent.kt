@@ -8,6 +8,6 @@ class MarkSent(
     private val messageRepo: MessageRepository
 ) : UseCase<Long>() {
 
-    override suspend fun run(params: Long): Result<*> =
+    override fun run(params: Long): Result<*> =
         Result.of { messageRepo.markSent(params) }
 }

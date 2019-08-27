@@ -31,7 +31,7 @@ class MarkRead(
     private val updateBadge: UpdateBadge
 ) : UseCase<List<Long>>() {
 
-    override suspend fun run(params: List<Long>): Result<*> =
+    override fun run(params: List<Long>): Result<*> =
         Result.of {
             params.toLongArray()
                 .also { messageRepo.markRead(*it) }

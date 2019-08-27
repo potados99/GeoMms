@@ -24,7 +24,7 @@ import com.potados.geomms.repository.MessageRepository
 
 class MarkSeen(private val messageRepo: MessageRepository) : UseCase<Long>() {
 
-    override suspend fun run(params: Long): Result<*> =
+    override fun run(params: Long): Result<*> =
         Result.of {
             messageRepo.markRead(params)
         }

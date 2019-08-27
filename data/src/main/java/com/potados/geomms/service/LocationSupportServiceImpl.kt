@@ -23,6 +23,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
 import timber.log.Timber
+import java.time.temporal.Temporal
 
 class LocationSupportServiceImpl(
     private val context: Context,
@@ -52,89 +53,110 @@ class LocationSupportServiceImpl(
     }
 
     override fun getConnections(): RealmResults<Connection>? = nullOnFail{
-        return@nullOnFail Realm.getDefaultInstance().where(Connection::class.java)
+        return@nullOnFail getRealm().where(Connection::class.java)
             .sort("date", Sort.ASCENDING)
             .findAll()
     }
 
-    override fun getConnection(id: Long): Connection? = nullOnFail {
-        val connection = Realm.getDefaultInstance().where(Connection::class.java)
+    override fun getConnection(id: Long, temporal: Boolean, showError: Boolean): Connection? = nullOnFail {
+        val connection = getRealm()
+            .where(Connection::class.java)
             .equalTo("id", id)
+            .equalTo("isTemporal", temporal)
             .findFirst()
 
         if (connection == null) {
-            Timber.w("Connection of id $id does not exist.")
+            setFailure(Failable.Failure("Connection of id $id does not exist.", showError))
+            return@nullOnFail null
+        }
+
+        if (connection.recipient == null) {
+            setFailure(Failable.Failure("Connection of id $id has no recipient.", showError))
+            return@nullOnFail null
         }
 
         return@nullOnFail connection
     }
 
+    override fun getRequest(connectionId: Long, inbound: Boolean): ConnectionRequest? = nullOnFail {
+        val request = getRealm()
+            .where(ConnectionRequest::class.java)
+            .equalTo("connectionId", connectionId)
+            .equalTo("isInbound", inbound)
+            .findFirst()
+
+        if (request == null) {
+            Timber.w("Request of id $connectionId does not exist.")
+        }
+
+        return@nullOnFail request
+    }
+
     private fun getRecipient(address: String): Recipient? = nullOnFail {
-        return@nullOnFail conversationRepo.getOrCreateConversation(address)?.recipients?.get(0)
-            ?: throw RuntimeException("conversation of address $address must exist.")
+        // If not exist, that's a problem.
+        val recipient = conversationRepo.getOrCreateConversation(address)?.recipients?.get(0)
+
+        if (recipient == null) {
+            setFailure(Failable.Failure("Failed to retrive recipient of address $address.", true))
+            return@nullOnFail null
+        }
+
+        return@nullOnFail recipient
     }
 
 
     override fun getIncomingRequests(): RealmResults<ConnectionRequest>? = nullOnFail {
-        return@nullOnFail  Realm.getDefaultInstance().where(ConnectionRequest::class.java)
+        return@nullOnFail  getRealm()
+            .where(ConnectionRequest::class.java)
             .sort("date", Sort.ASCENDING)
             .equalTo("isInbound", true)
             .findAll()
     }
     override fun getOutgoingRequests(): RealmResults<ConnectionRequest>? = nullOnFail {
-        return@nullOnFail  Realm.getDefaultInstance().where(ConnectionRequest::class.java)
+        return@nullOnFail  getRealm().where(ConnectionRequest::class.java)
             .sort("date", Sort.ASCENDING)
             .equalTo("isInbound", false)
             .findAll()
     }
 
     override fun requestNewConnection(address: String, duration: Long) = unitOnFail {
-        val recipient = getRecipient(address)
-        if (recipient == null) {
-            setFailure(Failable.Failure("Failed to request new connection. Couldn't get recipient of address $address.", true))
-        }
+        val recipient = getRecipient(address) ?: return@unitOnFail
 
         val request = ConnectionRequest(
             connectionId = keyManager.randomId(99999),
             recipient = recipient,
-            isInbound = false,
-            date = System.currentTimeMillis(),
+            isInbound = false, // outbound
+            date = System.currentTimeMillis(), // now
             duration = duration
         )
 
         sendPacket(address, Packet.ofRequestingNewConnection(request))
 
-        // Add this not-yet accepted connection to realm.
+        // Add this not-yet accepted connection to getRealm.
         val temporalConnection = Connection.fromAcceptedRequest(request).apply { isTemporal = true }
 
-        Realm.getDefaultInstance().executeTransaction {
+        executeInDefaultInstance {
             it.insertOrUpdate(request)
             it.insertOrUpdate(temporalConnection)
         }
     }
     override fun beRequestedNewConnection(packet: Packet) = unitOnFail {
-        // prevent double accepting and creating connection
-        val found = Realm.getDefaultInstance()
-            .where(Connection::class.java)
-            .equalTo("id", packet.connectionId)
-            .findFirst()
-
-        if (found != null) {
-            Timber.i("Connection that has same id with incoming request already exist. Ignore.")
+        // requests can be duplicated but connections cannot.
+        getConnectionNoCheck(packet.connectionId)?.let {
+            setFailure(Failable.Failure("Ignore request of already established connection or sent request.", true))
             return@unitOnFail
         }
 
-        val request = ConnectionRequest(
-            connectionId = packet.connectionId,
-            recipient = getRecipient(packet.address),
-            isInbound = true,
-            date = packet.date,
-            duration = packet.duration
-        )
+        val request = requestFromInboundPacket(packet)
 
-        Timber.i("New incoming request: ${packet.connectionId}")
+        if (request == null) {
+            setFailure(Failable.Failure("Cannot obtain request object from packet.", true))
+            return@unitOnFail
+        }
 
-        Realm.getDefaultInstance().executeTransaction { it.insertOrUpdate(request) }
+        Timber.i("New incoming request: ${request.connectionId}")
+
+        executeInDefaultInstance { it.insertOrUpdate(request) }
     }
 
     override fun acceptConnectionRequest(request: ConnectionRequest) = unitOnFail {
@@ -147,15 +169,12 @@ class LocationSupportServiceImpl(
             return@unitOnFail
         }
 
-        val realm = Realm.getDefaultInstance()
-
         // prevent double accepting and creating connection
-        val found =  Realm.getDefaultInstance()
-            .where(Connection::class.java)
-            .equalTo("id", request.connectionId)
-            .findFirst()
-
-        if (found != null) return@unitOnFail
+        getConnectionNoCheck(request.connectionId)?.let {
+            setFailure(Failable.Failure(
+                "The connection or sent request already exists.", true))
+            return@unitOnFail
+        }
 
         // tell it to YOU
         request.recipient?.let {
@@ -165,7 +184,7 @@ class LocationSupportServiceImpl(
         // add connection, delete request
         val connection = Connection.fromAcceptedRequest(request)
 
-        realm.executeTransaction { realm ->
+        executeInDefaultInstance { realm ->
             realm.insertOrUpdate(connection)
             request.deleteFromRealm()
         }
@@ -174,31 +193,26 @@ class LocationSupportServiceImpl(
 
         // start sending updates
         registerTask(connection)
-
-        realm.close()
     }
+
     override fun beAcceptedConnectionRequest(packet: Packet) = unitOnFail {
-        val realm = Realm.getDefaultInstance()
+        val request = getRequest(packet.connectionId, inbound = false)
 
-        realm.where(ConnectionRequest::class.java)
-            .equalTo("connectionId", packet.connectionId)
-            .equalTo("isInbound", false) // outbound request accepted
-            .findFirst()
-            ?.let { request ->
-                // add connection.
-                // if there are isTemporal connection already added,
-                // it will be updated.
-                val connection = Connection.fromAcceptedRequest(request)
-                realm.executeTransaction { it.insertOrUpdate(connection) }
+        if (request == null) {
+            setFailure(Failable.Failure("Request is accepted but cannot find the outbound request from DB.", true))
+            return@unitOnFail
+        }
 
-                Timber.i("New connection: ${connection.id}")
+        // add connection.
+        // if there are isTemporal connection already added,
+        // it will be updated.
+        val connection = Connection.fromAcceptedRequest(request)
+        executeInDefaultInstance { it.insertOrUpdate(connection) }
 
-                // start sending updates.
-                registerTask(connection)
-            }
-            ?: Timber.w("cannot find corresponding pending request for ACCEPT_CONNECT.")
+        Timber.i("New connection: ${connection.id}")
 
-        realm.close()
+        // start sending updates.
+        registerTask(connection)
     }
 
     override fun refuseConnectionRequest(request: ConnectionRequest) = unitOnFail {
@@ -207,7 +221,7 @@ class LocationSupportServiceImpl(
             return@unitOnFail
         }
         if (request.recipient == null) {
-            Realm.getDefaultInstance().executeTransaction {
+            executeInDefaultInstance {
                 request.deleteFromRealm()
             }
             setFailure(Failable.Failure("Request without recipient is impossible.", true))
@@ -220,17 +234,21 @@ class LocationSupportServiceImpl(
         }
 
         // delete
-        Realm.getDefaultInstance().executeTransaction {
+        executeInDefaultInstance {
             request.deleteFromRealm()
         }
     }
     override fun beRefusedConnectionRequest(packet: Packet) = unitOnFail {
-        Realm.getDefaultInstance().where(ConnectionRequest::class.java)
-            .equalTo("connectionId", packet.connectionId)
-            .equalTo("isInbound", false)
-            .findFirst()
-            ?.let { request -> request.deleteFromRealm() }
-            ?: Timber.w("cannot find corresponding pending request for REFUSE_CONNECT.")
+        val request = getRequest(packet.connectionId, inbound = false)
+
+        if (request == null) {
+            setFailure(Failable.Failure("Ignore refuse of non-existing request.", true))
+            return@unitOnFail
+        }
+
+        executeInDefaultInstance {
+            request.deleteFromRealm()
+        }
     }
 
     override fun cancelConnectionRequest(request: ConnectionRequest) = unitOnFail {
@@ -239,7 +257,7 @@ class LocationSupportServiceImpl(
             return@unitOnFail
         }
         if (request.recipient == null) {
-            Realm.getDefaultInstance().executeTransaction {
+            executeInDefaultInstance {
                 request.deleteFromRealm()
             }
             setFailure(Failable.Failure("Request without recipient is impossible.", true))
@@ -252,86 +270,60 @@ class LocationSupportServiceImpl(
         }
 
         // find temporal connection
-        val temporalConnection = getConnection(request.connectionId)
+        val temporalConnection = getConnection(request.connectionId, temporal = true)?.takeIf { it.isTemporal }
 
         // delete
-        Realm.getDefaultInstance().executeTransaction {
-            temporalConnection?.let {
-                if (it.isTemporal) {
-                    it.deleteFromRealm()
-                }
-            }
+        executeInDefaultInstance {
+            temporalConnection?.deleteFromRealm()
             request.deleteFromRealm()
         }
     }
     override fun beCanceledConnectionRequest(packet: Packet) = unitOnFail {
-        Realm.getDefaultInstance().where(ConnectionRequest::class.java)
-            .equalTo("connectionId", packet.connectionId)
-            .equalTo("isInbound", true)
-            .findFirst()
-            ?.let { request -> request.deleteFromRealm() }
-            ?: Timber.w("cannot find corresponding pending request for CANCEL_CONNECT.")
+        val request = getRequest(packet.connectionId, inbound = true)
+
+        if (request == null) {
+            val recipient = getRecipient(packet.address)
+            setFailure(Failable.Failure("${recipient?.getDisplayName()} want to cancel request but nothing to cancel.", true))
+            return@unitOnFail
+        }
+
+        executeInDefaultInstance { request.deleteFromRealm() }
     }
 
     override fun sendUpdate(connectionId: Long) = unitOnFail {
-        val connection = getConnection(connectionId)
-        if (connection == null) {
-            setFailure(Failable.Failure("Failed to send update. Cannot find connection of id $connectionId", true))
-            return@unitOnFail
-        }
+        val connection = getConnection(connectionId, temporal = false) ?: return@unitOnFail
 
         val packet = Packet.ofSendingData(connection, locationRepo.getCurrentLocation() ?: return@unitOnFail)
 
         sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
     }
     override fun beSentUpdate(packet: Packet) = unitOnFail {
-        val realm = Realm.getDefaultInstance()
+        val connection = getConnectionIfIncomingActionIsLegal(packet) ?: return@unitOnFail
 
-        realm.where(Connection::class.java)
-            .equalTo("id", packet.connectionId)
-            .findFirst()
-            ?.let { connection ->
-                realm.executeTransaction {
-                    connection.lastUpdate = System.currentTimeMillis()
-                    connection.latitude = packet.latitude
-                    connection.longitude = packet.longitude
-                }
-
-                Timber.i("Received data updated.")
-
-            } ?: Timber.w("cannot find corresponding connection for TRANSFER_DATA.")
+        executeInDefaultInstance {
+            connection.lastUpdate = System.currentTimeMillis()
+            connection.latitude = packet.latitude
+            connection.longitude = packet.longitude
+        }
     }
 
     override fun requestUpdate(connectionId: Long) = unitOnFail {
-        val connection = getConnection(connectionId)
-        if (connection == null) {
-            setFailure(Failable.Failure("Failed to request update. Cannot find connection of id $connectionId", true))
-            return@unitOnFail
-        }
+        val connection = getConnection(connectionId, temporal = false) ?: return@unitOnFail
+
         val packet = Packet.ofRequestingUpdate(connection)
 
         sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
 
-        Timber.i("requested update")
+        Timber.i("Requested update")
     }
     override fun beRequestedUpdate(packet: Packet) = unitOnFail {
-        Realm.getDefaultInstance().where(Connection::class.java)
-            .equalTo("id", packet.connectionId)
-            .findFirst()
-            ?.let { sendUpdate(it.id) }
-            ?: Timber.w("cannot find corresponding connection for REQUEST_DATA.")
+        val connection = getConnectionIfIncomingActionIsLegal(packet) ?: return@unitOnFail
+
+        sendUpdate(connection.id)
     }
 
     override fun requestDisconnect(connectionId: Long) = unitOnFail {
-        val connection = getConnection(connectionId)
-        if (connection == null) {
-            setFailure(Failable.Failure("Failed to request disconnect. Cannot find connection of id $connectionId", true))
-            return@unitOnFail
-        }
-        if (connection.isTemporal) {
-            Timber.i("Cannot request to disconnect a temporal connection. It is not even accepted!")
-            return@unitOnFail
-        }
+        val connection = getConnection(connectionId, temporal = false) ?: return@unitOnFail
 
         val packet = Packet.ofRequestingDisconnect(connection)
 
@@ -342,18 +334,18 @@ class LocationSupportServiceImpl(
         sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
 
         // delete
-        Realm.getDefaultInstance().executeTransaction {
+        executeInDefaultInstance {
             connection.deleteFromRealm()
         }
 
-        Timber.i("requested disconnect")
+        Timber.i("Requested disconnect")
     }
     override fun beRequestedDisconnect(packet: Packet) = unitOnFail {
-        val connection = getConnection(packet.connectionId) ?: return@unitOnFail
+        val connection = getConnectionIfIncomingActionIsLegal(packet) ?: return@unitOnFail
 
         sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
 
-        Realm.getDefaultInstance().executeTransaction {
+        executeInDefaultInstance {
             connection.deleteFromRealm()
         }
     }
@@ -375,6 +367,7 @@ class LocationSupportServiceImpl(
     override fun receivePacket(address: String, body: String) = unitOnFail {
         val packet = parsePacket(body)?.apply {
             this.address = address
+            this.isInbound = true
         } ?: return@unitOnFail
 
         Timber.i("Received packet is ${findType(packet.type).toString()}")
@@ -576,7 +569,7 @@ class LocationSupportServiceImpl(
      */
     private fun restoreTasks() = unitOnFail {
         scheduler.cancelAll()
-        Realm.getDefaultInstance().executeTransaction {
+        executeInDefaultInstance {
             getConnections()?.filter { !it.isTemporal }?.forEach {
                 if (it.isExpired()) {
                     it.deleteFromRealm()
@@ -598,7 +591,7 @@ class LocationSupportServiceImpl(
      *
      * TODO: UPDATE_INTERVAL hardcoded. fix it.
      *
-     * @param connection must be a realm managed object.
+     * @param connection must be a getRealm managed object.
      */
     private fun registerTask(connection: Connection) = unitOnFail {
         scheduler.doOnEvery(connection.id, UPDATE_INTERVAL) {
@@ -618,12 +611,87 @@ class LocationSupportServiceImpl(
     /**
      * Unegister periodic update task of connection.
      *
-     * @param connection must be a realm managed object.
+     * @param connection must be a getRealm managed object.
      */
     private fun unregisterTask(connection: Connection) = unitOnFail {
         scheduler.cancel(connection.id)
 
         Timber.i("Task unregistered: connection ${connection.id}.")
+    }
+
+
+    /**
+     * Construct a request from an inbound request packet.
+     * @param
+     */
+    private fun requestFromInboundPacket(packet: Packet): ConnectionRequest? = nullOnFail {
+        if (!packet.isInbound) {
+            setFailure(Failable.Failure("The packet must be inbound.", true))
+            return@nullOnFail null
+        }
+
+        return@nullOnFail ConnectionRequest(
+            connectionId = packet.connectionId,
+            recipient = getRecipient(packet.address),
+            isInbound = packet.isInbound,
+            date = if (packet.isInbound) packet.date else packet.dateSent,
+            duration = packet.duration
+        )
+    }
+
+    private fun getRealm(): Realm {
+        return Realm.getDefaultInstance()
+    }
+
+    private fun executeInDefaultInstance(transaction: (Realm) -> Unit) {
+        val realm = getRealm()
+
+        realm.beginTransaction()
+
+        try {
+            transaction(realm)
+            realm.commitTransaction()
+        } catch (e: Exception) {
+            if (realm.isInTransaction) {
+                realm.cancelTransaction()
+            }
+            setFailure(Failable.Failure(e.message ?: "Transaction error occurred.", true))
+        }
+    }
+
+    private fun getConnectionNoCheck(id: Long): Connection? = nullOnFail {
+        return@nullOnFail getRealm()
+            .where(Connection::class.java)
+            .equalTo("id", id)
+            .findFirst()
+    }
+
+    /**
+     * If something is requested from outside,
+     * check if it is legal.
+     */
+    private fun getConnectionIfIncomingActionIsLegal(packet: Packet): Connection? {
+        val connection = getConnectionNoCheck(packet.connectionId)
+        val recipient = connection?.recipient ?: getRecipient(packet.address)
+
+        if (connection == null) {
+            setFailure(Failable.Failure("Invalid request(${findType(packet.type)}) from ${recipient?.getDisplayName()}. No connection", true))
+            return null
+        }
+        if (connection.recipient == null) {
+            setFailure(Failable.Failure("Invalid request(${findType(packet.type)}) from ${recipient?.getDisplayName()}. Connection has no recipient", true))
+            return null
+        }
+        if (connection.isTemporal) {
+            setFailure(Failable.Failure("Invalid request(${findType(packet.type)}) from ${recipient?.getDisplayName()}. Not a normal connection.", true))
+            return null
+        }
+
+        return connection
+    }
+
+    private fun getRequestIfIncomingActionisLegal(packet: Packet) {
+
     }
 
     companion object {

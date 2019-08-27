@@ -61,7 +61,7 @@ class ConnectionsAdapter(
             view.name.alpha = 1.0f
             view.status.alpha = 1.0f
             view.status.text = when (connection.lastUpdate == 0L) {
-                true -> "No location data" // TODO hardcoded string
+                true -> "Location not available" // TODO hardcoded string
                 else -> dateFormatter.getConversationTimestamp(connection.lastUpdate)
             }
 

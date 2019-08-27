@@ -33,7 +33,7 @@ class DeleteMessages(
 
     data class Params(val messageIds: List<Long>, val threadId: Long? = null)
 
-    override suspend fun run(params: Params): Result<*> =
+    override fun run(params: Params): Result<*> =
         Result.of {
             params.messageIds.toLongArray()
                 .also { messageIds -> messageRepo.deleteMessages(*messageIds) }                 // delete the messages

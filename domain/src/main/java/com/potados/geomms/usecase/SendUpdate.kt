@@ -8,7 +8,7 @@ class SendUpdate(
     private val service: LocationSupportService
 ) : UseCase<Long>() {
 
-    override suspend fun run(params: Long): Result<*> =
+    override fun run(params: Long): Result<*> =
         Result.of {
             service.sendUpdate(params)
         }

@@ -40,7 +40,7 @@ class SendMessage(
         val attachments: List<Attachment> = listOf()
     )
 
-    override suspend fun run(params: Params): Result<*> =
+    override fun run(params: Params): Result<*> =
         Result.of {
             if (params.addresses.isEmpty()) return@of
 

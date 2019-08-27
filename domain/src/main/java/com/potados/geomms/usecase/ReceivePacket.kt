@@ -9,7 +9,7 @@ class ReceivePacket(
     private val service: LocationSupportService
 ) : UseCase<Array<SmsMessage>>() {
 
-    override suspend fun run(params: Array<SmsMessage>): Result<*> =
+    override fun run(params: Array<SmsMessage>): Result<*> =
         Result.of {
             if (params.isEmpty()) return@of
 

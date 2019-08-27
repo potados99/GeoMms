@@ -12,7 +12,7 @@ class SyncMessages(
     private val updateBadge: UpdateBadge
 ) : UseCase<Unit>() {
 
-    override suspend fun run(params: Unit): Result<*> =
+    override fun run(params: Unit): Result<*> =
         Result.of {
             val elapsedMillis = elapsedTimeMillis(syncRepo::syncMessages)
             val elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedMillis)

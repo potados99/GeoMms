@@ -12,7 +12,7 @@ class SyncMessage(
     private val updateBadge: UpdateBadge
 ) : UseCase<Uri>() {
 
-    override suspend fun run(params: Uri): Result<*> =
+    override fun run(params: Uri): Result<*> =
         Result.of {
             syncManager.syncMessage(params)
                 ?.let { conversationRepo.updateConversations(it.threadId) }

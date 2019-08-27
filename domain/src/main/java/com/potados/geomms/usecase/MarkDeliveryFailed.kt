@@ -10,7 +10,7 @@ class MarkDeliveryFailed(
 
     data class Params(val id: Long, val resultCode: Int)
 
-    override suspend fun run(params: Params): Result<*> =
+    override fun run(params: Params): Result<*> =
         Result.of {
             messageRepo.markDeliveryFailed(params.id, params.resultCode)
         }

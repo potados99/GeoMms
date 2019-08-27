@@ -5,7 +5,8 @@ import com.potados.geomms.interactor.UseCase
 import timber.log.Timber
 
 class UpdateBadge : UseCase<Unit>() {
-    override suspend fun run(params: Unit): Result<*> =
+
+    override fun run(params: Unit): Result<*> =
         Result.of{
             Timber.i("TODO: Do update badge")
         }
