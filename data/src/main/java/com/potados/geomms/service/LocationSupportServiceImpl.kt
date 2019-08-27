@@ -44,6 +44,7 @@ class LocationSupportServiceImpl(
 
         super.start()
 
+        validate()
         restoreTasks()
         startLocationUpdates()
 
@@ -52,12 +53,21 @@ class LocationSupportServiceImpl(
         Timber.i("Service started.")
     }
 
+    override fun clearConnections() {
+        getConnections()?.forEach {
+            requestDisconnect(it.id)
+        }
+    }
+
     override fun getConnections(): RealmResults<Connection>? = nullOnFail{
         return@nullOnFail getRealm().where(Connection::class.java)
             .sort("date", Sort.ASCENDING)
             .findAll()
     }
 
+    /**
+     * Auto correct connection without recipient.
+     */
     override fun getConnection(id: Long, temporal: Boolean, showError: Boolean): Connection? = nullOnFail {
         val connection = getRealm()
             .where(Connection::class.java)
@@ -667,9 +677,9 @@ class LocationSupportServiceImpl(
     }
 
     /**
-     * If something is requested from outside,
-     * check if it is legal.
-     */
+     * If something is requested from outside, check if it is legal.
+     * Auto correct connection without recipient.
+    */
     private fun getConnectionIfIncomingActionIsLegal(packet: Packet): Connection? {
         val connection = getConnectionNoCheck(packet.connectionId)
         val recipient = connection?.recipient ?: getRecipient(packet.address)
@@ -692,6 +702,35 @@ class LocationSupportServiceImpl(
 
     private fun getRequestIfIncomingActionisLegal(packet: Packet) {
 
+    }
+
+    /**
+     * Remove periodic task and delete from realm.
+     * Not notify to YOU.
+     */
+    private fun deleteConnection(connection: Connection) = unitOnFail {
+        unregisterTask(connection)
+        executeInDefaultInstance { connection.deleteFromRealm() }
+    }
+
+    private fun validate() = unitOnFail {
+        executeInDefaultInstance {
+            getConnections()?.forEach { connection ->
+                if (connection.recipient == null) {
+                    deleteConnection(connection)
+                }
+            }
+            getIncomingRequests()?.forEach { req ->
+                if (req.recipient == null || !req.isInbound) {
+                    req.deleteFromRealm()
+                }
+            }
+            getOutgoingRequests()?.forEach { req ->
+                if (req.recipient == null || req.isInbound) {
+                    req.deleteFromRealm()
+                }
+            }
+        }
     }
 
     companion object {

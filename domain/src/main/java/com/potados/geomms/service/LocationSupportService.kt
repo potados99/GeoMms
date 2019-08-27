@@ -19,6 +19,8 @@ import timber.log.Timber
  */
 abstract class LocationSupportService : Service() {
 
+    abstract fun clearConnections()
+
     abstract fun getConnections(): RealmResults<Connection>?
 
     abstract fun getConnection(id: Long, temporal: Boolean, showError: Boolean = true): Connection?
@@ -28,7 +30,6 @@ abstract class LocationSupportService : Service() {
     abstract fun getIncomingRequests(): RealmResults<ConnectionRequest>?
 
     abstract fun getOutgoingRequests(): RealmResults<ConnectionRequest>?
-
 
     /** I request YOU to join. */
     abstract fun requestNewConnection(address: String, duration: Long)

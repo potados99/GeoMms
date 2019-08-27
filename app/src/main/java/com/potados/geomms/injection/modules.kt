@@ -264,7 +264,13 @@ val myModules = module {
     /** Sync Message */
 
     /** Sync Messages */
-    single { SyncMessages(syncRepo = get(), updateBadge = get()) }
+    single {
+        SyncMessages(
+            syncRepo = get(),
+            service = get(),
+            updateBadge = get()
+        )
+    }
 
     /** Update Badges */
     single { UpdateBadge() }
