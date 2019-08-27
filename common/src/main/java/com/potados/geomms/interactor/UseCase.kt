@@ -25,6 +25,7 @@ abstract class UseCase<in Params> {
     operator fun invoke(params: Params, onResult: (Result<*>) -> Unit = {}) {
         Thread {
             try {
+                Timber.w("Invoke UseCase thread.")
                 val result = run(params)
                 Handler(Looper.getMainLooper()).post { onResult(result) }
             } catch (e: Exception) {

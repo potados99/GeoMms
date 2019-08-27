@@ -9,5 +9,7 @@ class MarkSent(
 ) : UseCase<Long>() {
 
     override fun run(params: Long): Result<*> =
-        Result.of { messageRepo.markSent(params) }
+        Result.of {
+            messageRepo.markSent(params)
+        }
 }
