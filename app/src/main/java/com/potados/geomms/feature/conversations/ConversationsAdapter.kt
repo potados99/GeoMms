@@ -41,7 +41,6 @@ class ConversationsAdapter(
                 snippet.setBold(true)
                 snippet.setTextColorRes(R.color.textPrimary) // TODO null theme
                 unread.setVisible(true)
-                unread.setTint(context.resolveThemeColor(R.attr.tintPrimary))
                 date.setBold(true)
                 date.setTextColorRes(R.color.textPrimary)
             }

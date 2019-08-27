@@ -51,11 +51,15 @@ class ConnectionsAdapter(
         view.avatar.setContact(connection.recipient)
 
         if (connection.isTemporal) {
-            // haze view of the temporal connection
             view.name.alpha = 0.5f
             view.status.alpha = 0.5f
             view.status.text = "Request sent." // TODO hardcoded string
-        } else {
+
+            (holder as TimerViewHolder).timer?.cancel()
+        }
+        else {
+            view.name.alpha = 1.0f
+            view.status.alpha = 1.0f
             view.status.text = when (connection.lastUpdate == 0L) {
                 true -> "No location data" // TODO hardcoded string
                 else -> dateFormatter.getConversationTimestamp(connection.lastUpdate)

@@ -48,7 +48,7 @@ class ConversationsFragment : NavigationFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        conversationsViewModel = getViewModel { start() }
+        conversationsViewModel = getViewModel()
 
         addFailables(conversationsViewModel.failables + listOf(navigator, permissionManager))
     }
@@ -61,6 +61,12 @@ class ConversationsFragment : NavigationFragment() {
             .apply { viewDataBinding = this }
             .apply { initializeView(root) }
             .root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        // start after view initiated.
+        conversationsViewModel.start()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
