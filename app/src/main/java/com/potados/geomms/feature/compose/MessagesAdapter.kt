@@ -87,7 +87,7 @@ class MessagesAdapter(
         val timeVisibility = (timeSincePrevious >= BubbleUtils.TIMESTAMP_THRESHOLD)
 
         view.timestamp.text = timeText
-        view.timestamp.setVisible(timeSincePrevious >= BubbleUtils.TIMESTAMP_THRESHOLD)
+        view.timestamp.setVisible(timeVisibility)
 
         // Bind the grouping
         val media = message.parts.filter { it.isImage() || it.isVideo() || it.isVCard() }
@@ -95,7 +95,7 @@ class MessagesAdapter(
 
         // Bind the avatar
         if (!message.isMe()) {
-            view.avatar.threadId = conversation?.id
+            view.avatar.threadId = conversation.id
             view.avatar.setContact(contactCache[message.address])
             view.avatar.setVisible(!canGroup(message, next), View.INVISIBLE)
         }
@@ -135,8 +135,8 @@ class MessagesAdapter(
     override fun getItemViewType(position: Int): Int {
         val message = getItem(position) ?: return -1
         return when (message.isMe()) {
-            true -> VIEW_TYPE_MESSAGE_OUT
-            false -> VIEW_TYPE_MESSAGE_IN
+            true -> VIEW_TYPE_MESSAGE_OUT   // send
+            false -> VIEW_TYPE_MESSAGE_IN   // receive
         }
     }
 

@@ -28,6 +28,7 @@ import com.potados.geomms.usecase.MarkFailed
 import com.potados.geomms.usecase.MarkSent
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import timber.log.Timber
 
 /**
  * Not registered in manifest.

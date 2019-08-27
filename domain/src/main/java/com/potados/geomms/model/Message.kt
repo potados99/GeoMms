@@ -72,6 +72,9 @@ open class Message : RealmObject() {
 
     fun isSms(): Boolean = type == "sms"
 
+    /**
+     * Is this message sent(or will be sent) from me? (right side)
+     */
     fun isMe(): Boolean {
         val isIncomingMms = isMms() && (boxId == Mms.MESSAGE_BOX_INBOX || boxId == Mms.MESSAGE_BOX_ALL)
         val isIncomingSms = isSms() && (boxId == Sms.MESSAGE_TYPE_INBOX || boxId == Sms.MESSAGE_TYPE_ALL)
