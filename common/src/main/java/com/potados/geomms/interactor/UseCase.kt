@@ -11,6 +11,8 @@ import android.os.Looper
 import com.potados.geomms.functional.Result
 import kotlinx.coroutines.*
 import timber.log.Timber
+import java.util.concurrent.ThreadPoolExecutor
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Abstract class for Use Case (Interactor in terms of Clean Architecture).
@@ -25,13 +27,12 @@ abstract class UseCase<in Params> {
     operator fun invoke(params: Params, onResult: (Result<*>) -> Unit = {}) {
         Thread {
             try {
-                Timber.w("Invoke UseCase thread.")
                 val result = run(params)
                 Handler(Looper.getMainLooper()).post { onResult(result) }
             } catch (e: Exception) {
                 Timber.w("Exception inside another thread.")
                 Timber.w(e)
             }
-        }.run()
+        }.start()
     }
 }
