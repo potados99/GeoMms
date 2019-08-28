@@ -19,7 +19,7 @@ class SyncMessages(
             // Connections relay on Recipient, which will be deleted after sync.
             // Disconnect all connections before sync to prevent connection having
             // no recipient.
-            service.clearConnections()
+            service.disconnectAll()
 
             Timber.i("Disconnect all.")
 

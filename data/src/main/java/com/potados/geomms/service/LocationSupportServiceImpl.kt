@@ -26,6 +26,7 @@ import io.realm.RealmResults
 import io.realm.Sort
 import timber.log.Timber
 import java.lang.reflect.Type
+import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
 class LocationSupportServiceImpl(
@@ -58,7 +59,7 @@ class LocationSupportServiceImpl(
         Timber.i("Service started.")
     }
 
-    override fun clearConnections() {
+    override fun disconnectAll() {
         getConnections()?.forEach {
             requestDisconnect(it.id)
         }
@@ -675,6 +676,7 @@ class LocationSupportServiceImpl(
         private val validation = HashMap<Class<*>, Validation<RealmObject>>()
 
         init {
+            Timber.i("Connection::class.java.name becomes ${Connection::class.java.name}")
             validation[Connection::class.java] = Validation<Connection>(
                 checker = {
                     return@Validation it.id != 0L && it.recipient != null
@@ -751,10 +753,10 @@ class LocationSupportServiceImpl(
 
         @Suppress("UNCHECKED_CAST")
         private fun <T: RealmObject> getValidation(locationObject: T): Validation<T>? {
-            // 100% safe.
-            // if value for key [locationObject::class.java] exists,
-            // the key must be a Validation<T> type.
-            return validation[locationObject::class.java] as? Validation<T>
+            // Managed realm object is replaced by a proxy class instance.
+            // We need to get an un-managed copy of realm object
+            // to get the model class name.
+            return validation[getRealm().copyFromRealm(locationObject)::class.java] as? Validation<T>
         }
     }
 

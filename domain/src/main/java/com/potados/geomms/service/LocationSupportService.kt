@@ -19,7 +19,7 @@ import timber.log.Timber
  */
 abstract class LocationSupportService : Service() {
 
-    abstract fun clearConnections()
+    abstract fun disconnectAll()
 
     abstract fun getConnections(): RealmResults<Connection>?
 
