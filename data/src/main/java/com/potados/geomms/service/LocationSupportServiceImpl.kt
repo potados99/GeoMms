@@ -1,5 +1,6 @@
 package com.potados.geomms.service
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.telephony.SmsManager
@@ -20,10 +21,12 @@ import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.LocationRepository
 import com.potados.geomms.util.*
 import io.realm.Realm
+import io.realm.RealmObject
 import io.realm.RealmResults
 import io.realm.Sort
 import timber.log.Timber
-import java.time.temporal.Temporal
+import java.lang.reflect.Type
+import kotlin.reflect.typeOf
 
 class LocationSupportServiceImpl(
     private val context: Context,
@@ -35,6 +38,8 @@ class LocationSupportServiceImpl(
 
     private var started = false
 
+    private val validator = Validator()
+
     override fun start() {
         if (started) {
             Timber.i("Already started!")
@@ -44,7 +49,7 @@ class LocationSupportServiceImpl(
 
         super.start()
 
-        validate()
+        validator.validateAll()
         restoreTasks()
         startLocationUpdates()
 
@@ -713,25 +718,109 @@ class LocationSupportServiceImpl(
         executeInDefaultInstance { connection.deleteFromRealm() }
     }
 
-    private fun validate() = unitOnFail {
-        executeInDefaultInstance {
-            getConnections()?.forEach { connection ->
-                if (connection.recipient == null) {
-                    deleteConnection(connection)
+    private fun fail(message: String, show: Boolean = false) {
+        setFailure(Failable.Failure(message, show))
+    }
+
+
+    /**
+     * Validate = check + correct
+     *
+     * Insure location connections and requests are valid.
+     * If found something not valid, perform correction(e.g. delete)
+     */
+    inner class Validator {
+        private val validation = HashMap<Class<*>, Validation<RealmObject>>()
+
+        init {
+            validation[Connection::class.java] = Validation<Connection>(
+                checker = {
+                    return@Validation it.recipient != null
+                },
+                corrector = { realmObject ->
+                    executeInDefaultInstance { realmObject.deleteFromRealm() }
+                    null
                 }
-            }
-            getIncomingRequests()?.forEach { req ->
-                if (req.recipient == null || !req.isInbound) {
-                    req.deleteFromRealm()
+            )
+
+            validation[ConnectionRequest::class.java] = Validation<ConnectionRequest>(
+                checker = {
+                    return@Validation it.recipient != null
+                },
+                corrector = { realmObject ->
+                    executeInDefaultInstance { realmObject.deleteFromRealm() }
+                    null
                 }
-            }
-            getOutgoingRequests()?.forEach { req ->
-                if (req.recipient == null || req.isInbound) {
-                    req.deleteFromRealm()
-                }
+            )
+        }
+
+        /**
+         * Check if [locationObject] is valid.
+         * Correct it if not valid.
+         *
+         * @param locationObject The realm object to validate.
+         * @return The [locationObject] if valid, or null.
+         */
+        fun <T : RealmObject> validate(locationObject: T?): T? {
+            return if (isValid(locationObject)) {
+                locationObject
+            } else {
+                performCorrection(locationObject)
             }
         }
+
+        fun validateAll() {
+            getIncomingRequests()?.forEach { validate(it) }
+            getIncomingRequests()?.forEach { validate(it) }
+            getOutgoingRequests()?.forEach { validate(it) }
+        }
+
+        /**
+         * Check.
+         * Null check here.
+         */
+        private fun <T: RealmObject> isValid(locationObject: T?): Boolean {
+            locationObject ?: return false
+
+            val foundChecker = getValidation(locationObject)?.checker
+            if (foundChecker == null) {
+                fail("Validator not found for type ${locationObject::class.java.name}.", true)
+                return false
+            }
+
+            return foundChecker(locationObject)
+        }
+
+        /**
+         * Correct.
+         * Null check here.
+         */
+        private fun <T: RealmObject> performCorrection(locationObject: T?): T? {
+            locationObject ?: return null
+
+            val foundCorrector = getValidation(locationObject)?.corrector
+            if (foundCorrector == null) {
+                fail("Validator not found for type ${locationObject::class.java.name}.", true)
+                return null
+            }
+
+            return foundCorrector(locationObject)
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        private fun <T: RealmObject> getValidation(locationObject: T): Validation<T>? {
+            // 100% safe.
+            // if value for key [locationObject::class.java] exists,
+            // the key must be a Validation<T> type.
+            return validation[locationObject::class.java] as? Validation<T>
+        }
     }
+
+    data class Validation<out T>(
+        val checker: (@UnsafeVariance T) -> Boolean,
+        val corrector: (@UnsafeVariance T) -> T?
+    )
+
 
     companion object {
         const val GEO_MMS_PREFIX = "[GEOMMS]"

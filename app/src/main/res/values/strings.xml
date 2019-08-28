@@ -317,5 +317,7 @@
     <string name="description_vcard_avatar">This is a contact card avatar.</string>
     <string name="delete_conversation_title">Delete conversation</string>
     <string name="delete_conversation_message">Do you want to delete conversation with %s?</string>
+    <string name="description_sync_message">Sync messages</string>
+    <string name="drawer_sync">Sync messages</string>
 
 </resources>

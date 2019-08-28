@@ -279,6 +279,8 @@
     <string name="description_vcard_avatar">연락처 사진입니다.</string>
     <string name="delete_conversation_title">대화 삭제</string>
     <string name="delete_conversation_message">%s님과의 대화를 삭제하시겠습니까?</string>
+    <string name="description_sync_message">메시지 동기화</string>
+    <string name="drawer_sync">메시지 동기화</string>
 
 
 </resources>
