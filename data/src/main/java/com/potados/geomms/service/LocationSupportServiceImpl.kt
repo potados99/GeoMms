@@ -73,38 +73,20 @@ class LocationSupportServiceImpl(
     /**
      * Auto correct connection without recipient.
      */
-    override fun getConnection(id: Long, temporal: Boolean, showError: Boolean): Connection? = nullOnFail {
-        val connection = getRealm()
+    override fun getConnection(id: Long, temporal: Boolean): Connection? = nullOnFail {
+        return@nullOnFail getRealm()
             .where(Connection::class.java)
             .equalTo("id", id)
             .equalTo("isTemporal", temporal)
             .findFirst()
-
-        if (connection == null) {
-            setFailure(Failable.Failure("Connection of id $id does not exist.", showError))
-            return@nullOnFail null
-        }
-
-        if (connection.recipient == null) {
-            setFailure(Failable.Failure("Connection of id $id has no recipient.", showError))
-            return@nullOnFail null
-        }
-
-        return@nullOnFail connection
     }
 
     override fun getRequest(connectionId: Long, inbound: Boolean): ConnectionRequest? = nullOnFail {
-        val request = getRealm()
+        return@nullOnFail getRealm()
             .where(ConnectionRequest::class.java)
             .equalTo("connectionId", connectionId)
             .equalTo("isInbound", inbound)
             .findFirst()
-
-        if (request == null) {
-            Timber.w("Request of id $connectionId does not exist.")
-        }
-
-        return@nullOnFail request
     }
 
     private fun getRecipient(address: String): Recipient? = nullOnFail {
@@ -112,13 +94,12 @@ class LocationSupportServiceImpl(
         val recipient = conversationRepo.getOrCreateConversation(address)?.recipients?.get(0)
 
         if (recipient == null) {
-            setFailure(Failable.Failure("Failed to retrive recipient of address $address.", true))
+            setFailure(Failable.Failure("Failed to retrieve recipient of address $address.", true))
             return@nullOnFail null
         }
 
         return@nullOnFail recipient
     }
-
 
     override fun getIncomingRequests(): RealmResults<ConnectionRequest>? = nullOnFail {
         return@nullOnFail  getRealm()
@@ -133,6 +114,7 @@ class LocationSupportServiceImpl(
             .equalTo("isInbound", false)
             .findAll()
     }
+
 
     override fun requestNewConnection(address: String, duration: Long) = unitOnFail {
         val recipient = getRecipient(address) ?: return@unitOnFail
@@ -175,19 +157,12 @@ class LocationSupportServiceImpl(
     }
 
     override fun acceptConnectionRequest(request: ConnectionRequest) = unitOnFail {
-        if (!request.isInbound) {
-            setFailure(Failable.Failure("Cannot accept request not inbound.", true))
-            return@unitOnFail
-        }
-        if (request.recipient == null) {
-            setFailure(Failable.Failure("Request without recipient is impossible.", true))
-            return@unitOnFail
+        val validated = validator.validate(request) {
+            it.isInbound && getConnection(it.connectionId, false) == null
         }
 
-        // prevent double accepting and creating connection
-        getConnectionNoCheck(request.connectionId)?.let {
-            setFailure(Failable.Failure(
-                "The connection or sent request already exists.", true))
+        if (validated == null) {
+            setFailure(Failable.Failure("Request is invalid.", true))
             return@unitOnFail
         }
 
@@ -209,9 +184,8 @@ class LocationSupportServiceImpl(
         // start sending updates
         registerTask(connection)
     }
-
     override fun beAcceptedConnectionRequest(packet: Packet) = unitOnFail {
-        val request = getRequest(packet.connectionId, inbound = false)
+        val request = validator.validate(getRequest(packet.connectionId, inbound = false))
 
         if (request == null) {
             setFailure(Failable.Failure("Request is accepted but cannot find the outbound request from DB.", true))
@@ -231,15 +205,11 @@ class LocationSupportServiceImpl(
     }
 
     override fun refuseConnectionRequest(request: ConnectionRequest) = unitOnFail {
-        if (!request.isInbound) {
-            setFailure(Failable.Failure("Cannot refuse request not inbound.", true))
-            return@unitOnFail
+        val validated = validator.validate(request) {
+            it.isInbound && getConnection(it.connectionId, false) == null
         }
-        if (request.recipient == null) {
-            executeInDefaultInstance {
-                request.deleteFromRealm()
-            }
-            setFailure(Failable.Failure("Request without recipient is impossible.", true))
+        if (validated == null) {
+            setFailure(Failable.Failure("Request is invalid.", true))
             return@unitOnFail
         }
 
@@ -267,15 +237,11 @@ class LocationSupportServiceImpl(
     }
 
     override fun cancelConnectionRequest(request: ConnectionRequest) = unitOnFail {
-        if (request.isInbound) {
-            setFailure(Failable.Failure("Cannot cancel request inbound.", true))
-            return@unitOnFail
+        val validated = validator.validate(request) {
+            !it.isInbound && getConnection(it.connectionId, false) == null
         }
-        if (request.recipient == null) {
-            executeInDefaultInstance {
-                request.deleteFromRealm()
-            }
-            setFailure(Failable.Failure("Request without recipient is impossible.", true))
+        if (validated == null) {
+            setFailure(Failable.Failure("Request is invalid.", true))
             return@unitOnFail
         }
 
@@ -285,7 +251,7 @@ class LocationSupportServiceImpl(
         }
 
         // find temporal connection
-        val temporalConnection = getConnection(request.connectionId, temporal = true)?.takeIf { it.isTemporal }
+        val temporalConnection = validator.validate(getConnection(request.connectionId, temporal = true))
 
         // delete
         executeInDefaultInstance {
@@ -294,7 +260,7 @@ class LocationSupportServiceImpl(
         }
     }
     override fun beCanceledConnectionRequest(packet: Packet) = unitOnFail {
-        val request = getRequest(packet.connectionId, inbound = true)
+        val request = validator.validate(getRequest(packet.connectionId, inbound = true))
 
         if (request == null) {
             val recipient = getRecipient(packet.address)
@@ -306,14 +272,16 @@ class LocationSupportServiceImpl(
     }
 
     override fun sendUpdate(connectionId: Long) = unitOnFail {
-        val connection = getConnection(connectionId, temporal = false) ?: return@unitOnFail
+        val connection = validator.validate(getConnection(connectionId, temporal = false))
+            ?: return@unitOnFail
 
         val packet = Packet.ofSendingData(connection, locationRepo.getCurrentLocation() ?: return@unitOnFail)
 
         sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
     }
     override fun beSentUpdate(packet: Packet) = unitOnFail {
-        val connection = getConnectionIfIncomingActionIsLegal(packet) ?: return@unitOnFail
+        val connection = validator.validate(getConnection(packet.connectionId, false))
+            ?: return@unitOnFail
 
         executeInDefaultInstance {
             connection.lastUpdate = System.currentTimeMillis()
@@ -332,13 +300,15 @@ class LocationSupportServiceImpl(
         Timber.i("Requested update")
     }
     override fun beRequestedUpdate(packet: Packet) = unitOnFail {
-        val connection = getConnectionIfIncomingActionIsLegal(packet) ?: return@unitOnFail
+        val connection = validator.validate(getConnection(packet.connectionId, false))
+            ?: return@unitOnFail
 
         sendUpdate(connection.id)
     }
 
     override fun requestDisconnect(connectionId: Long) = unitOnFail {
-        val connection = getConnection(connectionId, temporal = false) ?: return@unitOnFail
+        val connection = validator.validate(getConnection(connectionId, temporal = false))
+            ?: return@unitOnFail
 
         val packet = Packet.ofRequestingDisconnect(connection)
 
@@ -356,7 +326,8 @@ class LocationSupportServiceImpl(
         Timber.i("Requested disconnect")
     }
     override fun beRequestedDisconnect(packet: Packet) = unitOnFail {
-        val connection = getConnectionIfIncomingActionIsLegal(packet) ?: return@unitOnFail
+        val connection = validator.validate(getConnection(packet.connectionId, false))
+            ?: return@unitOnFail
 
         sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
 
@@ -420,7 +391,6 @@ class LocationSupportServiceImpl(
 
         Timber.i("Successfully handled packet.")
     }
-
 
     /**
      * Create a packet from a plain string.
@@ -682,34 +652,6 @@ class LocationSupportServiceImpl(
     }
 
     /**
-     * If something is requested from outside, check if it is legal.
-     * Auto correct connection without recipient.
-    */
-    private fun getConnectionIfIncomingActionIsLegal(packet: Packet): Connection? {
-        val connection = getConnectionNoCheck(packet.connectionId)
-        val recipient = connection?.recipient ?: getRecipient(packet.address)
-
-        if (connection == null) {
-            setFailure(Failable.Failure("Invalid request(${findType(packet.type)}) from ${recipient?.getDisplayName()}. No connection", true))
-            return null
-        }
-        if (connection.recipient == null) {
-            setFailure(Failable.Failure("Invalid request(${findType(packet.type)}) from ${recipient?.getDisplayName()}. Connection has no recipient", true))
-            return null
-        }
-        if (connection.isTemporal) {
-            setFailure(Failable.Failure("Invalid request(${findType(packet.type)}) from ${recipient?.getDisplayName()}. Not a normal connection.", true))
-            return null
-        }
-
-        return connection
-    }
-
-    private fun getRequestIfIncomingActionisLegal(packet: Packet) {
-
-    }
-
-    /**
      * Remove periodic task and delete from realm.
      * Not notify to YOU.
      */
@@ -735,7 +677,7 @@ class LocationSupportServiceImpl(
         init {
             validation[Connection::class.java] = Validation<Connection>(
                 checker = {
-                    return@Validation it.recipient != null
+                    return@Validation it.id != 0L && it.recipient != null
                 },
                 corrector = { realmObject ->
                     executeInDefaultInstance { realmObject.deleteFromRealm() }
@@ -745,7 +687,7 @@ class LocationSupportServiceImpl(
 
             validation[ConnectionRequest::class.java] = Validation<ConnectionRequest>(
                 checker = {
-                    return@Validation it.recipient != null
+                    return@Validation it.connectionId != 0L && it.recipient != null
                 },
                 corrector = { realmObject ->
                     executeInDefaultInstance { realmObject.deleteFromRealm() }
@@ -761,8 +703,8 @@ class LocationSupportServiceImpl(
          * @param locationObject The realm object to validate.
          * @return The [locationObject] if valid, or null.
          */
-        fun <T : RealmObject> validate(locationObject: T?): T? {
-            return if (isValid(locationObject)) {
+        fun <T : RealmObject> validate(locationObject: T?, additionalPredicate: (T) -> Boolean = { true }): T? {
+            return if (isValid(locationObject, additionalPredicate)) {
                 locationObject
             } else {
                 performCorrection(locationObject)
@@ -779,7 +721,7 @@ class LocationSupportServiceImpl(
          * Check.
          * Null check here.
          */
-        private fun <T: RealmObject> isValid(locationObject: T?): Boolean {
+        private fun <T: RealmObject> isValid(locationObject: T?, additionalPredicate: (T) -> Boolean = { true }): Boolean {
             locationObject ?: return false
 
             val foundChecker = getValidation(locationObject)?.checker
@@ -788,7 +730,7 @@ class LocationSupportServiceImpl(
                 return false
             }
 
-            return foundChecker(locationObject)
+            return foundChecker(locationObject) && additionalPredicate(locationObject)
         }
 
         /**
@@ -820,7 +762,6 @@ class LocationSupportServiceImpl(
         val checker: (@UnsafeVariance T) -> Boolean,
         val corrector: (@UnsafeVariance T) -> T?
     )
-
 
     companion object {
         const val GEO_MMS_PREFIX = "[GEOMMS]"

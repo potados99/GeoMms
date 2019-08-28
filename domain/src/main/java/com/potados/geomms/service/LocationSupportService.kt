@@ -23,13 +23,14 @@ abstract class LocationSupportService : Service() {
 
     abstract fun getConnections(): RealmResults<Connection>?
 
-    abstract fun getConnection(id: Long, temporal: Boolean, showError: Boolean = true): Connection?
+    abstract fun getConnection(id: Long, temporal: Boolean): Connection?
 
     abstract fun getRequest(connectionId: Long, inbound: Boolean): ConnectionRequest?
 
     abstract fun getIncomingRequests(): RealmResults<ConnectionRequest>?
 
     abstract fun getOutgoingRequests(): RealmResults<ConnectionRequest>?
+
 
     /** I request YOU to join. */
     abstract fun requestNewConnection(address: String, duration: Long)
@@ -70,6 +71,7 @@ abstract class LocationSupportService : Service() {
     abstract fun sendPacket(address: String, packet: Packet)
     /** YOU sent me a packet. I handle it and call methods above. */
     abstract fun receivePacket(address: String, body: String)
+
 
     abstract fun parsePacket(body: String): Packet?
 
