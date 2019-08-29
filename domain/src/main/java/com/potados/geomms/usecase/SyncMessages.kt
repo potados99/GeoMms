@@ -19,9 +19,9 @@ class SyncMessages(
             // Connections relay on Recipient, which will be deleted after sync.
             // Disconnect all connections before sync to prevent connection having
             // no recipient.
-            service.disconnectAll()
+            service.clearAll()
 
-            Timber.i("Disconnect all.")
+            Timber.i("Clear all.")
 
             val elapsedMillis = elapsedTimeMillis(syncRepo::syncMessages)
             val elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedMillis)

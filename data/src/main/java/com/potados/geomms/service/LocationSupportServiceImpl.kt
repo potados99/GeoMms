@@ -97,7 +97,7 @@ class LocationSupportServiceImpl(
     }
 
     override fun disconnectAll() = unitOnFail {
-        getConnections()?.forEach {
+        getConnections()?.filter { !it.isTemporal }?.forEach {
             requestDisconnect(it.id)
         }
     }
@@ -339,6 +339,8 @@ class LocationSupportServiceImpl(
     }
 
     override fun cancelConnectionRequest(request: ConnectionRequest) = unitOnFail {
+        val temporalConnection = validator.validate(getConnection(request.connectionId, temporal = true))
+
         val validated = validator.validate(request) {
             !it.isInbound && getConnection(it.connectionId, false) == null
         }
@@ -352,9 +354,6 @@ class LocationSupportServiceImpl(
         request.recipient?.let {
             sendPacket(it.address, Packet.ofCancelingRequest(request))
         }
-
-        // Have to remove temporal connection also.
-        val temporalConnection = validator.validate(getConnection(request.connectionId, temporal = true))
 
         Timber.i("Cancel request of id ${request.connectionId} to ${request.recipient?.getDisplayName()}")
 

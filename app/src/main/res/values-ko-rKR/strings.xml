@@ -18,7 +18,7 @@
     <string name="title_settings">설정</string>
     <string name="title_notification_prefs">알림</string>
     <string name="title_theme">테마</string>
-    <string name="title_compose">문자작성</string>
+    <string name="title_compose">이름 또는 전화번호</string>
     <string name="menu_call">전화</string>
     <string name="menu_info">자세히</string>
     <string name="menu_save">갤러리에 저장하기</string>
