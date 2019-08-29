@@ -456,11 +456,11 @@ class LocationSupportServiceImpl(
 
         sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
 
+        Timber.i("Requested disconnect of connection ${connection.id} to ${connection.recipient?.getDisplayName()}")
+
         executeInDefaultInstance {
             connection.deleteFromRealm()
         }
-
-        Timber.i("Requested disconnect of connection ${connection.id} to ${connection.recipient?.getDisplayName()}")
     }
     override fun beRequestedDisconnect(packet: Packet) = unitOnFail {
         val connection = validator.validate(getConnection(packet.connectionId, false))
