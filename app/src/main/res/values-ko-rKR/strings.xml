@@ -163,8 +163,8 @@
     <string name="settings_delivery_title">전송 확인</string>
     <string name="settings_delivery_summary">전송 성공을 확인합니다</string>
     <string name="settings_mms_size_title">자동으로 MMS 첨부 파일 압축하기</string>
-    <string name="settings_sync_title">메시지 동기화 하기</string>
-    <string name="settings_sync_summary">기본 안드로이드 SMS 데이터베이스에 다시 동기화하기</string>
+    <string name="settings_title_sync">메시지 동기화 하기</string>
+    <string name="settings_summary_sync">기본 안드로이드 SMS 데이터베이스에 다시 동기화하기</string>
     <string name="settings_version">버전 정보 %s</string>
     <string name="settings_logging_enabled">디버그 로깅 설정됨</string>
     <string name="settings_logging_disabled">디버그 로깅 해제됨</string>
@@ -298,6 +298,16 @@
     <string name="button_delete">삭제</string>
     <string name="button_ok">확인</string>
     <string name="title_permission">이 애플리케이션에서는 다음 권한이 필요합니다.</string>
+    <string name="settings_category_location">위치 공유</string>
+    <string name="settings_title_receive_geomms">위치공유 메시지 수신</string>
+    <string name="settings_summary_receive_geomms">위치정보 공유와 관련된 메시지를 수신합니다. 비활성화시 새로운 연결 요청이나 위치 정보를 수신하지 못합니다.</string>
+    <string name="settings_title_in_app_notification">앱 내 알림 수신</string>
+    <string name="settings_category_messaging">메시지</string>
+    <string name="settings_title_clear_connections">연결 초기화</string>
+    <string name="settings_summary_clear_connections">위치정보 공유와 관련된 모든 데이터를 지웁니다. 연결은 해제되고 연결 요청은 거절됩니다.</string>
+    <string name="drawer_rate">구글플레이에서 리뷰하기</string>
+    <string name="dialog_clear_geomms_warning">이 작업은 모든 연결을 해제하고 수신된 요청을 거절하며 이미 보낸 요청을 취소합니다. 계속 하시겠습니까?</string>
+    <string name="title_opensource_license">오픈소스 라이센스 고지</string>
 
 
 </resources>

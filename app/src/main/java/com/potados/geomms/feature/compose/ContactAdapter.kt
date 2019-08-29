@@ -68,7 +68,7 @@ class ContactAdapter(private val onContactClick: (Contact) -> Unit) : BaseAdapte
 
     /**
      * Creates a copy of the contact with only one phone number, so that the chips
-     * view can still display the name/photo, and not get confused about which phone number to use
+     * view can still display the packageName/photo, and not get confused about which phone number to use
      */
     private fun copyContact(contact: Contact, numberIndex: Int) = Contact().apply {
         lookupKey = contact.lookupKey

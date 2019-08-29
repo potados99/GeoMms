@@ -25,19 +25,19 @@
             tools:ignore="GoogleAppIndexingWarning">
 
         <!--Activity-->
-        <activity android:name="com.potados.geomms.feature.settings.SettingsActivity" />
-        <activity android:name="com.potados.geomms.common.navigation.RouteActivity">
+        <activity android:name=".feature.settings.SettingsActivity" />
+        <activity android:name=".common.navigation.RouteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.potados.geomms.common.GiveMePermissionActivity"/>
-        <activity android:name="com.potados.geomms.common.MakeMeDefaultAppActivity"/>
-        <activity android:name="com.potados.geomms.feature.main.MainActivity"
+        <activity android:name=".common.GiveMePermissionActivity" />
+        <activity android:name=".common.MakeMeDefaultAppActivity" />
+        <activity android:name=".feature.main.MainActivity"
                   android:windowSoftInputMode="adjustNothing" />
-        <activity android:name="com.potados.geomms.feature.location.InviteActivity"/>
-        <activity android:name="com.potados.geomms.feature.compose.ComposeActivity">
+        <activity android:name=".feature.location.InviteActivity" />
+        <activity android:name=".feature.compose.ComposeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
                 <action android:name="android.intent.action.SENDTO"/>
@@ -51,6 +51,7 @@
                 <data android:scheme="mmsto"/>
             </intent-filter>
         </activity>
+        <activity android:name=".feature.license.LicenseActivity" />
 
         <!--Receiver-->
         <receiver android:name=".receiver.SmsReceiver"

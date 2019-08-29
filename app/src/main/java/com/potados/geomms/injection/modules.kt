@@ -231,7 +231,8 @@ val myModules = module {
     /** Receive Packet */
     single {
         ReceivePacket(
-            service = get()
+            service = get(),
+            preference = get()
         )
     }
 

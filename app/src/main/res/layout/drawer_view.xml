@@ -74,31 +74,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Sync -->
-            <LinearLayout
-                    android:id="@+id/sync"
-                    style="@style/DrawerRow">
-
-                <ImageView
-                        style="@style/DrawerIcon"
-                        android:contentDescription="@string/description_sync_message"
-                        android:src="@drawable/ic_sync_24dp"
-                        android:tint="?android:attr/textColorSecondary" />
-
-                <TextView
-                        style="@style/DrawerText"
-                        android:text="@string/drawer_sync" />
-
-            </LinearLayout>
-
-            <!-- Separator -->
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="?android:attr/divider" />
-
             <!-- Settings -->
             <LinearLayout
                     android:id="@+id/settings"
@@ -130,6 +105,23 @@
                 <TextView
                         style="@style/DrawerText"
                         android:text="@string/drawer_help" />
+
+            </LinearLayout>
+
+            <!-- Rate -->
+            <LinearLayout
+                    android:id="@+id/rate"
+                    style="@style/DrawerRow">
+
+                <ImageView
+                        style="@style/DrawerIcon"
+                        android:contentDescription="@string/description_help_icon"
+                        android:src="@drawable/ic_star_black_24dp"
+                        android:tint="?android:attr/textColorSecondary" />
+
+                <TextView
+                        style="@style/DrawerText"
+                        android:text="@string/drawer_rate" />
 
             </LinearLayout>
 

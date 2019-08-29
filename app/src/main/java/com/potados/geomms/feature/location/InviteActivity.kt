@@ -5,6 +5,9 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.potados.geomms.common.base.SingleFragmentActivity
 
+/**
+ * Toolbar at [InviteFragment]
+ */
 class InviteActivity : SingleFragmentActivity() {
     override val fragment: Fragment = InviteFragment()
 

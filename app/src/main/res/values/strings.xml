@@ -177,8 +177,8 @@
     <string name="settings_delivery_title">Delivery confirmations</string>
     <string name="settings_delivery_summary">Confirm that messages were sent successfully</string>
     <string name="settings_mms_size_title">Auto-compress MMS attachments</string>
-    <string name="settings_sync_title">Sync messages</string>
-    <string name="settings_sync_summary">Re-sync your messages with the native Android SMS database</string>
+    <string name="settings_title_sync">Sync messages</string>
+    <string name="settings_summary_sync">Re-sync your messages with the native Android SMS database</string>
     <string name="settings_version">Version %s</string>
     <string name="settings_logging_enabled">Debug logging enabled</string>
     <string name="settings_logging_disabled">Debug logging disabled</string>
@@ -313,7 +313,7 @@
     <string name="delete_conversation_message">Do you want to delete conversation with %s?</string>
     <string name="description_sync_message">Sync messages</string>
     <string name="drawer_sync">Sync messages</string>
-    <string name="drawer_oss">Opensource license</string>
+    <string name="drawer_oss">Open Source license</string>
     <string name="dialog_sync_messages">Sync messages.</string>
     <string name="button_sync">Sync</string>
     <string name="button_confirm">Confirm</string>
@@ -337,5 +337,15 @@
     <string name="button_delete">Delelte</string>
     <string name="button_ok">OK</string>
     <string name="title_permission">This app requires these permissions</string>
+    <string name="settings_category_location">Location Share</string>
+    <string name="settings_title_receive_geomms">Receive Location Messages</string>
+    <string name="settings_summary_receive_geomms">Receive all messages related to location share feature. New requests or location data will not be received if disabled.</string>
+    <string name="settings_title_in_app_notification">Show In-App Notification</string>
+    <string name="settings_category_messaging">Messaging</string>
+    <string name="settings_title_clear_connections">Clear Connections</string>
+    <string name="settings_summary_clear_connections">Clear all location support data. Connections will be disconnected, requests will be canceled or refused.</string>
+    <string name="drawer_rate">Rate in Google Play</string>
+    <string name="dialog_clear_geomms_warning">This will disconnect all active connections, refuse all incoming request, and cancel already sent requests. Do you want to continue?</string>
+    <string name="title_opensource_license">OSS Notice</string>
 
 </resources>

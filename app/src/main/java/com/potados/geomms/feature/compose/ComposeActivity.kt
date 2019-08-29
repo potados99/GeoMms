@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import com.potados.geomms.common.base.SingleFragmentActivity
 
 /**
- * 대화방 액티비티입니다.
+ * Toolbar at [ComposeFragment]
  */
 class ComposeActivity : SingleFragmentActivity() {
 

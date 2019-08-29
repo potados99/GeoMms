@@ -21,7 +21,8 @@ import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import android.view.View
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.potados.geomms.feature.license.LicenseActivity
+import com.potados.geomms.feature.license.LicenseAdapter
 
 
 /**
@@ -83,26 +84,6 @@ class MainActivity : NavigationActivity(), KoinComponent {
             navigator.showGuides()
         }
 
-        setDrawerItemClickListener(sync) {
-            Popup(this)
-                .withTitle(R.string.dialog_sync_messages)
-                .withMessage(R.string.dialog_ask_sync_messages)
-                .withPositiveButton(R.string.button_sync) {
-                    if (!service.isIdle()) {
-                        Popup(this)
-                            .withTitle(R.string.dialog_warning)
-                            .withMessage(R.string.dialog_sync_warning)
-                            .withPositiveButton(R.string.button_confirm) { doSync() }
-                            .withNegativeButton(R.string.button_cancel)
-                            .show()
-                    } else {
-                        doSync()
-                    }
-                }
-                .withNegativeButton(R.string.button_cancel)
-                .show()
-        }
-
         setDrawerItemClickListener(settings) {
             navigator.showSettings()
         }
@@ -118,7 +99,7 @@ class MainActivity : NavigationActivity(), KoinComponent {
         }
 
         setDrawerItemClickListener(oss_license) {
-            startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+            startActivity(Intent(this, LicenseActivity::class.java))
         }
     }
 

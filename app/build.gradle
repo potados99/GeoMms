@@ -49,9 +49,6 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.3.0-alpha02'
     androidTestImplementation 'org.koin:koin-test:2.0.1'
 
-    /** OSS 라이센스 */
-    implementation "com.google.android.gms:play-services-oss-licenses:$play_services_version"
-
     /** realm */
     implementation("io.realm:android-adapters:$realm_adapters_version") { transitive = false }
 
@@ -65,9 +62,6 @@ dependencies {
 
     /** AAC  */
     implementation "android.arch.lifecycle:extensions:$aac_version"
-
-    /** 원형 이미지뷰 */
-    implementation "com.mikhaellopez:circularimageview:$circularimageview_version"
 
     /** 의존성 주입 */
     implementation "org.koin:koin-android:$koin_version"

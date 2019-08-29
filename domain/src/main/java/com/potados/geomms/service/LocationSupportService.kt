@@ -24,7 +24,16 @@ abstract class LocationSupportService : Service() {
      */
     abstract fun isIdle(): Boolean
 
+    /**
+     * Disconnect all, refuse all, cancel all.
+     */
+    abstract fun clearAll()
+
     abstract fun disconnectAll()
+
+    abstract fun refuseAll()
+
+    abstract fun cancelAll()
 
     abstract fun getConnections(): RealmResults<Connection>?
 

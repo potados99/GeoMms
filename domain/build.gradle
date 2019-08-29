@@ -47,6 +47,9 @@ dependencies {
     /** 로깅 */
     implementation "com.jakewharton.timber:timber:$timber_version"
 
+    /** 설정 */
+    implementation "com.f2prateek.rx.preferences2:rx-preferences:$rx_preferences_version"
+
     implementation project(":common")
 }
 repositories {

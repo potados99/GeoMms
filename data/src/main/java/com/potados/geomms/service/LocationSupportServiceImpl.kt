@@ -61,14 +61,32 @@ class LocationSupportServiceImpl(
     }
 
     override fun isIdle(): Boolean {
-        return getConnections()?.isNotEmpty() == true
-                || getIncomingRequests()?.isNotEmpty() == true
-                || getOutgoingRequests()?.isNotEmpty() == true
+        return getConnections()?.isEmpty() == true
+                && getIncomingRequests()?.isEmpty() == true
+                && getOutgoingRequests()?.isEmpty() == true
     }
 
-    override fun disconnectAll() {
+    override fun clearAll() = unitOnFail {
+        disconnectAll()
+        refuseAll()
+        cancelAll()
+    }
+
+    override fun disconnectAll() = unitOnFail {
         getConnections()?.forEach {
             requestDisconnect(it.id)
+        }
+    }
+
+    override fun refuseAll() = unitOnFail {
+        getIncomingRequests()?.forEach {
+            refuseConnectionRequest(it)
+        }
+    }
+
+    override fun cancelAll() = unitOnFail {
+        getOutgoingRequests()?.forEach {
+            cancelConnectionRequest(it)
         }
     }
 
@@ -683,7 +701,7 @@ class LocationSupportServiceImpl(
         private val validation = HashMap<Class<*>, Validation<RealmObject>>()
 
         init {
-            Timber.i("Connection::class.java.name becomes ${Connection::class.java.name}")
+            Timber.i("Connection::class.java.packageName becomes ${Connection::class.java.name}")
             validation[Connection::class.java] = Validation<Connection>(
                 checker = {
                     return@Validation it.id != 0L && it.recipient != null
@@ -762,7 +780,7 @@ class LocationSupportServiceImpl(
         private fun <T: RealmObject> getValidation(locationObject: T): Validation<T>? {
             // Managed realm object is replaced by a proxy class instance.
             // We need to get an un-managed copy of realm object
-            // to get the model class name.
+            // to get the model class packageName.
             return validation[getRealm().copyFromRealm(locationObject)::class.java] as? Validation<T>
         }
     }

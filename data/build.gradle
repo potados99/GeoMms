@@ -7,7 +7,6 @@ apply plugin: 'realm-android'
 android {
     compileSdkVersion 28
 
-
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 28
@@ -55,9 +54,6 @@ dependencies {
 
     /** exif */
     implementation "androidx.exifinterface:exifinterface:$androidx_exifinterface_version"
-
-    /** 설정 */
-    implementation "com.f2prateek.rx.preferences2:rx-preferences:$rx_preferences_version"
 
     /** 글라이드 */
     implementation "com.github.bumptech.glide:glide:$glide_version"

@@ -89,7 +89,7 @@ class ChipsAdapter(private val context: Context) : BaseAdapter<Contact>() {
 
                 view.avatar.setContact(contact)
 
-                // If the contact's name is empty, try to display a phone number instead
+                // If the contact's packageName is empty, try to display a phone number instead
                 // The contacts provided here should only have one number
                 view.name.text = if (contact.name.isNotBlank()) {
                     contact.name
