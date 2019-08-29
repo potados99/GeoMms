@@ -6,6 +6,7 @@
     <style name="TextPrimary">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:textSize">@dimen/textPrimary</item>
+        <item name="android:textColorLink">?android:attr/textColorPrimary</item>
     </style>
     <style name="TextSecondary">
         <item name="android:textColor">?android:attr/textColorSecondary</item>

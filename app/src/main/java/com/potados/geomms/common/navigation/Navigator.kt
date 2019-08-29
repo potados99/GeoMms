@@ -16,6 +16,7 @@ import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.settings.SettingsActivity
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.usecase.DeleteConversations
+import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
 import io.realm.Realm
 import org.koin.core.KoinComponent
@@ -34,6 +35,11 @@ class Navigator (
         whenPossible {
             startActivityWithFlag(MainActivity.callingIntent(it))
         }
+    }
+
+    fun showGuides() {
+        // TODO show guides
+        Notify(context).short("Sorry. Not implemented yet.")
     }
 
     fun showConversation(threadId: Long, query: String? = null) {
@@ -70,12 +76,10 @@ class Navigator (
         Popup(activity)
             .withTitle(context.getString(R.string.delete_conversation_title))
             .withMessage(context.getString(R.string.delete_conversation_message, conversation.getTitle()))
-            .withPositiveButton(context.getString(R.string.button_delete)) { _, _ ->
+            .withPositiveButton(context.getString(R.string.button_delete)) {
                 deleteConversations(listOf(conversation.id))
             }
-            .withNegativeButton(context.getString(R.string.button_cancel)) { _, _ ->
-                // do nothing
-            }
+            .withNegativeButton(context.getString(R.string.button_cancel))
             .show()
     }
 

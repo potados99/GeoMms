@@ -33,8 +33,9 @@
                 android:contentDescription="@string/description_vcard_avatar" />
 
         <!-- Name -->
-        <com.potados.geomms.common.widget.QkTextView
+        <com.potados.geomms.common.widget.CollapseTextView
                 android:id="@+id/name"
+                android:textSize="@dimen/textPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
@@ -42,23 +43,22 @@
                 android:paddingEnd="12dp"
                 android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintStart_toEndOf="@id/avatar"
-                app:textSize="primary"
                 tools:text="@tools:sample/full_names"
                 app:layout_constraintTop_toTopOf="parent"/>
 
         <!-- Label -->
-        <com.potados.geomms.common.widget.QkTextView
+        <com.potados.geomms.common.widget.CollapseTextView
                 android:id="@+id/label"
+                android:textSize="@dimen/textSecondary"
+                android:textColor="?android:attr/textColorTertiary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:paddingBottom="8dp"
                 tools:text="Contact card"
-                android:textColor="?android:attr/textColorTertiary"
                 app:layout_constraintStart_toStartOf="@id/name"
-                app:layout_constraintTop_toBottomOf="@id/name"
-                app:textSize="secondary" />
+                app:layout_constraintTop_toBottomOf="@id/name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

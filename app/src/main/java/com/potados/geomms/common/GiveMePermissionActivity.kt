@@ -31,16 +31,7 @@ class GiveMePermissionActivity: AppCompatActivity() {
             this.finish()
         }
 
-        Popup(this)
-            .withTitle(getString(R.string.need_permission))
-            .withMessage(getString(R.string.please_allow_permissions))
-            .withPositiveButton(getString(R.string.ok)) { _, _ ->
-                requirePermissions(permissionManager.ungrantedPermissions())
-            }
-            .withNegativeButton(getString(R.string.cancel)) { _, _ ->
-                Notify(this).short("why... :(")
-            }
-            .show()
+        // get permissions here.
     }
 
     private fun requirePermissions(permissions: Array<String>) {
@@ -90,7 +81,7 @@ class GiveMePermissionActivity: AppCompatActivity() {
         Popup(this)
             .withTitle("Alert")
             .withMessage("Failed to get permission.")
-            .withPositiveButton("OK") { _, _ ->
+            .withPositiveButton("OK") {
                 exitProcess(1)
             }
             .show()

@@ -21,8 +21,9 @@ package com.potados.geomms.common.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
+import com.potados.geomms.common.extension.getColorCompat
 
-open class QkTextView(
+open class CollapseTextView(
     context: Context,
     attrs: AttributeSet? = null
 ) : TextView(context, attrs) {
@@ -41,10 +42,6 @@ open class QkTextView(
      */
     var collapseEnabled: Boolean = false
 
-    init {
-
-    }
-
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
 
@@ -57,7 +54,7 @@ open class QkTextView(
                     ?.takeIf { lastComma -> lastComma >= 0 }
                     ?.let { lastComma ->
                         val remainingNames = text.drop(lastComma).count { c -> c == ',' }
-                        text = "${text.take(lastComma)}, +$remainingNames"
+                        text = String.format("${text.take(lastComma)}, +$remainingNames")
                     }
         }
     }

@@ -1,13 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.3.41'
+    ext.kotlin_version = '1.3.50'
     ext.androidx_appcompat_version = '1.0.2'
     ext.androidx_exifinterface_version = '1.0.0'
     ext.androidx_core_version = '1.0.2'
     ext.timber_version = '4.7.1'
     ext.coroutine_version = '1.3.0-RC'
-    ext.map_version = '17.0.0'
+    ext.play_services_version = '17.0.0'
     ext.aac_version = '1.1.1'
     ext.circularimageview_version = '4.0.1'
     ext.koin_version = '2.0.1'
@@ -21,6 +21,7 @@ buildscript {
     ext.realm_version = '5.8.0'
     ext.realm_adapters_version = '3.1.0'
     ext.gson_version = '2.8.5'
+    ext.oss_license_plugin_version = '0.9.5'
 
     repositories {
         google()
@@ -29,9 +30,9 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
         classpath "io.realm:realm-gradle-plugin:$realm_version"
+
+        classpath "com.google.android.gms:oss-licenses-plugin:$oss_license_plugin_version"
     }
 }
 

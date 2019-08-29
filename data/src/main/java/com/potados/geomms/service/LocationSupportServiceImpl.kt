@@ -25,6 +25,7 @@ import io.realm.RealmObject
 import io.realm.RealmResults
 import io.realm.Sort
 import timber.log.Timber
+import java.lang.NullPointerException
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
@@ -57,6 +58,12 @@ class LocationSupportServiceImpl(
         started = true
 
         Timber.i("Service started.")
+    }
+
+    override fun isIdle(): Boolean {
+        return getConnections()?.isNotEmpty() == true
+                || getIncomingRequests()?.isNotEmpty() == true
+                || getOutgoingRequests()?.isNotEmpty() == true
     }
 
     override fun disconnectAll() {

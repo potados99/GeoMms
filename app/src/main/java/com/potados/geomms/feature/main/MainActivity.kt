@@ -20,6 +20,9 @@ import kotlinx.android.synthetic.main.drawer_view.*
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import android.view.View
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+
 
 /**
  * 권한 획득과 기본 앱 설정 후 나타나는 주 액티비티입니다.
@@ -43,7 +46,6 @@ class MainActivity : NavigationActivity(), KoinComponent {
         super.onCreate(savedInstanceState)
 
         setDrawer()
-        setVersionView()
         setService()
     }
 
@@ -62,63 +64,64 @@ class MainActivity : NavigationActivity(), KoinComponent {
 
         toggle.syncState()
 
-        // TODO dirty!
-        sync.setOnClickListener {
+        setDrawerItemListeners()
+    }
+
+    private fun setDrawerItemListeners() {
+        val doSync = {
+            syncMessages(Unit) {
+                if (it is Result.Success){
+                    Notify(this).short(R.string.notify_sync_completed)
+                }
+                else {
+                    Notify(this).short(R.string.notify_sync_failed)
+                }
+            }
+        }
+
+        setDrawerItemClickListener(header) {
+            navigator.showGuides()
+        }
+
+        setDrawerItemClickListener(sync) {
             Popup(this)
-                .withTitle("Sync messages")
-                .withMessage("Do you want to sync messages?")
-                .withPositiveButton("Sync") { _, _ ->
-                    if (service.getConnections()?.isNotEmpty() == true
-                        || service.getIncomingRequests()?.isNotEmpty() == true
-                        || service.getOutgoingRequests()?.isNotEmpty() == true) {
+                .withTitle(R.string.dialog_sync_messages)
+                .withMessage(R.string.dialog_ask_sync_messages)
+                .withPositiveButton(R.string.button_sync) {
+                    if (!service.isIdle()) {
                         Popup(this)
-                            .withTitle("Warning")
-                            .withMessage("You will lose all location connections and requests if you sync messages. Do you want to continue?")
-                            .withPositiveButton("Confirm") { _, _ ->
-                                syncMessages(Unit) {
-                                    if (it is Result.Success){
-                                        Notify(this).short("Sync completed.")
-                                    }
-                                    else {
-                                        Notify(this).short("Sync failed.")
-                                    }
-                                }
-                            }
-                            .withNegativeButton("Cancel") { _, _ -> }
+                            .withTitle(R.string.dialog_warning)
+                            .withMessage(R.string.dialog_sync_warning)
+                            .withPositiveButton(R.string.button_confirm) { doSync() }
+                            .withNegativeButton(R.string.button_cancel)
                             .show()
                     } else {
-                        syncMessages(Unit) {
-                            if (it is Result.Success){
-                                Notify(this).short("Sync completed.")
-                            }
-                            else {
-                                Notify(this).short("Sync failed.")
-                            }
-                        }
+                        doSync()
                     }
                 }
-                .withNegativeButton("Cancel") { _, _ -> }
+                .withNegativeButton(R.string.button_cancel)
                 .show()
-
-            root_layout.closeDrawers()
         }
 
-        settings.setOnClickListener {
+        setDrawerItemClickListener(settings) {
             navigator.showSettings()
-            root_layout.closeDrawers()
         }
 
-        help.setOnClickListener {
-            // TODO Implement it
+        setDrawerItemClickListener(help, autoClose = false) {
+            // TODO
             Notify(this).short("Not implemented yet.")
         }
+
+        setDrawerItemClickListener(invite, autoClose = false) {
+            // TODO
+            Notify(this).short("Not implemented yet.")
+        }
+
+        setDrawerItemClickListener(oss_license) {
+            startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+        }
     }
 
-    private fun setVersionView() {
-        val currentVersion = getString(R.string.version, BuildConfig.VERSION_NAME)
-
-        current_version.text = currentVersion
-    }
 
     /**
      * Until user tab the Map tab, this service does not get started.
@@ -126,6 +129,15 @@ class MainActivity : NavigationActivity(), KoinComponent {
      */
     private fun setService() {
         service.start()
+    }
+
+    private fun setDrawerItemClickListener(item: View,  autoClose: Boolean = true, listener: (View) -> Unit) {
+        item.setOnClickListener{
+            listener(it)
+            if (autoClose) {
+                root_layout.closeDrawers()
+            }
+        }
     }
 
     companion object {

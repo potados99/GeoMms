@@ -89,7 +89,7 @@
                 tools:listitem="@layout/message_list_item_in" />
 
         <!-- Empty -->
-        <com.potados.geomms.common.widget.QkTextView
+        <com.potados.geomms.common.widget.CollapseTextView
                 android:id="@+id/messages_empty"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="@dimen/textSecondary"
@@ -125,7 +125,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/rounded_rectangle_22dp"
-                android:backgroundTint="#FEFEFE"
+                android:backgroundTint="?android:attr/windowBackground"
                 android:elevation="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -191,7 +191,7 @@
                 app:layout_constraintStart_toStartOf="@id/message_background" />
 
         <!-- Counter -->
-        <com.potados.geomms.common.widget.QkTextView
+        <com.potados.geomms.common.widget.CollapseTextView
                 android:id="@+id/counter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -215,6 +215,13 @@
                 app:layout_constraintBottom_toBottomOf="@id/message_background"
                 app:layout_constraintEnd_toEndOf="@id/message_background" />
 
+        <!-- Bottom group -->
+        <androidx.constraintlayout.widget.Group
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="compose_background,message_background,attach,attachments,message,counter,send"
+                android:visibility="@{vm.conversation != null ? View.VISIBLE : View.GONE}" />
+
         <!-- Contacts -->
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/contacts"
@@ -232,7 +239,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 tools:listitem="@layout/contact_list_item"
-                android:elevation="4dp"
                 tools:visibility="gone" />
 
         <!-- Toolbar shadow -->

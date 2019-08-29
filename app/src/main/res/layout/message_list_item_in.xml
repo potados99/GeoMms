@@ -15,7 +15,7 @@
         android:background="?attr/selectableItemBackground">
 
     <!-- Timestamp -->
-    <com.potados.geomms.common.widget.QkTextView
+    <com.potados.geomms.common.widget.CollapseTextView
             android:id="@+id/timestamp"
             style="@style/TextSecondary"
             android:layout_width="wrap_content"
@@ -57,8 +57,8 @@
     <!-- Body -->
     <com.potados.geomms.common.widget.TightTextView
         android:id="@+id/body"
-        style="@style/TextPrimary"
-        android:textColor="@color/white"
+        android:textSize="@dimen/textPrimary"
+        android:textColor="?android:attr/textColorPrimaryInverse" android:textColorLink="?android:attr/textColorPrimaryInverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"

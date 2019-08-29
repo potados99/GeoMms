@@ -19,6 +19,11 @@ import timber.log.Timber
  */
 abstract class LocationSupportService : Service() {
 
+    /**
+     * All requests, connections are empty
+     */
+    abstract fun isIdle(): Boolean
+
     abstract fun disconnectAll()
 
     abstract fun getConnections(): RealmResults<Connection>?

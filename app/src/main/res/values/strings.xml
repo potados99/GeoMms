@@ -8,9 +8,6 @@
     <string name="make_me_default_app">Please allow this app to a default SMS app :)</string>
     <string name="change_default_app">Change Default SMS App</string>
     <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-    <string name="need_permission">Permissions Required</string>
-    <string name="please_allow_permissions">This app requires these permissions: ...</string>
     <string name="failure_query">Failed to load messages.</string>
     <string name="retry">Retry</string>
     <string name="cannot_send_message">Failed to send message.</string>
@@ -62,10 +59,9 @@
     <string name="drawer_plus">QKSMS+</string>
     <string name="drawer_help">Help &amp; feedback</string>
     <string name="drawer_invite">Invite friends</string>
-    <string name="drawer_plus_banner_title">QKSMS+</string>
-    <string name="drawer_plus_banner_summary">Unlock amazing new features, and support development</string>
+    <string name="drawer_header_title" translatable="false">GeoMMS</string>
+    <string name="drawer_header_description">Don\'t ask friends where they are.\nSee guides.</string>
 
-    <string name="dialog_delete_title">Delete</string>
     <plurals name="dialog_delete_message">
         <item quantity="one">Are you sure you would like to delete this conversation?</item>
         <item quantity="other">Are you sure you would like to delete %d conversations?</item>
@@ -218,8 +214,6 @@
         <item>Delete</item>
     </string-array>
 
-    <string name="button_cancel">Cancel</string>
-    <string name="button_delete">Delete</string>
     <string name="button_save">Save</string>
     <string name="button_stop">Stop</string>
     <string name="button_more">More</string>
@@ -319,5 +313,29 @@
     <string name="delete_conversation_message">Do you want to delete conversation with %s?</string>
     <string name="description_sync_message">Sync messages</string>
     <string name="drawer_sync">Sync messages</string>
+    <string name="drawer_oss">Opensource license</string>
+    <string name="dialog_sync_messages">Sync messages.</string>
+    <string name="button_sync">Sync</string>
+    <string name="button_confirm">Confirm</string>
+    <string name="notify_sync_completed">Sync completed.</string>
+    <string name="notify_sync_failed">Sync failed.</string>
+    <string name="dialog_warning">Warning</string>
+    <string name="dialog_sync_warning">You will lose all location connections and requests if you sync messages. Do you want to continue?</string>
+    <string name="dialog_ask_sync_messages">Do you want to sync message? This may take a while.</string>
+    <string name="dialog_refuse_request">Refust request</string>
+    <string name="dialog_ask_refuse">Do you want to refuse request from %s?</string>
+    <string name="button_refuse">Refuse</string>
+    <string name="dialog_request_from">Request from %s</string>
+    <string name="dialog_ask_accept_request">%s want to share location with you for %s.</string>
+    <string name="later">Later</string>
+    <string name="button_yes">Yes</string>
+    <string name="no">No</string>
+    <string name="button_later">Later</string>
+    <string name="button_no">No</string>
+    <string name="button_accept">Accept</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_delete">Delelte</string>
+    <string name="button_ok">OK</string>
+    <string name="title_permission">This app requires these permissions</string>
 
 </resources>

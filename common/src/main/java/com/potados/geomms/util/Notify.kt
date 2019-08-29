@@ -2,6 +2,7 @@ package com.potados.geomms.util
 
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.StringRes
 
 /**
  * Toast의 wrapper입니다.
@@ -9,13 +10,15 @@ import android.widget.Toast
  */
 class Notify(private val context: Context?) {
 
-    fun short(message: String) {
+    fun short(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
+    fun short(@StringRes message: Int) = short(context?.getString(message))
 
-    fun long(message: String) {
+    fun long(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
+    fun long(@StringRes message: Int) = long(context?.getString(message))
 
     companion object {
         fun short(context: Context?, message: String) {

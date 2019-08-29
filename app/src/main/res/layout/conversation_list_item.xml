@@ -32,7 +32,7 @@
         app:layout_constraintVertical_bias="0" />
 
     <!-- Title -->
-    <com.potados.geomms.common.widget.QkTextView
+    <com.potados.geomms.common.widget.CollapseTextView
         android:id="@+id/title"
         style="@style/TextPrimary"
         android:layout_width="0dp"
@@ -49,7 +49,7 @@
         tools:text="@tools:sample/full_names" />
 
     <!-- Snippet -->
-    <com.potados.geomms.common.widget.QkTextView
+    <com.potados.geomms.common.widget.CollapseTextView
         android:id="@+id/snippet"
         style="@style/TextSecondary"
         android:layout_width="0dp"
@@ -80,7 +80,7 @@
             android:contentDescription="@string/description_unread_icon" />
 
     <!-- Date -->
-    <com.potados.geomms.common.widget.QkTextView
+    <com.potados.geomms.common.widget.CollapseTextView
         android:id="@+id/date"
         style="@style/TextTertiary"
         android:layout_width="wrap_content"

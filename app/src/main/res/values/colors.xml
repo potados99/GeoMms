@@ -2,9 +2,10 @@
 <resources>
 
     <color name="green">#56ACA1</color>
-    <color name="gray">#A7A7A7</color>
+    <color name="blue">#6298DD</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="gray">#5F626F</color>
     <color name="black">#000000</color>
 
     <color name="rippleLight">#1f000000</color>
@@ -19,10 +20,12 @@
     <color name="toolbarSearchBackgroundLight">#0D000000</color>
     <color name="toolbarSearchBackgroundDark">#26000000</color>
 
-    <color name="backgroundLight">#ECEFF1</color>
+
+    <color name="backgroundLight">@color/white</color>
+    <color name="backgroundLightGray">#EEEEEE</color>
     <color name="backgroundDark">#192025</color>
 
-    <color name="textPrimary">#49555F</color>
+    <color name="textPrimary">#262B31</color>
     <color name="textSecondary">#70808D</color>
     <color name="textTertiary">#B7B9C0</color>
 
@@ -30,7 +33,7 @@
     <color name="textSecondaryDark">#ccffffff</color>
     <color name="textTertiaryDark">#80ffffff</color>
 
-    <color name="bubbleLight">#FFFFFF</color>
+    <color name="bubbleLight">#EFF1F3</color>
     <color name="bubbleDark">#242a2f</color>
 
     <color name="separatorLight">#0C000000</color>

@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 
 android {
     compileSdkVersion 28
@@ -39,7 +40,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.1.0-alpha09'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta02'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta03'
     testImplementation 'junit:junit:4.13-beta-3'
 
     androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
@@ -47,6 +48,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2-alpha02'
     androidTestImplementation 'androidx.test:rules:1.3.0-alpha02'
     androidTestImplementation 'org.koin:koin-test:2.0.1'
+
+    /** OSS 라이센스 */
+    implementation "com.google.android.gms:play-services-oss-licenses:$play_services_version"
 
     /** realm */
     implementation("io.realm:android-adapters:$realm_adapters_version") { transitive = false }
@@ -57,7 +61,7 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
 
     /** 구글 지도 */
-    implementation "com.google.android.gms:play-services-maps:$map_version"
+    implementation "com.google.android.gms:play-services-maps:$play_services_version"
 
     /** AAC  */
     implementation "android.arch.lifecycle:extensions:$aac_version"

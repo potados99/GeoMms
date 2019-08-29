@@ -15,7 +15,7 @@
         android:background="?attr/selectableItemBackground">
 
     <!-- Timestamp -->
-    <com.potados.geomms.common.widget.QkTextView
+    <com.potados.geomms.common.widget.CollapseTextView
             android:id="@+id/timestamp"
             style="@style/TextSecondary"
             android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
         tools:text="Hey! How's it going?" />
 
     <!-- Status -->
-    <com.potados.geomms.common.widget.QkTextView
+    <com.potados.geomms.common.widget.CollapseTextView
         android:id="@+id/status"
         android:textColor="?android:attr/textColorSecondary"
         android:textSize="@dimen/textTertiary"

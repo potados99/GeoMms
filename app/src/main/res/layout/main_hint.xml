@@ -20,7 +20,7 @@
             app:defaultSmsState="@{vm.defaultSmsState}">
 
         <!-- Title -->
-        <com.potados.geomms.common.widget.QkTextView
+        <com.potados.geomms.common.widget.CollapseTextView
                 android:id="@+id/title"
                 style="@style/TextPrimary"
                 android:layout_width="0dp"
@@ -35,7 +35,7 @@
                 android:text="@string/main_default_sms_title"/>
 
         <!-- Message -->
-        <com.potados.geomms.common.widget.QkTextView
+        <com.potados.geomms.common.widget.CollapseTextView
                 android:id="@+id/message"
                 style="@style/TextSecondary"
                 android:layout_width="0dp"
@@ -50,7 +50,7 @@
                 android:text="@string/main_default_sms_message"/>
 
         <!-- Button -->
-        <com.potados.geomms.common.widget.QkTextView
+        <com.potados.geomms.common.widget.CollapseTextView
                 android:id="@+id/button"
                 style="@style/TextSecondary"
                 android:textColor="?attr/tintPrimary"

@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.view.View
+import androidx.annotation.StringRes
 
 /**
  * AlertDialog의 wrapper입니다.
@@ -26,31 +27,40 @@ class Popup(private val context: Context?) {
         dialogBuilder.show()
     }
 
-    fun withTitle(title: String): Popup {
+    fun withTitle(title: String?): Popup {
         dialogBuilder.setTitle(title)
         return this
     }
+    fun withTitle(@StringRes title: Int, vararg formatArgs: Any?): Popup = withTitle(context?.getString(title, formatArgs))
 
-    fun withMessage(message: String): Popup {
+    fun withMessage(message: String?): Popup {
         messageBuilder.clear()
         messageBuilder.append(message)
         return this
     }
+    fun withMessage(@StringRes message: Int, vararg formatArgs: Any?): Popup = withMessage(context?.getString(message, formatArgs))
 
-    fun withMoreMessage(addtion: String): Popup {
-        messageBuilder.append(addtion)
+    fun withMoreMessage(addition: String?): Popup {
+        messageBuilder.append(addition)
         return this
     }
+    fun withMoreMessage(@StringRes addition: Int): Popup = withMoreMessage(context?.getString(addition))
 
-    fun withPositiveButton(text: String, listener: (dialog: DialogInterface, which: Int) -> Unit): Popup {
-        dialogBuilder.setPositiveButton(text, listener)
+    fun withPositiveButton(text: String?, listener: () -> Unit = {}): Popup {
+        dialogBuilder.setPositiveButton(text) { _, _ ->
+            listener()
+        }
         return this
     }
+    fun withPositiveButton(@StringRes text: Int, listener: () -> Unit = {}) = withPositiveButton(context?.getString(text), listener)
 
-    fun withNegativeButton(text: String, listener: (dialog: DialogInterface, which: Int) -> Unit): Popup {
-        dialogBuilder.setNegativeButton(text, listener)
+    fun withNegativeButton(text: String?, listener: () -> Unit = {}): Popup {
+        dialogBuilder.setNegativeButton(text) { _, _ ->
+            listener()
+        }
         return this
     }
+    fun withNegativeButton(@StringRes text: Int, listener: () -> Unit = {}) = withNegativeButton(context?.getString(text), listener)
 
     fun withView(view: View): Popup {
         dialogBuilder.setView(view)

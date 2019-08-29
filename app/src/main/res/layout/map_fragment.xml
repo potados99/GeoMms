@@ -37,16 +37,17 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Bottom sheet -->
-        <FrameLayout android:id="@+id/sheet"
-                     android:layout_width="match_parent"
-                     android:layout_height="match_parent"
-                     app:layout_behavior=".common.widget.CustomBottomSheetBehavior"
-                     app:behavior_hideable="false"
-                     app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
-                     app:behavior_fitToContents="false"
-                     android:background="@drawable/top_rounded"
-                     android:fillViewport="true"
-                     android:elevation="12dp">
+        <FrameLayout
+                android:id="@+id/sheet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior=".common.widget.CustomBottomSheetBehavior"
+                app:behavior_hideable="false"
+                app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
+                app:behavior_fitToContents="false"
+                android:background="@drawable/top_rounded"
+                android:fillViewport="true"
+                android:elevation="12dp">
             <include layout="@layout/bottom_sheet" app:vm="@{vm}"/>
         </FrameLayout>
 

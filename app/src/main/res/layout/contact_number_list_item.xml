@@ -14,7 +14,7 @@
         android:background="?attr/selectableItemBackground">
 
     <!-- Address -->
-    <com.potados.geomms.common.widget.QkTextView
+    <com.potados.geomms.common.widget.CollapseTextView
             android:id="@+id/address"
             style="@style/TextSecondary"
             android:layout_width="0dp"
@@ -25,7 +25,7 @@
             tools:textColor="@color/textSecondary" />
 
     <!-- Type of address -->
-    <com.potados.geomms.common.widget.QkTextView
+    <com.potados.geomms.common.widget.CollapseTextView
             android:id="@+id/type"
             style="@style/TextSecondary"
             android:layout_width="wrap_content"

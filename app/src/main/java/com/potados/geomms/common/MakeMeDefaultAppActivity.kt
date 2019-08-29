@@ -28,10 +28,8 @@ class MakeMeDefaultAppActivity : AppCompatActivity() {
         Popup(this)
             .withTitle(getString(R.string.change_default_app))
             .withMessage(getString(R.string.make_me_default_app))
-            .withPositiveButton(getString(R.string.ok)) { _, _ ->
-                makeMeDefaultSmsApp()
-            }
-            .withNegativeButton(getString(R.string.cancel)) { _, _ ->
+            .withPositiveButton(getString(R.string.button_ok)) { makeMeDefaultSmsApp() }
+            .withNegativeButton(getString(R.string.button_cancel)) {
                 Notify(this).short("why...:(")
             }
             .show()

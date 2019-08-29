@@ -6,7 +6,7 @@
   ~ Copyright (C) 2019 Song Byeong Jun <potados@gmail.com>
 -->
 
-<ScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -14,120 +14,157 @@
         android:layout_height="match_parent"
         android:background="?android:attr/windowBackground">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        
-        <!-- Header -->
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/oss_license"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/tintPrimary">
+                android:orientation="vertical">
 
-            <!-- App name -->
-            <TextView
-                    android:id="@+id/app_name"
-                    style="@style/DrawerHeader"
-                    android:layout_width="wrap_content"
+            <!-- Header -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/header"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/app_name"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/app_icon" />
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/rounded_rectangle_outline_2dp"
+                    android:backgroundTint="?android:attr/divider"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:padding="16dp">
 
-            <!-- App icon -->
-            <ImageView
-                    android:id="@+id/app_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="38dp"
-                    android:contentDescription="@string/description_launcher_icon"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@mipmap/ic_launcher_round" />
+                <TextView
+                        android:id="@+id/header_title"
+                        style="@style/TextPrimary"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/drawer_header_title"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Current version -->
-            <TextView
-                    android:id="@+id/current_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <TextView
+                        android:id="@+id/description"
+                        style="@style/TextSecondary"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/drawer_header_description"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/header_title" />
+
+                <ImageView
+                        android:id="@+id/plusNext"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_chevron_right_black_24dp"
+                        android:tint="?android:attr/textColorTertiary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Sync -->
+            <LinearLayout
+                    android:id="@+id/sync"
+                    style="@style/DrawerRow">
+
+                <ImageView
+                        style="@style/DrawerIcon"
+                        android:contentDescription="@string/description_sync_message"
+                        android:src="@drawable/ic_sync_24dp"
+                        android:tint="?android:attr/textColorSecondary" />
+
+                <TextView
+                        style="@style/DrawerText"
+                        android:text="@string/drawer_sync" />
+
+            </LinearLayout>
+
+            <!-- Separator -->
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/version"
-                    android:textColor="?android:attr/textColorSecondaryInverse"
-                    android:textSize="@dimen/textSecondary"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/app_name"
-                    tools:text="Version 0.1.0" />
+                    android:layout_marginBottom="8dp"
+                    android:background="?android:attr/divider" />
 
-            <!-- Powered by QKSMS. -->
+            <!-- Settings -->
+            <LinearLayout
+                    android:id="@+id/settings"
+                    style="@style/DrawerRow">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                        style="@style/DrawerIcon"
+                        android:contentDescription="@string/description_settings_icon"
+                        android:src="@drawable/ic_settings_black_24dp"
+                        android:tint="?android:attr/textColorSecondary" />
 
-        <!-- Sync -->
-        <LinearLayout
-                android:id="@+id/sync"
-                style="@style/DrawerRow">
+                <TextView
+                        style="@style/DrawerText"
+                        android:text="@string/drawer_settings" />
 
-            <ImageView
-                    style="@style/DrawerIcon"
-                    android:src="@drawable/ic_sync_24dp"
-                    android:tint="?android:attr/textColorSecondary"
-                    android:contentDescription="@string/description_sync_message"/>
+            </LinearLayout>
 
-            <TextView
-                    style="@style/DrawerText"
-                    android:text="@string/drawer_sync" />
+            <!-- Help -->
+            <LinearLayout
+                    android:id="@+id/help"
+                    style="@style/DrawerRow">
 
-        </LinearLayout>
+                <ImageView
+                        style="@style/DrawerIcon"
+                        android:contentDescription="@string/description_help_icon"
+                        android:src="@drawable/ic_help_black_24dp"
+                        android:tint="?android:attr/textColorSecondary" />
 
-        <!-- Separator -->
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:background="?android:attr/divider" />
+                <TextView
+                        style="@style/DrawerText"
+                        android:text="@string/drawer_help" />
 
-        <!-- Settings -->
-        <LinearLayout
-            android:id="@+id/settings"
-            style="@style/DrawerRow">
+            </LinearLayout>
 
-            <ImageView
-                    style="@style/DrawerIcon"
-                    android:src="@drawable/ic_settings_black_24dp"
-                    android:tint="?android:attr/textColorSecondary"
-                    android:contentDescription="@string/description_settings_icon"/>
+            <!-- Invite -->
+            <LinearLayout
+                    android:id="@+id/invite"
+                    style="@style/DrawerRow">
 
-            <TextView
-                    style="@style/DrawerText"
-                    android:text="@string/drawer_settings" />
+                <ImageView
+                        style="@style/DrawerIcon"
+                        android:src="@drawable/ic_people_black_24dp"
+                        android:tint="?android:attr/textColorSecondary" />
 
-        </LinearLayout>
+                <TextView
+                        style="@style/DrawerText"
+                        android:text="@string/drawer_invite" />
 
-        <!-- Help -->
-        <LinearLayout
-            android:id="@+id/help"
-            style="@style/DrawerRow">
-
-            <ImageView
-                    style="@style/DrawerIcon"
-                    android:src="@drawable/ic_help_black_24dp"
-                    android:tint="?android:attr/textColorSecondary"
-                    android:contentDescription="@string/description_help_icon" />
-
-            <TextView
-                    style="@style/DrawerText"
-                    android:text="@string/drawer_help" />
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
-</ScrollView>
+    <!-- OSS Button -->
+    <TextView
+            android:id="@+id/oss_license"
+            style="@style/TextSecondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:padding="8dp"
+            android:text="@string/drawer_oss"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

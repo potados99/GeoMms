@@ -234,44 +234,35 @@ class MapFragment : NavigationFragment(),
             Popup(baseActivity)
                 .withTitle("Cancel request")
                 .withMessage("Do you want to cancel request to ${connection.recipient?.getDisplayName()}?")
-                .withPositiveButton("Yes") { _, _ ->
-                    mapViewModel.cancel(connection)
-                }
-                .withNegativeButton("No") { _, _ -> }
+                .withPositiveButton(R.string.button_yes) { mapViewModel.cancel(connection) }
+                .withNegativeButton(R.string.button_no)
                 .show()
 
         } else {
             Popup(baseActivity)
                 .withTitle("Disconnect")
                 .withMessage("Do you want to stop sharing location with ${connection.recipient?.getDisplayName()}?")
-                .withPositiveButton("Disconnect") { _, _ ->
-                    mapViewModel.delete(connection)
-                }
-                .withNegativeButton("Cancel") { _, _ -> }
+                .withPositiveButton(R.string.button_confirm) { mapViewModel.delete(connection) }
+                .withNegativeButton(R.string.button_cancel)
                 .show()
         }
     }
 
     override fun onRequestClick(request: ConnectionRequest) {
-        // TODO hardcoded string
         Popup(baseActivity)
-            .withTitle("Request")
-            .withMessage("${request.recipient?.getDisplayName()} wants to share location for ${Duration(request.duration).toShortenString()} ")
-            .withPositiveButton("Accept") { _, _ ->
-                mapViewModel.accept(request)
-            }
-            .withNegativeButton("Later") { _, _ -> }
+            .withTitle(R.string.dialog_request_from, request.recipient?.getDisplayName())
+            .withMessage(R.string.dialog_ask_accept_request, request.recipient?.getDisplayName(), Duration(request.duration).toShortenString())
+            .withPositiveButton(R.string.button_accept) { mapViewModel.accept(request) }
+            .withNegativeButton(R.string.button_later)
             .show()
     }
 
     override fun onRequestLongClick(request: ConnectionRequest) {
-        // TODO hardcoded string
         Popup(baseActivity)
-            .withTitle("Refust request")
-            .withMessage("Do you want to refuse request from ${request.recipient?.getDisplayName()}?")
-            .withPositiveButton("Refuse") { _, _ ->
-                mapViewModel.refuse(request)            }
-            .withNegativeButton("Cancel") { _, _ -> }
+            .withTitle(R.string.dialog_refuse_request)
+            .withMessage(R.string.dialog_ask_refuse, request.recipient?.getDisplayName())
+            .withPositiveButton(R.string.button_refuse) { mapViewModel.refuse(request)  }
+            .withNegativeButton(R.string.button_cancel)
             .show()
     }
 
