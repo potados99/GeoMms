@@ -39,7 +39,7 @@ import com.potados.geomms.model.Attachment
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.Message
 import com.potados.geomms.model.MmsPart
-import com.potados.geomms.preference.Preferences
+import com.potados.geomms.preference.MyPreferences
 import com.potados.geomms.receiver.SmsDeliveredReceiver
 import com.potados.geomms.receiver.SmsSentReceiver
 import com.potados.geomms.util.ImageUtils
@@ -54,7 +54,7 @@ class MessageRepositoryImpl(
     private val context: Context,
     private val messageIds: KeyManager,
     private val imageRepository: ImageRepository,
-    private val prefs: Preferences,
+    private val prefs: MyPreferences,
     private val syncRepository: SyncRepository
 ) : MessageRepository() {
 

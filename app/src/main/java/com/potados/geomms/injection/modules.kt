@@ -1,8 +1,6 @@
 package com.potados.geomms.injection
 
 import android.Manifest
-import androidx.preference.PreferenceManager
-import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.potados.geomms.common.manager.NotificationManagerImplTest
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
@@ -12,7 +10,7 @@ import com.potados.geomms.filter.PhoneNumberFilter
 import com.potados.geomms.filter.RecipientFilter
 import com.potados.geomms.manager.*
 import com.potados.geomms.mapper.*
-import com.potados.geomms.preference.Preferences
+import com.potados.geomms.preference.MyPreferences
 import com.potados.geomms.repository.*
 import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.service.LocationSupportServiceImpl
@@ -125,11 +123,8 @@ val myModules = module {
      * Preference
      **********************************************************/
 
-    /** SharedPreference */
-    single { PreferenceManager.getDefaultSharedPreferences(get()) }
-
-    /** Preferences */
-    single { Preferences(RxSharedPreferences.create(get())) }
+    /** MyPreferences */
+    single { MyPreferences(get()) }
 
 
     /**********************************************************

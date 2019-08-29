@@ -31,14 +31,14 @@ class Popup(private val context: Context?) {
         dialogBuilder.setTitle(title)
         return this
     }
-    fun withTitle(@StringRes title: Int, vararg formatArgs: Any?): Popup = withTitle(context?.getString(title, formatArgs))
+    fun withTitle(@StringRes title: Int, vararg formatArgs: Any?): Popup = withTitle(context?.getString(title, *formatArgs))
 
     fun withMessage(message: String?): Popup {
         messageBuilder.clear()
         messageBuilder.append(message)
         return this
     }
-    fun withMessage(@StringRes message: Int, vararg formatArgs: Any?): Popup = withMessage(context?.getString(message, formatArgs))
+    fun withMessage(@StringRes message: Int, vararg formatArgs: Any?): Popup = withMessage(context?.getString(message, *formatArgs))
 
     fun withMoreMessage(addition: String?): Popup {
         messageBuilder.append(addition)

@@ -42,8 +42,8 @@
     <string name="inbox_search_empty_text">No results</string>
     <string name="archived_empty_text">Your archived conversations will appear here</string>
     <string name="main_fab_cd">Start new conversation</string>
-    <string name="main_default_sms_title">Love texting again</string>
-    <string name="main_default_sms_message">Make QKSMS your default SMS app</string>
+    <string name="main_default_sms_title">Share your stories</string>
+    <string name="main_default_sms_message">Make GeoMMS your default SMS app</string>
     <string name="main_default_sms_change">Change</string>
     <string name="main_permission_required">Permission required</string>
     <string name="main_permission_sms">QKSMS needs permission to send and view SMS messages</string>
@@ -60,7 +60,7 @@
     <string name="drawer_help">Help &amp; feedback</string>
     <string name="drawer_invite">Invite friends</string>
     <string name="drawer_header_title" translatable="false">GeoMMS</string>
-    <string name="drawer_header_description">Don\'t ask friends where they are.\nSee guides.</string>
+    <string name="drawer_header_description">Don\'t ask friends where they are. \nSee guides.</string>
 
     <plurals name="dialog_delete_message">
         <item quantity="one">Are you sure you would like to delete this conversation?</item>
@@ -83,7 +83,7 @@
     <string name="compose_scheduled_future">Selected time must be in the future!</string>
     <string name="compose_scheduled_plus">You must unlock QKSMS+ to use scheduled messaging</string>
     <string name="compose_scheduled_toast">Added to scheduled messages</string>
-    <string name="compose_hint">Write a message…</string>
+    <string name="compose_hint">Write a message</string>
     <string name="compose_menu_copy">Copy text</string>
     <string name="compose_menu_forward">Forward</string>
     <string name="compose_menu_delete">Delete</string>

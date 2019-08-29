@@ -41,8 +41,8 @@
     <string name="inbox_search_empty_text">결과없음</string>
     <string name="archived_empty_text">보관된 메시지가 여기 나타납니다</string>
     <string name="main_fab_cd">새로운 대화 시작하기</string>
-    <string name="main_default_sms_title">다시 문자 보내는게 좋네요</string>
-    <string name="main_default_sms_message">QKSMS 앱을 기본 메시지 앱으로 설정하기</string>
+    <string name="main_default_sms_title">당신의 이야기를 나누어 보세요</string>
+    <string name="main_default_sms_message">GeoMMS를 기본 메시지 앱으로 설정하기</string>
     <string name="main_default_sms_change">변경하기</string>
     <string name="main_permission_required">권한을 부여해 주세요</string>
     <string name="main_permission_sms">QKSMS 앱은 메시지를 보내고 읽을 수 있는 권한이 필요합니다</string>
@@ -57,7 +57,7 @@
     <string name="drawer_plus">QKSMS+</string>
     <string name="drawer_help">도움말 &amp; 피드백</string>
     <string name="drawer_invite">친구 초대하기</string>
-    <string name="drawer_header_description">친구에게 어디냐고 묻지 마세요. 도움말 보기</string>
+    <string name="drawer_header_description">친구에게 어디냐고 묻지 마세요. \n도움말 보기</string>
     <plurals name="dialog_delete_message">
         <item quantity="other">정말 이 대화를 삭제할까요?
 
@@ -78,7 +78,7 @@
     <string name="compose_scheduled_future">선택한 시간은 반드시 현재 이후의 시간으로 설정해야 합니다</string>
     <string name="compose_scheduled_plus">메시지 예약 전송 기능을 사용하려면 QKSMS+를 구입해야 합니다</string>
     <string name="compose_scheduled_toast">예약된 메시지에 저장됨</string>
-    <string name="compose_hint">메시지 작성 중...</string>
+    <string name="compose_hint">메시지 작성</string>
     <string name="compose_menu_copy">문자 복사하기</string>
     <string name="compose_menu_forward">전달</string>
     <string name="compose_menu_delete">삭제</string>
