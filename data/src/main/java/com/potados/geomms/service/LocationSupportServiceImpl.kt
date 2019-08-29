@@ -449,10 +449,10 @@ class LocationSupportServiceImpl(
             return@unitOnFail
         }
 
-        val packet = Packet.ofRequestingDisconnect(connection)
-
         // Stop sending updates.
         unregisterTask(connection)
+
+        val packet = Packet.ofRequestingDisconnect(connection)
 
         sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
 
