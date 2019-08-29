@@ -69,17 +69,6 @@ class MainActivity : NavigationActivity(), KoinComponent {
     }
 
     private fun setDrawerItemListeners() {
-        val doSync = {
-            syncMessages(Unit) {
-                if (it is Result.Success){
-                    Notify(this).short(R.string.notify_sync_completed)
-                }
-                else {
-                    Notify(this).short(R.string.notify_sync_failed)
-                }
-            }
-        }
-
         setDrawerItemClickListener(header) {
             navigator.showGuides()
         }
@@ -89,6 +78,11 @@ class MainActivity : NavigationActivity(), KoinComponent {
         }
 
         setDrawerItemClickListener(help, autoClose = false) {
+            // TODO
+            Notify(this).short("Not implemented yet.")
+        }
+
+        setDrawerItemClickListener(rate, autoClose = false) {
             // TODO
             Notify(this).short("Not implemented yet.")
         }

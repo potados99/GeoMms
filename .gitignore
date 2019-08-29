@@ -10,5 +10,6 @@
 .DS_Store
 /build
 .build
+android-smsmms/build
 /captures
 .externalNativeBuild
