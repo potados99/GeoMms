@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.potados.geomms.repository
 
 import android.content.Context
