@@ -44,7 +44,6 @@ class MessagesAdapter(
 
     private val partsViewPool = RecyclerView.RecycledViewPool()
     private val contactCache = ContactCache()
-    private val expanded = LongSparseArray<Boolean>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
 
@@ -156,11 +155,8 @@ class MessagesAdapter(
         }
 
         view.status.setVisible(when {
-            expanded[message.id] == true -> true
             message.isSending() -> true
             message.isFailedMessage() -> true
-            expanded[message.id] == false -> false
-            conversation.recipients.size > 1 && !message.isMe() && next?.compareSender(message) != true -> true
             message.isDelivered() && next?.isDelivered() != true && age <= BubbleUtils.TIMESTAMP_THRESHOLD -> true
             else -> false
         })

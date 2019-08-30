@@ -372,7 +372,7 @@ class LocationSupportServiceImpl(
         val request = validator.validate(getRequest(temporalConnection.id, inbound = false))
 
         if (request == null) {
-            fail(context.getString(R.string.fail_cannot_cancel_request_invalid), show = true)
+            fail(R.string.fail_cannot_cancel_request_invalid, show = true)
             return@unitOnFail
         }
 
@@ -415,7 +415,7 @@ class LocationSupportServiceImpl(
         val connection = validator.validate(getConnection(packet.connectionId, false))
 
         if (connection == null) {
-            fail(context.getString(R.string.fail_ignore_wrong_data), show = false)
+            fail(R.string.fail_ignore_wrong_data, show = false)
             return@unitOnFail
         }
 
@@ -810,11 +810,7 @@ class LocationSupportServiceImpl(
      * UTILITY
      ************************************/
 
-    private fun fail(message: String, show: Boolean = false) {
-        setFailure(Failable.Failure(message, show))
-    }
-
-    private fun fail(@StringRes message: Int, vararg formatArgs: Any?, show: Boolean = false) {
+    override fun fail(@StringRes message: Int, vararg formatArgs: Any?, show: Boolean) {
         setFailure(Failable.Failure(context.getString(message, *formatArgs), show))
     }
 
@@ -903,7 +899,7 @@ class LocationSupportServiceImpl(
 
             val foundCorrector = getValidation(locationObject)?.corrector
             if (foundCorrector == null) {
-                fail("Validator not found for type ${locationObject::class.java.name}.", true)
+                fail(R.string.fail_no_validator, locationObject::class.java.name, show = true)
                 return null
             }
 

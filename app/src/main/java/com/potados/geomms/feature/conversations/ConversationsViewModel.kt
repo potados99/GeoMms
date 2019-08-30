@@ -3,6 +3,7 @@ package com.potados.geomms.feature.conversations
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.potados.geomms.R
 import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.functional.Result
@@ -87,7 +88,7 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
         if (lastSync == 0 && permissionManager.isDefaultSms() && permissionManager.hasReadSms() && permissionManager.hasContacts()) {
             syncMessages(Unit) {
                 if (it is Result.Error) {
-                    setFailure(Failable.Failure("Failed to sync messages.", true))
+                    Timber.w("Failed to sync message.")
                 }
             }
         }

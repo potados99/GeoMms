@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.potados.geomms.R
 import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.common.GiveMePermissionActivity
-import com.potados.geomms.common.MakeMeDefaultAppActivity
 import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.feature.location.InviteActivity
 import com.potados.geomms.feature.main.MainActivity
@@ -87,10 +86,6 @@ class Navigator (
         startActivityWithFlag(GiveMePermissionActivity.callingIntent(context))
     }
 
-    private fun showMakeMeDefaultApp() {
-        startActivityWithFlag(MakeMeDefaultAppActivity.callingIntent(context))
-    }
-
     private fun whenPossible(body: (Context) -> Unit) {
         if (!permissionManager.isAllGranted()) {
             /**
@@ -110,10 +105,10 @@ class Navigator (
 
     // TODO
     fun showMedia(id: Long) {
-        Timber.i("show media: $id")
+        Timber.i("Show media: $id")
     }
 
     fun saveVcard(uri: Uri) {
-        Timber.i("save vcard: $uri")
+        Timber.i("Save vcard: $uri")
     }
 }

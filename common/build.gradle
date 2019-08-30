@@ -53,6 +53,9 @@ dependencies {
     /** reflection */
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
+    /** 의존성 주입 */
+    implementation "org.koin:koin-android:$koin_version"
+
     implementation project(":android-smsmms")
 
 }

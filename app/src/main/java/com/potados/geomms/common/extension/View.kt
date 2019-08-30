@@ -59,12 +59,6 @@ var ViewGroup.animateLayoutChanges: Boolean
     }
 
 
-fun EditText.showKeyboard() {
-    requestFocus()
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.showSoftInput(this, 0)
-}
-
 fun ImageView.setTint(color: Int) {
     imageTintList = ColorStateList.valueOf(color)
 }

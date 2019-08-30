@@ -374,5 +374,12 @@
     <string name="permission_access_network_state">Access Network State</string>
     <string name="permission_access_location">Access Location</string>
     <string name="permission_explain">Please allow them to use this application.</string>
+    <string name="notify_cannot_send_while_sync">Unable to send message when sync in progress.</string>
+    <string name="fail_sync_messages">Failed to sync messages.</string>
+    <string name="fail_mark_read">Failed to mark as read.</string>
+    <string name="fail_get_or_create_conversation">Failed to get or create conversation.</string>
+    <string name="fail_get_contacts">Failed to get contacts.</string>
+    <string name="fail_send_message">Failed to send SMS.</string>
+    <string name="start_a_new_conversation">Start a new conversation</string>
 
 </resources>

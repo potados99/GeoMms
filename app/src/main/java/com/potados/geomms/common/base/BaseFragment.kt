@@ -1,9 +1,11 @@
 package com.potados.geomms.common.base
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import androidx.annotation.CallSuper
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +25,8 @@ import java.lang.StringBuilder
  * Base Fragment that has options menu and failure handling.
  */
 abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableHandler, KoinComponent {
+    private val mContext: Context by inject()
+
     open val optionMenuId: Int? = null
 
     private var menu: Menu? = null
@@ -44,6 +48,9 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
         Timber.w("Failure is set: ${failure.message}")
     }
 
+    override fun fail(@StringRes message: Int, vararg formatArgs: Any?, show: Boolean) {
+        setFailure(Failable.Failure(mContext.getString(message, *formatArgs), show))
+    }
 
     /******************************
      * AS A FailableContainer

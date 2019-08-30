@@ -18,20 +18,25 @@
  */
 package com.potados.geomms.common.base
 
+import android.content.Context
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.base.Failable
 import com.potados.geomms.common.extension.setVisible
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 
 /**
  * Base RecyclerView.Adapter that provides some convenience when creating a new Adapter, such as
  * data list handing and item animations
  */
-abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable {
+abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable, KoinComponent {
+    private val mContext: Context by inject()
 
     private val failure = MutableLiveData<Failable.Failure>()
 
@@ -42,6 +47,10 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable
 
     final override fun getFailure(): LiveData<Failable.Failure> {
         return failure
+    }
+
+    override fun fail(@StringRes message: Int, vararg formatArgs: Any?, show: Boolean) {
+        setFailure(Failable.Failure(mContext.getString(message, *formatArgs), show))
     }
 
     var data: List<T> = ArrayList()

@@ -148,8 +148,7 @@ class ConversationRepositoryImpl(
                     conversation.recipients.size == recipients.size && conversation.recipients.map { it.address }.all { address ->
                         recipients.any { recipient -> PhoneNumberUtils.compare(recipient, address) }
                     }
-                }
-                ?.id
+                }?.id
         }
     }
 

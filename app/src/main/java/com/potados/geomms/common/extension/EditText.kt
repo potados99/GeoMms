@@ -1,7 +1,9 @@
 package com.potados.geomms.common.extension
 
+import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 
 fun EditText.setOnTextChanged(onChange: (text: CharSequence?) -> Unit) {
@@ -13,4 +15,10 @@ fun EditText.setOnTextChanged(onChange: (text: CharSequence?) -> Unit) {
             onChange(s)
         }
     })
+}
+
+fun EditText.showKeyboard() {
+    requestFocus()
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(this, 0)
 }

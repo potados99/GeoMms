@@ -33,7 +33,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".common.GiveMePermissionActivity" />
-        <activity android:name=".common.MakeMeDefaultAppActivity" />
         <activity android:name=".feature.main.MainActivity"
                   android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".feature.location.InviteActivity" />

@@ -126,14 +126,19 @@ class ConversationsFragment : NavigationFragment() {
     }
 
     private fun initializeView(view: View) {
-        with(view.button) {
+        with(view.change) {
             setOnClickListener {
-                navigator.showDefaultSmsDialog()
+                navigator.showDefaultSmsDialogIfNeeded()
             }
+        }
+
+        with(view.empty) {
+            conversationsAdapter.emptyView = this
         }
 
         with(view.conversations) {
             setHasFixedSize(true)
+
             conversationsAdapter.autoScrollToStart(this@with)
             adapter = conversationsAdapter
 

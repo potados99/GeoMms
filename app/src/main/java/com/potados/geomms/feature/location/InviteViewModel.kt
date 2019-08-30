@@ -1,5 +1,6 @@
 package com.potados.geomms.feature.location
 
+import com.potados.geomms.R
 import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.filter.ContactFilter
@@ -26,7 +27,7 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
         }
 
         if (contacts == null) {
-            setFailure(Failable.Failure("Failed to get contacts.", true))
+            fail(R.string.fail_get_contacts, show = true)
             return listOf()
         }
 

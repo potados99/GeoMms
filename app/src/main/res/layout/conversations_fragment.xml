@@ -21,6 +21,21 @@
             android:id="@+id/conversation_list_root_layout"
             android:animateLayoutChanges="true">
 
+        <TextView
+            android:id="@+id/empty"
+            style="@style/TextSecondary"
+            android:text="@string/start_a_new_conversation"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="56dp"
+            app:layout_constraintBottom_toTopOf="@+id/snackbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="invisible" />
+
         <!-- Conversations -->
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/conversations"

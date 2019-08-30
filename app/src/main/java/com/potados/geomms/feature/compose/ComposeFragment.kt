@@ -1,12 +1,12 @@
 package com.potados.geomms.feature.compose
 
+import android.content.Context
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import com.potados.geomms.R
-import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
@@ -14,11 +14,15 @@ import com.potados.geomms.databinding.ComposeFragmentBinding
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.PhoneNumber
+import com.potados.geomms.repository.SyncRepository
+import com.potados.geomms.util.Notify
 import io.realm.RealmList
 import kotlinx.android.synthetic.main.compose_fragment.view.*
 import org.koin.core.inject
 import timber.log.Timber
 import java.util.*
+import android.view.inputmethod.InputMethodManager
+
 
 class ComposeFragment : BaseFragment() {
 
@@ -26,6 +30,7 @@ class ComposeFragment : BaseFragment() {
 
     private val permissionManager: PermissionManager by inject()
     private val navigator: Navigator by inject()
+    private val syncRepo: SyncRepository by inject()
 
     private lateinit var composeViewModel: ComposeViewModel
     private lateinit var viewDataBinding: ComposeFragmentBinding
@@ -69,12 +74,23 @@ class ComposeFragment : BaseFragment() {
         menu.setVisible(composeViewModel.conversation.value != null)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        composeViewModel.conversation.removeObservers(this)
+    }
+
     private fun initializeView(view: View) {
         observe(composeViewModel.conversation) { conversation ->
-            Timber.i("%s menu", if (conversation != null) "show" else "hide")
+            Timber.i("%s menu", if (conversation != null) "Show" else "Hide")
             getOptionsMenu()?.iterator()?.forEach { menuItem ->
                 menuItem.isVisible = (conversation != null)
             } ?: Timber.i("Menu is null")
+
+            conversation?.let {
+                Timber.i("Focus!")
+
+                view.postDelayed({ view.message.showKeyboard() }, 200)
+            }
         }
 
         with(chipsAdapter) {
@@ -118,7 +134,11 @@ class ComposeFragment : BaseFragment() {
                 with(view.message) {
                     if (!permissionManager.isDefaultSms()) {
                         navigator.showDefaultSmsDialogIfNeeded()
-                    } else {
+                    }
+                    else if (syncRepo.syncProgress.value is SyncRepository.SyncProgress.Running) {
+                        Notify(context).short(R.string.notify_cannot_send_while_sync)
+                    }
+                    else {
                         composeViewModel.sendSms(text.toString())
                         text.clear()
                     }
@@ -143,7 +163,5 @@ class ComposeFragment : BaseFragment() {
                 }
             })
         }
-
     }
-
 }

@@ -29,7 +29,7 @@
                 android:paddingTop="16dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/message"
-                app:layout_constraintEnd_toStartOf="@id/button"
+                app:layout_constraintEnd_toStartOf="@id/change"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 android:text="@string/main_default_sms_title"/>
@@ -44,14 +44,14 @@
                 android:layout_marginTop="2dp"
                 android:paddingBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/button"
+                app:layout_constraintEnd_toStartOf="@id/change"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 android:text="@string/main_default_sms_message"/>
 
         <!-- Button -->
         <com.potados.geomms.common.widget.CollapseTextView
-                android:id="@+id/button"
+                android:id="@+id/change"
                 style="@style/TextSecondary"
                 android:textColor="?attr/tintPrimary"
                 android:layout_width="wrap_content"

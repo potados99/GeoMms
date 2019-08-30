@@ -7,8 +7,10 @@ import android.graphics.Matrix
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
+import androidx.annotation.StringRes
 import androidx.exifinterface.media.ExifInterface
 import com.potados.geomms.base.Failable
+import com.potados.geomms.data.R
 import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.unitOnFail
 import java.io.File
@@ -60,10 +62,9 @@ class ImageRepostoryImpl(
             inputStream?.close()
             outputStream.close()
         } catch (e: Exception) {
-            setFailure(Failable.Failure("Stream I/O error."))
+            setFailure(Failable.Failure(context.getString(R.string.fail_stream_io), show = false))
         }
 
         MediaScannerConnection.scanFile(context, arrayOf(file.path), null, null)
     }
-
 }

@@ -1,8 +1,11 @@
 package com.potados.geomms.feature.compose
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
+import com.potados.geomms.R
 import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.filter.ContactFilter
@@ -40,8 +43,8 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
     private val contactFilter: ContactFilter by inject()
 
     // Parameters
-    lateinit var sharedText: String
-    lateinit var attatchments: Attachments
+    private lateinit var sharedText: String
+    private lateinit var attatchments: Attachments
 
     // Conversation data
     val conversation = MutableLiveData<Conversation>()      // null on empty
@@ -79,7 +82,7 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
             activeConversationManager.setActiveConversation(threadId)
             markRead(listOf(threadId)) {
                 if (it is Result.Error) {
-                    setFailure(Failable.Failure("Failed to mark as read.", true))
+                    fail(R.string.fail_mark_read, show = true)
                 }
             }
 
@@ -91,14 +94,23 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
             attatchments = Attachments(sharedImages.map { Attachment.Image(it) })
         }
 
-        Timber.i("viewmodel started.")
+        Timber.i("View model started.")
     }
 
     fun setConversationByContact(contact: Contact) {
-        val address = contact.numbers[0]?.address ?: throw RuntimeException("check ContactAdapter.")
+        val address = contact.numbers[0]?.address
+
+        if (address == null) {
+            fail(R.string.fail_cannot_select_address_not_exist, show = true)
+            return
+        }
 
         val derivedConversation = conversationRepo.getOrCreateConversation(address)
-            ?: throw RuntimeException("failed to get or create conversation")
+
+        if (derivedConversation == null) {
+            fail(R.string.fail_get_or_create_conversation, show = true)
+            return
+        }
 
         conversation.value = derivedConversation
         messages.value = messageRepo.getMessages(derivedConversation.id)
@@ -110,7 +122,7 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
         }
 
         if (contacts == null) {
-            setFailure(Failable.Failure("Failed to get contacts.", true))
+            fail(R.string.fail_get_contacts, true)
             return listOf()
         }
 
@@ -131,7 +143,7 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
 
         sendMessage(params) {
             if (it is Result.Error) {
-                setFailure(Failable.Failure("Failed to send SMS.", true))
+                fail(R.string.fail_send_message, show = true)
             }
         }
     }
