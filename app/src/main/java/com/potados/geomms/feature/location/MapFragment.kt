@@ -2,6 +2,8 @@ package com.potados.geomms.feature.location
 
 import android.animation.LayoutTransition
 import android.content.IntentFilter
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -191,6 +193,8 @@ class MapFragment : NavigationFragment(),
         }
 
         with(view.sheet) {
+            onSlideBottomSheet(view, 0f)
+
             collapseSheet()
 
             bottomSheetBehavior().setBottomSheetCallback(object: CustomBottomSheetBehavior.BottomSheetCallback() {
@@ -206,9 +210,7 @@ class MapFragment : NavigationFragment(),
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    val param = empty_view.layoutParams as ConstraintLayout.LayoutParams
-                    param.verticalBias = slideOffset / 2 + 0.05f
-                    empty_view.layoutParams = param
+                    onSlideBottomSheet(view, slideOffset)
                 }
             })
 
@@ -224,6 +226,7 @@ class MapFragment : NavigationFragment(),
             }
         }
     }
+
 
     override fun onConnectionClick(connection: Connection) {
         if (connection.isTemporal) {
@@ -327,6 +330,36 @@ class MapFragment : NavigationFragment(),
             val behavior = params.behavior
             if (behavior != null && behavior is CustomBottomSheetBehavior<*>)
                 behavior.setNestedScrollingChildRef(recyclerView)
+        }
+    }
+
+    private fun onSlideBottomSheet(view: View, offset: Float) {
+        val param = view.empty_view.layoutParams as ConstraintLayout.LayoutParams
+        param.verticalBias = offset / 2 + 0.05f
+        view.empty_view.layoutParams = param
+
+        // Variables
+        val changeStart = 0.8f
+        val alphaMax = 1.0f
+        val radiusMax = 20f
+        val color = Color.parseColor("#EEFFFFFF")
+
+        val rangeZeroToOne = (1.0f - offset) / (1.0f - changeStart)
+        val rangeZeroToAlphaMax = rangeZeroToOne * alphaMax
+        val rangeZeroToRadiusMax = rangeZeroToOne * radiusMax
+
+        if (offset > changeStart) {
+            view.grip.alpha = rangeZeroToAlphaMax
+            view.sheet.background = GradientDrawable().apply {
+                setColor(color)
+                cornerRadius = rangeZeroToRadiusMax
+            }
+        } else {
+            view.grip.alpha = alphaMax
+            view.sheet.background = GradientDrawable().apply {
+                setColor(color)
+                cornerRadius = radiusMax
+            }
         }
     }
 
