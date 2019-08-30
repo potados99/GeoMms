@@ -17,7 +17,7 @@ abstract class BaseRealmAdapter<T: RealmModel>
 
     final override fun setFailure(failure: Failable.Failure) {
         this.failure.postValue(failure)
-        Timber.v("A failure is set: ${failure.message}")
+        Timber.w("Failure is set: ${failure.message}")
     }
 
     final override fun getFailure(): LiveData<Failable.Failure> {

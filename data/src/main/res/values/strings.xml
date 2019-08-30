@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fail_ignore_illegal_request">Ignore illegal request packet.</string>
+    <string name="fail_packet_not_inbound">The packet must be inbound.</string>
+    <string name="fail_no_recipient">Failed to retrieve recipient of address %s.</string>
+    <string name="fail_cannot_obtain_request">Cannot obtain request object from packet.</string>
+    <string name="fail_cannot_accept_request_invalid">Failed to accept request. Request is invalid.</string>
+    <string name="fail_ignore_wrong_accept">Ignoring wrong accept packet.</string>
+    <string name="fail_cannot_refuse_request_invalid">Failed to refuse request. Request is invalid.</string>
+    <string name="fail_ignore_wrong_refuse">Ignore wrong refuse packet.</string>
+    <string name="fail_cannot_cancel_request_invalid">Failed to cancel request. Request is invalid.</string>
+    <string name="fail_ignore_wrong_cancel">Ignore wrong cancel packet.</string>
+    <string name="fail_cannot_send_update_invalid_connection">Failed to send update. Cannot find valid connection.</string>
+    <string name="fail_ignore_wrong_data">Ignore wrong data packet.</string>
+    <string name="fail_cannot_request_update_invalid_connection">Failed to request update. Cannot find valid connection.</string>
+    <string name="fail_ignore_wrong_update_request">Ignore request update packet.</string>
+    <string name="fail_cannot_request_disconnect_invalid_connection">Failed to request disconnect. Cannot find valid connection.</string>
+    <string name="fail_ignore_wrong_disconnect">Ignore request disconnect packet.</string>
+    <string name="fail_validator_not_found">Validator not found for type %s.</string>
+</resources>

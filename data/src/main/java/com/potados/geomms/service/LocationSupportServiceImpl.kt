@@ -1,13 +1,14 @@
 package com.potados.geomms.service
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.telephony.SmsManager
+import androidx.annotation.StringRes
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.potados.geomms.base.Failable
+import com.potados.geomms.data.R
 import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.unitOnFail
 import com.potados.geomms.manager.KeyManager
@@ -25,10 +26,6 @@ import io.realm.RealmObject
 import io.realm.RealmResults
 import io.realm.Sort
 import timber.log.Timber
-import java.lang.NullPointerException
-import java.lang.reflect.Type
-import kotlin.reflect.KClass
-import kotlin.reflect.typeOf
 
 /**
  * FOREWORD: This is not android.app.Service.
@@ -59,6 +56,9 @@ class LocationSupportServiceImpl(
 
     private var started = false
 
+    /**
+     * This will be used for validating requests and connections.
+     */
     private val validator = Validator()
 
 
@@ -68,7 +68,7 @@ class LocationSupportServiceImpl(
 
     override fun start() = unitOnFail {
         if (started) {
-            Timber.i("Already started!")
+            Timber.w("Already started!")
 
             return@unitOnFail
         }
@@ -158,7 +158,7 @@ class LocationSupportServiceImpl(
         val recipient = conversationRepo.getOrCreateConversation(address)?.recipients?.get(0)
 
         if (recipient == null) {
-            setFailure(Failable.Failure("Failed to retrieve recipient of address $address.", true))
+            fail(R.string.fail_no_recipient, address, show = true)
             return@nullOnFail null
         }
 
@@ -189,7 +189,7 @@ class LocationSupportServiceImpl(
      */
     private fun requestFromInboundPacket(packet: Packet): ConnectionRequest? = nullOnFail {
         if (!packet.isInbound) {
-            setFailure(Failable.Failure("The packet must be inbound.", true))
+            fail(R.string.fail_packet_not_inbound, show = true)
             return@nullOnFail null
         }
 
@@ -233,14 +233,14 @@ class LocationSupportServiceImpl(
     override fun beRequestedNewConnection(packet: Packet) = unitOnFail {
         // requests can be duplicated but connections cannot.
         getConnection(packet.connectionId, temporal = false)?.let {
-            fail("Ignore illegal request packet.", false)
+            fail(R.string.fail_ignore_illegal_request, false)
             return@unitOnFail
         }
 
         val request = requestFromInboundPacket(packet)
 
         if (request == null) {
-            setFailure(Failable.Failure("Cannot obtain request object from packet.", true))
+            fail(R.string.fail_cannot_obtain_request, show = true)
             return@unitOnFail
         }
 
@@ -256,7 +256,7 @@ class LocationSupportServiceImpl(
 
         // If is not inbound or connection already exists.
         if (validated == null) {
-            fail("Failed to accept request. Request is invalid.", true)
+            fail(R.string.fail_cannot_accept_request_invalid, show = true)
             return@unitOnFail
         }
 
@@ -284,7 +284,7 @@ class LocationSupportServiceImpl(
         }
 
         if (request == null) {
-            fail("Ignoring wrong accept packet.", false)
+            fail(R.string.fail_ignore_wrong_accept, show = false)
             return@unitOnFail
         }
 
@@ -305,7 +305,7 @@ class LocationSupportServiceImpl(
 
         // If is not inbound or connection already exists.
         if (validated == null) {
-            fail("Failed to refuse request. Request is invalid.", true)
+            fail(R.string.fail_cannot_refuse_request_invalid, show = true)
             return@unitOnFail
         }
 
@@ -327,7 +327,7 @@ class LocationSupportServiceImpl(
         }
 
         if (request == null) {
-            fail("Ignore wrong refuse packet.", false)
+            fail(R.string.fail_ignore_wrong_refuse, show = false)
             return@unitOnFail
         }
 
@@ -346,7 +346,7 @@ class LocationSupportServiceImpl(
         }
 
         if (validated == null) {
-            fail("Failed to cancel request. Request is invalid.", true)
+            fail(R.string.fail_cannot_cancel_request_invalid, show = true)
             return@unitOnFail
         }
 
@@ -368,7 +368,7 @@ class LocationSupportServiceImpl(
         }
 
         if (request == null) {
-            fail("Ignore wrong cancel packet.", false)
+            fail(R.string.fail_ignore_wrong_cancel, show = false)
             return@unitOnFail
         }
 
@@ -381,7 +381,7 @@ class LocationSupportServiceImpl(
         val connection = validator.validate(getConnection(connectionId, temporal = false))
 
         if (connection == null) {
-            fail("Failed to send update. Cannot find valid connection.", true)
+            fail(R.string.fail_cannot_send_update_invalid_connection, show = true)
             return@unitOnFail
         }
 
@@ -399,7 +399,7 @@ class LocationSupportServiceImpl(
         val connection = validator.validate(getConnection(packet.connectionId, false))
 
         if (connection == null) {
-            fail("Ignore wrong data packet.", false)
+            fail(context.getString(R.string.fail_ignore_wrong_data), show = false)
             return@unitOnFail
         }
 
@@ -416,7 +416,7 @@ class LocationSupportServiceImpl(
         val connection = getConnection(connectionId, temporal = false)
 
         if (connection == null) {
-            fail("Failed to request update. Cannot find valid connection.", true)
+            fail(R.string.fail_cannot_request_update_invalid_connection, show = true)
             return@unitOnFail
         }
 
@@ -431,7 +431,8 @@ class LocationSupportServiceImpl(
 
         if (connection == null) {
             // This could be an illegal try.
-            fail("Ignore request update packet.", false)
+            // Think how to handle it. (e.g. notify user with warning)
+            fail(R.string.fail_ignore_wrong_update_request, show = false)
             return@unitOnFail
         }
 
@@ -444,7 +445,7 @@ class LocationSupportServiceImpl(
         val connection = validator.validate(getConnection(connectionId, temporal = false))
 
         if (connection == null) {
-            fail("Failed to request disconnect. Cannot find valid connection.", true)
+            fail(R.string.fail_cannot_request_disconnect_invalid_connection, show = true)
             return@unitOnFail
         }
 
@@ -465,7 +466,7 @@ class LocationSupportServiceImpl(
         val connection = validator.validate(getConnection(packet.connectionId, false))
 
         if (connection == null) {
-            fail("Ignore request disconnect packet.", false)
+            fail(R.string.fail_ignore_wrong_disconnect, show = false)
             return@unitOnFail
         }
 
@@ -551,98 +552,83 @@ class LocationSupportServiceImpl(
      * @see [Packet]
      */
     override fun parsePacket(body: String): Packet? = nullOnFail {
-        /**
-         * 예외처리
-         */
         if (isValidPacket(body) != true) {
-            Timber.w("not a LocationSupport packet.")
+            Timber.w("Body is \"body\", which is not a LocationSupport packet.")
             return@nullOnFail null
         }
 
-        /**
-         * 페이로드의 필드들 가져오기.
-         */
+        // Get fields by splitting them with [FIELD_SPLITTER].
         val payload = body.removePrefix(GEO_MMS_PREFIX)
         val payloadFields = payload.split(FIELD_SPLITTER)
 
-        /**
-         * 고정 필드가 type과 id로 두 개인데, 이보다 적으면 잘못된 패킷으로 간주.
-         */
+        // Must be over 2 fields. (type, id)
         if (payloadFields.size < 2) {
-            Timber.w("necessary fields are missing.")
+            Timber.w("Necessary fields are missing.")
             return@nullOnFail null
         }
 
-        /**
-         * 페이로드 중 고정 부분의 첫번째 필드인 type 숫자 값을 가져옵니다.
-         */
-        val typeNumber = with(Packet.Field.TYPE) {
-            convert(payloadFields[positionInPayload])
+        // Get type number from type field of the payload.
+        // It uses convert, therefore we need to catch exceptions.
+        val typeNumber = try {
+            with(Packet.Field.TYPE) {
+                convert(payloadFields[positionInPayload])
+            }
+        }
+        catch (e: NumberFormatException) {
+            Timber.w("Parse error while getting the id of packet.")
+            return@nullOnFail null
+        }
+        catch (e: Exception) {
+            Timber.w("Unknown error occurred while getting the id of packet.")
+            Timber.w(e)
+            return@nullOnFail null
         }
 
-        /**
-         * 해당 typeNumber에 해당하는 PacketType을 가져옵니다.
-         */
+        // Get [PacketType] from the type number.
         val type =
             findType(typeNumber)
 
-        /**
-         * 없으면 잘못된 패킷.
-         */
+        // If no type found, that's a problem.
         if (type == null) {
-            Timber.w("undefined type: $typeNumber")
+            Timber.w("Undefined type: $typeNumber")
             return@nullOnFail null
         }
 
-        /**
-         * json으로 만들어서 담을겁니다.
-         */
+        // We are going to parse fields using JSON.
         val json = JsonObject()
 
-        /**
-         * 가져온 타입에 해당하는 필드들을 가지고 와서,
-         * {필드 이름}과 {페이로드에서 가져온 그 필드의 값} 쌍을 json 객체에 추가해줍니다.
-         */
+        // We know the type. So we know what fields are used.
+        // Add pairs of field name(key) and the value to the JSON object.
         type.fields.forEach {
             val value = try {
-                /**
-                 * Convert를 굳이 여기서 해주는 이유는, 숫자 스트링이 무결한지 여기에서 확인하기 위함입니다.
-                 * Gson이 검사하게 해도 되는데 그냥 직접 하고 싶었습니다.
-                 */
+                // Same here, it can throw something.
                 it.convert(payloadFields[it.positionInPayload])
             }
+            catch (e: NumberFormatException) {
+                Timber.w("Parse error at payload field ${it.positionInPayload}: ${payloadFields[it.positionInPayload]}")
+                return@nullOnFail null
+            }
             catch (e: Exception) {
-                when (e) {
-                    /** toDouble이나 toLong에서 문제가 생긴 경우 */
-                    is NumberFormatException -> {
-                        Timber.w("parse error at payload field ${it.positionInPayload}: ${payloadFields[it.positionInPayload]}")
-                    }
-                    else -> { /* 그렇지 않은 경우 */
-                        Timber.w("unknown error occurred while adding parsed number to json object.")
-                    }
-                }
-
+                Timber.w("Unknown error occurred while adding parsed number to json object.")
+                Timber.w(e)
                 return@nullOnFail null
             }
 
+            // If successful, add the pair.
             json.addProperty(it.fieldName, value)
         }
 
-        /**
-         * Packet 객체 확보.
-         */
+        // Get [Packet] instance from the JSON.
         return@nullOnFail try {
             Gson().fromJson(json, Types.typeOf<Packet>())
         }
+        catch (e: JsonSyntaxException) {
+            Timber.w("Error while parsing json. Json syntax incorrect.")
+            return@nullOnFail null
+        }
         catch (e: Exception) {
-            when (e) {
-                is JsonSyntaxException -> {
-                    Timber.w("error while parsing json. json syntax incorrect.")
-                }
-                else -> {
-                    Timber.w("unknown error occurred while parsing json.")
-                }
-            }
+            Timber.w("Unknown error occurred while parsing json.")
+            Timber.w(e)
             return@nullOnFail null
         }
     }
@@ -657,24 +643,29 @@ class LocationSupportServiceImpl(
     override fun serializePacket(packet: Packet): String? = nullOnFail {
         val builder = StringBuilder().append(GEO_MMS_PREFIX)
 
+        // Find the type of the packet.
         val type = Packet.PacketType.values().find { it.number == packet.type }
 
         if (type == null) {
-            Timber.w("wrong packet type: ${packet.type}")
+            Timber.w("Wrong packet type: ${packet.type}")
             return@nullOnFail null
         }
 
+        // Stringify each field.
         type.fields.forEach {
             val value = try {
                 Reflection.readInstanceProperty<Any>(packet, it.fieldName).toString()
             }
             catch (e: Exception) {
-                Timber.w("error occurred while accessing property.")
+                Timber.w("Error occurred while accessing property.")
+                Timber.w(e)
                 return@nullOnFail null
             }
 
+            // If successful, add it to serialized string.
             builder.append(value)
 
+            // Add splitter except the last one.
             if (it != type.fields.last()) {
                 builder.append(FIELD_SPLITTER)
             }
@@ -684,8 +675,8 @@ class LocationSupportServiceImpl(
     }
 
     override fun isValidPacket(body: String): Boolean? = nullOnFail {
-        if (body.isBlank())                     return@nullOnFail false   /* 비어있는 메시지 */
-        if (!body.startsWith(GEO_MMS_PREFIX))   return@nullOnFail false   /* 무관한 메시지 */
+        if (body.isBlank())                     return@nullOnFail false   /* Empty message */
+        if (!body.startsWith(GEO_MMS_PREFIX))   return@nullOnFail false   /* Not a packet. */
 
         return@nullOnFail true
     }
@@ -721,20 +712,25 @@ class LocationSupportServiceImpl(
      * Register periodic update task of connection.
      * The connection id is good to use as a task id.
      *
-     * TODO: UPDATE_INTERVAL hardcoded. fix it.
-     *
      * @param connection must be a getRealm managed object.
      */
     private fun registerTask(connection: Connection) = unitOnFail {
-        scheduler.doOnEvery(connection.id, UPDATE_INTERVAL) {
+        val sendBroadcast = {
             context.sendBroadcast(
-                Intent(context, SendUpdateReceiver::class.java)
-                    .apply { putExtra(EXTRA_CONNECTION_ID, connection.id) }
+                Intent(context, SendUpdateReceiver::class.java).apply {
+                    putExtra(EXTRA_CONNECTION_ID, connection.id)
+                }
             )
         }
-        scheduler.doAtTime(connection.id, connection.due) {
-            requestDisconnect(connection.id)
+        val expireConnection = {
+            closeExpiredConnection(connection)
         }
+
+        // Send update every [UPDATE_INTERVAL].
+        scheduler.doOnEvery(connection.id, UPDATE_INTERVAL, sendBroadcast)
+
+        // Request disconnect when expired.
+        scheduler.doAtTime(connection.id, connection.due, expireConnection)
 
         Timber.i("Task registered: connection ${connection.id}, for every ${Duration(UPDATE_INTERVAL).toShortenString()}")
         Timber.i("Will be disconnected at ${DateTime(connection.due)}")
@@ -751,6 +747,19 @@ class LocationSupportServiceImpl(
         Timber.i("Task unregistered: connection ${connection.id}.")
     }
 
+    private fun closeExpiredConnection(connection: Connection) = unitOnFail {
+        if (!connection.isExpired()) {
+            Timber.w("Connection is not expired yet!")
+        }
+
+        unregisterTask(connection)
+
+        Timber.i("Closed expired connection of id ${connection.id}")
+
+        executeInDefaultInstance {
+            connection.deleteFromRealm()
+        }
+    }
 
     /************************************
      * REALM
@@ -785,6 +794,10 @@ class LocationSupportServiceImpl(
         setFailure(Failable.Failure(message, show))
     }
 
+    private fun fail(@StringRes message: Int, vararg formatArgs: Any?, show: Boolean = false) {
+        setFailure(Failable.Failure(context.getString(message, *formatArgs), show))
+    }
+
 
     /************************************
      * VALIDATOR
@@ -799,11 +812,13 @@ class LocationSupportServiceImpl(
     inner class Validator {
         private val validation = HashMap<Class<*>, Validation<RealmObject>>()
 
+        /**
+         * Validation declaration here.
+         */
         init {
-            Timber.i("Connection::class.java.packageName becomes ${Connection::class.java.name}")
             validation[Connection::class.java] = Validation<Connection>(
                 checker = {
-                    return@Validation it.id != 0L && it.recipient != null
+                    return@Validation it.id != 0L && it.recipient != null && !it.isExpired()
                 },
                 corrector = { realmObject ->
                     executeInDefaultInstance { realmObject.deleteFromRealm() }
@@ -852,7 +867,7 @@ class LocationSupportServiceImpl(
 
             val foundChecker = getValidation(locationObject)?.checker
             if (foundChecker == null) {
-                fail("Validator not found for type ${locationObject::class.java.name}.", true)
+                fail(R.string.fail_validator_not_found, locationObject::class.java.name, show = true)
                 return false
             }
 
