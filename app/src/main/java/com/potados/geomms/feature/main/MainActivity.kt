@@ -75,17 +75,17 @@ class MainActivity : NavigationActivity(), KoinComponent {
 
         setDrawerItemClickListener(help, autoClose = false) {
             // TODO
-            Notify(this).short("Not implemented yet.")
+            Notify(this).short(R.string.notify_not_implemented)
         }
 
         setDrawerItemClickListener(rate, autoClose = false) {
             // TODO
-            Notify(this).short("Not implemented yet.")
+            Notify(this).short(R.string.notify_not_implemented)
         }
 
         setDrawerItemClickListener(invite, autoClose = false) {
             // TODO
-            Notify(this).short("Not implemented yet.")
+            Notify(this).short(R.string.notify_not_implemented)
         }
 
         setDrawerItemClickListener(oss_license) {
