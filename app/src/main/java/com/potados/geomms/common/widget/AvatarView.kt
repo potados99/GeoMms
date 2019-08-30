@@ -23,9 +23,14 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
         View.inflate(context, R.layout.avatar_view, this)
 
         clipToOutline = true
+    }
 
-        setBackgroundResource(R.drawable.circle)
-        setBackgroundTint(context.resolveThemeColor(R.attr.avatarColor))
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+
+        if (!isInEditMode) {
+            updateView()
+        }
     }
 
     /**
@@ -56,16 +61,7 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
         address = contactAddress ?: contact?.numbers?.firstOrNull()?.address
         updateView()
     }
-
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-
-        if (!isInEditMode) {
-            updateView()
-        }
-    }
-
-
+    
     private fun updateView() {
         if (name?.isNotEmpty() == true) {
             initial.text = name?.substring(0, 1)
@@ -74,8 +70,7 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
             initial.text = null
             icon.visibility = VISIBLE
         }
-        setBackgroundResource(R.drawable.circle)
-        setBackgroundTint(context.resolveThemeColor(R.attr.avatarColor))
+
         photo.setImageDrawable(null)
         address?.let { address ->
             // Glide.with(photo).load(PhoneNumberUtils.stripSeparators(address)).into(photo)
