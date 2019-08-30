@@ -9,17 +9,23 @@ import com.potados.geomms.R
 import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
+import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ComposeFragmentBinding
+import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.PhoneNumber
 import io.realm.RealmList
 import kotlinx.android.synthetic.main.compose_fragment.view.*
+import org.koin.core.inject
 import timber.log.Timber
 import java.util.*
 
 class ComposeFragment : BaseFragment() {
 
     override val optionMenuId: Int? = R.menu.compose
+
+    private val permissionManager: PermissionManager by inject()
+    private val navigator: Navigator by inject()
 
     private lateinit var composeViewModel: ComposeViewModel
     private lateinit var viewDataBinding: ComposeFragmentBinding
@@ -68,11 +74,10 @@ class ComposeFragment : BaseFragment() {
             Timber.i("%s menu", if (conversation != null) "show" else "hide")
             getOptionsMenu()?.iterator()?.forEach { menuItem ->
                 menuItem.isVisible = (conversation != null)
-            } ?: Timber.i("menu is null")
+            } ?: Timber.i("Menu is null")
         }
 
         with(chipsAdapter) {
-            // data by query
             editText.setOnTextChanged {
                 val query = it.toString()
 
@@ -111,8 +116,12 @@ class ComposeFragment : BaseFragment() {
         with(view.send) {
             setOnClickListener {
                 with(view.message) {
-                    composeViewModel.sendSms(text.toString())
-                    text.clear()
+                    if (!permissionManager.isDefaultSms()) {
+                        navigator.showDefaultSmsDialogIfNeeded()
+                    } else {
+                        composeViewModel.sendSms(text.toString())
+                        text.clear()
+                    }
                 }
             }
         }

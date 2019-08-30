@@ -11,7 +11,6 @@ import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.feature.conversations.ConversationsFragment
 import com.potados.geomms.feature.location.MapFragment
 import com.potados.geomms.service.LocationSupportService
-import com.potados.geomms.usecase.SyncMessages
 import com.potados.geomms.util.Notify
 import kotlinx.android.synthetic.main.drawer_view.*
 import kotlinx.android.synthetic.main.main_activity.*
@@ -19,7 +18,6 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import android.view.View
 import com.potados.geomms.feature.license.LicenseActivity
-import com.potados.geomms.preference.MyPreferences
 
 
 /**
@@ -33,7 +31,6 @@ class MainActivity : NavigationActivity(), KoinComponent {
     override val defaultMenuItemId: Int = R.id.menu_item_navigation_message
     override val layoutId: Int = R.layout.main_activity
 
-    private val syncMessages: SyncMessages by inject()
     private val service: LocationSupportService by inject()
 
     private val navigator: Navigator by inject()
@@ -45,6 +42,8 @@ class MainActivity : NavigationActivity(), KoinComponent {
 
         setDrawer()
         setService()
+
+        navigator.showDefaultSmsDialogIfNeeded()
     }
 
     private fun setDrawer() {

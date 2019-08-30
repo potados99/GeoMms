@@ -4,18 +4,19 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import com.potados.geomms.R
-import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.autoScrollToStart
-import com.potados.geomms.common.extension.baseActivity
 import com.potados.geomms.common.extension.getViewModel
 import com.potados.geomms.common.extension.observe
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
 import com.potados.geomms.manager.PermissionManager
+import com.potados.geomms.model.Conversation
+import com.potados.geomms.usecase.DeleteConversations
+import com.potados.geomms.util.Popup
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
 import kotlinx.android.synthetic.main.main_hint.view.*
-import org.koin.android.ext.android.inject
+import org.koin.core.inject
 import timber.log.Timber
 
 /**
@@ -27,15 +28,27 @@ class ConversationsFragment : NavigationFragment() {
     override val navigationItemId: Int = R.id.menu_item_navigation_message
     override val titleId: Int = R.string.title_conversations
 
+    private val deleteConversations: DeleteConversations by inject()
+
     private val navigator: Navigator by inject()
     private val permissionManager: PermissionManager by inject()
 
     private lateinit var conversationsViewModel: ConversationsViewModel
     private lateinit var viewDataBinding: ConversationsFragmentBinding
 
-    private val conversationsAdapter = ConversationsAdapter {
-        navigator.showAskDeleteConversation(it.id, baseActivity!!)
+    private val askDeleteConversation = { conversation: Conversation ->
+        Popup(context)
+            .withTitle(R.string.delete_conversation_title)
+            .withMessage(R.string.delete_conversation_message, conversation.getTitle())
+            .withPositiveButton(R.string.button_delete) {
+                deleteConversations(listOf(conversation.id))
+            }
+            .withNegativeButton(R.string.button_cancel)
+            .show()
     }
+
+    private val conversationsAdapter = ConversationsAdapter(askDeleteConversation)
+
     private val searchAdapter = SearchAdapter()
 
     init {

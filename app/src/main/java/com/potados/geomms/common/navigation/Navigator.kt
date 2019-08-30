@@ -65,30 +65,14 @@ class Navigator (
         }
     }
 
-    fun showAskDeleteConversation(threadId: Long, activity: Activity) {
-        val deleteConversations: DeleteConversations by inject()
-
-        val conversation = Realm.getDefaultInstance()
-            .where(Conversation::class.java)
-            .equalTo("id", threadId)
-            .findFirst() ?: return
-
-        Popup(activity)
-            .withTitle(context.getString(R.string.delete_conversation_title))
-            .withMessage(context.getString(R.string.delete_conversation_message, conversation.getTitle()))
-            .withPositiveButton(context.getString(R.string.button_delete)) {
-                deleteConversations(listOf(conversation.id))
-            }
-            .withNegativeButton(context.getString(R.string.button_cancel))
-            .show()
-    }
-
-    fun showDefaultSmsDialog() {
-        val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+    fun showDefaultSmsDialogIfNeeded() {
         if (Telephony.Sms.getDefaultSmsPackage(context) != context.packageName) {
-            intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, context.packageName)
+            val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)
+            if (Telephony.Sms.getDefaultSmsPackage(context) != context.packageName) {
+                intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, context.packageName)
+            }
+            startActivityWithFlag(intent)
         }
-        startActivityWithFlag(intent)
     }
 
     fun showInvite() {
@@ -113,12 +97,6 @@ class Navigator (
              * if not all permissions allowed.
              */
             showGiveMePermission()
-        }
-        else if (Telephony.Sms.getDefaultSmsPackage(context) != context.packageName) {
-            /**
-             * if this app is not a default messaging app.
-             */
-            showMakeMeDefaultApp()
         }
         else {
             body(context)
