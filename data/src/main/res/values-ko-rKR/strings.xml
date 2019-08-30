@@ -23,4 +23,5 @@
     <string name="fail_cannot_register_connection_invalid">작업을 등록할 수 없습니다. 연결이 유효하지 않습니다.</string>
     <string name="fail_close_expired_connection_invalid">만료된 연결을 삭제할 수 없습니다. 연결이 유효하지 않습니다.</string>
     <string name="notify_not_implemented">해당 기능은 아직 구현되지 않았습니다 :)</string>
+    <string name="fail_close_connection_not_expired">연결을 삭제할 수 없습니다. 아직 만료되지 않았습니다.</string>
 </resources>
