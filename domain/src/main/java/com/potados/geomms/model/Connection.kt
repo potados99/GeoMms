@@ -24,6 +24,9 @@ open class Connection(
     val due: Long
         get() = date + duration
 
+    val timeLeft: Long
+        get() = due - System.currentTimeMillis()
+
     companion object {
         fun fromAcceptedRequest(request: ConnectionRequest) =
             Connection(

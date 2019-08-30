@@ -10,4 +10,6 @@ class MyPreferences(context: Context) {
     val inAppNotification get() = pref.getBoolean("in_app_notification", false)
 
     val receiveGeoMms get() = pref.getBoolean("receive_geomms", true)
+
+    val showAllError get() = pref.getBoolean("show_all_error", false)
 }

@@ -326,7 +326,7 @@
     <string name="dialog_ask_refuse">Do you want to refuse request from %s?</string>
     <string name="button_refuse">Refuse</string>
     <string name="dialog_request_from">Request from %s</string>
-    <string name="dialog_ask_accept_request">%s want to share location with you for %s.</string>
+    <string name="dialog_ask_accept_request">%s wants to share location with you for %s.</string>
     <string name="later">Later</string>
     <string name="button_yes">Yes</string>
     <string name="no">No</string>
@@ -350,5 +350,13 @@
     <string name="connection_request_sent">Request sent</string>
     <string name="connection_location_not_available">Location not available</string>
     <string name="fail_cannot_select_address_not_exist">Failed to select address. The selected address does not exist.</string>
+    <string name="connection_last_update">Last update %s</string>
+    <string name="connection_time_left">%s left</string>
+
+    <string name="dot">·</string>
+    <string name="dash">―</string>
+    <string name="settings_category_dev">Developer</string>
+    <string name="settings_title_show_all_error">Show All Error Reports</string>
+    <string name="settings_summary_show_all_error">Display all errors occurred inside this application.</string>
 
 </resources>

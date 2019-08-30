@@ -30,38 +30,84 @@
 
     <!-- Title -->
     <TextView
-            android:id="@+id/name"
-            style="@style/TextPrimary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            app:layout_constraintStart_toEndOf="@+id/avatar"
-            app:layout_constraintBottom_toTopOf="@+id/status"
-            tools:text="TextView" />
+        android:id="@+id/name"
+        style="@style/TextPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/status"
+        app:layout_constraintStart_toEndOf="@+id/avatar"
+        tools:text="@tools:sample/full_names[0]" />
 
     <!-- Status -->
     <TextView
-            android:id="@+id/status"
-            style="@style/TextSecondary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/name"
-            app:layout_constraintStart_toEndOf="@+id/avatar"
-            android:layout_marginStart="16dp"
-            tools:text="TextView"/>
+        android:id="@+id/status"
+        style="@style/TextSecondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toEndOf="@+id/avatar"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        tools:text="Updated 2:32 PM" />
+
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/duration_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="dot,time_label,time_progress" />
+
+    <!-- Dot -->
+    <TextView
+        android:id="@+id/dot"
+        style="@style/TextSecondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        app:layout_constraintEnd_toStartOf="@+id/time_label"
+        app:layout_constraintStart_toEndOf="@+id/status"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        android:text="@string/dash" />
+
+    <!-- Time -->
+    <TextView
+        android:id="@+id/time_label"
+        style="@style/TextSecondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        app:layout_constraintStart_toEndOf="@+id/dot"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        tools:text="36 minutes left." />
 
     <!-- Duration remaining -->
     <com.dinuscxj.progressbar.CircleProgressBar
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:id="@+id/time_left"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            app:style="solid"
-            app:progress_text_size="0dp"
-            app:progress_start_color="?attr/tintPrimary"
-            app:progress_end_color="?attr/tintPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/time_progress"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/status"
+        app:layout_constraintStart_toEndOf="@+id/time_label"
+        app:progress_end_color="?attr/tintPrimary"
+        app:progress_start_color="?attr/tintPrimary"
+        app:progress_text_size="0dp"
+        app:style="solid" />
+
+
+    <!-- Info Button -->
+    <ImageView
+        android:id="@+id/info"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="0dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:tint="?attr/tintPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_info_black_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

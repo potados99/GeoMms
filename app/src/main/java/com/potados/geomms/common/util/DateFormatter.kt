@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2017 Moez Bhatti <moez.bhatti@gmail.com>
- *
- * This file is part of QKSMS.
- *
- * QKSMS is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * QKSMS is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with QKSMS.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.potados.geomms.common.util
 
 import android.content.Context
@@ -25,6 +7,9 @@ import com.potados.geomms.common.extension.isSameWeek
 import com.potados.geomms.common.extension.isSameYear
 import java.text.SimpleDateFormat
 import java.util.*
+import android.R.attr.duration
+import com.potados.geomms.R
+
 
 class DateFormatter(val context: Context) {
 
@@ -86,6 +71,33 @@ class DateFormatter(val context: Context) {
             now.isSameYear(then) -> getFormatter("MMM d h:mm a")
             else -> getFormatter("MMM d yyyy h:mm a")
         }.format(date)
+    }
+
+    fun getDuration(duration: Long, short: Boolean = false): String {
+        val toSec = (duration / 1000).toInt()
+
+        val hours = toSec / 3600
+        val minutes = toSec % 3600 / 60
+        val seconds = toSec % 60
+
+        val builder = StringBuilder()
+
+        if (hours > 0) {
+            // On for the string, one for the format.
+            builder.append(context.resources.getQuantityString(if (short) R.plurals.hour_short else R.plurals.hour, hours, hours))
+        }
+
+        if (minutes > 0) {
+            builder.append(' ')
+            builder.append(context.resources.getQuantityString(if (short) R.plurals.minute_short else R.plurals.minute, minutes, minutes))
+        }
+
+        if (toSec < 60) {
+            builder.append(' ')
+            builder.append(context.resources.getQuantityString(if (short) R.plurals.second_short else R.plurals.second, seconds, seconds))
+        }
+
+        return builder.toString()
     }
 
 }

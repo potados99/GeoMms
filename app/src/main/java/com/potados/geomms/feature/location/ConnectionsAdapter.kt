@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
+import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Connection
+import com.potados.geomms.util.Duration
 import kotlinx.android.synthetic.main.connection_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -39,6 +41,10 @@ class ConnectionsAdapter(
                 listener.onConnectionLongClick(item)
                 true
             }
+            view.info.setOnClickListener {
+                val item = getItem(adapterPosition) ?: return@setOnClickListener
+                listener.onInfoClick(item)
+            }
         }
     }
 
@@ -50,24 +56,39 @@ class ConnectionsAdapter(
         view.avatar.setContact(connection.recipient)
 
         val alpha = if (connection.isTemporal) 0.5f else 1.0f
+        val timeLeftVisibility = !connection.isTemporal
 
         view.name.alpha = alpha
         view.status.alpha = alpha
+        view.duration_group.setVisible(timeLeftVisibility)
 
-        if (connection.isTemporal) {
-            view.status.text = context.getString(R.string.connection_request_sent)
-            (holder as TimerViewHolder).timer?.cancel()
-        }
-        else {
-            view.status.text = when (connection.lastUpdate == 0L) {
-                true -> context.getString(R.string.connection_location_not_available)
-                else -> dateFormatter.getConversationTimestamp(connection.lastUpdate)
+        view.status.text = when (connection.isTemporal) {
+            true -> context.getString(R.string.connection_request_sent)
+
+            false -> when (connection.lastUpdate) {
+                0L -> {
+                    context.getString(R.string.connection_location_not_available)
+                }
+                else -> {
+                    val update = dateFormatter.getConversationTimestamp(connection.lastUpdate)
+                    context.getString(R.string.connection_last_update, update)
+                }
             }
+        }
 
-            (holder as TimerViewHolder).apply {
-                timer?.cancel()
+        view.time_label.text = when (connection.isTemporal) {
+            true -> null
+            false -> {
+                val duration = dateFormatter.getDuration(connection.timeLeft, short = true)
+                context.getString(R.string.connection_time_left, duration)
+            }
+        }
+
+        (holder as TimerViewHolder).apply {
+            timer?.cancel()
+
+            if (timeLeftVisibility) {
                 timer = Timer()
-
                 timer?.schedule(object: TimerTask() {
                     override fun run() {
                         handler.post {
@@ -75,9 +96,13 @@ class ConnectionsAdapter(
                                 timer = null
                                 return@post
                             }
-                            with(view.time_left) {
+                            with(view.time_progress) {
                                 max = connection.duration.toInt()
                                 progress = (connection.due - System.currentTimeMillis()).toInt()
+                            }
+                            with(view.time_label) {
+                                val duration = dateFormatter.getDuration(connection.timeLeft, short = true)
+                                text = context.getString(R.string.connection_time_left, duration)
                             }
                         }
                     }
@@ -93,5 +118,10 @@ class ConnectionsAdapter(
     interface ConnectionClickListener {
         fun onConnectionClick(connection: Connection)
         fun onConnectionLongClick(connection: Connection)
+        fun onInfoClick(connection: Connection)
+    }
+
+    companion object {
+        const val SEPARATOR = " · "
     }
 }

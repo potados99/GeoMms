@@ -269,12 +269,11 @@ class LocationSupportServiceImpl(
 
         // add connection, delete request
         executeInDefaultInstance { realm ->
-            realm.insertOrUpdate(connection)
+            realm.copyToRealmOrUpdate(connection).let(::registerTask)
             request.deleteFromRealm()
         }
 
         // start sending updates
-        registerTask(connection)
 
         Timber.i("Accept -> New connection(${connection.id}) established with ${connection.id}.")
     }
@@ -291,9 +290,9 @@ class LocationSupportServiceImpl(
         // if there is a temporal connection already added, it will be updated.
         val connection = Connection.fromAcceptedRequest(request)
 
-        executeInDefaultInstance { it.insertOrUpdate(connection) }
-
-        registerTask(connection)
+        executeInDefaultInstance {
+            it.copyToRealmOrUpdate(connection).let(::registerTask)
+        }
 
         Timber.i("Accepted -> New connection(${connection.id}) established with ${connection.id}.")
     }
@@ -712,7 +711,7 @@ class LocationSupportServiceImpl(
      * Register periodic update task of connection.
      * The connection id is good to use as a task id.
      *
-     * @param connection must be a getRealm managed object.
+     * @param connection must be a realm managed object.
      */
     private fun registerTask(connection: Connection) = unitOnFail {
         val sendBroadcast = {

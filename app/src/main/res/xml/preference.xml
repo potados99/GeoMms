@@ -28,6 +28,12 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/settings_category_dev">
+        <SwitchPreference
+            app:key="show_all_error"
+            app:title="@string/settings_title_show_all_error"
+            app:summary="@string/settings_summary_show_all_error" />
+    </PreferenceCategory>
 
 
 

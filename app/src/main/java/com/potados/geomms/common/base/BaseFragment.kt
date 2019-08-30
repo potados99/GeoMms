@@ -13,17 +13,22 @@ import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.base.FailableContainer
 import com.potados.geomms.base.FailableHandler
 import com.potados.geomms.common.extension.*
+import com.potados.geomms.preference.MyPreferences
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 import java.lang.StringBuilder
 
 /**
  * Base Fragment that has options menu and failure handling.
  */
-abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableHandler {
+abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableHandler, KoinComponent {
     open val optionMenuId: Int? = null
 
     private var menu: Menu? = null
     fun getOptionsMenu(): Menu? = menu
+
+    private val preferences: MyPreferences by inject()
 
 
     /******************************
@@ -55,7 +60,10 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
 
     @CallSuper
     override fun onFail(failure: Failable.Failure) {
-        notify(failure.message, long = true)
+        if (failure.show || preferences.showAllError) {
+            notify(failure.message, long = true)
+        }
+
         Timber.w("Failure with message: $failure")
     }
 

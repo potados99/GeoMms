@@ -9,24 +9,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.potados.geomms.R
-import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
+import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import com.potados.geomms.databinding.MapFragmentBinding
 import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.repository.LocationRepository
-import com.potados.geomms.util.Duration
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
+import android.animation.LayoutTransition
+import com.potados.geomms.R
 
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
@@ -43,6 +43,7 @@ class MapFragment : NavigationFragment(),
 
     private val navigator: Navigator by inject()
     private val locationRepo: LocationRepository by inject()
+    private val dateFormatter: DateFormatter by inject()
 
     private lateinit var mapViewModel: MapViewModel
     private lateinit var viewDataBinding: MapFragmentBinding
@@ -215,6 +216,13 @@ class MapFragment : NavigationFragment(),
                 toggleSheet()
             }
         }
+
+        with(view.bottom_sheet_root_layout) {
+            animateLayoutChanges = true
+            layoutTransition = LayoutTransition().apply {
+                setAnimateParentHierarchy(false)
+            }
+        }
     }
 
     override fun onConnectionClick(connection: Connection) {
@@ -253,10 +261,17 @@ class MapFragment : NavigationFragment(),
         }
     }
 
+    override fun onInfoClick(connection: Connection) {
+        Popup(context)
+            .withTitle("hi")
+            .withPositiveButton("OK")
+            .show()
+    }
+
     override fun onRequestClick(request: ConnectionRequest) {
         Popup(baseActivity)
             .withTitle(R.string.dialog_request_from, request.recipient?.getDisplayName())
-            .withMessage(R.string.dialog_ask_accept_request, request.recipient?.getDisplayName(), Duration(request.duration).toShortenString())
+            .withMessage(R.string.dialog_ask_accept_request, request.recipient?.getDisplayName(), dateFormatter.getDuration(request.duration))
             .withPositiveButton(R.string.button_accept) { mapViewModel.accept(request) }
             .withNegativeButton(R.string.button_later)
             .show()
