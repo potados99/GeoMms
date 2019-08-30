@@ -8,6 +8,8 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.potados.geomms.R
+import com.potados.geomms.common.base.BaseActivity
+import com.potados.geomms.common.extension.resolveThemeColor
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.injection.permissions
 import com.potados.geomms.util.Notify
@@ -21,7 +23,7 @@ import kotlin.system.exitProcess
  * Explain user why we need these permissions.
  * After that, make a permission request to system.
  */
-class GiveMePermissionActivity: AppCompatActivity() {
+class GiveMePermissionActivity: BaseActivity() {
 
     private val navigator: Navigator by inject()
     private val permissionManager: com.potados.geomms.manager.PermissionManager by inject()
@@ -33,6 +35,8 @@ class GiveMePermissionActivity: AppCompatActivity() {
             navigator.showMain()
             this.finish()
         }
+
+        window.statusBarColor = resolveThemeColor(R.attr.tintPrimary)
 
         setContentView(R.layout.permission_activity)
 

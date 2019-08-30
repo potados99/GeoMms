@@ -15,10 +15,10 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.decorView.systemUiVisibility = when {
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.M -> 0
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.O -> View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            else -> View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        // We can only set light nav bar on API 27 in attrs, but we can do it in API 26 here
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
+            window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         }
 
         // Some devices don't let you modify android.R.attr.navigationBarColor

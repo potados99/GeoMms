@@ -78,8 +78,9 @@
     <style name="PermissionRow">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginBottom">25dp</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
         <item name="android:textSize">@dimen/textPrimary</item>
     </style>

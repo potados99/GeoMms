@@ -8,7 +8,7 @@ open class Connection(
     @PrimaryKey var id: Long = 0,
     var recipient: Recipient? = null,
     var duration: Long = 0,
-    var date: Long = 0, // date established
+    var date: Long = 0, // date established or request sent(temproal)
     var lastUpdate: Long = 0,
     var lastSent: Long = 0,
     var latitude: Double = 0.0,

@@ -20,4 +20,6 @@
     <string name="fail_stream_io">스트림 입출력 오류</string>
     <string name="fail_transaction">트랜잭션 오류: %s</string>
     <string name="fail_validator_not_found">%s 타입에 해당하는 검증자가 존재하지 않습니다.</string>
+    <string name="fail_cannot_register_connection_invalid">작업을 등록할 수 없습니다. 연결이 유효하지 않습니다.</string>
+    <string name="fail_close_expired_connection_invalid">만료된 연결을 삭제할 수 없습니다. 연결이 유효하지 않습니다.</string>
 </resources>

@@ -46,6 +46,8 @@ class Popup(private val context: Context?) {
     }
     fun withMoreMessage(@StringRes addition: Int, vararg formatArgs: Any?): Popup = withMoreMessage(context?.getString(addition, *formatArgs))
 
+    fun withNewLine(): Popup = withMoreMessage("\n")
+
     fun withPositiveButton(text: String?, listener: () -> Unit = {}): Popup {
         dialogBuilder.setPositiveButton(text) { _, _ ->
             listener()

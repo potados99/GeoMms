@@ -258,23 +258,31 @@ class MapFragment : NavigationFragment(),
     }
 
     override fun onInfoClick(connection: Connection) {
-        val p = Popup(context).withTitle(connection.recipient?.getDisplayName())
+        val popup = Popup(context).withTitle(connection.recipient?.getDisplayName())
 
         if (connection.isTemporal) {
-            p
-                .withMessage("Sent an invitation to %s\n")
-                .withMoreMessage("Sent: %s\n")
-                .withMoreMessage("Connection ID: %s\n")
-                .withMoreMessage("Duration: %s\n")
+            popup
+                .withMessage(R.string.dialog_invitation_sent)
+                .withNewLine()
+                .withNewLine()
+                .withMoreMessage(R.string.dialog_sent_at, dateFormatter.getMessageTimestamp(connection.date))
+                .withNewLine()
+                .withMoreMessage(R.string.dialog_connection_id, connection.id)
+                .withNewLine()
+                .withMoreMessage(R.string.dialog_duration, dateFormatter.getDuration(connection.duration))
         } else {
-            p
-                .withMessage("Sharing location with %s\n")
-                .withMessage("Connection ID: %s\n")
-                .withMessage("From: %s\n")
-                .withMessage("Until: %s\n")
+            popup
+                .withMessage(R.string.dialog_sharing_location)
+                .withNewLine()
+                .withNewLine()
+                .withMoreMessage(R.string.dialog_connection_id, connection.id)
+                .withNewLine()
+                .withMoreMessage(R.string.dialog_from, dateFormatter.getMessageTimestamp(connection.date))
+                .withNewLine()
+                .withMoreMessage(R.string.dialog_until, dateFormatter.getMessageTimestamp(connection.due))
         }
 
-        p
+        popup
             .withPositiveButton(R.string.button_ok)
             .show()
     }

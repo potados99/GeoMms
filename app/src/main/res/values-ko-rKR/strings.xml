@@ -322,23 +322,31 @@
     <string name="notify_nothing_to_delete">지울 것이 없습니다.</string>
     <string name="notify_request_not_yet_accepted">초대가 아직 수락되지 않았습니다.</string>
     <string name="permission_access_internet">인터넷 접근</string>
-    <string name="permission_access_location">위치정보 접근</string>
+    <string name="permission_access_location">위치정보에 액세스</string>
     <string name="permission_access_network_state">네트워크 정보 접근</string>
     <string name="permission_explain">애플리케이션을 사용하기 위해 권한 획득을 허용해 주세요.</string>
-    <string name="permission_read_contacts">연락처 열람</string>
-    <string name="permission_read_phone_state">휴대전화 상태 열람</string>
+    <string name="permission_access_contacts">주소록에 액세스</string>
+    <string name="permission_make_and_manage_call">전화 걸기 및 관리</string>
     <string name="permission_read_sms">메시지 열람</string>
-    <string name="permission_receive_send_sms">메시지 수신 및 발신</string>
+    <string name="permission_send_and_view_sms">SMS 메시지 전송 및 보기</string>
     <string name="settings_category_dev">개발자</string>
     <string name="settings_summary_show_all_error">애플리케이션 내에서 발생하는 모든 오류를 표시합니다.</string>
     <string name="settings_title_show_all_error">모든 오류 보기</string>
     <string name="start_a_new_conversation">새로운 대화를 시작해보세요.</string>
-    <string name="title_cancel_request">요청 취소</string>
+    <string name="title_cancel_request">초대 취소</string>
     <string name="title_disconnect">연결 해제</string>
     <string name="title_without_permissions">권한이 없다면...</string>
     <string name="dialog_ask_cancel_request">%s님에게 보낸 요청을 취소하시겠습니까?</string>
     <string name="dialog_ask_disconnect">%s님과의 위치 공유를 끝내시겠습니까?</string>
     <string name="dialog_please_permission">권한이 없다면 이 애플리케이션은 메시지를 받거나 보낼 수도, 위치를 공유할 수도 없습니다. 이 애플리케이션이 정상적으로 작동할 수 있도록 도와주세요 :)</string>
+    <string name="dialog_sent_at">전송 시각: %s</string>
+    <string name="dialog_connection_id">연결 ID: %s</string>
+    <string name="dialog_duration">공유 시간: %s</string>
+    <string name="dialog_from">시작 시각: %s</string>
+    <string name="dialog_invitation_sent">초대 전송됨.</string>
+    <string name="dialog_sharing_location">위치 공유중.</string>
+    <string name="dialog_until">종료 시각: %s</string>
+    <string name="permission_be_default_sms">이 앱을 기본 SMS 앱으로 설정</string>
 
 
 </resources>

@@ -8,9 +8,11 @@
     <!-- Title -->
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="60dp"
+        android:layout_marginEnd="32dp"
         android:text="@string/title_permission"
         android:textColor="?android:attr/textColorPrimaryInverse"
         android:textSize="@dimen/textBig"
@@ -24,10 +26,12 @@
         android:layout_height="0dp"
         android:layout_marginTop="64dp"
         android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/explain"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title">
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,42 +40,36 @@
 
             <TextView
                 style="@style/PermissionRow"
-                android:text="@string/permission_receive_send_sms" />
+                android:text="@string/permission_send_and_view_sms" />
 
             <TextView
                 style="@style/PermissionRow"
-                android:text="@string/permission_read_sms" />
-
-            <TextView
-                style="@style/PermissionRow"
-                android:text="@string/permission_read_contacts" />
-
-            <TextView
-                style="@style/PermissionRow"
-                android:text="@string/permission_read_phone_state" />
-
-            <TextView
-                style="@style/PermissionRow"
-                android:text="@string/permission_access_internet" />
-
-            <TextView
-                style="@style/PermissionRow"
-                android:text="@string/permission_access_network_state" />
+                android:text="@string/permission_access_contacts" />
 
             <TextView
                 style="@style/PermissionRow"
                 android:text="@string/permission_access_location" />
 
+            <TextView
+                style="@style/PermissionRow"
+                android:text="@string/permission_make_and_manage_call" />
+
+            <TextView
+                style="@style/PermissionRow"
+                android:text="@string/permission_be_default_sms" />
+
         </LinearLayout>
 
     </ScrollView>
 
-    <!-- Summary -->
+    <!-- Explain -->
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:id="@+id/explain"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="128dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="48dp"
         android:text="@string/permission_explain"
         android:textColor="?android:attr/textColorPrimaryInverse"
         android:textSize="@dimen/textPrimary"
@@ -79,23 +77,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Button shadow -->
-    <View
-        android:layout_width="0dp"
-        android:layout_height="4dp"
-        android:background="@drawable/ab_shadow_reversed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/nav_view_shadow"
-        app:layout_constraintBottom_toTopOf="@+id/allow" />
-
     <!-- Allow button -->
     <Button
         android:id="@+id/allow"
-        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="@color/backgroundLight"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_rectangle_4dp"
+        android:elevation="12dp"
         android:text="@string/button_ok"
         android:textColor="?attr/tintPrimary"
         android:textSize="@dimen/textPrimary"

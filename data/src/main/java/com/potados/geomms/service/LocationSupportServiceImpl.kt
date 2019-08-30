@@ -269,7 +269,7 @@ class LocationSupportServiceImpl(
 
         // add connection, delete request
         executeInDefaultInstance { realm ->
-            realm.copyToRealmOrUpdate(connection).let(::registerTask)
+            realm.copyToRealmOrUpdate(connection).let { registerTask(it.id) }
             request.deleteFromRealm()
         }
 
@@ -291,7 +291,7 @@ class LocationSupportServiceImpl(
         val connection = Connection.fromAcceptedRequest(request)
 
         executeInDefaultInstance {
-            it.copyToRealmOrUpdate(connection).let(::registerTask)
+            it.copyToRealmOrUpdate(connection).let { registerTask(it.id) }
         }
 
         Timber.i("Accepted -> New connection(${connection.id}) established with ${connection.id}.")
@@ -466,7 +466,7 @@ class LocationSupportServiceImpl(
         }
 
         // Stop sending updates.
-        unregisterTask(connection)
+        unregisterTask(connection.id)
 
         val packet = Packet.ofRequestingDisconnect(connection)
 
@@ -718,7 +718,7 @@ class LocationSupportServiceImpl(
                     it.deleteFromRealm()
                 }
                 else {
-                    registerTask(it)
+                    registerTask(it.id)
                 }
             }
         }
@@ -730,7 +730,14 @@ class LocationSupportServiceImpl(
      *
      * @param connection must be a realm managed object.
      */
-    private fun registerTask(connection: Connection) = unitOnFail {
+    private fun registerTask(connectionId: Long) = unitOnFail {
+        val connection = validator.validate(getConnection(connectionId, temporal = false))
+
+        if (connection == null) {
+            fail(R.string.fail_cannot_register_connection_invalid, show = true)
+            return@unitOnFail
+        }
+
         val sendBroadcast = {
             context.sendBroadcast(
                 Intent(context, SendUpdateReceiver::class.java).apply {
@@ -739,7 +746,7 @@ class LocationSupportServiceImpl(
             )
         }
         val expireConnection = {
-            closeExpiredConnection(connection)
+            closeExpiredConnection(connection.id)
         }
 
         // Send update every [UPDATE_INTERVAL].
@@ -757,18 +764,25 @@ class LocationSupportServiceImpl(
      *
      * @param connection must be a getRealm managed object.
      */
-    private fun unregisterTask(connection: Connection) = unitOnFail {
-        scheduler.cancel(connection.id)
+    private fun unregisterTask(connectionId: Long) = unitOnFail {
+        scheduler.cancel(connectionId)
 
-        Timber.i("Task unregistered: connection ${connection.id}.")
+        Timber.i("Task unregistered: connection $connectionId.")
     }
 
-    private fun closeExpiredConnection(connection: Connection) = unitOnFail {
+    private fun closeExpiredConnection(connectionId: Long) = unitOnFail {
+        val connection = validator.validate(getConnection(connectionId, temporal = false))
+
+        if (connection == null) {
+            fail(R.string.fail_close_expired_connection_invalid, show = true)
+            return@unitOnFail
+        }
+
         if (!connection.isExpired()) {
             Timber.w("Connection is not expired yet!")
         }
 
-        unregisterTask(connection)
+        unregisterTask(connection.id)
 
         Timber.i("Closed expired connection of id ${connection.id}")
 
