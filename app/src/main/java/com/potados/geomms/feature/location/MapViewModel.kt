@@ -1,7 +1,13 @@
 package com.potados.geomms.feature.location
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -9,16 +15,17 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewModel
+import com.potados.geomms.common.widget.AvatarView
 import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.service.LocationSupportService
+import com.potados.geomms.util.Popup
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.marker_layout.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
-import java.util.*
 
 /**
  * View Model for [MapFragment].
@@ -37,23 +44,26 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     private val _liveMarkers = MutableLiveData<MutableList<MarkerOptions>>()
     val markers: LiveData<MutableList<MarkerOptions>> = _liveMarkers
 
+    @SuppressWarnings("InflateParams")
     private val refreshMarkers = { connections: RealmResults<Connection> ->
         _markers.clear()
         connections.forEach {
             if (it.lastUpdate != 0L) {
                 // do not display marker when having nothing to display.
 
-                val markerOption = MarkerOptions()
-                    .position(LatLng(it.latitude, it.longitude))
-                    .title(it.recipient?.getDisplayName())
-                    .icon(BitmapDescriptorFactory.defaultMarker(Random(it.id).nextInt(360).toFloat()))
-
                 val markerAvatar = LayoutInflater
                     .from(context)
                     .inflate(R.layout.marker_layout, null)
                     .avatar
+                    .apply { setContact(it.recipient) }
 
-                markerAvatar.setContact(it.recipient)
+
+                val avatarBitmap = getBitmapFromView(markerAvatar)
+
+                val markerOption = MarkerOptions()
+                    .position(LatLng(it.latitude, it.longitude))
+                    .title(it.recipient?.getDisplayName())
+                    .icon(BitmapDescriptorFactory.fromBitmap(avatarBitmap))
 
                 _markers.add(markerOption)
 
@@ -130,5 +140,24 @@ class MapViewModel : BaseViewModel(), KoinComponent {
             locationService.cancelConnectionRequest(connection)
             return@tryOrNull true
         } ?: false
+    }
+
+    private fun getBitmapFromView(view: View): Bitmap {
+        view.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        val bitmap = Bitmap.createBitmap(
+            view.measuredWidth,
+            view.measuredHeight,
+            Bitmap.Config.ARGB_8888
+        )
+
+        val canvas = Canvas(bitmap)
+
+        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+
+        view.draw(canvas)
+
+        // Background included here.
+        return bitmap
     }
 }

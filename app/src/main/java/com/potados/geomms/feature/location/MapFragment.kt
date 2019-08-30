@@ -4,6 +4,7 @@ import android.animation.LayoutTransition
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.*
+import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,7 @@ import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
+import kotlinx.android.synthetic.main.marker_layout.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -168,6 +170,7 @@ class MapFragment : NavigationFragment(),
     }
 
     private fun initializeView(view: View, savedInstanceState: Bundle?) {
+
         with(view.map_view) {
             onCreate(savedInstanceState)
             getMapAsync(this@MapFragment) // onMapReady called after this done

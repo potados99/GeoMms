@@ -22,10 +22,7 @@ import android.content.Context
 import android.util.AttributeSet
 import kotlin.math.ceil
 
-class TightTextView(
-    context: Context,
-    attrs: AttributeSet? = null
-) : CollapseTextView(context, attrs) {
+class TightTextView(context: Context, attrs: AttributeSet? = null) : CollapseTextView(context, attrs) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)

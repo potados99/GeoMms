@@ -38,6 +38,7 @@ import android.graphics.Canvas
 import android.view.ViewGroup
 import android.util.DisplayMetrics
 import android.view.WindowManager
+import com.potados.geomms.R
 
 
 fun Context.getColorCompat(colorRes: Int): Int {
@@ -89,30 +90,4 @@ fun Context.registerReceiver(action: String, onReceive: (intent: Intent?) -> Uni
             onReceive(intent)
         }
     }, IntentFilter(action))
-}
-fun Context.getBitmapFromView(context: Context, view: View): Bitmap {
-    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    val displayMetrics = DisplayMetrics()
-
-    windowManager.defaultDisplay.getMetrics(displayMetrics)
-    view.apply {
-        layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)
-    }
-
-    val bitmap = Bitmap.createBitmap(
-        view.measuredWidth,
-        view.measuredHeight,
-        Bitmap.Config.ARGB_8888
-    )
-
-    val canvas = Canvas(bitmap)
-
-    view.draw(canvas)
-
-    return bitmap
 }

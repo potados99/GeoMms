@@ -1,31 +1,26 @@
 package com.potados.geomms.common.widget
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.resolveThemeColor
 import com.potados.geomms.common.extension.setBackgroundTint
-import com.potados.geomms.common.extension.setTint
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.Recipient
 import kotlinx.android.synthetic.main.avatar_view.view.*
 
-class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
+class StaticAvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
 
     private var lookupKey: String? = null
     private var name: String? = null
     private var address: String? = null
 
     init {
-        View.inflate(context, R.layout.avatar_view, this)
+        View.inflate(context, R.layout.static_avatar_view, this)
 
         clipToOutline = true
-
-        setBackgroundResource(R.drawable.circle)
-        setBackgroundTint(context.resolveThemeColor(R.attr.avatarColor))
     }
 
     /**
