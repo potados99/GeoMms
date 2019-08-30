@@ -1,5 +1,6 @@
 package com.potados.geomms.feature.location
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -16,11 +17,9 @@ import org.koin.core.inject
 import java.util.*
 
 class ConnectionsAdapter(
+    private val context: Context,
     private val listener: ConnectionClickListener
-) :
-    BaseRealmAdapter<Connection>(),
-    KoinComponent
-{
+) : BaseRealmAdapter<Connection>(), KoinComponent {
 
     private val dateFormatter: DateFormatter by inject()
 
@@ -50,18 +49,18 @@ class ConnectionsAdapter(
         view.name.text = connection.recipient?.getDisplayName()
         view.avatar.setContact(connection.recipient)
 
-        if (connection.isTemporal) {
-            view.name.alpha = 0.5f
-            view.status.alpha = 0.5f
-            view.status.text = "Request sent." // TODO hardcoded string
+        val alpha = if (connection.isTemporal) 0.5f else 1.0f
 
+        view.name.alpha = alpha
+        view.status.alpha = alpha
+
+        if (connection.isTemporal) {
+            view.status.text = context.getString(R.string.connection_request_sent)
             (holder as TimerViewHolder).timer?.cancel()
         }
         else {
-            view.name.alpha = 1.0f
-            view.status.alpha = 1.0f
             view.status.text = when (connection.lastUpdate == 0L) {
-                true -> "Location not available" // TODO hardcoded string
+                true -> context.getString(R.string.connection_location_not_available)
                 else -> dateFormatter.getConversationTimestamp(connection.lastUpdate)
             }
 

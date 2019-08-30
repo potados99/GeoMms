@@ -64,17 +64,15 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
 
     val searching = MutableLiveData<Boolean>().apply { value = false }
 
+    init {
+        failables += this
+        failables += conversationRepo
+        failables += syncRepo
+        failables += permissionManager
+    }
+
     override fun start() {
         super.start()
-
-        failables.addAll(
-            listOf(
-                this,
-                conversationRepo,
-                syncRepo,
-                permissionManager
-            )
-        )
 
         sync()
     }

@@ -5,7 +5,6 @@ import android.view.*
 import androidx.appcompat.widget.SearchView
 import com.potados.geomms.R
 import com.potados.geomms.base.Failable
-import com.potados.geomms.common.base.BaseActivity
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.autoScrollToStart
 import com.potados.geomms.common.extension.baseActivity
@@ -15,7 +14,6 @@ import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
 import com.potados.geomms.manager.PermissionManager
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
-import kotlinx.android.synthetic.main.main_hint.*
 import kotlinx.android.synthetic.main.main_hint.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -40,9 +38,12 @@ class ConversationsFragment : NavigationFragment() {
     }
     private val searchAdapter = SearchAdapter()
 
-    override fun onFail(failure: Failable.Failure) {
-        super.onFail(failure)
-        // do some...
+    init {
+        failables += this
+        failables += navigator
+        failables += permissionManager
+        failables += conversationsAdapter
+        failables += searchAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +51,7 @@ class ConversationsFragment : NavigationFragment() {
 
         conversationsViewModel = getViewModel()
 
-        addFailables(conversationsViewModel.failables + listOf(navigator, permissionManager))
+        failables += conversationsViewModel.failables
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

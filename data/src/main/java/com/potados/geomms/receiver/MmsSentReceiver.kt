@@ -89,9 +89,9 @@ class MmsSentReceiver : BroadcastReceiver(), KoinComponent {
         Timber.v(filePath)
         File(filePath).delete()
 
-        Uri.parse(intent.getStringExtra("content_uri"))?.let { uri ->
+        Uri.parse(intent.getStringExtra("content_uri"))?.let { messageUri ->
             val pendingResult = goAsync()
-            syncMessage(uri) { pendingResult.finish() }
+            syncMessage(messageUri) { pendingResult.finish() }
         }
     }
 

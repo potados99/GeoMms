@@ -55,9 +55,7 @@ class MessagesAdapter(
                 layoutInflater.inflate(R.layout.message_list_item_out, parent, false)
             }
             else -> {
-                layoutInflater.inflate(R.layout.message_list_item_in, parent, false).apply {
-                    avatar.threadId = data?.first()?.threadId ?: 0
-                }
+                layoutInflater.inflate(R.layout.message_list_item_in, parent, false)
             }
         }
 
@@ -95,7 +93,6 @@ class MessagesAdapter(
 
         // Bind the avatar
         if (!message.isMe()) {
-            view.avatar.threadId = conversation.id
             view.avatar.setContact(contactCache[message.address])
             view.avatar.setVisible(!canGroup(message, next), View.INVISIBLE)
         }
@@ -177,7 +174,7 @@ class MessagesAdapter(
 
         override fun get(key: String): Recipient? {
             if (super.get(key)?.isValid != true) {
-                set(key, conversation?.recipients?.firstOrNull { PhoneNumberUtils.compare(it.address, key) })
+                set(key, conversation.recipients.firstOrNull { PhoneNumberUtils.compare(it.address, key) })
             }
 
             return super.get(key)?.takeIf { it.isValid }

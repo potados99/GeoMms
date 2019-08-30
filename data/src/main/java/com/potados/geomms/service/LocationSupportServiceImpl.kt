@@ -769,7 +769,7 @@ class LocationSupportServiceImpl(
         return Realm.getDefaultInstance()
     }
 
-    private fun executeInDefaultInstance(transaction: (Realm) -> Unit) {
+    private fun executeInDefaultInstance(close: Boolean = true, transaction: (Realm) -> Unit) {
         val realm = getRealm()
 
         realm.beginTransaction()
@@ -777,11 +777,15 @@ class LocationSupportServiceImpl(
         try {
             transaction(realm)
             realm.commitTransaction()
+            if (close) {
+                realm.close()
+            }
         } catch (e: Exception) {
             if (realm.isInTransaction) {
                 realm.cancelTransaction()
+                Timber.i("Canceled transaction.")
             }
-            setFailure(Failable.Failure(e.message ?: "Transaction error occurred.", true))
+            fail(R.string.fail_transaction, e.message, show = true)
         }
     }
 

@@ -347,5 +347,8 @@
     <string name="drawer_rate">Rate in Google Play</string>
     <string name="dialog_clear_geomms_warning">This will disconnect all active connections, refuse all incoming request, and cancel already sent requests. Do you want to continue?</string>
     <string name="title_opensource_license">OSS Notice</string>
+    <string name="connection_request_sent">Request sent</string>
+    <string name="connection_location_not_available">Location not available</string>
+    <string name="fail_cannot_select_address_not_exist">Failed to select address. The selected address does not exist.</string>
 
 </resources>

@@ -28,9 +28,8 @@ class ComposeFragment : BaseFragment() {
     private lateinit var contactAdapter: ContactAdapter
     private lateinit var messagesAdapter: MessagesAdapter
 
-    override fun onFail(failure: Failable.Failure) {
-        super.onFail(failure)
-        // do some
+    init {
+        failables += this
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +40,10 @@ class ComposeFragment : BaseFragment() {
         composeViewModel = getViewModel { activity?.intent?.let(::startWithIntent) }
         contactAdapter = ContactAdapter(composeViewModel::setConversationByContact)
 
-        addFailables(composeViewModel.failables + listOf<Failable>(chipsAdapter, contactAdapter, messagesAdapter))
+        failables += composeViewModel.failables
+        failables += chipsAdapter
+        failables += contactAdapter
+        failables += messagesAdapter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -331,7 +331,7 @@ class MessageRepositoryImpl(
         //
         // We do this after inserting the message because it might be slow, and we want the message
         // to be inserted into Realm immediately. We don't need to do this after receiving one
-        realm.executeTransaction { managedMessage?.takeIf { it.isValid }?.contentId = uri.lastPathSegment.toLong() }
+        realm.executeTransaction { managedMessage?.takeIf { it.isValid }?.contentId = uri?.lastPathSegment?.toLong() ?: 0 }
         realm.close()
 
         // On some devices, we can't obtain a threadId until after the first message is sent in a
@@ -374,7 +374,7 @@ class MessageRepositoryImpl(
 
         context.contentResolver.insert(Telephony.Sms.Inbox.CONTENT_URI, values)?.let { uri ->
             // Update the contentId after the message has been inserted to the content provider
-            realm.executeTransaction { managedMessage?.contentId = uri.lastPathSegment.toLong() }
+            realm.executeTransaction { managedMessage?.contentId = uri.lastPathSegment?.toLong() ?: 0 }
         }
 
         realm.close()

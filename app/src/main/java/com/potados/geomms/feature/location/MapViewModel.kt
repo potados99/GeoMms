@@ -28,7 +28,6 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     private val locationService: LocationSupportService by inject()
 
     val incomingRequests = locationService.getIncomingRequests()
-    val outgoingRequests = locationService.getOutgoingRequests()
     val connections = locationService.getConnections()
 
     private val _markers = mutableListOf<MarkerOptions>()
@@ -56,12 +55,13 @@ class MapViewModel : BaseViewModel(), KoinComponent {
         _liveMarkers.value = _markers
     }
 
+    init {
+        failables += this
+        failables += locationService
+    }
+
     override fun start() {
         super.start()
-
-        failables.addAll(
-            listOf(this, locationService)
-        )
 
         connections?.let {
             // Setting chagne listener does not invoke it on register time.

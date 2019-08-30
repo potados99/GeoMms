@@ -14,16 +14,10 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
 
     private val contactFilter: ContactFilter by inject()
 
-    override fun start() {
-        super.start()
-
-        failables.addAll(
-            listOf(
-                this,
-                contactRepo,
-                contactFilter
-            )
-        )
+    init {
+        failables += this
+        failables += contactRepo
+        failables += contactFilter
     }
 
     fun getContacts(query: String = ""): List<Contact> {
@@ -37,10 +31,5 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
         }
 
         return contacts
-    }
-
-    // TODO
-    fun setContact(contact: Contact) {
-
     }
 }

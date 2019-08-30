@@ -6,6 +6,8 @@ import android.telephony.PhoneNumberUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.potados.geomms.R
+import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.getViewModel
 import com.potados.geomms.common.extension.setOnTextChanged
@@ -17,11 +19,9 @@ import com.potados.geomms.feature.location.MapFragment.Companion.ACTION_SET_ADDR
 import com.potados.geomms.feature.location.MapFragment.Companion.EXTRA_ADDRESS
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.PhoneNumber
-import com.potados.geomms.service.LocationSupportService
 import io.realm.RealmList
 import kotlinx.android.synthetic.main.invite_fragment.view.*
 import org.koin.core.KoinComponent
-import org.koin.core.inject
 import java.util.*
 
 class InviteFragment : BaseFragment(), KoinComponent {
@@ -32,19 +32,24 @@ class InviteFragment : BaseFragment(), KoinComponent {
     private lateinit var chipsAdapter: ChipsAdapter
     private lateinit var contactAdapter: ContactAdapter
 
-    private val service: LocationSupportService by inject()
-
     /**
      * Invoked when user select contact
      * @see [onCreate].
      */
     private val broadcastSelectedAddress: (Contact) -> Unit = {
-        context?.sendBroadcast(
-            Intent(ACTION_SET_ADDRESS)
-                .putExtra(EXTRA_ADDRESS, it.numbers[0]?.address
-                    ?: throw RuntimeException("check ContactAdapter."))
-        )
+        val address= it.numbers[0]?.address
+
+        if (address == null) {
+            setFailure(Failable.Failure(getString(R.string.fail_cannot_select_address_not_exist), show = true))
+        } else {
+            context?.sendBroadcast(Intent(ACTION_SET_ADDRESS).putExtra(EXTRA_ADDRESS, address))
+        }
+
         activity?.finish()
+    }
+
+    init {
+        failables += this
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +58,10 @@ class InviteFragment : BaseFragment(), KoinComponent {
         inviteViewModel = getViewModel()
         chipsAdapter = ChipsAdapter(context!!)
         contactAdapter = ContactAdapter(onContactClick = broadcastSelectedAddress)
+
+        failables += inviteViewModel.failables
+        failables += chipsAdapter
+        failables += contactAdapter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -70,7 +79,6 @@ class InviteFragment : BaseFragment(), KoinComponent {
                 val query = it.toString()
 
                 var contacts = inviteViewModel.getContacts(query)
-                val sentReqs = service.getOutgoingRequests()
 
                 if (PhoneNumberUtils.isWellFormedSmsAddress(query)) {
                     val newAddress = PhoneNumberUtils.formatNumber(query, Locale.getDefault().country)

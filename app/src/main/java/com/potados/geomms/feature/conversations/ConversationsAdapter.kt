@@ -39,7 +39,7 @@ class ConversationsAdapter(
             view.apply {
                 title.setBold(true)
                 snippet.setBold(true)
-                snippet.setTextColorRes(R.color.textPrimary) // TODO null theme
+                snippet.setTextColorRes(R.color.textPrimary)
                 unread.setVisible(true)
                 date.setBold(true)
                 date.setTextColorRes(R.color.textPrimary)

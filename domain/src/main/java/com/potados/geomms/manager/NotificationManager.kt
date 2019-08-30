@@ -5,7 +5,7 @@ import androidx.core.app.NotificationCompat
 abstract class NotificationManager : Manager() {
     abstract fun update(threadId: Long)
 
-    abstract fun notifyFailed(threadId: Long)
+    abstract fun notifyFailed(msgId: Long)
 
     abstract fun createNotificationChannel(threadId: Long)
 

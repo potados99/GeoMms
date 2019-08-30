@@ -33,16 +33,6 @@ import kotlinx.android.synthetic.main.avatar_view.view.*
 
 class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
 
-    /**
-     * This value can be changes if we should use the theme from a particular conversation
-     */
-    var threadId: Long = 0
-        set(value) {
-            if (field == value) return
-            field = value
-            applyTheme(value)
-        }
-
     private var lookupKey: String? = null
     private var name: String? = null
     private var address: String? = null
@@ -87,12 +77,12 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
         super.onFinishInflate()
 
         if (!isInEditMode) {
-            applyTheme(threadId)
+            applyTheme()
             updateView()
         }
     }
 
-    fun applyTheme(threadId: Long) {
+    fun applyTheme() {
         setBackgroundTint(context.resolveThemeColor(R.attr.avatarColor))
         initial.setTextColor(Color.WHITE)
         icon.setTint(Color.WHITE)

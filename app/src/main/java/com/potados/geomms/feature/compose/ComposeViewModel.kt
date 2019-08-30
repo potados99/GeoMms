@@ -47,19 +47,13 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
     val conversation = MutableLiveData<Conversation>()      // null on empty
     val messages = MutableLiveData<RealmResults<Message>>() // null on empty
 
-    override fun start() {
-        super.start()
-
-        failables.addAll(
-            listOf(
-                this,
-                activeConversationManager,
-                conversationRepo,
-                messageRepo,
-                contactRepo,
-                contactFilter
-            )
-        )
+    init {
+        failables += this
+        failables += activeConversationManager
+        failables += conversationRepo
+        failables += messageRepo
+        failables += contactRepo
+        failables += contactFilter
     }
 
     // Setup fragment with Intent of parent Activity.

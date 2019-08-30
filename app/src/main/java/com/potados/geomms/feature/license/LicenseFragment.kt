@@ -17,6 +17,10 @@ import kotlinx.android.synthetic.main.license_fragment.view.*
 class LicenseFragment : BaseFragment() {
     private lateinit var adapter: LicenseAdapter
 
+    init {
+        failables += this
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -47,7 +47,7 @@ class MapFragment : NavigationFragment(),
     private lateinit var mapViewModel: MapViewModel
     private lateinit var viewDataBinding: MapFragmentBinding
 
-    private val connectionsAdapter = ConnectionsAdapter(this)
+    private lateinit var connectionsAdapter: ConnectionsAdapter
     private val requestsAdapter = RequestsAdapter(this)
 
     /**
@@ -64,9 +64,11 @@ class MapFragment : NavigationFragment(),
 
     private var map: GoogleMap? = null
 
-    override fun onFail(failure: Failable.Failure) {
-        super.onFail(failure)
-        // do some...
+    init {
+        failables += this
+        failables += navigator
+        failables += locationRepo
+        failables += requestsAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,9 +77,12 @@ class MapFragment : NavigationFragment(),
         MapsInitializer.initialize(context)
 
         mapViewModel = getViewModel { start() }
-        context?.registerReceiver(receiver, IntentFilter(ACTION_SET_ADDRESS))
+        connectionsAdapter = ConnectionsAdapter(context!!, this)
 
-        addFailables(mapViewModel.failables + listOf(navigator, locationRepo, connectionsAdapter, requestsAdapter))
+        failables += mapViewModel.failables
+        failables += connectionsAdapter
+
+        context?.registerReceiver(receiver, IntentFilter(ACTION_SET_ADDRESS))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

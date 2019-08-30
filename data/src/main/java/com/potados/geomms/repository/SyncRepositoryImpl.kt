@@ -156,10 +156,10 @@ class SyncRepositoryImpl(
          * 여기서 Contact와 이어줍니다.
          */
         recipientCursor?.use {
-            val contacts = realm.copyToRealm(getContacts())
+            val contacts = realm.copyToRealm(getContacts() as MutableList)
             val recipients = recipientCursor
                     .map { cursor ->
-                        Timber.v("main_syncing recipients...$progress")
+                        Timber.v("Syncing recipients...$progress")
 
                         postProgress(max, ++progress, false)
                         cursorToRecipient.map(cursor).apply {
@@ -169,7 +169,7 @@ class SyncRepositoryImpl(
                         }
                     }
             realm.insertOrUpdate(recipients)
-            Timber.i("recipients inserted to realm")
+            Timber.i("Recipients inserted to realm")
         }
 
         postProgress(0, 0, false)
@@ -304,7 +304,7 @@ class SyncRepositoryImpl(
         _progress.postValue(SyncProgress.Running(max, progress, indeterminate))
     }
     private fun postIdle() = unitOnFail {
-        _progress.postValue(SyncRepository.SyncProgress.Idle())
+        _progress.postValue(SyncProgress.Idle())
     }
 
 }

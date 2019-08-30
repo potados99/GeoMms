@@ -14,7 +14,7 @@ operator fun Menu.iterator() = object : MutableIterator<MenuItem> {
 }
 
 fun Menu.setTint(context: Context?, color: Int) {
-    context?.let { c ->
+    context?.let {
         iterator().forEach { item ->
             item.icon.setTint(color)
         }

@@ -1,6 +1,9 @@
 package com.potados.geomms.base
 
 interface FailableHandler {
+
+    val observedFailables: MutableList<Failable>
+
     /**
      * What to do when some failure occur
      */
@@ -9,5 +12,11 @@ interface FailableHandler {
     /**
      * Add failables to manage.
      */
-    fun addFailables(failables: List<Failable>)
+    fun startObservingFailables(failables: List<Failable>)
+
+    /**
+     * Stop managing failables.
+     * This clears observedFailables.
+     */
+    fun stopObservingFailables()
 }
