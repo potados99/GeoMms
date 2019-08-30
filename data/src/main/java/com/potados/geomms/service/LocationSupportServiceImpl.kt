@@ -292,6 +292,8 @@ class LocationSupportServiceImpl(
         val connection = Connection.fromAcceptedRequest(request)
 
         executeInDefaultInstance { realm ->
+            request.deleteFromRealm()
+
             realm.insertOrUpdate(connection)
             registerTask(connection.id)
         }

@@ -341,7 +341,7 @@ class MapFragment : NavigationFragment(),
         // Variables
         val changeStart = 0.8f
         val alphaMax = 1.0f
-        val radiusMax = 20f
+        val radiusMax = 30f
         val color = Color.parseColor("#EEFFFFFF")
 
         val rangeZeroToOne = (1.0f - offset) / (1.0f - changeStart)
