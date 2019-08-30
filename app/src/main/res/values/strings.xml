@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="friend_content_title_textview">Friends</string>
     <string name="app_name">Geo MMS</string>
@@ -351,12 +352,12 @@
     <string name="connection_last_update">Last update %s</string>
     <string name="connection_time_left">%s left</string>
 
-    <string name="dot">·</string>
-    <string name="dash">―</string>
+    <string name="dot" translatable="false">·</string>
+    <string name="dash" translatable="false">―</string>
     <string name="settings_category_dev">Developer</string>
     <string name="settings_title_show_all_error">Show All Error Reports</string>
     <string name="settings_summary_show_all_error">Display all errors occurred inside this application.</string>
-    <string name="notify_request_not_yet_accepted">Request is not yet accepted.</string>
+    <string name="notify_request_not_yet_accepted">Invitation is not yet accepted.</string>
     <string name="notify_no_location_data">Location data not yet arrived.</string>
     <string name="title_cancel_request">Cancel request</string>
     <string name="title_disconnect">Disconnect</string>
@@ -364,7 +365,7 @@
     <string name="dialog_ask_disconnect">Do you want to stop sharing location with %s?</string>
     <string name="notify_nothing_to_delete">Nothing to delete.</string>
     <string name="notify_cleared">Cleared.</string>
-    <string name="title_without_permissions">Without Permissions</string>
+    <string name="title_without_permissions">Without Permissions...</string>
     <string name="dialog_please_permission">Without permissions, this application can neither send or receive messages, nor share locations. Please help this app to work :).</string>
     <string name="permission_receive_send_sms">Receive and Send SMS</string>
     <string name="permission_read_sms">Read SMS</string>

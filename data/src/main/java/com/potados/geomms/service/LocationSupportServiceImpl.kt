@@ -899,7 +899,7 @@ class LocationSupportServiceImpl(
 
             val foundCorrector = getValidation(locationObject)?.corrector
             if (foundCorrector == null) {
-                fail(R.string.fail_no_validator, locationObject::class.java.name, show = true)
+                fail(R.string.fail_validator_not_found, locationObject::class.java.name, show = true)
                 return null
             }
 

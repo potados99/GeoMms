@@ -55,11 +55,8 @@ class MapFragment : NavigationFragment(),
      * Invoked when ACTION_SET_ADDRESS intent received.
      */
     private val receiver = createBroadcastReceiver {
-        // TODO hardcoded string
         it?.getStringExtra(EXTRA_ADDRESS)?.let { address ->
-            if (mapViewModel.request(address)) {
-                Notify(context).short("Request sent to $address")
-            }
+            mapViewModel.request(address)
         }
     }
 

@@ -306,6 +306,39 @@
     <string name="drawer_rate">구글플레이에서 리뷰하기</string>
     <string name="dialog_clear_geomms_warning">이 작업은 모든 연결을 해제하고 수신된 요청을 거절하며 이미 보낸 요청을 취소합니다. 계속 하시겠습니까?</string>
     <string name="title_opensource_license">오픈소스 라이센스 고지</string>
+    <string name="connection_location_not_available">위치 정보 없음</string>
+    <string name="connection_last_update">마지막 업데이트 %s</string>
+    <string name="connection_time_left">%s 남음</string>
+    <string name="connection_request_sent">요청 전송됨</string>
+    <string name="fail_cannot_select_address_not_exist">선택된 전화번호가 존재하지 않습니다.</string>
+    <string name="fail_get_contacts">연락처를 가져오지 못했습니다.</string>
+    <string name="fail_get_or_create_conversation">대화를 가져오거나 생성하지 못했습니다.</string>
+    <string name="fail_mark_read">읽음으로 표시하는 데에 실패했습니다.</string>
+    <string name="fail_send_message">메시지 전송에 실패했습니다.</string>
+    <string name="fail_sync_messages">메시지 동기화에 실패했습니다.</string>
+    <string name="notify_cannot_send_while_sync">동기화 중에는 메시지를 보낼 수 없습니다.</string>
+    <string name="notify_cleared">지우기 완료</string>
+    <string name="notify_no_location_data">위치 정보가 아직 수신되지 않았습니다.</string>
+    <string name="notify_nothing_to_delete">지울 것이 없습니다.</string>
+    <string name="notify_request_not_yet_accepted">초대가 아직 수락되지 않았습니다.</string>
+    <string name="permission_access_internet">인터넷 접근</string>
+    <string name="permission_access_location">위치정보 접근</string>
+    <string name="permission_access_network_state">네트워크 정보 접근</string>
+    <string name="permission_explain">애플리케이션을 사용하기 위해 권한 획득을 허용해 주세요.</string>
+    <string name="permission_read_contacts">연락처 열람</string>
+    <string name="permission_read_phone_state">휴대전화 상태 열람</string>
+    <string name="permission_read_sms">메시지 열람</string>
+    <string name="permission_receive_send_sms">메시지 수신 및 발신</string>
+    <string name="settings_category_dev">개발자</string>
+    <string name="settings_summary_show_all_error">애플리케이션 내에서 발생하는 모든 오류를 표시합니다.</string>
+    <string name="settings_title_show_all_error">모든 오류 보기</string>
+    <string name="start_a_new_conversation">새로운 대화를 시작해보세요.</string>
+    <string name="title_cancel_request">요청 취소</string>
+    <string name="title_disconnect">연결 해제</string>
+    <string name="title_without_permissions">권한이 없다면...</string>
+    <string name="dialog_ask_cancel_request">%s님에게 보낸 요청을 취소하시겠습니까?</string>
+    <string name="dialog_ask_disconnect">%s님과의 위치 공유를 끝내시겠습니까?</string>
+    <string name="dialog_please_permission">권한이 없다면 이 애플리케이션은 메시지를 받거나 보낼 수도, 위치를 공유할 수도 없습니다. 이 애플리케이션이 정상적으로 작동할 수 있도록 도와주세요 :)</string>
 
 
 </resources>

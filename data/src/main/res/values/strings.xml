@@ -20,5 +20,4 @@
     <string name="fail_transaction">Transaction error occurred: %s</string>
     <string name="fail_cannot_cancel_request_temp_connection_invalid">Failed to cancel request. Temporal connection is invalid.</string>
     <string name="fail_stream_io">Stream I/O error.</string>
-    <string name="fail_no_validator">Validator not found for type %s.</string>
 </resources>
