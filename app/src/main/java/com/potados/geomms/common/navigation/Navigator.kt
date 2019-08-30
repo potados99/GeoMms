@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Telephony
+import com.potados.geomms.R
 import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.common.GiveMePermissionActivity
 import com.potados.geomms.feature.compose.ComposeActivity
@@ -30,7 +31,7 @@ class Navigator (
 
     fun showGuides() {
         // TODO show guides
-        Notify(context).short("Sorry. Not implemented yet.")
+        Notify(context).short(R.string.notify_not_implemented)
     }
 
     fun showConversation(threadId: Long, query: String? = null) {
