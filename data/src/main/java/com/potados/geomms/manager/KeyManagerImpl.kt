@@ -39,23 +39,24 @@ class KeyManagerImpl: KeyManager() {
     }
 
     override fun newId(channel: Int): Long {
-
         val selectedChannel = channels[channel] ?: throw IllegalArgumentException("no such channel as $channel.")
 
-        if (!selectedChannel.initialized) {
+        if (selectedChannel.initialized) {
 
             selectedChannel.maxId = when (channel) {
                 CHANNEL_MESSAGE -> Realm.getDefaultInstance().use { realm ->
                     realm.where(Message::class.java).max("id")?.toLong() ?: 0L
                 }
 
-                else -> throw IllegalArgumentException("no such channel as $channel.")
+                else -> throw IllegalArgumentException("No such channel as $channel.")
             }
 
-            selectedChannel.initialized = true
+            selectedChannel.initialized = false
         }
 
-        return ++selectedChannel.maxId
+        selectedChannel.maxId += 1
+
+        return selectedChannel.maxId
     }
 
     override fun randomId(max: Long): Long {

@@ -51,8 +51,8 @@ class Duration(private val millis: Long) {
 
 
     fun toShortenString(): String {
-        return if (minutePart == 0L) secondPart.toString() + "초"
-        else minutePart.toString() + "분"
+        return if (minutePart == 0L) secondPart.toString() + "second(s)"
+        else minutePart.toString() + "minute(s)"
     }
 
     override fun toString(): String {

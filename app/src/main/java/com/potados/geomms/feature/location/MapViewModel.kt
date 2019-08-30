@@ -1,16 +1,20 @@
 package com.potados.geomms.feature.location
 
+import android.content.Context
+import android.view.LayoutInflater
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.service.LocationSupportService
 import io.realm.RealmResults
+import kotlinx.android.synthetic.main.marker_layout.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
@@ -24,6 +28,7 @@ import java.util.*
 class MapViewModel : BaseViewModel(), KoinComponent {
 
     private val locationService: LocationSupportService by inject()
+    private val context: Context by inject()
 
     val incomingRequests = locationService.getIncomingRequests()
     val connections = locationService.getConnections()
@@ -42,6 +47,13 @@ class MapViewModel : BaseViewModel(), KoinComponent {
                     .position(LatLng(it.latitude, it.longitude))
                     .title(it.recipient?.getDisplayName())
                     .icon(BitmapDescriptorFactory.defaultMarker(Random(it.id).nextInt(360).toFloat()))
+
+                val markerAvatar = LayoutInflater
+                    .from(context)
+                    .inflate(R.layout.marker_layout, null)
+                    .avatar
+
+                markerAvatar.setContact(it.recipient)
 
                 _markers.add(markerOption)
 

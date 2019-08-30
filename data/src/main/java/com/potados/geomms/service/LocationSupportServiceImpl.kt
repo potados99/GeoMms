@@ -61,7 +61,6 @@ class LocationSupportServiceImpl(
      */
     private val validator = Validator()
 
-
     /************************************
      * STATE CONTROL
      ************************************/
@@ -739,14 +738,17 @@ class LocationSupportServiceImpl(
         }
 
         val sendBroadcast = {
+            // This closure may be launched in a thread which is
+            // not a thread the connection object is created.
             context.sendBroadcast(
                 Intent(context, SendUpdateReceiver::class.java).apply {
-                    putExtra(EXTRA_CONNECTION_ID, connection.id)
+                    putExtra(EXTRA_CONNECTION_ID, connectionId)
                 }
             )
         }
         val expireConnection = {
-            closeExpiredConnection(connection.id)
+            // Also here, avoid using realm object.
+            closeExpiredConnection(connectionId)
         }
 
         // Send update every [UPDATE_INTERVAL].
@@ -778,11 +780,15 @@ class LocationSupportServiceImpl(
             return@unitOnFail
         }
 
+        // Do not validate the connection with not expired condition
+        // because it will delete it and its task if it is not expired yet.
+        // Instead, check isExpired here.
         if (!connection.isExpired()) {
-            Timber.w("Connection is not expired yet!")
+            fail(R.string.fail_close_connection_not_expired, show = true)
+            return@unitOnFail
         }
 
-        unregisterTask(connection.id)
+        unregisterTask(connectionId)
 
         Timber.i("Closed expired connection of id ${connection.id}")
 
@@ -848,20 +854,61 @@ class LocationSupportServiceImpl(
         init {
             validation[Connection::class.java] = Validation<Connection>(
                 checker = {
-                    return@Validation it.id != 0L && it.recipient != null && !it.isExpired()
+                    if (!it.isValid) {
+                        Timber.i("Connection is not valid(realm)")
+                        return@Validation false
+                    }
+                    else if (it.id == 0L) {
+                        Timber.i("Connection id is zero.")
+                        return@Validation false
+                    }
+                    else if (it.recipient == null) {
+                        Timber.i("Recipient of connection is null.")
+                        return@Validation false
+                    }
+                    else {
+                        Timber.i("Connection ${it.id} is valid :)")
+                        return@Validation true
+                    }
                 },
-                corrector = { realmObject ->
-                    executeInDefaultInstance { realmObject.deleteFromRealm() }
+                corrector = { connection ->
+                    if (connection.isValid) {
+                        // The correction contains removing task.
+                        // This action is safe because this method does not call validate().
+                        unregisterTask(connection.id)
+                        Timber.i("Correct wrong connection: unregister task.")
+                    }
+                    executeInDefaultInstance {
+                        connection.deleteFromRealm()
+                        Timber.i("Correct wrong connection: remove from realm.")
+                    }
                     null
                 }
             )
 
             validation[ConnectionRequest::class.java] = Validation<ConnectionRequest>(
                 checker = {
-                    return@Validation it.connectionId != 0L && it.recipient != null
+                    if (!it.isValid) {
+                        Timber.i("Request is not valid(realm).")
+                        return@Validation false
+                    }
+                    else if (it.connectionId == 0L) {
+                        Timber.i("Connection id of request is zero.")
+                        return@Validation false
+                    }
+                    else if (it.recipient == null) {
+                        Timber.i("Recipient of request is null.")
+                        return@Validation false
+                    }
+                    else {
+                        return@Validation true
+                    }
                 },
                 corrector = { realmObject ->
-                    executeInDefaultInstance { realmObject.deleteFromRealm() }
+                    executeInDefaultInstance {
+                        realmObject.deleteFromRealm()
+                        Timber.i("Correct wrong request: remove from realm.")
+                    }
                     null
                 }
             )

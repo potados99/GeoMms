@@ -19,6 +19,7 @@
         android:paddingEnd="12dp"
         android:paddingBottom="8dp">
 
+    <!-- Avatar -->
     <com.potados.geomms.common.widget.AvatarView
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -86,7 +87,7 @@
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="6dp"
         app:layout_constraintBottom_toBottomOf="@+id/status"
         app:layout_constraintStart_toEndOf="@+id/time_label"
         app:progress_end_color="?attr/tintPrimary"

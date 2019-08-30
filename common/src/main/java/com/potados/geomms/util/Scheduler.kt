@@ -29,7 +29,7 @@ class Scheduler {
             handler.post(this)
         }
 
-        Timber.i("task $taskId scheduled.")
+        Timber.i("Task $taskId scheduled.")
     }
 
     /**
@@ -46,7 +46,7 @@ class Scheduler {
             handler.postDelayed(this, time - System.currentTimeMillis())
         }
 
-        Timber.i("task $taskId scheduled.")
+        Timber.i("Task $taskId scheduled.")
     }
 
     /**
@@ -55,7 +55,7 @@ class Scheduler {
     fun cancel(taskId: Long) {
         tasks[taskId]?.let {
             it.forEach(handler::removeCallbacks)
-            Timber.i("task $taskId canceled.")
+            Timber.i("Task $taskId canceled.")
 
         } ?: Timber.i("scheduled task of taskId $taskId not found. ignore")
     }

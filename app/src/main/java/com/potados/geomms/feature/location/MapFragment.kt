@@ -138,7 +138,7 @@ class MapFragment : NavigationFragment(),
                 uiSettings.isCompassEnabled = true
                 uiSettings.isMyLocationButtonEnabled = true
             } catch (e: SecurityException) {
-                throw RuntimeException("THIS IS IMPOSSIBLE. CHECK PERMISSION.")
+                fail(R.string.fail_exception, e.message, show = false)
             }
 
             // Move to current location.

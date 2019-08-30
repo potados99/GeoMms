@@ -124,5 +124,6 @@
     <string name="dialog_from">From: %s</string>
     <string name="dialog_until">Until: %s</string>
     <string name="permission_be_default_sms">Be a Default SMS App</string>
+    <string name="fail_exception">Exception thrown: %s</string>
 
 </resources>

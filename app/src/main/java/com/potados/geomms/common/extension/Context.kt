@@ -23,14 +23,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.util.TypedValue
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.potados.geomms.extension.tryOrNull
+import android.R.layout
+import android.graphics.Canvas
+import android.view.ViewGroup
+import android.util.DisplayMetrics
+import android.view.WindowManager
+
 
 fun Context.getColorCompat(colorRes: Int): Int {
     //return black as a default color, in case an invalid color ID was passed in
@@ -81,4 +89,30 @@ fun Context.registerReceiver(action: String, onReceive: (intent: Intent?) -> Uni
             onReceive(intent)
         }
     }, IntentFilter(action))
+}
+fun Context.getBitmapFromView(context: Context, view: View): Bitmap {
+    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    val displayMetrics = DisplayMetrics()
+
+    windowManager.defaultDisplay.getMetrics(displayMetrics)
+    view.apply {
+        layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        measure(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)
+    }
+
+    val bitmap = Bitmap.createBitmap(
+        view.measuredWidth,
+        view.measuredHeight,
+        Bitmap.Config.ARGB_8888
+    )
+
+    val canvas = Canvas(bitmap)
+
+    view.draw(canvas)
+
+    return bitmap
 }

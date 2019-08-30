@@ -113,6 +113,7 @@
     <string name="dialog_sharing_location">위치 공유중.</string>
     <string name="dialog_until">종료 시각: %s</string>
     <string name="permission_be_default_sms">이 앱을 기본 SMS 앱으로 설정</string>
+    <string name="fail_exception">예외 발생: %s</string>
 
 
 </resources>
