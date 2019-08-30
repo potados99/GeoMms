@@ -88,7 +88,7 @@
     <string name="connection_request_sent">Request sent</string>
     <string name="connection_location_not_available">Location not available</string>
     <string name="fail_cannot_select_address_not_exist">Failed to select address. The selected address does not exist.</string>
-    <string name="connection_last_update">Last update %s</string>
+    <string name="connection_last_update">Updated %s</string>
     <string name="connection_time_left">%s left</string>
 
     <string name="dash" translatable="false">―</string>

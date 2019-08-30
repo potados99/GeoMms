@@ -77,7 +77,7 @@
     <string name="dialog_clear_geomms_warning">이 작업은 모든 연결을 해제하고 수신된 요청을 거절하며 이미 보낸 요청을 취소합니다. 계속 하시겠습니까?</string>
     <string name="title_opensource_license">오픈소스 라이센스 고지</string>
     <string name="connection_location_not_available">위치 정보 없음</string>
-    <string name="connection_last_update">마지막 업데이트 %s</string>
+    <string name="connection_last_update">업데이트 %s</string>
     <string name="connection_time_left">%s 남음</string>
     <string name="connection_request_sent">요청 전송됨</string>
     <string name="fail_cannot_select_address_not_exist">선택된 전화번호가 존재하지 않습니다.</string>

@@ -268,8 +268,10 @@ class LocationSupportServiceImpl(
 
         // add connection, delete request
         executeInDefaultInstance { realm ->
-            realm.copyToRealmOrUpdate(connection).let { registerTask(it.id) }
             request.deleteFromRealm()
+
+            realm.insertOrUpdate(connection)
+            registerTask(connection.id)
         }
 
         // start sending updates
@@ -289,8 +291,9 @@ class LocationSupportServiceImpl(
         // if there is a temporal connection already added, it will be updated.
         val connection = Connection.fromAcceptedRequest(request)
 
-        executeInDefaultInstance {
-            it.copyToRealmOrUpdate(connection).let { registerTask(it.id) }
+        executeInDefaultInstance { realm ->
+            realm.insertOrUpdate(connection)
+            registerTask(connection.id)
         }
 
         Timber.i("Accepted -> New connection(${connection.id}) established with ${connection.id}.")
@@ -320,6 +323,8 @@ class LocationSupportServiceImpl(
         Timber.i("Refused request of id ${request.connectionId} from ${request.recipient?.getDisplayName()}.")
     }
     override fun beRefusedConnectionRequest(packet: Packet) = unitOnFail {
+        val temporalConnection = validator.validate(getConnection(packet.connectionId, temporal = true))
+
         val request = validator.validate(getRequest(packet.connectionId, inbound = false))  {
             getConnection(it.connectionId, false) == null
         }
@@ -329,10 +334,14 @@ class LocationSupportServiceImpl(
             return@unitOnFail
         }
 
+        // TOOD: There could be some cases
+        // where request is gone but the temporal connection stays valid.
+
         Timber.i("Request of id ${request.connectionId} to ${request.recipient?.getDisplayName()} is refused.")
 
         executeInDefaultInstance {
             request.deleteFromRealm()
+            temporalConnection?.deleteFromRealm()
         }
     }
 
@@ -348,6 +357,9 @@ class LocationSupportServiceImpl(
             return@unitOnFail
         }
 
+        // TOOD: There could be some cases
+        // where request is gone but the temporal connection stays valid.
+
         // Notify canceled.
         request.recipient?.let {
             sendPacket(it.address, Packet.ofCancelingRequest(request))
@@ -356,8 +368,8 @@ class LocationSupportServiceImpl(
         Timber.i("Cancel request of id ${request.connectionId} to ${request.recipient?.getDisplayName()}")
 
         executeInDefaultInstance {
-            temporalConnection?.deleteFromRealm()
             request.deleteFromRealm()
+            temporalConnection?.deleteFromRealm()
         }
     }
     override fun cancelConnectionRequest(temporalConnection: Connection) = unitOnFail {
@@ -940,7 +952,10 @@ class LocationSupportServiceImpl(
          * Null check here.
          */
         private fun <T: RealmObject> isValid(locationObject: T?, additionalPredicate: (T) -> Boolean = { true }): Boolean {
-            locationObject ?: return false
+            if (locationObject == null) {
+                Timber.i("Location object is null :(")
+                return false
+            }
 
             val foundChecker = getValidation(locationObject)?.checker
             if (foundChecker == null) {

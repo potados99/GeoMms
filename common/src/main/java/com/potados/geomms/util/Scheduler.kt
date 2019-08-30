@@ -26,7 +26,7 @@ class Scheduler {
 
         with(runnable) {
             addRunnable(taskId, this)
-            handler.post(this)
+            handler.postDelayed(this, 1000) // Start first job after 1 sec.
         }
 
         Timber.i("Task $taskId scheduled.")

@@ -5,6 +5,7 @@
     <PreferenceCategory app:title="@string/settings_category_general">
         <SwitchPreference
                 app:key="in_app_notification"
+                app:defaultValue="true"
                 app:title="@string/settings_title_in_app_notification" />
     </PreferenceCategory>
 
@@ -18,6 +19,7 @@
     <PreferenceCategory app:title="@string/settings_category_location">
         <SwitchPreference
                 app:key="receive_geomms"
+                app:defaultValue="true"
                 app:title="@string/settings_title_receive_geomms"
                 app:summary="@string/settings_summary_receive_geomms" />
 
@@ -31,6 +33,7 @@
     <PreferenceCategory app:title="@string/settings_category_dev">
         <SwitchPreference
             app:key="show_all_error"
+            app:defaultValue="false"
             app:title="@string/settings_title_show_all_error"
             app:summary="@string/settings_summary_show_all_error" />
     </PreferenceCategory>
