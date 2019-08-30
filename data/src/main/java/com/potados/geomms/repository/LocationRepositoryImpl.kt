@@ -20,8 +20,8 @@ class LocationRepositoryImpl(
     private val locationClient = LocationServices.getFusedLocationProviderClient(context)
 
     private val request = LocationRequest.create().apply {
-        interval = 10000 // 10sec
-        fastestInterval = 2000 // 2sec
+        interval = 30000            // 30 sec
+        fastestInterval = 10000     // 10 sec
         priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
