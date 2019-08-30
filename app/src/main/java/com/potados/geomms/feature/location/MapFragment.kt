@@ -226,9 +226,9 @@ class MapFragment : NavigationFragment(),
     }
 
     override fun onConnectionClick(connection: Connection) {
-        // TODO hardcoded string
         if (connection.isTemporal) {
-            Notify(context).short("Request is not yet accepted.")
+            // Sent request not accepted yet
+            Notify(context).short(R.string.notify_request_not_yet_accepted)
             return
         }
 
@@ -236,25 +236,24 @@ class MapFragment : NavigationFragment(),
             if (connection.lastUpdate != 0L) {
                 moveTo(connection.latitude, connection.longitude, 15f)
             } else {
-                Notify(context).short("Location data not yet arrived.")
+                Notify(context).short(R.string.notify_no_location_data)
             }
         }
     }
 
     override fun onConnectionLongClick(connection: Connection) {
-        // TODO hardcoded string
         if (connection.isTemporal) {
             Popup(baseActivity)
-                .withTitle("Cancel request")
-                .withMessage("Do you want to cancel request to ${connection.recipient?.getDisplayName()}?")
+                .withTitle(R.string.title_cancel_request)
+                .withMessage(R.string.dialog_ask_cancel_request, connection.recipient?.getDisplayName())
                 .withPositiveButton(R.string.button_yes) { mapViewModel.cancel(connection) }
                 .withNegativeButton(R.string.button_no)
                 .show()
 
         } else {
             Popup(baseActivity)
-                .withTitle("Disconnect")
-                .withMessage("Do you want to stop sharing location with ${connection.recipient?.getDisplayName()}?")
+                .withTitle(R.string.title_disconnect)
+                .withMessage(R.string.dialog_ask_disconnect, connection.recipient?.getDisplayName())
                 .withPositiveButton(R.string.button_confirm) { mapViewModel.delete(connection) }
                 .withNegativeButton(R.string.button_cancel)
                 .show()
@@ -262,9 +261,24 @@ class MapFragment : NavigationFragment(),
     }
 
     override fun onInfoClick(connection: Connection) {
-        Popup(context)
-            .withTitle("hi")
-            .withPositiveButton("OK")
+        val p = Popup(context).withTitle(connection.recipient?.getDisplayName())
+
+        if (connection.isTemporal) {
+            p
+                .withMessage("Sent an invitation to %s\n")
+                .withMoreMessage("Sent: %s\n")
+                .withMoreMessage("Connection ID: %s\n")
+                .withMoreMessage("Duration: %s\n")
+        } else {
+            p
+                .withMessage("Sharing location with %s\n")
+                .withMessage("Connection ID: %s\n")
+                .withMessage("From: %s\n")
+                .withMessage("Until: %s\n")
+        }
+
+        p
+            .withPositiveButton(R.string.button_ok)
             .show()
     }
 

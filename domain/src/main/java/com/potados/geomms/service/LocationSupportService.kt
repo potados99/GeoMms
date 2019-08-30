@@ -63,6 +63,7 @@ abstract class LocationSupportService : Service() {
 
     /** I cancel my request to YOU */
     abstract fun cancelConnectionRequest(request: ConnectionRequest)
+    abstract fun cancelConnectionRequest(temporalConnection: Connection)
     /** YOU canceled YOUr request to me. */
     abstract fun beCanceledConnectionRequest(packet: Packet)
 

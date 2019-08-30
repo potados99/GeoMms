@@ -46,7 +46,7 @@ class DefaultSmsChangedReceiver : BroadcastReceiver(), KoinComponent {
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onReceive(context: Context, intent: Intent) {
-        Timber.i("default sms app changed")
+        Timber.i("Default sms app changed")
 
         if (intent.getBooleanExtra(Telephony.Sms.Intents.EXTRA_IS_DEFAULT_SMS_APP, false)) {
             val pendingResult = goAsync()
@@ -54,5 +54,4 @@ class DefaultSmsChangedReceiver : BroadcastReceiver(), KoinComponent {
             syncMessages(Unit) { pendingResult.finish() }
         }
     }
-
 }

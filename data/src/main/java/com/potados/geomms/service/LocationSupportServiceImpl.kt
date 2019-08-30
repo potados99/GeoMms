@@ -361,6 +361,23 @@ class LocationSupportServiceImpl(
             request.deleteFromRealm()
         }
     }
+    override fun cancelConnectionRequest(temporalConnection: Connection) = unitOnFail {
+        val validated = validator.validate(temporalConnection) { it.isTemporal }
+
+        if (validated == null) {
+            fail(R.string.fail_cannot_cancel_request_temp_connection_invalid, show = true)
+            return@unitOnFail
+        }
+
+        val request = validator.validate(getRequest(temporalConnection.id, inbound = false))
+
+        if (request == null) {
+            fail(context.getString(R.string.fail_cannot_cancel_request_invalid), show = true)
+            return@unitOnFail
+        }
+
+        cancelConnectionRequest(request)
+    }
     override fun beCanceledConnectionRequest(packet: Packet) = unitOnFail {
         val request = validator.validate(getRequest(packet.connectionId, inbound = true))  {
             getConnection(it.connectionId, false) == null

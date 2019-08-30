@@ -5,29 +5,103 @@
         android:layout_height="match_parent"
         android:background="?attr/tintPrimary">
 
+    <!-- Title -->
     <TextView
-            android:id="@+id/textView"
-            android:textSize="@dimen/textBig"
-            android:textColor="?android:attr/textColorPrimaryInverse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:text="@string/title_permission"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="@string/title_permission"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textSize="@dimen/textBig"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:textSize="@dimen/textPrimary"
-            android:textColor="?attr/tintPrimary"
-            android:layout_width="0dp"
+    <!-- Permissions -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/backgroundLight"
-            android:text="@string/button_ok"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/PermissionRow"
+                android:text="@string/permission_receive_send_sms" />
+
+            <TextView
+                style="@style/PermissionRow"
+                android:text="@string/permission_read_sms" />
+
+            <TextView
+                style="@style/PermissionRow"
+                android:text="@string/permission_read_contacts" />
+
+            <TextView
+                style="@style/PermissionRow"
+                android:text="@string/permission_read_phone_state" />
+
+            <TextView
+                style="@style/PermissionRow"
+                android:text="@string/permission_access_internet" />
+
+            <TextView
+                style="@style/PermissionRow"
+                android:text="@string/permission_access_network_state" />
+
+            <TextView
+                style="@style/PermissionRow"
+                android:text="@string/permission_access_location" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Summary -->
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="128dp"
+        android:text="@string/permission_explain"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textSize="@dimen/textPrimary"
+        app:layout_constraintBottom_toTopOf="@id/allow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Button shadow -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:background="@drawable/ab_shadow_reversed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/nav_view_shadow"
+        app:layout_constraintBottom_toTopOf="@+id/allow" />
+
+    <!-- Allow button -->
+    <Button
+        android:id="@+id/allow"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="@color/backgroundLight"
+        android:text="@string/button_ok"
+        android:textColor="?attr/tintPrimary"
+        android:textSize="@dimen/textPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

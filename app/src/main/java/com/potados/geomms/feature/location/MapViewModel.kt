@@ -117,29 +117,7 @@ class MapViewModel : BaseViewModel(), KoinComponent {
      */
     fun cancel(connection: Connection): Boolean {
         return tryOrNull {
-            if (!connection.isTemporal) {
-                setFailure(Failable.Failure("Cannot cancel already established connection.", true))
-                return@tryOrNull false
-            }
-
-            val request = Realm.getDefaultInstance()
-                .where(ConnectionRequest::class.java)
-                .equalTo("connectionId", connection.id)
-                .findFirst()
-
-            if (request == null) {
-                setFailure(Failable.Failure("Cannot find request to cancel.", true))
-
-                Timber.i("There exists a temporal connection but not the request. Remove the teomporal connection.")
-                Realm.getDefaultInstance().executeTransaction {
-                    connection.deleteFromRealm()
-                }
-
-                return@tryOrNull false
-            }
-
-            locationService.cancelConnectionRequest(request)
-
+            locationService.cancelConnectionRequest(connection)
             return@tryOrNull true
         } ?: false
     }

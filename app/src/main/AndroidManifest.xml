@@ -82,6 +82,11 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".receiver.SendUpdateReceiver" />
+        <receiver android:name=".receiver.LocaleChangedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+            </intent-filter>
+        </receiver>
         <!--
         ~~ Other broadcast receivers not listed here:
         ~~

@@ -157,20 +157,22 @@ class SyncRepositoryImpl(
          */
         recipientCursor?.use {
             val contacts = realm.copyToRealm(getContacts() as MutableList)
-            val recipients = recipientCursor
-                    .map { cursor ->
-                        Timber.v("Syncing recipients...$progress")
+            val recipients = recipientCursor.map { cursor ->
+                Timber.v("Syncing recipients...$progress")
+                postProgress(max, ++progress, false)
 
-                        postProgress(max, ++progress, false)
-                        cursorToRecipient.map(cursor).apply {
-                            contact = contacts.firstOrNull { contact ->
-                                contact.numbers.any { PhoneNumberUtils.compare(address, it.address) }
-                            }
-                        }
+                cursorToRecipient.map(cursor).apply {
+                    contact = contacts.firstOrNull { contact ->
+                        contact.numbers.any { PhoneNumberUtils.compare(address, it.address) }
                     }
+                }
+            }
+
             realm.insertOrUpdate(recipients)
+
             Timber.i("Recipients inserted to realm")
         }
+
 
         postProgress(0, 0, false)
 
@@ -239,18 +241,12 @@ class SyncRepositoryImpl(
 
                 contacts = realm.copyToRealm(contacts)
 
-                // Update all the recipients with the new contacts
-                val updatedRecipients = recipients.map { recipient ->
-                    recipient.apply {
-                        contact = contacts.firstOrNull {
-                            it.numbers.any { PhoneNumberUtils.compare(recipient.address, it.address) }
-                        }
+                recipients.forEach {recipient ->
+                    recipient.contact = contacts.find { contact ->
+                        contact.numbers.any { PhoneNumberUtils.compare(recipient.address, it.address) }
                     }
                 }
-
-                realm.insertOrUpdate(updatedRecipients)
             }
-
         }
     }
 

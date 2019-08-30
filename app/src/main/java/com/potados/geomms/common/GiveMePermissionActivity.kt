@@ -9,9 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.potados.geomms.R
 import com.potados.geomms.common.navigation.Navigator
+import com.potados.geomms.injection.permissions
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
+import kotlinx.android.synthetic.main.permission_activity.*
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import kotlin.system.exitProcess
 
 /**
@@ -31,11 +34,14 @@ class GiveMePermissionActivity: AppCompatActivity() {
             this.finish()
         }
 
-        // get permissions here.
+        setContentView(R.layout.permission_activity)
+
+        allow.setOnClickListener {
+            requirePermissions(permissions)
+        }
     }
 
     private fun requirePermissions(permissions: Array<String>) {
-
         if (permissionManager.isAllGranted()) {
             onPermissionSuccess()
         }
@@ -55,18 +61,13 @@ class GiveMePermissionActivity: AppCompatActivity() {
         if (permissions.isEmpty()) return
         if (grantResults.isEmpty()) return
 
-        // 결과가 전부 성공이면
         if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-            // 다음으로 넘어가고
-
-            Log.d("MainActivity:onRequestPermissionsResult", "all permission secured :)")
+            Timber.i("All permission secured :)")
 
             onPermissionSuccess()
         }
         else {
-            // 그렇지 않다면 잘 처리해줍니다..
-
-            Log.d("MainActivity:onRequestPermissionsResult", "request failed :(")
+            Timber.i("Request failed :(")
 
             onPermissionFail()
         }
@@ -79,11 +80,9 @@ class GiveMePermissionActivity: AppCompatActivity() {
 
     private fun onPermissionFail() {
         Popup(this)
-            .withTitle("Alert")
-            .withMessage("Failed to get permission.")
-            .withPositiveButton("OK") {
-                exitProcess(1)
-            }
+            .withTitle(getString(R.string.title_without_permissions))
+            .withMessage(getString(R.string.dialog_please_permission))
+            .withPositiveButton(R.string.button_ok)
             .show()
     }
 

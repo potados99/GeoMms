@@ -251,13 +251,12 @@ val myModules = module {
     }
 
     /** Send Update */
-    single {
-        SendUpdate(
-            service = get()
-        )
-    }
+    single { SendUpdate(service = get()) }
 
     /** Sync Message */
+
+    /** Sync contacts */
+    single { SyncContacts( syncRepo = get() ) }
 
     /** Sync Messages */
     single {

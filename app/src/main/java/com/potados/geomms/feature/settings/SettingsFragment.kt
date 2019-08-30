@@ -60,9 +60,12 @@ class SettingsFragment : PreferenceFragmentCompat(), KoinComponent {
                     .withMessage(R.string.dialog_clear_geomms_warning)
                     .withPositiveButton(R.string.button_confirm) {
                         service.clearAll()
+                        Notify(context).short(R.string.notify_cleared)
                     }
                     .withNegativeButton(R.string.button_cancel)
                     .show()
+            } else {
+                Notify(context).short(R.string.notify_nothing_to_delete)
             }
 
             true

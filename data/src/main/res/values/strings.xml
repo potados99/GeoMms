@@ -18,4 +18,5 @@
     <string name="fail_ignore_wrong_disconnect">Ignore request disconnect packet.</string>
     <string name="fail_validator_not_found">Validator not found for type %s.</string>
     <string name="fail_transaction">Transaction error occurred: %s</string>
+    <string name="fail_cannot_cancel_request_temp_connection_invalid">Failed to cancel request. Temporal connection is invalid.</string>
 </resources>

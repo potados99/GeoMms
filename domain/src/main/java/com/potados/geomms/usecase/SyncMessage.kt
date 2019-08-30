@@ -14,8 +14,7 @@ class SyncMessage(
 
     override fun run(params: Uri): Result<*> =
         Result.of {
-            syncManager.syncMessage(params)
-                ?.let { conversationRepo.updateConversations(it.threadId) }
+            syncManager.syncMessage(params)?.let { conversationRepo.updateConversations(it.threadId) }
             updateBadge(Unit)
         }
 }
