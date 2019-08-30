@@ -4,20 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseActivity
 import com.potados.geomms.common.extension.resolveThemeColor
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.injection.permissions
-import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
 import kotlinx.android.synthetic.main.permission_activity.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
-import kotlin.system.exitProcess
 
 /**
  * Explain user why we need these permissions.

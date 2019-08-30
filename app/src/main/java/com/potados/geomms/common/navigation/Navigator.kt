@@ -1,25 +1,17 @@
 package com.potados.geomms.common.navigation
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Telephony
-import androidx.appcompat.app.AppCompatActivity
-import com.potados.geomms.R
 import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.common.GiveMePermissionActivity
 import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.feature.location.InviteActivity
 import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.settings.SettingsActivity
-import com.potados.geomms.model.Conversation
-import com.potados.geomms.usecase.DeleteConversations
 import com.potados.geomms.util.Notify
-import com.potados.geomms.util.Popup
-import io.realm.Realm
 import org.koin.core.KoinComponent
-import org.koin.core.inject
 import timber.log.Timber
 
 /**

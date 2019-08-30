@@ -1,5 +1,6 @@
 package com.potados.geomms.feature.location
 
+import android.animation.LayoutTransition
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.*
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
@@ -25,8 +27,6 @@ import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 import org.koin.android.ext.android.inject
 import timber.log.Timber
-import android.animation.LayoutTransition
-import com.potados.geomms.R
 
 /**
  * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.

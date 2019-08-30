@@ -22,4 +22,5 @@
     <string name="fail_stream_io">Stream I/O error.</string>
     <string name="fail_cannot_register_connection_invalid">Failed to register task. Connection is invlalid.</string>
     <string name="fail_close_expired_connection_invalid">Failed to close expired connection. Connection is invalid.</string>
+    <string name="notify_not_implemented">This feature is not implemented yet :)</string>
 </resources>

@@ -4,13 +4,8 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.potados.geomms.injection.myModules
-import com.potados.geomms.model.ConnectionRequest
-import com.potados.geomms.model.Packet
-import com.potados.geomms.model.Recipient
-import com.potados.geomms.repository.*
 import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.service.LocationSupportServiceImpl
-import com.potados.geomms.usecase.*
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import org.junit.Test

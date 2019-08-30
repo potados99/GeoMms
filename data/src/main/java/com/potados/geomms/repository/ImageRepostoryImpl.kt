@@ -7,16 +7,13 @@ import android.graphics.Matrix
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
-import androidx.annotation.StringRes
 import androidx.exifinterface.media.ExifInterface
 import com.potados.geomms.base.Failable
 import com.potados.geomms.data.R
 import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.unitOnFail
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 
 class ImageRepostoryImpl(
     private val context: Context

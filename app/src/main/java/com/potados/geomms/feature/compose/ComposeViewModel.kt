@@ -1,12 +1,9 @@
 package com.potados.geomms.feature.compose
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
-import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.filter.ContactFilter
 import com.potados.geomms.functional.Result

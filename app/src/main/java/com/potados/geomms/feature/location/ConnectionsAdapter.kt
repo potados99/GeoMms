@@ -12,7 +12,6 @@ import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Connection
-import com.potados.geomms.util.Duration
 import kotlinx.android.synthetic.main.connection_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject

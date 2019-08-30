@@ -11,15 +11,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
 import com.potados.geomms.base.Failable
-import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.base.FailableContainer
 import com.potados.geomms.base.FailableHandler
-import com.potados.geomms.common.extension.*
+import com.potados.geomms.common.extension.notify
+import com.potados.geomms.common.extension.observe
+import com.potados.geomms.common.extension.resolveThemeColor
+import com.potados.geomms.common.extension.setTint
 import com.potados.geomms.preference.MyPreferences
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
-import java.lang.StringBuilder
 
 /**
  * Base Fragment that has options menu and failure handling.

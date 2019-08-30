@@ -1,6 +1,8 @@
 package com.potados.geomms.feature.license
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.potados.geomms.R
@@ -8,9 +10,6 @@ import com.potados.geomms.common.base.BaseAdapter
 import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.model.License
 import kotlinx.android.synthetic.main.license_list_item.view.*
-import androidx.core.content.ContextCompat.startActivity
-import android.content.Intent
-import android.net.Uri
 
 
 class LicenseAdapter(private val context: Context) : BaseAdapter<License>() {

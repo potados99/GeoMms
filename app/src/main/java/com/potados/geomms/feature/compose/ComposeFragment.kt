@@ -1,6 +1,5 @@
 package com.potados.geomms.feature.compose
 
-import android.content.Context
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
 import android.text.Editable
@@ -21,7 +20,6 @@ import kotlinx.android.synthetic.main.compose_fragment.view.*
 import org.koin.core.inject
 import timber.log.Timber
 import java.util.*
-import android.view.inputmethod.InputMethodManager
 
 
 class ComposeFragment : BaseFragment() {
@@ -86,10 +84,11 @@ class ComposeFragment : BaseFragment() {
                 menuItem.isVisible = (conversation != null)
             } ?: Timber.i("Menu is null")
 
-            conversation?.let {
-                Timber.i("Focus!")
-
-                view.postDelayed({ view.message.showKeyboard() }, 200)
+            if ((activity?.intent?.extras?.getLong("threadId") ?: 0L) == 0L) {
+                conversation?.let {
+                    Timber.i("Conversation is set. Request focus.")
+                    view.postDelayed({ view.message.showKeyboard() }, 200)
+                }
             }
         }
 

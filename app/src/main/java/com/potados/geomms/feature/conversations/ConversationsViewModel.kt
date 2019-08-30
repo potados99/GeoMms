@@ -1,22 +1,15 @@
 package com.potados.geomms.feature.conversations
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.potados.geomms.R
-import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.functional.Result
 import com.potados.geomms.manager.PermissionManager
-import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.SearchResult
 import com.potados.geomms.model.SyncLog
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.SyncMessages
 import io.realm.Realm
-import io.realm.RealmList
-import io.realm.RealmResults
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
@@ -36,33 +29,12 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
     private val permissionManager: PermissionManager by inject()
 
     /**
-     * Binding element.
-     * Target: [conversations_fragment.xml]
-     * @see [ConversationsBinding.kt]
+     * Binding properties.
      */
     val conversations = conversationRepo.getConversations()
-
-    /**
-     * Binding element
-     * Target: [conversations_fragment.xml]
-     * @see [ConversationsBinding.kt]
-     */
     val searchResults = MutableLiveData<List<SearchResult>>()
-
-    /**
-     * Binding element.
-     * Target: [main_hint.xml]
-     * @see [ConversationsBinding.kt]
-     */
     val defaultSmsState = permissionManager.isDefaultSmsLiveData()
-
-    /**
-     * Binding element
-     * Target: [main_syncing.xml]
-     * @see [ConversationsBinding.kt]
-     */
     val syncState = syncRepo.syncProgress
-
     val searching = MutableLiveData<Boolean>().apply { value = false }
 
     init {
@@ -74,7 +46,6 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
 
     override fun start() {
         super.start()
-
         sync()
     }
 

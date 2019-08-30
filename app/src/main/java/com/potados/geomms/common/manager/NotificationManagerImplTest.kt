@@ -19,8 +19,8 @@ import androidx.core.app.TaskStackBuilder
 import androidx.core.graphics.drawable.IconCompat
 import com.bumptech.glide.Glide
 import com.potados.geomms.R
-import com.potados.geomms.extension.dpToPx
 import com.potados.geomms.common.extension.resolveThemeColor
+import com.potados.geomms.extension.dpToPx
 import com.potados.geomms.extension.isImage
 import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.feature.compose.ComposeActivity

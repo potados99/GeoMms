@@ -5,13 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.potados.geomms.R
-import com.potados.geomms.common.base.BaseAdapter
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.setSupportActionBar
-import com.potados.geomms.common.extension.setTitle
 import com.potados.geomms.model.License
 import com.potados.geomms.util.RawReader
-import kotlinx.android.synthetic.main.license_fragment.*
 import kotlinx.android.synthetic.main.license_fragment.view.*
 
 class LicenseFragment : BaseFragment() {

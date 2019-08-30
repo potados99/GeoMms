@@ -1,13 +1,9 @@
 package com.potados.geomms.service
 
-import androidx.annotation.CallSuper
-import com.potados.geomms.base.FailableComponent
-import com.potados.geomms.base.Startable
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.model.Packet
 import io.realm.RealmResults
-import timber.log.Timber
 
 /**
  * Do communication thing.

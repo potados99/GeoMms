@@ -2,7 +2,6 @@ package com.potados.geomms.base
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 
 /**
  * Represents a component that can fail.

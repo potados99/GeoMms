@@ -48,8 +48,7 @@
 
         <!-- Label -->
         <com.potados.geomms.common.widget.CollapseTextView
-                android:id="@+id/label"
-                android:textSize="@dimen/textSecondary"
+            android:textSize="@dimen/textSecondary"
                 android:textColor="?android:attr/textColorTertiary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

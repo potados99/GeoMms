@@ -27,7 +27,6 @@ import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.model.Contact
 import kotlinx.android.synthetic.main.contact_list_item.view.*
-import timber.log.Timber
 import kotlin.math.min
 
 class ContactAdapter(private val onContactClick: (Contact) -> Unit) : BaseAdapter<Contact>() {

@@ -9,10 +9,7 @@ package com.potados.geomms.interactor
 import android.os.Handler
 import android.os.Looper
 import com.potados.geomms.functional.Result
-import kotlinx.coroutines.*
 import timber.log.Timber
-import java.util.concurrent.ThreadPoolExecutor
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * Abstract class for Use Case (Interactor in terms of Clean Architecture).

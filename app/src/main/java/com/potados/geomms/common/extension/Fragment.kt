@@ -25,7 +25,6 @@ import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.util.Notify
 import kotlinx.android.synthetic.main.single_fragment_activity.*
-import kotlinx.android.synthetic.main.toolbar.*
 
 /**
  * Do something in the middle of beginTransaction() and commit().

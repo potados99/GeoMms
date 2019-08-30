@@ -6,7 +6,6 @@ import android.telephony.PhoneNumberUtils
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
-import android.util.LongSparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
-import com.potados.geomms.common.extension.*
+import com.potados.geomms.common.extension.forwardTouches
+import com.potados.geomms.common.extension.isVisible
+import com.potados.geomms.common.extension.setPadding
+import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.extension.dpToPx

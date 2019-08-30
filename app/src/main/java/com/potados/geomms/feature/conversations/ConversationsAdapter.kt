@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
-import com.potados.geomms.common.extension.*
+import com.potados.geomms.common.extension.setBold
+import com.potados.geomms.common.extension.setTextColorRes
+import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Conversation

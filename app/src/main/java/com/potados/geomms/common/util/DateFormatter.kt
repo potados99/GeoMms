@@ -2,13 +2,12 @@ package com.potados.geomms.common.util
 
 import android.content.Context
 import android.text.format.DateFormat
+import com.potados.geomms.R
 import com.potados.geomms.common.extension.isSameDay
 import com.potados.geomms.common.extension.isSameWeek
 import com.potados.geomms.common.extension.isSameYear
 import java.text.SimpleDateFormat
 import java.util.*
-import android.R.attr.duration
-import com.potados.geomms.R
 
 
 class DateFormatter(val context: Context) {

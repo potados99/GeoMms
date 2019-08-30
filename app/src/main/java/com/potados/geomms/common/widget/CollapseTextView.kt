@@ -21,7 +21,6 @@ package com.potados.geomms.common.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
-import com.potados.geomms.common.extension.getColorCompat
 
 open class CollapseTextView(
     context: Context,

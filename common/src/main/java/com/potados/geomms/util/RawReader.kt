@@ -2,7 +2,6 @@ package com.potados.geomms.util
 
 import android.content.Context
 import androidx.annotation.RawRes
-import java.io.BufferedReader
 
 class RawReader(private val context: Context, @RawRes private val resId: Int) {
     fun toStringList(): List<String> = mutableListOf<String>().apply {
