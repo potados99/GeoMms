@@ -425,7 +425,7 @@ class LocationSupportServiceImpl(
         Timber.i("Sent update.")
     }
     override fun beSentUpdate(packet: Packet) = unitOnFail {
-        val connection = validator.validate(getConnection(packet.connectionId, false))
+        val connection = validator.validate(getConnection(packet.connectionId, temporal = false))
 
         if (connection == null) {
             fail(R.string.fail_ignore_wrong_data, show = false)
