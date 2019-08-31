@@ -91,7 +91,10 @@ class LocationSupportServiceImpl(
     }
 
     override fun clearAll() = falseOnFail {
-        return@falseOnFail disconnectAll() && refuseAll() &&cancelAll()
+        return@falseOnFail listOf(disconnectAll(), refuseAll(), cancelAll())
+            .takeIf { it.isNotEmpty() }
+            ?.reduce { acc, b -> acc && b }
+            ?: false
     }
 
     override fun disconnectAll() = falseOnFail {
@@ -99,21 +102,24 @@ class LocationSupportServiceImpl(
             ?.filter { !it.isTemporal }
             ?.takeIf { it.isNotEmpty() }
             ?.map { requestDisconnect(it.id) }
-            ?.reduce { acc, b -> acc && b } ?: false
+            ?.reduce { acc, b -> acc && b }
+            ?: false
     }
 
     override fun refuseAll() = falseOnFail {
         return@falseOnFail getIncomingRequests()
             ?.takeIf { it.isNotEmpty() }
             ?.map { refuseConnectionRequest(it) }
-            ?.reduce { acc, b -> acc && b } ?: false
+            ?.reduce { acc, b -> acc && b }
+            ?: false
     }
 
     override fun cancelAll() = falseOnFail {
         return@falseOnFail getOutgoingRequests()
             ?.takeIf { it.isNotEmpty() }
             ?.map { cancelConnectionRequest(it) }
-            ?.reduce { acc, b -> acc && b } ?: false
+            ?.reduce { acc, b -> acc && b }
+            ?: false
     }
 
 
@@ -783,6 +789,7 @@ class LocationSupportServiceImpl(
                     registerTask(connection.id)
                 }
             }
+            ?.takeIf { it.isNotEmpty() }
             ?.reduce { acc, b -> acc && b } ?: false
     }
 
