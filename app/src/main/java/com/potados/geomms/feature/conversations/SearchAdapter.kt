@@ -18,26 +18,27 @@ import kotlinx.android.synthetic.main.search_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class SearchAdapter : BaseAdapter<SearchResult>(), KoinComponent {
+class SearchAdapter(
+    private val listener: SearchResultClickListener
+) : BaseAdapter<SearchResult>(), KoinComponent {
 
     private val context: Context by inject()
     private val dateFormatter: DateFormatter by inject()
-    private val navigator: Navigator by inject()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view = layoutInflater.inflate(R.layout.search_list_item, parent, false)
         return BaseViewHolder(view).apply {
             view.setOnClickListener {
-                val result = getItem(adapterPosition)
-                navigator.showConversation(result.conversation.id, result.query.takeIf { result.messages > 0 })
+                val result = getItem(adapterPosition) ?: return@setOnClickListener
+                listener.onSearchResultClick(result)
             }
         }
     }
 
     override fun onBindViewHolder(viewHolder: BaseViewHolder, position: Int) {
         val previous = data.getOrNull(position - 1)
-        val result = getItem(position)
+        val result = getItem(position) ?: return
         val view = viewHolder.containerView
 
         view.results_header.setVisible(result.messages > 0 && previous?.messages == 0)
@@ -81,5 +82,9 @@ class SearchAdapter : BaseAdapter<SearchResult>(), KoinComponent {
         return old.query == new.query && // Queries are the same
                 old.conversation.id == new.conversation.id // Conversation id is the same
                 && old.messages == new.messages // Result count is the same
+    }
+
+    interface SearchResultClickListener {
+        fun onSearchResultClick(result: SearchResult)
     }
 }

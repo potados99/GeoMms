@@ -21,10 +21,6 @@ fun <T> Failable.nullOnFail(logOnError: Boolean = true, body: () -> T?): T? {
     }
 }
 
-/**
- * Try something.
- * if something thrown set failure.
- */
 fun <T> Failable.unitOnFail(logOnError: Boolean = true, body: () -> T?) {
     try {
         body()
@@ -33,5 +29,18 @@ fun <T> Failable.unitOnFail(logOnError: Boolean = true, body: () -> T?) {
             Timber.w(e)
         }
         setFailure(Failable.Failure(e.message ?: "Unknown failure"))
+    }
+}
+
+fun Failable.falseOnFail(logOnError: Boolean = true, body: () -> Boolean): Boolean {
+    return try {
+        body()
+    } catch (e: Exception) {
+        if (logOnError) {
+            Timber.w(e)
+        }
+        setFailure(Failable.Failure(e.message ?: "Unknown failure"))
+
+        false
     }
 }

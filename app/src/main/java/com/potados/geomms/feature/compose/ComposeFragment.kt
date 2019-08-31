@@ -12,47 +12,57 @@ import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ComposeFragmentBinding
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Contact
+import com.potados.geomms.model.Message
 import com.potados.geomms.model.PhoneNumber
 import com.potados.geomms.repository.SyncRepository
+import com.potados.geomms.usecase.DeleteMessages
 import com.potados.geomms.util.Notify
+import com.potados.geomms.util.Popup
 import io.realm.RealmList
 import kotlinx.android.synthetic.main.compose_fragment.view.*
 import org.koin.core.inject
 import timber.log.Timber
 import java.util.*
+import android.content.Intent
+import android.net.Uri
+import com.potados.geomms.model.Recipient
 
-
-class ComposeFragment : BaseFragment() {
+class ComposeFragment :
+    BaseFragment(),
+    ContactAdapter.ContactClickListener,
+    MessagesAdapter.MessageClickListener{
 
     override val optionMenuId: Int? = R.menu.compose
 
+    private val syncRepo: SyncRepository by inject()
+    private val deleteMessage: DeleteMessages by inject()
+
     private val permissionManager: PermissionManager by inject()
     private val navigator: Navigator by inject()
-    private val syncRepo: SyncRepository by inject()
 
     private lateinit var composeViewModel: ComposeViewModel
     private lateinit var viewDataBinding: ComposeFragmentBinding
 
-    private lateinit var chipsAdapter: ChipsAdapter
-    private lateinit var contactAdapter: ContactAdapter
-    private lateinit var messagesAdapter: MessagesAdapter
+    private val chipsAdapter = ChipsAdapter()
+    private val contactAdapter = ContactAdapter(this)
+    private val messagesAdapter = MessagesAdapter(this)
 
     init {
         failables += this
+        failables += syncRepo
+        failables += deleteMessage
+        failables += permissionManager
+        failables += navigator
+        failables += chipsAdapter
+        failables += contactAdapter
+        failables += messagesAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        chipsAdapter = ChipsAdapter(context!!)
-        messagesAdapter = MessagesAdapter(context!!)
         composeViewModel = getViewModel { activity?.intent?.let(::startWithIntent) }
-        contactAdapter = ContactAdapter(composeViewModel::setConversationByContact)
-
         failables += composeViewModel.failables
-        failables += chipsAdapter
-        failables += contactAdapter
-        failables += messagesAdapter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -69,7 +79,36 @@ class ComposeFragment : BaseFragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
-        menu.setVisible(composeViewModel.conversation.value != null)
+        val conversationIsNotNull = composeViewModel.conversation.value != null
+        val singleRecipient = conversationIsNotNull && (composeViewModel.conversation.value?.recipients?.size == 1)
+
+        with(menu) {
+            setVisible(conversationIsNotNull)
+            findItem(R.id.location)?.isVisible = singleRecipient
+            findItem(R.id.call)?.isVisible = singleRecipient
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+
+        when (item.itemId) {
+            R.id.call -> {
+                getFirstRecipient()?.let {
+                    startActivity(
+                        Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + it.address))
+                    )
+                } ?: fail(R.string.fail_cannot_make_a_call_invalid_recipient, show = true)
+            }
+            R.id.location -> {
+                Notify(context).short(R.string.notify_not_implemented)
+            }
+            R.id.info -> {
+                Notify(context).short(R.string.notify_not_implemented)
+            }
+        }
+
+        return true
     }
 
     override fun onDestroy() {
@@ -79,16 +118,20 @@ class ComposeFragment : BaseFragment() {
 
     private fun initializeView(view: View) {
         observe(composeViewModel.conversation) { conversation ->
-            Timber.i("%s menu", if (conversation != null) "Show" else "Hide")
-            getOptionsMenu()?.iterator()?.forEach { menuItem ->
-                menuItem.isVisible = (conversation != null)
-            } ?: Timber.i("Menu is null")
+            val conversationIsNull = (conversation == null)
+            val conversationIsNotSetInitially = ((activity?.intent?.extras?.getLong("threadId") ?: 0L) == 0L)
 
-            if ((activity?.intent?.extras?.getLong("threadId") ?: 0L) == 0L) {
-                conversation?.let {
-                    Timber.i("Conversation is set. Request focus.")
-                    view.postDelayed({ view.message.showKeyboard() }, 200)
-                }
+            // Menu should be visible only when conversation is not null.
+            getOptionsMenu()?.iterator()?.forEach { menuItem ->
+                Timber.i("Set menu ${menuItem.itemId} visiblity: ${conversationIsNull.not()}.")
+                menuItem.isVisible = !conversationIsNull
+            }
+
+            // Focus on edit text right after conversation is set.
+            // If threadId extra does not exist in intent, it is the case.
+            if (conversationIsNotSetInitially && !conversationIsNull) {
+                Timber.i("Conversation is set. Request focus.")
+                view.postDelayed({ view.message.showKeyboard() }, 200)
             }
         }
 
@@ -162,5 +205,40 @@ class ComposeFragment : BaseFragment() {
                 }
             })
         }
+
+        with(view.attach) {
+            setOnClickListener {
+                Notify(context).short(R.string.notify_not_implemented)
+            }
+        }
+    }
+
+    private fun getFirstRecipient(): Recipient? {
+        return composeViewModel.conversation.value?.recipients?.get(0)
+    }
+
+    override fun onContactClick(contact: Contact) {
+        composeViewModel.setConversationByContact(contact)
+    }
+
+    override fun onMessageClick(message: Message): Boolean {
+        // Do something here...
+        return true // Keep click default action (show/hide status)
+    }
+
+    override fun onMessageLongClick(message: Message) {
+        Popup(context)
+            .withTitle(R.string.title_delete_message)
+            .withMessage(R.string.dialog_ask_delete_message)
+            .withPositiveButton(R.string.button_delete) {
+                deleteMessage(
+                    DeleteMessages.Params(
+                        listOf(message.id),
+                        composeViewModel.conversation.value?.id
+                    )
+                )
+            }
+            .withNegativeButton(R.string.button_cancel)
+            .show()
     }
 }

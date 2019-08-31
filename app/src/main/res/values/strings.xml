@@ -51,7 +51,7 @@
     <string name="description_detach_button_icon">This is a detach button.</string>
     <string name="title_incoming_requests">Incoming Requests</string>
     <string name="description_vcard_avatar">This is a contact card avatar.</string>
-    <string name="delete_conversation_title">Delete conversation</string>
+    <string name="title_delete_conversation">Delete conversation</string>
     <string name="delete_conversation_message">Do you want to delete conversation with %s?</string>
     <string name="drawer_oss">Open Source license</string>
     <string name="dialog_sync_messages">Sync messages.</string>
@@ -125,5 +125,10 @@
     <string name="dialog_until">Until: %s</string>
     <string name="permission_be_default_sms">Be a Default SMS App</string>
     <string name="fail_exception">Exception thrown: %s</string>
+    <string name="title_delete_message">Delete Message</string>
+    <string name="dialog_ask_delete_message">Do you want to delete this message?</string>
+    <string name="menu_show_on_map">Show On Map</string>
+    <string name="fail_cannot_make_a_call_invalid_recipient">Failed to make a call. Recipient is not found.</string>
+    <string name="connection_request_sent_to">Invitation sent to %s.</string>
 
 </resources>

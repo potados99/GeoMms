@@ -57,7 +57,9 @@ class SmsSentReceiver : BroadcastReceiver(), KoinComponent {
     private val markFailed: MarkFailed by inject()
 
     override fun onReceive(context: Context, intent: Intent) {
-        context.unregisterReceiver(this) /* 일회용 */
+        // This receiver is instantiated registered when sms is sent.
+        // After it has done its duty, unregister it.
+        context.unregisterReceiver(this)
 
         val id = intent.getLongExtra("id", 0L)
 

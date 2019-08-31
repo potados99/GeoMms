@@ -20,7 +20,8 @@ class LocationRepositoryImpl(
     private val locationClient = LocationServices.getFusedLocationProviderClient(context)
 
     private val request = LocationRequest.create().apply {
-        interval = 30000            // 30 sec
+        interval = 15000            // 15 sec
+        fastestInterval = 5000      // 5 sec
         priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
@@ -39,6 +40,10 @@ class LocationRepositoryImpl(
         }
     }
 
+    override fun getLocationWithCallback(onLocation: (Location) -> Unit) {
+        locationClient.lastLocation.addOnSuccessListener(onLocation)
+    }
+    
     override fun getCurrentLocation(): Location? = nullOnFail {
         if (currentLocation == null) {
             Timber.i("Current location is null.")

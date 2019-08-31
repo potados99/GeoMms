@@ -41,6 +41,7 @@ class DeleteMessagesReceiver : BroadcastReceiver(), KoinComponent {
         val pendingResult = goAsync()
         val threadId = intent.getLongExtra("threadId", 0)
         val messageIds = intent.getLongArrayExtra("messageIds")
+
         deleteMessages(DeleteMessages.Params(messageIds.toList(), threadId)) { pendingResult.finish() }
     }
 

@@ -18,7 +18,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class ConversationsAdapter(
-    private val onLongClick: (Conversation) -> Unit
+    private val listener: ConversationClickListener
 ) : BaseRealmAdapter<Conversation>(), KoinComponent {
 
     private val dateFormatter: DateFormatter by inject()
@@ -50,16 +50,13 @@ class ConversationsAdapter(
 
         return BaseViewHolder(view).apply {
             view.setOnClickListener {
-                if (adapterPosition < 0) return@setOnClickListener
                 val conversation = getItem(adapterPosition) ?: return@setOnClickListener
-
-                navigator.showConversation(conversation.id)
+                listener.onConversationClick(conversation)
             }
             view.setOnLongClickListener {
-                if (adapterPosition < 0) return@setOnLongClickListener false
                 val conversation = getItem(adapterPosition) ?: return@setOnLongClickListener false
 
-                onLongClick(conversation)
+                listener.onConversationLongClick(conversation)
                 true
             }
         }
@@ -83,6 +80,11 @@ class ConversationsAdapter(
             true -> VIEW_TYPE_READ
             else -> VIEW_TYPE_UNREAD
         }
+
+    interface ConversationClickListener {
+        fun onConversationClick(conversation: Conversation)
+        fun onConversationLongClick(conversation: Conversation)
+    }
 
     companion object {
         private val VIEW_TYPE_READ = 1

@@ -9,10 +9,12 @@ import android.view.*
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.material.snackbar.Snackbar
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
@@ -60,7 +62,15 @@ class MapFragment : NavigationFragment(),
      */
     private val receiver = createBroadcastReceiver {
         it?.getStringExtra(EXTRA_ADDRESS)?.let { address ->
-            mapViewModel.request(address)
+            if (mapViewModel.request(address)) {
+                Snackbar.make(
+                    viewDataBinding.sheet,
+                    getString(R.string.connection_request_sent_to),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+
+            Notify(context).short(R.string.connection_request_sent_to, address)
         }
     }
 
@@ -146,7 +156,7 @@ class MapFragment : NavigationFragment(),
             }
 
             // Move to current location.
-            locationRepo.getCurrentLocation()?.let {
+            locationRepo.getLocationWithCallback{
                 moveTo(it.latitude, it.longitude, 10f)
             }
 
@@ -172,7 +182,6 @@ class MapFragment : NavigationFragment(),
     }
 
     private fun initializeView(view: View, savedInstanceState: Bundle?) {
-
         with(view.map_view) {
             onCreate(savedInstanceState)
             getMapAsync(this@MapFragment) // onMapReady called after this done

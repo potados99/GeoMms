@@ -35,7 +35,7 @@ class Scheduler {
     /**
      * Add task to be done at time.
      */
-    fun doAtTime(taskId: Long, time: Long, task: () -> Unit) {
+    fun doAtTime(taskId: Long, time: Long, task: () -> Any?) {
         val runnable = Runnable {
             task()
             Timber.v("On time task $taskId ran.")

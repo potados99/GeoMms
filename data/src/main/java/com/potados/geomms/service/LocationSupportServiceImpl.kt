@@ -10,6 +10,7 @@ import com.google.gson.JsonSyntaxException
 import com.potados.geomms.base.Failable
 import com.potados.geomms.data.R
 import com.potados.geomms.extension.nullOnFail
+import com.potados.geomms.extension.falseOnFail
 import com.potados.geomms.extension.unitOnFail
 import com.potados.geomms.manager.KeyManager
 import com.potados.geomms.model.Connection
@@ -89,28 +90,30 @@ class LocationSupportServiceImpl(
                 && getOutgoingRequests()?.isEmpty() == true
     }
 
-    override fun clearAll() = unitOnFail {
-        disconnectAll()
-        refuseAll()
-        cancelAll()
+    override fun clearAll() = falseOnFail {
+        return@falseOnFail disconnectAll() && refuseAll() &&cancelAll()
     }
 
-    override fun disconnectAll() = unitOnFail {
-        getConnections()?.filter { !it.isTemporal }?.forEach {
-            requestDisconnect(it.id)
-        }
+    override fun disconnectAll() = falseOnFail {
+        return@falseOnFail getConnections()
+            ?.filter { !it.isTemporal }
+            ?.takeIf { it.isNotEmpty() }
+            ?.map { requestDisconnect(it.id) }
+            ?.reduce { acc, b -> acc && b } ?: false
     }
 
-    override fun refuseAll() = unitOnFail {
-        getIncomingRequests()?.forEach {
-            refuseConnectionRequest(it)
-        }
+    override fun refuseAll() = falseOnFail {
+        return@falseOnFail getIncomingRequests()
+            ?.takeIf { it.isNotEmpty() }
+            ?.map { refuseConnectionRequest(it) }
+            ?.reduce { acc, b -> acc && b } ?: false
     }
 
-    override fun cancelAll() = unitOnFail {
-        getOutgoingRequests()?.forEach {
-            cancelConnectionRequest(it)
-        }
+    override fun cancelAll() = falseOnFail {
+        return@falseOnFail getOutgoingRequests()
+            ?.takeIf { it.isNotEmpty() }
+            ?.map { cancelConnectionRequest(it) }
+            ?.reduce { acc, b -> acc && b } ?: false
     }
 
 
@@ -118,8 +121,9 @@ class LocationSupportServiceImpl(
      * INTERNAL STATE CONTROL
      ************************************/
 
-    private fun startLocationUpdates() = unitOnFail {
+    private fun startLocationUpdates() = falseOnFail {
         locationRepo.startLocationUpdates()
+        return@falseOnFail true
     }
 
 
@@ -132,6 +136,7 @@ class LocationSupportServiceImpl(
             .sort("date", Sort.ASCENDING)
             .findAll()
     }
+
 
     /**
      * Auto correct connection without recipient.
@@ -206,8 +211,8 @@ class LocationSupportServiceImpl(
      * TAKE & HANDLE ACTION
      ************************************/
 
-    override fun requestNewConnection(address: String, duration: Long) = unitOnFail {
-        val recipient = getRecipient(address) ?: return@unitOnFail
+    override fun requestNewConnection(address: String, duration: Long) = falseOnFail {
+        val recipient = getRecipient(address) ?: return@falseOnFail false
 
         val request = ConnectionRequest(
             connectionId = keyManager.randomId(99999),
@@ -228,27 +233,31 @@ class LocationSupportServiceImpl(
         }
 
         Timber.i("Requested connection to ${recipient.getDisplayName()} with id ${request.connectionId}.")
+
+        return@falseOnFail true
     }
-    override fun beRequestedNewConnection(packet: Packet) = unitOnFail {
+    override fun beRequestedNewConnection(packet: Packet) = falseOnFail {
         // requests can be duplicated but connections cannot.
         getConnection(packet.connectionId, temporal = false)?.let {
             fail(R.string.fail_ignore_illegal_request, false)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         val request = requestFromInboundPacket(packet)
 
         if (request == null) {
             fail(R.string.fail_cannot_obtain_request, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         executeInDefaultInstance { it.insertOrUpdate(request) }
 
         Timber.i("New incoming request from ${request.recipient?.getDisplayName()} with id ${request.connectionId}.")
+
+        return@falseOnFail true
     }
 
-    override fun acceptConnectionRequest(request: ConnectionRequest) = unitOnFail {
+    override fun acceptConnectionRequest(request: ConnectionRequest) = falseOnFail {
         val validated = validator.validate(request) {
             it.isInbound && getConnection(it.connectionId, false) == null
         }
@@ -256,7 +265,7 @@ class LocationSupportServiceImpl(
         // If is not inbound or connection already exists.
         if (validated == null) {
             fail(R.string.fail_cannot_accept_request_invalid, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         // Notify accepted.
@@ -277,15 +286,17 @@ class LocationSupportServiceImpl(
         // start sending updates
 
         Timber.i("Accept -> New connection(${connection.id}) established with ${connection.id}.")
+
+        return@falseOnFail true
     }
-    override fun beAcceptedConnectionRequest(packet: Packet) = unitOnFail {
+    override fun beAcceptedConnectionRequest(packet: Packet) = falseOnFail {
         val request = validator.validate(getRequest(packet.connectionId, inbound = false)) {
             getConnection(it.connectionId, false) == null
         }
 
         if (request == null) {
             fail(R.string.fail_ignore_wrong_accept, show = false)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         // if there is a temporal connection already added, it will be updated.
@@ -299,9 +310,11 @@ class LocationSupportServiceImpl(
         }
 
         Timber.i("Accepted -> New connection(${connection.id}) established with ${connection.id}.")
+
+        return@falseOnFail true
     }
 
-    override fun refuseConnectionRequest(request: ConnectionRequest) = unitOnFail {
+    override fun refuseConnectionRequest(request: ConnectionRequest) = falseOnFail {
         val validated = validator.validate(request) {
             it.isInbound && getConnection(it.connectionId, false) == null
         }
@@ -309,7 +322,7 @@ class LocationSupportServiceImpl(
         // If is not inbound or connection already exists.
         if (validated == null) {
             fail(R.string.fail_cannot_refuse_request_invalid, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         // let you know
@@ -323,8 +336,10 @@ class LocationSupportServiceImpl(
         }
 
         Timber.i("Refused request of id ${request.connectionId} from ${request.recipient?.getDisplayName()}.")
+
+        return@falseOnFail true
     }
-    override fun beRefusedConnectionRequest(packet: Packet) = unitOnFail {
+    override fun beRefusedConnectionRequest(packet: Packet) = falseOnFail {
         val temporalConnection = validator.validate(getConnection(packet.connectionId, temporal = true))
 
         val request = validator.validate(getRequest(packet.connectionId, inbound = false))  {
@@ -333,7 +348,7 @@ class LocationSupportServiceImpl(
 
         if (request == null) {
             fail(R.string.fail_ignore_wrong_refuse, show = false)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         // TOOD: There could be some cases
@@ -345,9 +360,11 @@ class LocationSupportServiceImpl(
             request.deleteFromRealm()
             temporalConnection?.deleteFromRealm()
         }
+
+        return@falseOnFail true
     }
 
-    override fun cancelConnectionRequest(request: ConnectionRequest) = unitOnFail {
+    override fun cancelConnectionRequest(request: ConnectionRequest) = falseOnFail {
         val temporalConnection = validator.validate(getConnection(request.connectionId, temporal = true))
 
         val validated = validator.validate(request) {
@@ -356,7 +373,7 @@ class LocationSupportServiceImpl(
 
         if (validated == null) {
             fail(R.string.fail_cannot_cancel_request_invalid, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         // TOOD: There could be some cases
@@ -373,63 +390,71 @@ class LocationSupportServiceImpl(
             request.deleteFromRealm()
             temporalConnection?.deleteFromRealm()
         }
+
+        return@falseOnFail true
     }
-    override fun cancelConnectionRequest(temporalConnection: Connection) = unitOnFail {
+    override fun cancelConnectionRequest(temporalConnection: Connection) = falseOnFail {
         val validated = validator.validate(temporalConnection) { it.isTemporal }
 
         if (validated == null) {
             fail(R.string.fail_cannot_cancel_request_temp_connection_invalid, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         val request = validator.validate(getRequest(temporalConnection.id, inbound = false))
 
         if (request == null) {
             fail(R.string.fail_cannot_cancel_request_invalid, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         cancelConnectionRequest(request)
+
+        return@falseOnFail true
     }
-    override fun beCanceledConnectionRequest(packet: Packet) = unitOnFail {
+    override fun beCanceledConnectionRequest(packet: Packet) = falseOnFail {
         val request = validator.validate(getRequest(packet.connectionId, inbound = true))  {
             getConnection(it.connectionId, false) == null
         }
 
         if (request == null) {
             fail(R.string.fail_ignore_wrong_cancel, show = false)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         Timber.i("Request of id ${request.connectionId} from ${request.recipient?.getDisplayName()} is canceled by the sender.")
 
         executeInDefaultInstance { request.deleteFromRealm() }
+
+        return@falseOnFail true
     }
 
-    override fun sendUpdate(connectionId: Long) = unitOnFail {
+    override fun sendUpdate(connectionId: Long) = falseOnFail {
         val connection = validator.validate(getConnection(connectionId, temporal = false))
 
         if (connection == null) {
             fail(R.string.fail_cannot_send_update_invalid_connection, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
-        val packet = Packet.ofSendingData(connection, locationRepo.getCurrentLocation() ?: return@unitOnFail)
+        val packet = Packet.ofSendingData(connection, locationRepo.getCurrentLocation() ?: return@falseOnFail false)
 
-        sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
+        sendPacket(connection.recipient?.address ?: return@falseOnFail false, packet)
 
         executeInDefaultInstance {
             connection.lastSent = System.currentTimeMillis()
         }
 
         Timber.i("Sent update.")
+
+        return@falseOnFail true
     }
-    override fun beSentUpdate(packet: Packet) = unitOnFail {
+    override fun beSentUpdate(packet: Packet) = falseOnFail {
         val connection = validator.validate(getConnection(packet.connectionId, temporal = false))
 
         if (connection == null) {
             fail(R.string.fail_ignore_wrong_data, show = false)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         executeInDefaultInstance {
@@ -439,43 +464,49 @@ class LocationSupportServiceImpl(
         }
 
         Timber.i("Received update of connection ${connection.id} from ${connection.recipient?.getDisplayName()}.")
+
+        return@falseOnFail true
     }
 
-    override fun requestUpdate(connectionId: Long) = unitOnFail {
+    override fun requestUpdate(connectionId: Long) = falseOnFail {
         val connection = getConnection(connectionId, temporal = false)
 
         if (connection == null) {
             fail(R.string.fail_cannot_request_update_invalid_connection, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         val packet = Packet.ofRequestingUpdate(connection)
 
-        sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
+        sendPacket(connection.recipient?.address ?: return@falseOnFail false, packet)
 
         Timber.i("Requested update of ${connection.id} to ${connection.recipient?.getDisplayName()}.")
+
+        return@falseOnFail true
     }
-    override fun beRequestedUpdate(packet: Packet) = unitOnFail {
+    override fun beRequestedUpdate(packet: Packet) = falseOnFail {
         val connection = validator.validate(getConnection(packet.connectionId, false))
 
         if (connection == null) {
             // This could be an illegal try.
             // Think how to handle it. (e.g. notify user with warning)
             fail(R.string.fail_ignore_wrong_update_request, show = false)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         sendUpdate(connection.id)
 
         Timber.i("Sent update of connection ${connection.id} in response of ${connection.recipient?.getDisplayName()}'s request.")
+
+        return@falseOnFail true
     }
 
-    override fun requestDisconnect(connectionId: Long) = unitOnFail {
+    override fun requestDisconnect(connectionId: Long) = falseOnFail {
         val connection = validator.validate(getConnection(connectionId, temporal = false))
 
         if (connection == null) {
             fail(R.string.fail_cannot_request_disconnect_invalid_connection, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         // Stop sending updates.
@@ -483,29 +514,33 @@ class LocationSupportServiceImpl(
 
         val packet = Packet.ofRequestingDisconnect(connection)
 
-        sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
+        sendPacket(connection.recipient?.address ?: return@falseOnFail false, packet)
 
         Timber.i("Requested disconnect of connection ${connection.id} to ${connection.recipient?.getDisplayName()}")
 
         executeInDefaultInstance {
             connection.deleteFromRealm()
         }
+
+        return@falseOnFail true
     }
-    override fun beRequestedDisconnect(packet: Packet) = unitOnFail {
+    override fun beRequestedDisconnect(packet: Packet) = falseOnFail {
         val connection = validator.validate(getConnection(packet.connectionId, false))
 
         if (connection == null) {
             fail(R.string.fail_ignore_wrong_disconnect, show = false)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
-        sendPacket(connection.recipient?.address ?: return@unitOnFail, packet)
+        sendPacket(connection.recipient?.address ?: return@falseOnFail false, packet)
 
         Timber.i("Disconnect and delete connection of id ${connection.id} in response of ${connection.recipient?.getDisplayName()}'s request.")
 
         executeInDefaultInstance {
             connection.deleteFromRealm()
         }
+
+        return@falseOnFail true
     }
 
 
@@ -513,8 +548,8 @@ class LocationSupportServiceImpl(
      * PACKET PROCESS
      ************************************/
 
-    override fun sendPacket(address: String, packet: Packet) = unitOnFail {
-        val serialized = serializePacket(packet) ?: return@unitOnFail
+    override fun sendPacket(address: String, packet: Packet) = falseOnFail {
+        val serialized = serializePacket(packet) ?: return@falseOnFail false
 
         SmsManager.getDefault().sendTextMessage(
             address,
@@ -525,16 +560,18 @@ class LocationSupportServiceImpl(
         )
 
         Timber.i("Sent packet: \"$serialized\"")
+
+        return@falseOnFail true
     }
-    override fun receivePacket(address: String, body: String) = unitOnFail {
+    override fun receivePacket(address: String, body: String) = falseOnFail {
         val packet = parsePacket(body)?.apply {
             this.address = address
             this.isInbound = true
-        } ?: return@unitOnFail
+        } ?: return@falseOnFail false
 
         Timber.i("Received packet is ${findType(packet.type).toString()}")
 
-        when (packet.type) {
+        val result = when (packet.type) {
 
             Packet.PacketType.REQUEST_CONNECT.number -> {
                 beRequestedNewConnection(packet)
@@ -563,9 +600,18 @@ class LocationSupportServiceImpl(
             Packet.PacketType.REQUEST_DISCONNECT.number -> {
                 beRequestedDisconnect(packet)
             }
+
+            else -> {
+                Timber.w("Packet type ${packet.type} not found.")
+                false
+            }
         }
 
-        Timber.i("Successfully handled packet.")
+        if (result) {
+            Timber.i("Successfully handled packet.")
+        }
+
+        return@falseOnFail result
     }
 
     /**
@@ -723,18 +769,21 @@ class LocationSupportServiceImpl(
      * Only once when app started.
      * Add scheduled tasks for active connections.
      */
-    private fun restoreTasks() = unitOnFail {
+    private fun restoreTasks() = falseOnFail {
         scheduler.cancelAll()
-        executeInDefaultInstance {
-            getConnections()?.filter { !it.isTemporal }?.forEach {
-                if (it.isExpired()) {
-                    it.deleteFromRealm()
+
+        return@falseOnFail getConnections()
+            ?.filter { !it.isTemporal }
+            ?.map { connection ->
+                if (connection.isExpired()) {
+                    executeInDefaultInstance { connection.deleteFromRealm() }
+                    true
                 }
                 else {
-                    registerTask(it.id)
+                    registerTask(connection.id)
                 }
             }
-        }
+            ?.reduce { acc, b -> acc && b } ?: false
     }
 
     /**
@@ -743,12 +792,12 @@ class LocationSupportServiceImpl(
      *
      * @param connection must be a realm managed object.
      */
-    private fun registerTask(connectionId: Long) = unitOnFail {
+    private fun registerTask(connectionId: Long) = falseOnFail {
         val connection = validator.validate(getConnection(connectionId, temporal = false))
 
         if (connection == null) {
             fail(R.string.fail_cannot_register_connection_invalid, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         val sendBroadcast = {
@@ -773,6 +822,8 @@ class LocationSupportServiceImpl(
 
         Timber.i("Task registered: connection ${connection.id}, for every ${Duration(UPDATE_INTERVAL).toShortenString()}")
         Timber.i("Will be disconnected at ${DateTime(connection.due)}")
+
+        return@falseOnFail true
     }
 
     /**
@@ -780,18 +831,20 @@ class LocationSupportServiceImpl(
      *
      * @param connection must be a getRealm managed object.
      */
-    private fun unregisterTask(connectionId: Long) = unitOnFail {
+    private fun unregisterTask(connectionId: Long) = falseOnFail {
         scheduler.cancel(connectionId)
 
         Timber.i("Task unregistered: connection $connectionId.")
+
+        return@falseOnFail true
     }
 
-    private fun closeExpiredConnection(connectionId: Long) = unitOnFail {
+    private fun closeExpiredConnection(connectionId: Long) = falseOnFail {
         val connection = validator.validate(getConnection(connectionId, temporal = false))
 
         if (connection == null) {
             fail(R.string.fail_close_expired_connection_invalid, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         // Do not validate the connection with not expired condition
@@ -799,7 +852,7 @@ class LocationSupportServiceImpl(
         // Instead, check isExpired here.
         if (!connection.isExpired()) {
             fail(R.string.fail_close_connection_not_expired, show = true)
-            return@unitOnFail
+            return@falseOnFail false
         }
 
         unregisterTask(connectionId)
@@ -809,6 +862,8 @@ class LocationSupportServiceImpl(
         executeInDefaultInstance {
             connection.deleteFromRealm()
         }
+
+        return@falseOnFail true
     }
 
     /************************************

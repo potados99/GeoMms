@@ -3,6 +3,7 @@ package com.potados.geomms.feature.location
 import android.content.Intent
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,44 +25,30 @@ import kotlinx.android.synthetic.main.invite_fragment.view.*
 import org.koin.core.KoinComponent
 import java.util.*
 
-class InviteFragment : BaseFragment(), KoinComponent {
+class InviteFragment :
+    BaseFragment(),
+    KoinComponent,
+    ContactAdapter.ContactClickListener{
 
     private lateinit var inviteViewModel: InviteViewModel
     private lateinit var viewDataBinding: InviteFragmentBinding
 
-    private lateinit var chipsAdapter: ChipsAdapter
-    private lateinit var contactAdapter: ContactAdapter
+    private val chipsAdapter = ChipsAdapter()
+    private val contactAdapter = ContactAdapter(this)
 
-    /**
-     * Invoked when user select contact
-     * @see [onCreate].
-     */
-    private val broadcastSelectedAddress: (Contact) -> Unit = {
-        val address= it.numbers[0]?.address
-
-        if (address == null) {
-            setFailure(Failable.Failure(getString(R.string.fail_cannot_select_address_not_exist), show = true))
-        } else {
-            context?.sendBroadcast(Intent(ACTION_SET_ADDRESS).putExtra(EXTRA_ADDRESS, address))
-        }
-
-        activity?.finish()
-    }
+    private var textWatcher: TextWatcher? = null
 
     init {
         failables += this
+        failables += chipsAdapter
+        failables += contactAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         inviteViewModel = getViewModel()
-        chipsAdapter = ChipsAdapter(context!!)
-        contactAdapter = ContactAdapter(onContactClick = broadcastSelectedAddress)
-
         failables += inviteViewModel.failables
-        failables += chipsAdapter
-        failables += contactAdapter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -73,9 +60,15 @@ class InviteFragment : BaseFragment(), KoinComponent {
             .root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        chipsAdapter.editText.removeTextChangedListener(textWatcher)
+    }
+
     private fun initializeView(view: View) {
         with(chipsAdapter) {
-            editText.setOnTextChanged {
+            textWatcher = editText.setOnTextChanged {
                 val query = it.toString()
 
                 var contacts = inviteViewModel.getContacts(query)
@@ -101,5 +94,17 @@ class InviteFragment : BaseFragment(), KoinComponent {
         with(view.contacts) {
             adapter = contactAdapter
         }
+    }
+
+    override fun onContactClick(contact: Contact) {
+        val address= contact.numbers[0]?.address
+
+        if (address == null) {
+            fail(R.string.fail_cannot_select_address_not_exist, show = true)
+        } else {
+            context?.sendBroadcast(Intent(ACTION_SET_ADDRESS).putExtra(EXTRA_ADDRESS, address))
+        }
+
+        activity?.finish()
     }
 }

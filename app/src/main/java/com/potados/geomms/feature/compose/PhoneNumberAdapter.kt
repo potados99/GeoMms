@@ -40,7 +40,7 @@ class PhoneNumberAdapter(
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        val number = getItem(position)
+        val number = getItem(position) ?: return
         val view = holder.containerView
 
         // Setting this in onCreateViewHolder causes a crash sometimes. [contact] returns the

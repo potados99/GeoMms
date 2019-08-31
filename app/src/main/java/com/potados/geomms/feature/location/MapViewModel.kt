@@ -93,52 +93,32 @@ class MapViewModel : BaseViewModel(), KoinComponent {
      * Add a non-accepted outgoing request as a disabled connection
      * to a connections list.
      */
-    fun request(address: String): Boolean {
-        return tryOrNull {
-            locationService.requestNewConnection(address, 1800000)
-            return@tryOrNull true
-        } ?: false
-    }
+    fun request(address: String) =
+        locationService.requestNewConnection(address, 1800000)
 
     /**
      * Accept connection request.
      */
-    fun accept(request: ConnectionRequest): Boolean {
-        return tryOrNull {
-            locationService.acceptConnectionRequest(request)
-            return@tryOrNull true
-        } ?: false
-    }
+    fun accept(request: ConnectionRequest) =
+        locationService.acceptConnectionRequest(request)
 
     /**
      * Refuse connection request.
      */
-    fun refuse(request: ConnectionRequest): Boolean {
-        return tryOrNull {
-            locationService.refuseConnectionRequest(request)
-            return@tryOrNull true
-        } ?: false
-    }
+    fun refuse(request: ConnectionRequest) =
+        locationService.refuseConnectionRequest(request)
 
     /**
      * Disconnect
      */
-    fun delete(connection: Connection): Boolean {
-        return tryOrNull {
-            locationService.requestDisconnect(connection.id)
-            return@tryOrNull true
-        } ?: false
-    }
+    fun delete(connection: Connection) =
+        locationService.requestDisconnect(connection.id)
 
     /**
      * Cancel request
      */
-    fun cancel(connection: Connection): Boolean {
-        return tryOrNull {
-            locationService.cancelConnectionRequest(connection)
-            return@tryOrNull true
-        } ?: false
-    }
+    fun cancel(connection: Connection) =
+        locationService.cancelConnectionRequest(connection)
 
     private fun getBitmapFromView(view: View): Bitmap {
         view.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)

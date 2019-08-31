@@ -8,6 +8,7 @@ package com.potados.geomms.interactor
 
 import android.os.Handler
 import android.os.Looper
+import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.functional.Result
 import timber.log.Timber
 
@@ -15,7 +16,7 @@ import timber.log.Timber
  * Abstract class for Use Case (Interactor in terms of Clean Architecture).
  * Any use case in this application should implement this.
  */
-abstract class UseCase<in Params> {
+abstract class UseCase<in Params> : FailableComponent() {
     abstract fun run(params: Params): Result<*>
 
     /**

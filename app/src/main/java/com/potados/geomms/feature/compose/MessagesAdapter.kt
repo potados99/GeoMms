@@ -36,11 +36,12 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MessagesAdapter(
-    private val context: Context
+    private val listener: MessageClickListener
 ) : BaseRealmAdapter<Message>(), KoinComponent {
 
     lateinit var conversation: Conversation
 
+    private val context: Context by inject()
     private val dateFormatter: DateFormatter by inject()
     private val navigator: Navigator by inject()
 
@@ -66,7 +67,15 @@ class MessagesAdapter(
 
         return BaseViewHolder(view).apply {
             containerView.setOnClickListener {
-                it.status.setVisible(!it.status.isVisible)
+                val message = getItem(adapterPosition) ?: return@setOnClickListener
+                if (listener.onMessageClick(message)) {
+                    it.status.setVisible(!it.status.isVisible)
+                }
+            }
+            containerView.setOnLongClickListener {
+                val message = getItem(adapterPosition) ?: return@setOnLongClickListener false
+                listener.onMessageLongClick(message)
+                true
             }
         }
     }
@@ -178,6 +187,14 @@ class MessagesAdapter(
             return super.get(key)?.takeIf { it.isValid }
         }
 
+    }
+
+    interface MessageClickListener {
+        /**
+         * @return False if you want to override default click action.
+         */
+        fun onMessageClick(message: Message): Boolean
+        fun onMessageLongClick(message: Message)
     }
 
     companion object {

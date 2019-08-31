@@ -13,7 +13,7 @@ class Notify(private val context: Context?) {
     fun short(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
-    fun short(@StringRes message: Int) = short(context?.getString(message))
+    fun short(@StringRes message: Int, vararg formatArgs: Any?) = short(context?.getString(message, *formatArgs))
 
     fun long(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()

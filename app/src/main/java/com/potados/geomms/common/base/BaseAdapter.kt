@@ -109,7 +109,12 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable
         notifyDataSetChanged()
     }
 
-    fun getItem(position: Int): T {
+    fun getItem(position: Int): T? {
+        if (position < 0) {
+            Timber.w("Trying to access index $position!!")
+            return null
+        }
+
         return data[position]
     }
 

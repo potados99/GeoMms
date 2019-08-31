@@ -269,6 +269,7 @@ class MessageRepositoryImpl(
         val sentIntents = parts.map {
             context.registerReceiver(SmsSentReceiver(), IntentFilter(SmsSentReceiver.ACTION))
             val intent = Intent(SmsSentReceiver.ACTION).putExtra("id", message.id)
+
             PendingIntent.getBroadcast(context, message.id.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 

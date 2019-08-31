@@ -12,6 +12,7 @@ import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Conversation
+import com.potados.geomms.model.SearchResult
 import com.potados.geomms.usecase.DeleteConversations
 import com.potados.geomms.util.Popup
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
@@ -22,7 +23,10 @@ import timber.log.Timber
 /**
  * 메시지 대화 목록을 보여주는 프래그먼트입니다.
  */
-class ConversationsFragment : NavigationFragment() {
+class ConversationsFragment :
+    NavigationFragment(),
+    ConversationsAdapter.ConversationClickListener,
+    SearchAdapter.SearchResultClickListener {
 
     override val optionMenuId: Int? = R.menu.conversations
     override val navigationItemId: Int = R.id.menu_item_navigation_message
@@ -36,23 +40,12 @@ class ConversationsFragment : NavigationFragment() {
     private lateinit var conversationsViewModel: ConversationsViewModel
     private lateinit var viewDataBinding: ConversationsFragmentBinding
 
-    private val askDeleteConversation = { conversation: Conversation ->
-        Popup(context)
-            .withTitle(R.string.delete_conversation_title)
-            .withMessage(R.string.delete_conversation_message, conversation.getTitle())
-            .withPositiveButton(R.string.button_delete) {
-                deleteConversations(listOf(conversation.id))
-            }
-            .withNegativeButton(R.string.button_cancel)
-            .show()
-    }
-
-    private val conversationsAdapter = ConversationsAdapter(askDeleteConversation)
-
-    private val searchAdapter = SearchAdapter()
+    private val conversationsAdapter = ConversationsAdapter(this)
+    private val searchAdapter = SearchAdapter(this)
 
     init {
         failables += this
+        failables += deleteConversations
         failables += navigator
         failables += permissionManager
         failables += conversationsAdapter
@@ -79,7 +72,8 @@ class ConversationsFragment : NavigationFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        // start after view initiated.
+
+        // Start after view initiated.
         conversationsViewModel.start()
     }
 
@@ -110,6 +104,11 @@ class ConversationsFragment : NavigationFragment() {
         }
 
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
     }
 
     override fun onShow() {
@@ -156,5 +155,23 @@ class ConversationsFragment : NavigationFragment() {
                 }
             }
         }
+    }
+
+    override fun onConversationClick(conversation: Conversation) {
+        navigator.showConversation(conversation.id)
+    }
+    override fun onConversationLongClick(conversation: Conversation) {
+        Popup(context)
+            .withTitle(R.string.title_delete_conversation)
+            .withMessage(R.string.delete_conversation_message, conversation.getTitle())
+            .withPositiveButton(R.string.button_delete) {
+                deleteConversations(listOf(conversation.id))
+            }
+            .withNegativeButton(R.string.button_cancel)
+            .show()
+    }
+
+    override fun onSearchResultClick(result: SearchResult) {
+        navigator.showConversation(result.conversation.id, result.query.takeIf { result.messages > 0 })
     }
 }

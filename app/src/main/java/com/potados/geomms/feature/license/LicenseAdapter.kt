@@ -20,7 +20,7 @@ class LicenseAdapter(private val context: Context) : BaseAdapter<License>() {
         return BaseViewHolder(view)
     }
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        val item = getItem(position)
+        val item = getItem(position) ?: return
         with(holder.containerView) {
             package_name.text = item.packageName
             license_url.text = item.licenseUrl
