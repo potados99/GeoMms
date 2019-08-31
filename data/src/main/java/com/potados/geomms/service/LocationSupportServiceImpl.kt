@@ -69,15 +69,12 @@ class LocationSupportServiceImpl(
     override fun start() = unitOnFail {
         if (started) {
             Timber.w("Already started!")
-
             return@unitOnFail
         }
-
         super.start()
 
         validator.validateAll()
         restoreTasks()
-        startLocationUpdates()
 
         started = true
 
@@ -127,6 +124,12 @@ class LocationSupportServiceImpl(
      * INTERNAL STATE CONTROL
      ************************************/
 
+    /**
+     * Request location updates.
+     * Not need anymore because we use getLocationWithCallback() instead.
+     *
+     * @see [LocationRepository]
+     */
     private fun startLocationUpdates() = falseOnFail {
         locationRepo.startLocationUpdates()
         return@falseOnFail true
@@ -443,15 +446,30 @@ class LocationSupportServiceImpl(
             return@falseOnFail false
         }
 
-        val packet = Packet.ofSendingData(connection, locationRepo.getCurrentLocation() ?: return@falseOnFail false)
+        locationRepo.getLocationWithCallback { location ->
+            // On location success
 
-        sendPacket(connection.recipient?.address ?: return@falseOnFail false, packet)
+            // We validate it again for two reason:
+            // 1. It is not sure the connection is valid at this moment.
+            // 2. Task might be ran on different thread.
+            val connectionAgain = validator.validate(getConnection(connectionId, temporal = false))
 
-        executeInDefaultInstance {
-            connection.lastSent = System.currentTimeMillis()
+            if (connectionAgain == null) {
+                fail(R.string.fail_cannot_send_update_invalid_connection, show = true)
+            } else {
+                val packet = Packet.ofSendingData(connectionAgain, location)
+
+                connectionAgain.recipient?.address?.let {
+                    sendPacket(it, packet)
+                }
+
+                executeInDefaultInstance {
+                    connectionAgain.lastSent = System.currentTimeMillis()
+                }
+
+                Timber.i("Sent update.")
+            }
         }
-
-        Timber.i("Sent update.")
 
         return@falseOnFail true
     }
