@@ -784,8 +784,7 @@ class LocationSupportServiceImpl(
                 if (connection.isExpired()) {
                     executeInDefaultInstance { connection.deleteFromRealm() }
                     true
-                }
-                else {
+                } else {
                     registerTask(connection.id)
                 }
             }
