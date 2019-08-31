@@ -127,6 +127,7 @@ val myModules = module {
     single { MyPreferences(get()) }
 
 
+
     /**********************************************************
      * Repository
      **********************************************************/
@@ -191,10 +192,32 @@ val myModules = module {
     }
 
     /** Delete Messages */
+    single {
+        DeleteMessages(
+            conversationRepo = get(),
+            messageRepo = get(),
+            notificationManager = get(),
+            updateBadge = get()
+        )
+    }
 
     /** Mark Delivered */
+    single {
+        MarkDelivered(messageRepo = get())
+    }
+
     /** Mark Delivery Failed */
+    single {
+        MarkDeliveryFailed(messageRepo = get())
+    }
+
     /** Mark Failed */
+    single {
+        MarkFailed(
+            messageRepo = get(),
+            notificationMgr = get()
+        )
+    }
 
     /** Mark Read */
     single {
@@ -207,6 +230,9 @@ val myModules = module {
     }
 
     /** Mark Seen */
+    single {
+        MarkSeen(messageRepo = get())
+    }
 
     /** Mark Sent */
     single{ MarkSent(messageRepo = get()) }
@@ -254,6 +280,13 @@ val myModules = module {
     single { SendUpdate(service = get()) }
 
     /** Sync Message */
+    single {
+        SyncMessage(
+            conversationRepo = get(),
+            syncManager = get(),
+            updateBadge = get()
+        )
+    }
 
     /** Sync contacts */
     single { SyncContacts( syncRepo = get() ) }

@@ -28,7 +28,7 @@ class MainActivity : NavigationActivity(), KoinComponent {
     override val fragments: List<NavigationFragment> = listOf(ConversationsFragment(), MapFragment())
 
     override val navigationMenuId: Int = R.menu.bottom_nav
-    override val defaultMenuItemId: Int = R.id.menu_item_navigation_message
+    override val defaultMenuItemId: Int = R.id.menu_item_navigation_map
     override val layoutId: Int = R.layout.main_activity
 
     private val service: LocationSupportService by inject()

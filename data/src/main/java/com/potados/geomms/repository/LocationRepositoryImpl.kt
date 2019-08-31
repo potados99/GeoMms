@@ -21,7 +21,6 @@ class LocationRepositoryImpl(
 
     private val request = LocationRequest.create().apply {
         interval = 30000            // 30 sec
-        fastestInterval = 10000     // 10 sec
         priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
