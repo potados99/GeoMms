@@ -44,7 +44,7 @@ class LocationRepositoryImpl(
         if (currentLocation == null) {
             Timber.i("Current location is null.")
         }
-`
+
         return@nullOnFail currentLocation
     }
 
