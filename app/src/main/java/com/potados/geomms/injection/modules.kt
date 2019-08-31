@@ -195,6 +195,12 @@ val myModules = module {
     /** Mark Delivered */
     /** Mark Delivery Failed */
     /** Mark Failed */
+    single {
+        MarkFailed(
+            messageRepo = get(),
+            notificationMgr = get()
+        )
+    }
 
     /** Mark Read */
     single {
