@@ -18,6 +18,7 @@ import com.potados.geomms.receiver.SendUpdateReceiver
 import com.potados.geomms.receiver.SendUpdateReceiver.Companion.EXTRA_CONNECTION_ID
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.LocationRepository
+import com.potados.geomms.usecase.DeleteMessages
 import com.potados.geomms.util.*
 import io.realm.Realm
 import io.realm.RealmObject
@@ -41,6 +42,7 @@ import timber.log.Timber
  */
 class LocationSupportServiceImpl(
     private val context: Context,
+    private val deleteMessages: DeleteMessages,
     private val conversationRepo: ConversationRepository,
     private val locationRepo: LocationRepository,
     private val scheduler: Scheduler,
@@ -87,7 +89,10 @@ class LocationSupportServiceImpl(
                 .findAll() // Consider using findAllAsync.
                 .let { messages -> messages.takeIf { it.isNotEmpty() } ?: return@falseOnFail true } // cool
                 .map { message -> realm.copyFromRealm(message) }
-                .map { unmanaged -> receivePacket(unmanaged.address, unmanaged.body) }
+                .map { unmanaged ->
+                    deleteMessages(DeleteMessages.Params(listOf(unmanaged.id)))
+                    receivePacket(unmanaged.address, unmanaged.body)
+                }
                 .reduce { acc, b -> acc && b }
         }
     }
