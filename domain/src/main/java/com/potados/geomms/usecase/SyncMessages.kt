@@ -10,7 +10,8 @@ import java.util.concurrent.TimeUnit
 
 class SyncMessages(
     private val syncRepo: SyncRepository,
-    private val service: LocationSupportService,
+    private val clearAll: ClearAll,
+    private val processMessages: ProcessMessages,
     private val updateBadge: UpdateBadge
 ) : UseCase<Unit>() {
 
@@ -19,7 +20,9 @@ class SyncMessages(
             // Connections relay on Recipient, which will be deleted after sync.
             // Disconnect all connections before sync to prevent connection having
             // no recipient.
-            service.clearAll()
+            clearAll(Unit) {
+                it.onError { Timber.w("Failed to clear all.") }
+            }
 
             Timber.i("Clear all.")
 
@@ -27,6 +30,10 @@ class SyncMessages(
             val elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedMillis)
 
             Timber.i("Completed sync in $elapsedSeconds seconds.")
+
+            processMessages(Unit) {
+                it.onError { Timber.w("Failed to process messages.") }
+            }
 
             updateBadge(Unit)
         }

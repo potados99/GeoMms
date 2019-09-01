@@ -66,6 +66,7 @@ class LocationSupportServiceImpl(
         super.start()
 
         validator.validateAll()
+        processUnhandledMessages()
         restoreTasks()
 
         started = true
@@ -84,6 +85,7 @@ class LocationSupportServiceImpl(
             realm.where(Message::class.java)
                 .contains("body", GEO_MMS_PREFIX) // It only searched for SMS.
                 .findAll() // Consider using findAllAsync.
+                .let { messages -> messages.takeIf { it.isNotEmpty() } ?: return@falseOnFail true } // cool
                 .map { message -> realm.copyFromRealm(message) }
                 .map { unmanaged -> receivePacket(unmanaged.address, unmanaged.body) }
                 .reduce { acc, b -> acc && b }
@@ -776,7 +778,7 @@ class LocationSupportServiceImpl(
         return@nullOnFail builder.toString()
     }
 
-    override fun isValidPacket(body: String): Boolean? = falseOnFail {
+    override fun isValidPacket(body: String): Boolean = falseOnFail {
         if (body.isBlank())                     return@falseOnFail false   /* Empty message */
         if (!body.startsWith(GEO_MMS_PREFIX))   return@falseOnFail false   /* Not a packet. */
 

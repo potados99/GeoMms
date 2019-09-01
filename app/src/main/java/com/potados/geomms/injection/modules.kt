@@ -301,7 +301,8 @@ val myModules = module {
     single {
         SyncMessages(
             syncRepo = get(),
-            service = get(),
+            clearAll = get(),
+            processMessages = get(),
             updateBadge = get()
         )
     }
