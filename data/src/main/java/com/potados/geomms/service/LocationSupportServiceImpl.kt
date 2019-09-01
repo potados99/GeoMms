@@ -19,6 +19,7 @@ import com.potados.geomms.receiver.SendUpdateReceiver.Companion.EXTRA_CONNECTION
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.LocationRepository
 import com.potados.geomms.usecase.DeleteMessages
+import com.potados.geomms.usecase.DeleteMessages.Params
 import com.potados.geomms.util.*
 import io.realm.Realm
 import io.realm.RealmObject
@@ -88,11 +89,9 @@ class LocationSupportServiceImpl(
                 .contains("body", GEO_MMS_PREFIX) // It only searched for SMS.
                 .findAll() // Consider using findAllAsync.
                 .let { messages -> messages.takeIf { it.isNotEmpty() } ?: return@falseOnFail true } // cool
-                .map { message -> realm.copyFromRealm(message) }
-                .map { unmanaged ->
-                    deleteMessages(DeleteMessages.Params(listOf(unmanaged.id)))
-                    receivePacket(unmanaged.address, unmanaged.body)
-                }
+                .map { managed -> realm.copyFromRealm(managed) }
+                .onEach { copied -> deleteMessages(Params(listOf(copied.id))) } // awesome
+                .map { copied -> receivePacket(copied.address, copied.body) }
                 .reduce { acc, b -> acc && b }
         }
     }
