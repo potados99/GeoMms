@@ -83,6 +83,11 @@ class LocationSupportServiceImpl(
                 && getOutgoingRequests()?.isEmpty() == true
     }
 
+    /**
+     * Find messages that contain GEO_MMS_PREFIX,
+     * process and remove them,
+     * and return true if all succeeded of nothing exists.
+     */
     override fun processUnhandledMessages() = falseOnFail {
         return@falseOnFail getRealm().use { realm ->
             realm.where(Message::class.java)
