@@ -119,6 +119,6 @@
     <string name="title_delete_message">메시지 삭제</string>
     <string name="connection_request_sent_to">%s님에게 초대를 보냈습니다.</string>
     <string name="dialog_ask_delete_message">메시지를 삭제하시겠습니까?</string>
-
+    <string name="notify_fail_clear">지우기에 실패했습니다.</string>
 
 </resources>

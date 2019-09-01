@@ -43,16 +43,17 @@ class ContactRepositoryImpl(private val context: Context) : ContactRepository() 
     }
 
     override fun getUnmanagedContacts(): List<Contact>? = nullOnFail {
-        val realm = Realm.getDefaultInstance()
-
         val mobileLabel by lazy {
             Phone.getTypeLabel(context.resources, Phone.TYPE_MOBILE, "Mobile").toString()
         }
 
-        return@nullOnFail realm.where(Contact::class.java)
-            .contains("numbers.type", mobileLabel)
-            .sort("name")
-            .findAll()
-            .map { realm.copyFromRealm(it) }
+        return@nullOnFail Realm.getDefaultInstance().use { realm ->
+            realm
+                .where(Contact::class.java)
+                .contains("numbers.type", mobileLabel)
+                .sort("name")
+                .findAll()
+                .map { realm.copyFromRealm(it) }
+        }
     }
 }

@@ -13,10 +13,7 @@ import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.falseOnFail
 import com.potados.geomms.extension.unitOnFail
 import com.potados.geomms.manager.KeyManager
-import com.potados.geomms.model.Connection
-import com.potados.geomms.model.ConnectionRequest
-import com.potados.geomms.model.Packet
-import com.potados.geomms.model.Recipient
+import com.potados.geomms.model.*
 import com.potados.geomms.receiver.SendUpdateReceiver
 import com.potados.geomms.receiver.SendUpdateReceiver.Companion.EXTRA_CONNECTION_ID
 import com.potados.geomms.repository.ConversationRepository
@@ -80,6 +77,17 @@ class LocationSupportServiceImpl(
         return getConnections()?.isEmpty() == true
                 && getIncomingRequests()?.isEmpty() == true
                 && getOutgoingRequests()?.isEmpty() == true
+    }
+
+    override fun processUnhandledMessages() = falseOnFail {
+        return@falseOnFail getRealm().use { realm ->
+            realm.where(Message::class.java)
+                .contains("body", GEO_MMS_PREFIX) // It only searched for SMS.
+                .findAll() // Consider using findAllAsync.
+                .map { message -> realm.copyFromRealm(message) }
+                .map { unmanaged -> receivePacket(unmanaged.address, unmanaged.body) }
+                .reduce { acc, b -> acc && b }
+        }
     }
 
     override fun clearAll() = falseOnFail {
@@ -896,20 +904,10 @@ class LocationSupportServiceImpl(
     private fun executeInDefaultInstance(close: Boolean = true, transaction: (Realm) -> Unit) {
         val realm = getRealm()
 
-        realm.beginTransaction()
+        realm.executeTransaction(transaction)
 
-        try {
-            transaction(realm)
-            realm.commitTransaction()
-            if (close) {
-                realm.close()
-            }
-        } catch (e: Exception) {
-            if (realm.isInTransaction) {
-                realm.cancelTransaction()
-                Timber.i("Canceled transaction.")
-            }
-            fail(R.string.fail_transaction, e.message, show = true)
+        if (close && !realm.isClosed) {
+            realm.close()
         }
     }
 

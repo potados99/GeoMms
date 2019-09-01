@@ -182,6 +182,9 @@ val myModules = module {
      * Use Case
      **********************************************************/
 
+    /** Clear All */
+    single { ClearAll(service = get()) }
+
     /** Delete Conversations */
     single {
         DeleteConversations(
@@ -235,7 +238,10 @@ val myModules = module {
     }
 
     /** Mark Sent */
-    single{ MarkSent(messageRepo = get()) }
+    single { MarkSent(messageRepo = get()) }
+
+    /** Process Messages */
+    single { ProcessMessages(service = get()) }
 
     /** Receive Mms */
     single {

@@ -6,6 +6,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.potados.geomms.R
 import com.potados.geomms.functional.Result
 import com.potados.geomms.service.LocationSupportService
+import com.potados.geomms.usecase.ClearAll
 import com.potados.geomms.usecase.SyncMessages
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
@@ -15,6 +16,8 @@ import org.koin.core.inject
 class SettingsFragment : PreferenceFragmentCompat(), KoinComponent {
 
     private val syncMessages: SyncMessages by inject()
+    private val clearAll: ClearAll by inject()
+
     private val service: LocationSupportService by inject()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -23,12 +26,11 @@ class SettingsFragment : PreferenceFragmentCompat(), KoinComponent {
         findPreference<Preference>("sync")?.setOnPreferenceClickListener {
             val doSync = {
                 syncMessages(Unit) {
-                    if (it is Result.Success){
+                    it.either({
                         Notify(context).short(R.string.notify_sync_completed)
-                    }
-                    else {
+                    }, {
                         Notify(context).short(R.string.notify_sync_failed)
-                    }
+                    })
                 }
             }
 
@@ -59,8 +61,13 @@ class SettingsFragment : PreferenceFragmentCompat(), KoinComponent {
                     .withTitle(R.string.dialog_warning)
                     .withMessage(R.string.dialog_clear_geomms_warning)
                     .withPositiveButton(R.string.button_confirm) {
-                        service.clearAll()
-                        Notify(context).short(R.string.notify_cleared)
+                        clearAll(Unit) {
+                            it.either({
+                                Notify(context).short(R.string.notify_cleared)
+                            }, {
+                                Notify(context).short(R.string.notify_fail_clear)
+                            })
+                        }
                     }
                     .withNegativeButton(R.string.button_cancel)
                     .show()

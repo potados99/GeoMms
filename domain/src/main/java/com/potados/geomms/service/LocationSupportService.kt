@@ -37,6 +37,13 @@ abstract class LocationSupportService : Service() {
     abstract fun isIdle(): Boolean
 
     /**
+     * Process geomms messages in the inbox, which are not handled.
+     *
+     * @return true if success, false if fail.
+     */
+    abstract fun processUnhandledMessages(): Boolean
+
+    /**
      * Disconnect all, refuse all, cancel all.
      *
      * @return true if all actions succeeded.
