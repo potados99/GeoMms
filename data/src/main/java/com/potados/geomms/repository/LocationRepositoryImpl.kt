@@ -41,7 +41,9 @@ class LocationRepositoryImpl(
     }
 
     override fun getLocationWithCallback(onLocation: (Location) -> Unit) {
-        locationClient.lastLocation.addOnSuccessListener(onLocation)
+        locationClient
+            .lastLocation
+            .addOnSuccessListener(onLocation)
     }
     
     override fun getCurrentLocation(): Location? = nullOnFail {

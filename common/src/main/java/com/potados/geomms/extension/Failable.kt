@@ -4,9 +4,10 @@ import com.potados.geomms.base.Failable
 import timber.log.Timber
 
 /**
- * Try something.
- * If nothing thrown, the evaluation of body is returned.
- * Else, set failure and return null.
+ * Run code block.
+ * Set failure if any exceptions are thrown.
+ *
+ * @return null if any exceptions.
  */
 fun <T> Failable.nullOnFail(logOnError: Boolean = true, body: () -> T?): T? {
     return try {
@@ -21,6 +22,10 @@ fun <T> Failable.nullOnFail(logOnError: Boolean = true, body: () -> T?): T? {
     }
 }
 
+/**
+ * Run code block.
+ * Set failure if any exceptions.
+ */
 fun <T> Failable.unitOnFail(logOnError: Boolean = true, body: () -> T?) {
     try {
         body()
@@ -32,6 +37,12 @@ fun <T> Failable.unitOnFail(logOnError: Boolean = true, body: () -> T?) {
     }
 }
 
+/**
+ * Run code block.
+ * Set failure if any exceptions are thrown.
+ *
+ * @return false if any exceptions.
+ */
 fun Failable.falseOnFail(logOnError: Boolean = true, body: () -> Boolean): Boolean {
     return try {
         body()

@@ -29,23 +29,18 @@ import io.realm.Sort
 import timber.log.Timber
 
 /**
- * FOREWORD: This is not android.app.Service.
+ * Implementation of [LocationSupportService].
  *
- * This class implements the main feature of this app:
- * Share location with friend(s) through SMS.
+ * All methods are covered by [unitOnFail] or [falseOnFail] or [nullOnFail].
+ * None of these methods will throw exceptions.
  *
- * It handles all things about the feature.
- * This service does:
- *  - Keep current location.
- *  - Send, cancel, accept, or refuse connection requests.
- *  - Send disconnection request.
- *  - Receive incoming packet and do proper job (e.g. notify user or handel it by itself or ignore)
- *  - Correct invalid requests or connections when they are required.
+ * If somethings got wrong and it should be noticed by the user,
+ * a [Failable.Failure] should be set.
  *
- * To-do:
- * This architecture is fundamentally insecure because is uses non-encrypted method.
- * Do some encryption or notify user for implicitly harmful action.
- *
+ * @see [LocationSupportService]
+ * @see [unitOnFail]
+ * @see [falseOnFail]
+ * @see [nullOnFail]
  */
 class LocationSupportServiceImpl(
     private val context: Context,
@@ -773,11 +768,11 @@ class LocationSupportServiceImpl(
         return@nullOnFail builder.toString()
     }
 
-    override fun isValidPacket(body: String): Boolean? = nullOnFail {
-        if (body.isBlank())                     return@nullOnFail false   /* Empty message */
-        if (!body.startsWith(GEO_MMS_PREFIX))   return@nullOnFail false   /* Not a packet. */
+    override fun isValidPacket(body: String): Boolean? = falseOnFail {
+        if (body.isBlank())                     return@falseOnFail false   /* Empty message */
+        if (!body.startsWith(GEO_MMS_PREFIX))   return@falseOnFail false   /* Not a packet. */
 
-        return@nullOnFail true
+        return@falseOnFail true
     }
 
     private fun findType(typeNum: Number): Packet.PacketType? = nullOnFail {

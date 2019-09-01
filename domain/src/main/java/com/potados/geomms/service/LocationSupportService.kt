@@ -6,39 +6,103 @@ import com.potados.geomms.model.Packet
 import io.realm.RealmResults
 
 /**
- * Do communication thing.
+ * FOREWORD:
+ * 1. This is not android.app.Service.
+ * 2. Terms:
+ *  I       The user of this app.
+ *  YOU     The other user. Could be a friend.
  *
- * FORWARD
- *  Terms:
- *      I       The user of this app.
- *      YOU     The other user. Could be a friend.
+ * This class serves the main feature of this app:
+ * Share location with friend(s) through SMS.
+ *
+ * It handles all things about the feature.
+ * This service does:
+ *  - Keep current location.
+ *  - Send, cancel, accept, or refuse connection requests.
+ *  - Send disconnection request.
+ *  - Receive incoming packet and do proper job (e.g. notify user or handel it by itself or ignore)
+ *  - Correct invalid requests or connections when they are required.
+ *
+ * To-do:
+ * This architecture is fundamentally insecure because is uses non-encrypted method.
+ * Do some encryption or notify user for implicitly harmful action.
  */
 abstract class LocationSupportService : Service() {
 
     /**
      * All requests, connections are empty
+     *
+     * @return true if success, false if fail.
      */
     abstract fun isIdle(): Boolean
 
     /**
      * Disconnect all, refuse all, cancel all.
+     *
+     * @return true if all actions succeeded.
      */
     abstract fun clearAll(): Boolean
 
+    /**
+     * Request disconnect for all connections.
+     *
+     * @return true if success, false if fail.
+     */
     abstract fun disconnectAll(): Boolean
 
+    /**
+     * Request refuse for all connections.
+     *
+     * @return true if success, false if fail.
+     */
     abstract fun refuseAll(): Boolean
 
+    /**
+     * Request cancel for all sent-but-not-accepted requests.
+     *
+     * @return true if success, false if fail.
+     */
     abstract fun cancelAll(): Boolean
 
+    /**
+     * Get all managed connections from realm.
+     *
+     * @return null if any exceptions.
+     */
     abstract fun getConnections(): RealmResults<Connection>?
 
+    /**
+     * Get managed connection with id and temporal condition.
+     *
+     * @param id id of the connection.
+     * @param temporal filter isTemporal.
+     *
+     * @return null if any exceptions.
+     */
     abstract fun getConnection(id: Long, temporal: Boolean): Connection?
 
+    /**
+     * Get managed connection requests from realm with id and inbound connection.
+     *
+     * @param connectionId id of connection.
+     * @param inbound filter isInbound
+     *
+     * @return null if any exceptions.
+     */
     abstract fun getRequest(connectionId: Long, inbound: Boolean): ConnectionRequest?
 
+    /**
+     * Get all managed incoming(received) requests from realm.
+     *
+     * @return null if any exceptions.
+     */
     abstract fun getIncomingRequests(): RealmResults<ConnectionRequest>?
 
+    /**
+     * Get all managed outgoing(sent) requests from realm.
+     *
+     * @return null if any exceptions.
+     */
     abstract fun getOutgoingRequests(): RealmResults<ConnectionRequest>?
 
 
@@ -83,10 +147,24 @@ abstract class LocationSupportService : Service() {
     /** YOU sent me a packet. I handle it and call methods above. */
     abstract fun receivePacket(address: String, body: String): Boolean
 
-
+    /**
+     * Parse string to packet
+     *
+     * @return null if any exceptions or wrong packet form.
+     */
     abstract fun parsePacket(body: String): Packet?
 
+    /**
+     * Serialize a packet to plain string.
+     *
+     * @return null if any exceptions or wrong packet.
+     */
     abstract fun serializePacket(packet: Packet): String?
 
-    abstract fun isValidPacket(body: String): Boolean?
+    /**
+     * Check if the string is a valid packet form.
+     *
+     * @return true if this is a valid packet.
+     */
+    abstract fun isValidPacket(body: String): Boolean
 }
