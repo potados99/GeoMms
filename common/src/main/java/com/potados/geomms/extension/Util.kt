@@ -1,5 +1,7 @@
 package com.potados.geomms.extension
 
+import timber.log.Timber
+
 fun <R> elapsedTimeMillis(action: () -> R): Long {
     val startTime = System.currentTimeMillis()
     action()

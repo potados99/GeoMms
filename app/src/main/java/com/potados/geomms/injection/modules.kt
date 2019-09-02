@@ -57,6 +57,7 @@ val myModules = module {
     single {
         LocationSupportServiceImpl(
             context = get(),
+            deleteMessages = get(),
             conversationRepo = get(),
             locationRepo = get(),
             scheduler = get(),
