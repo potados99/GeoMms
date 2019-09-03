@@ -84,7 +84,7 @@ val myModules = module {
             conversationRepo = get(),
             messageRepo = get(),
             permissionManager = get()
-    ) as NotificationManager
+        ) as NotificationManager
     }
 
     /** Permission Manager */

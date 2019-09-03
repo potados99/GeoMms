@@ -12,14 +12,14 @@ sealed class Result<out T> {
 
     val succeeded get() = this is Success && data != null
 
-    fun <R> onSuccess(body: (T) -> R): Result<*> {
+    fun <R> onSuccess(body: (T) -> R): Result<T> {
         if (this is Success && data != null) {
             body(data)
         }
         return this
     }
 
-    fun <R> onError(body: (Exception) -> R): Result<*> {
+    fun <R> onError(body: (Exception) -> R): Result<T> {
         if (this is Error) {
             body(exception)
         }
