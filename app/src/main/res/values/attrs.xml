@@ -2,6 +2,7 @@
 <resources>
 
     <attr name="tintPrimary" format="reference" />
+    <attr name="tintSecondary" format="reference" />
     <attr name="avatarColor" format="reference" />
     <attr name="bubbleColor" format="reference" />
     <attr name="composeBackground" format="reference" />

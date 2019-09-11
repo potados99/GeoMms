@@ -8,7 +8,7 @@ import timber.log.Timber
 abstract class SyncRepository : Repository() {
 
     sealed class SyncProgress {
-        class Idle : SyncProgress() {
+        object Idle : SyncProgress() {
             init {
                 Timber.v("Idle progress created")
             }

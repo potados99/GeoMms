@@ -41,7 +41,7 @@ class SyncRepositoryImpl(
     )
 
     private val _progress = MutableLiveData<SyncProgress>().apply {
-        value = SyncRepository.SyncProgress.Idle()
+        value = SyncProgress.Idle
     }
 
     override val syncProgress: LiveData<SyncProgress> = _progress
@@ -300,7 +300,7 @@ class SyncRepositoryImpl(
         _progress.postValue(SyncProgress.Running(max, progress, indeterminate))
     }
     private fun postIdle() = unitOnFail {
-        _progress.postValue(SyncProgress.Idle())
+        _progress.postValue(SyncProgress.Idle)
     }
 
 }

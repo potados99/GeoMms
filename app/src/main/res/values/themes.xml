@@ -17,6 +17,7 @@
         <item name="avatarColor">@color/green</item>
         <item name="bubbleColor">@color/backgroundLightGray</item>
         <item name="tintPrimary">@color/green</item>
+        <item name="tintSecondary">@color/blue</item>
 
         <item name="colorPrimary">@color/toolbarLight</item>
         <item name="colorPrimaryDark">@color/statusBarLight</item>

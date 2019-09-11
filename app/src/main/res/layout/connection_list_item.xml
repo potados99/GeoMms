@@ -79,7 +79,7 @@
         android:layout_marginStart="4dp"
         app:layout_constraintStart_toEndOf="@+id/dot"
         app:layout_constraintTop_toBottomOf="@+id/name"
-        tools:text="36 minutes left." />
+        tools:text="36m left." />
 
     <!-- Duration remaining -->
     <com.dinuscxj.progressbar.CircleProgressBar
@@ -87,7 +87,7 @@
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_marginStart="6dp"
+        android:layout_marginStart="4dp"
         app:layout_constraintBottom_toBottomOf="@+id/status"
         app:layout_constraintStart_toEndOf="@+id/time_label"
         app:progress_end_color="?attr/tintPrimary"
@@ -99,16 +99,28 @@
     <!-- Info Button -->
     <ImageView
         android:id="@+id/info"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:paddingStart="4dp"
-        android:paddingEnd="0dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="4dp"
         android:tint="?attr/tintPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/name"
+        app:layout_constraintStart_toEndOf="@+id/name"
+        app:layout_constraintTop_toTopOf="@+id/name"
+        app:srcCompat="@drawable/ic_info_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/refresh_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        android:src="@drawable/ic_refresh_24dp"
+        android:tint="@color/white"
+        android:background="@drawable/rounded_rectangle_4dp"
+        android:backgroundTint="?attr/tintPrimary"
+        android:text="Refresh"
+        android:textColor="?android:attr/textColorPrimaryInverse"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_info_black_24dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

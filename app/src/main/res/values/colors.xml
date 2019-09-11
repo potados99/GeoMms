@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <color name="green">#56ACA1</color>
-
     <color name="white">#FFFFFF</color>
+    <color name="green">#56ACA1</color>
+    <color name="blue">#2793C7</color>
 
     <color name="rippleLight">#1f000000</color>
-
     <color name="statusBarLight">#FFFFFF</color>
+    <color name="separatorLight">#0C000000</color>
 
     <color name="toolbarLight">#FFFFFF</color>
     <color name="toolbarSearchBackgroundLight">#0D000000</color>
@@ -20,9 +20,5 @@
     <color name="textTertiary">#B7B9C0</color>
 
     <color name="bubbleLight">#EFF1F3</color>
-
-    <color name="separatorLight">#0C000000</color>
-
-    <color name="design_snackbar_background_color" tools:override="true">#000000</color>
 
 </resources>
