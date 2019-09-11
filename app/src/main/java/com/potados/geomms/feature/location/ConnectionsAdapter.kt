@@ -1,6 +1,5 @@
 package com.potados.geomms.feature.location
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -17,14 +16,15 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import java.util.*
 
-class ConnectionsAdapter(
-    private val context: Context,
-    private val listener: ConnectionClickListener
-) : BaseRealmAdapter<Connection>(), KoinComponent {
+class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
 
     private val dateFormatter: DateFormatter by inject()
 
     private val handler = Handler(Looper.getMainLooper())
+
+    var onConnectionClick: (Connection) -> Unit = {}
+    var onConnectionLongClick: (Connection) -> Unit = {}
+    var onInfoClick: (Connection) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -33,16 +33,16 @@ class ConnectionsAdapter(
         return TimerViewHolder(view).apply {
             view.setOnClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
-                listener.onConnectionClick(item)
+                onConnectionClick(item)
             }
             view.setOnLongClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnLongClickListener false
-                listener.onConnectionLongClick(item)
+                onConnectionLongClick(item)
                 true
             }
             view.info.setOnClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
-                listener.onInfoClick(item)
+                onInfoClick(item)
             }
         }
     }
@@ -112,15 +112,5 @@ class ConnectionsAdapter(
 
     class TimerViewHolder(view: View) : BaseViewHolder(view) {
         var timer: Timer? = null
-    }
-
-    interface ConnectionClickListener {
-        fun onConnectionClick(connection: Connection)
-        fun onConnectionLongClick(connection: Connection)
-        fun onInfoClick(connection: Connection)
-    }
-
-    companion object {
-        const val SEPARATOR = " · "
     }
 }

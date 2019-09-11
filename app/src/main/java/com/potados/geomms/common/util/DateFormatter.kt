@@ -3,6 +3,7 @@ package com.potados.geomms.common.util
 import android.content.Context
 import android.text.format.DateFormat
 import com.potados.geomms.R
+import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.common.extension.isSameDay
 import com.potados.geomms.common.extension.isSameWeek
 import com.potados.geomms.common.extension.isSameYear
@@ -10,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class DateFormatter(val context: Context) {
+class DateFormatter(val context: Context) : FailableComponent() {
 
     /**
      * Formats the [pattern] correctly for the current locale, and replaces 12 hour format with

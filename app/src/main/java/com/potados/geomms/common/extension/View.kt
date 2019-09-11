@@ -2,8 +2,10 @@ package com.potados.geomms.common.extension
 
 import android.animation.LayoutTransition
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.view.MotionEvent
 import android.view.View
@@ -12,9 +14,12 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.ColorRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
+import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import kotlinx.android.synthetic.main.map_fragment.view.*
 
 fun View.hideSheet() {
     CustomBottomSheetBehavior.from(this).state = CustomBottomSheetBehavior.STATE_HIDDEN
@@ -154,4 +159,41 @@ fun TextView.setBold(bold: Boolean) {
 
 fun TextView.setTextColorRes(@ColorRes colorResId: Int) {
     resources.getColor(colorResId, null)
+}
+
+/**
+ * Useful when changing alpha by bottom sheet offset.
+ */
+fun View.setAlphaByOffset(offset: Float, changeStart: Float = 0.8f) {
+    val alphaMax = 1.0f
+
+    val rangeZeroToOne = (1.0f - offset) / (1.0f - changeStart)
+    val rangeZeroToAlphaMax = rangeZeroToOne * alphaMax
+
+    alpha = if (offset > changeStart) rangeZeroToAlphaMax else alphaMax
+}
+
+/**
+ * Useful when changing radius of background drawable by bottom sheet offset.
+ * This creates a new drawable for its background.
+ */
+fun View.setBackgroundRadiusByOffset(offset: Float, changeStart: Float = 0.8f, radiusMax: Float = 30f) {
+    val color = Color.parseColor("#EEFFFFFF")
+
+    val rangeZeroToOne = (1.0f - offset) / (1.0f - changeStart)
+    val rangeZeroToRadiusMax = rangeZeroToOne * radiusMax
+
+    background = GradientDrawable().apply {
+        setColor(color)
+        cornerRadius = if (offset > changeStart) rangeZeroToRadiusMax else radiusMax
+    }
+}
+
+/**
+ * Set vertical bias by bottom sheet offset.
+ */
+fun View.setVerticalBiasByOffset(offset: Float) {
+    val param = layoutParams as ConstraintLayout.LayoutParams
+    param.verticalBias = offset / 2 + 0.05f
+    layoutParams = param
 }

@@ -2,14 +2,9 @@ package com.potados.geomms.feature.location
 
 import android.animation.LayoutTransition
 import android.content.IntentFilter
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
@@ -18,69 +13,38 @@ import com.google.android.material.snackbar.Snackbar
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
-import com.potados.geomms.common.navigation.Navigator
-import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import com.potados.geomms.databinding.MapFragmentBinding
-import com.potados.geomms.extension.withNonNull
-import com.potados.geomms.model.Connection
-import com.potados.geomms.model.ConnectionRequest
-import com.potados.geomms.repository.LocationRepository
 import com.potados.geomms.util.Notify
-import com.potados.geomms.util.Popup
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
-import kotlinx.android.synthetic.main.marker_layout.view.*
-import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-/**
- * 지도와 함께 연결된 친구 목록을 보여주는 프래그먼트입니다.
- */
-class MapFragment : NavigationFragment(),
-    OnMapReadyCallback,
-    ConnectionsAdapter.ConnectionClickListener,
-    RequestsAdapter.RequestClickListener
-{
+class MapFragment : NavigationFragment(), OnMapReadyCallback {
 
     override val optionMenuId: Int? = R.menu.map
     override val navigationItemId: Int = R.id.menu_item_navigation_map
     override val titleId: Int = R.string.title_friends
 
-    private val navigator: Navigator by inject()
-    private val locationRepo: LocationRepository by inject()
-    private val dateFormatter: DateFormatter by inject()
-
     private lateinit var mapViewModel: MapViewModel
     private lateinit var viewDataBinding: MapFragmentBinding
 
-    private lateinit var connectionsAdapter: ConnectionsAdapter
-    private val requestsAdapter = RequestsAdapter(this)
+    private var connectionsAdapter = ConnectionsAdapter()
+    private val requestsAdapter = RequestsAdapter()
+
+    private var map: GoogleMap? = null
 
     /**
      * Invoked when ACTION_SET_ADDRESS intent received.
      */
-    private val receiver = createBroadcastReceiver {
-        it?.getStringExtra(EXTRA_ADDRESS)?.let { address ->
-            if (mapViewModel.request(address)) {
-                Snackbar.make(
-                    viewDataBinding.sheet,
-                    getString(R.string.connection_request_sent_to),
-                    Snackbar.LENGTH_SHORT
-                ).show()
-            }
-
-            Notify(context).short(R.string.connection_request_sent_to, address)
-        }
+    private val addressSetReceiver = newBroadcastReceiver {
+        it?.getStringExtra(EXTRA_ADDRESS)?.let { address -> mapViewModel.request(activity, address) }
     }
-
-    private var map: GoogleMap? = null
 
     init {
         failables += this
-        failables += navigator
-        failables += locationRepo
         failables += requestsAdapter
+        failables += connectionsAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,12 +53,9 @@ class MapFragment : NavigationFragment(),
         MapsInitializer.initialize(context)
 
         mapViewModel = getViewModel { start() }
-        connectionsAdapter = ConnectionsAdapter(context!!, this)
-
         failables += mapViewModel.failables
-        failables += connectionsAdapter
 
-        context?.registerReceiver(receiver, IntentFilter(ACTION_SET_ADDRESS))
+        context?.registerReceiver(addressSetReceiver, IntentFilter(ACTION_SET_ADDRESS))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -109,7 +70,7 @@ class MapFragment : NavigationFragment(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.invite -> {
-                navigator.showInvite()
+                mapViewModel.invite()
             }
         }
 
@@ -135,7 +96,7 @@ class MapFragment : NavigationFragment(),
     override fun onDestroy() {
         super.onDestroy()
         viewDataBinding.mapView.onDestroy()
-        context?.unregisterReceiver(receiver)
+        context?.unregisterReceiver(addressSetReceiver)
     }
     override fun onLowMemory() {
         super.onLowMemory()
@@ -156,7 +117,7 @@ class MapFragment : NavigationFragment(),
             }
 
             // Move to current location.
-            locationRepo.getLocationWithCallback{
+            mapViewModel.getLocation {
                 moveTo(it.latitude, it.longitude, 10f)
             }
 
@@ -188,16 +149,26 @@ class MapFragment : NavigationFragment(),
         }
 
         with(view.connections) {
-            connectionsAdapter.emptyView = view.empty_view
-            adapter = connectionsAdapter
+            adapter = connectionsAdapter.apply {
+                emptyView = view.empty_view
 
+                onConnectionClick = { mapViewModel.showConnectionInfo(activity, map, it) }
+                onConnectionLongClick = { mapViewModel.showConnectionDeletionConfirmation(activity!!, it) }
+            }
+
+            // For scroll in bottom sheet.
             addOnItemTouchListener(onItemTouchListener)
         }
 
         with(view.incoming_requests) {
-            requestsAdapter.companionView = view.incoming_requests_layout
-            adapter = requestsAdapter
+            adapter = requestsAdapter.apply {
+                companionView = view.incoming_requests_layout
 
+                onRequestClick = { mapViewModel.showRequestInfo(activity, it) }
+                onRequestLongClick = { mapViewModel.showRequestDeletionConfirmation(activity, it) }
+            }
+
+            // For scroll in bottom sheet.
             addOnItemTouchListener(onItemTouchListener)
         }
 
@@ -237,90 +208,6 @@ class MapFragment : NavigationFragment(),
     }
 
 
-    override fun onConnectionClick(connection: Connection) {
-        if (connection.isTemporal) {
-            // Sent request not accepted yet
-            Notify(context).short(R.string.notify_request_not_yet_accepted)
-            return
-        }
-
-        withNonNull(map) {
-            if (connection.lastUpdate != 0L) {
-                moveTo(connection.latitude, connection.longitude, 15f)
-            } else {
-                Notify(context).short(R.string.notify_no_location_data)
-            }
-        }
-    }
-
-    override fun onConnectionLongClick(connection: Connection) {
-        if (connection.isTemporal) {
-            Popup(baseActivity)
-                .withTitle(R.string.title_cancel_request)
-                .withMessage(R.string.dialog_ask_cancel_request, connection.recipient?.getDisplayName())
-                .withPositiveButton(R.string.button_yes) { mapViewModel.cancel(connection) }
-                .withNegativeButton(R.string.button_no)
-                .show()
-
-        } else {
-            Popup(baseActivity)
-                .withTitle(R.string.title_disconnect)
-                .withMessage(R.string.dialog_ask_disconnect, connection.recipient?.getDisplayName())
-                .withPositiveButton(R.string.button_confirm) { mapViewModel.delete(connection) }
-                .withNegativeButton(R.string.button_cancel)
-                .show()
-        }
-    }
-
-    override fun onInfoClick(connection: Connection) {
-        val popup = Popup(context).withTitle(connection.recipient?.getDisplayName())
-
-        if (connection.isTemporal) {
-            popup
-                .withMessage(R.string.dialog_invitation_sent)
-                .withNewLine()
-                .withNewLine()
-                .withMoreMessage(R.string.dialog_sent_at, dateFormatter.getMessageTimestamp(connection.date))
-                .withNewLine()
-                .withMoreMessage(R.string.dialog_connection_id, connection.id)
-                .withNewLine()
-                .withMoreMessage(R.string.dialog_duration, dateFormatter.getDuration(connection.duration))
-        } else {
-            popup
-                .withMessage(R.string.dialog_sharing_location)
-                .withNewLine()
-                .withNewLine()
-                .withMoreMessage(R.string.dialog_connection_id, connection.id)
-                .withNewLine()
-                .withMoreMessage(R.string.dialog_from, dateFormatter.getMessageTimestamp(connection.date))
-                .withNewLine()
-                .withMoreMessage(R.string.dialog_until, dateFormatter.getMessageTimestamp(connection.due))
-        }
-
-        popup
-            .withPositiveButton(R.string.button_ok)
-            .show()
-    }
-
-    override fun onRequestClick(request: ConnectionRequest) {
-        Popup(baseActivity)
-            .withTitle(R.string.dialog_request_from, request.recipient?.getDisplayName())
-            .withMessage(R.string.dialog_ask_accept_request, request.recipient?.getDisplayName(), dateFormatter.getDuration(request.duration))
-            .withPositiveButton(R.string.button_accept) { mapViewModel.accept(request) }
-            .withNegativeButton(R.string.button_later)
-            .show()
-    }
-
-    override fun onRequestLongClick(request: ConnectionRequest) {
-        Popup(baseActivity)
-            .withTitle(R.string.dialog_refuse_request)
-            .withMessage(R.string.dialog_ask_refuse, request.recipient?.getDisplayName())
-            .withPositiveButton(R.string.button_refuse) { mapViewModel.refuse(request)  }
-            .withNegativeButton(R.string.button_cancel)
-            .show()
-    }
-
-
     /**
      * Pass touch events of Bottom Sheet to Recycler View.
      */
@@ -343,32 +230,10 @@ class MapFragment : NavigationFragment(),
     }
 
     private fun onSlideBottomSheet(view: View, offset: Float) {
-        val param = view.empty_view.layoutParams as ConstraintLayout.LayoutParams
-        param.verticalBias = offset / 2 + 0.05f
-        view.empty_view.layoutParams = param
-
-        // Variables
-        val changeStart = 0.8f
-        val alphaMax = 1.0f
-        val radiusMax = 30f
-        val color = Color.parseColor("#EEFFFFFF")
-
-        val rangeZeroToOne = (1.0f - offset) / (1.0f - changeStart)
-        val rangeZeroToAlphaMax = rangeZeroToOne * alphaMax
-        val rangeZeroToRadiusMax = rangeZeroToOne * radiusMax
-
-        if (offset > changeStart) {
-            view.grip.alpha = rangeZeroToAlphaMax
-            view.sheet.background = GradientDrawable().apply {
-                setColor(color)
-                cornerRadius = rangeZeroToRadiusMax
-            }
-        } else {
-            view.grip.alpha = alphaMax
-            view.sheet.background = GradientDrawable().apply {
-                setColor(color)
-                cornerRadius = radiusMax
-            }
+        with(view) {
+            empty_view.setVerticalBiasByOffset(offset)
+            grip.setAlphaByOffset(offset)
+            sheet.setBackgroundRadiusByOffset(offset)
         }
     }
 

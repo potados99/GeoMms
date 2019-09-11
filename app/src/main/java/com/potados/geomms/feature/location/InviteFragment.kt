@@ -34,7 +34,7 @@ class InviteFragment :
     private lateinit var viewDataBinding: InviteFragmentBinding
 
     private val chipsAdapter = ChipsAdapter()
-    private val contactAdapter = ContactAdapter(this)
+    private val contactAdapter = ContactAdapter()
 
     private var textWatcher: TextWatcher? = null
 

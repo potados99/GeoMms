@@ -18,7 +18,7 @@ import timber.log.Timber
  */
 abstract class BaseViewModel : ViewModel(), Startable, Failable, FailableContainer, KoinComponent {
 
-    private val mContext: Context by inject()
+    protected val context: Context by inject()
 
     /**
      * Failure of View Model itself
@@ -40,7 +40,7 @@ abstract class BaseViewModel : ViewModel(), Startable, Failable, FailableContain
     }
 
     override fun fail(@StringRes message: Int, vararg formatArgs: Any?, show: Boolean) {
-        setFailure(Failable.Failure(mContext.getString(message, *formatArgs), show))
+        setFailure(Failable.Failure(context.getString(message, *formatArgs), show))
     }
 
     @CallSuper

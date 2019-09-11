@@ -189,7 +189,8 @@
             android:textColorHint="?android:attr/textColorTertiary"
             app:layout_constraintBottom_toBottomOf="@id/message_background"
             app:layout_constraintEnd_toStartOf="@id/send"
-            app:layout_constraintStart_toStartOf="@id/message_background" />
+            app:layout_constraintStart_toStartOf="@id/message_background"
+            android:text="@={vm.messageText}"/>
 
         <!-- Counter -->
         <com.potados.geomms.common.widget.CollapseTextView

@@ -18,12 +18,12 @@ import kotlinx.android.synthetic.main.search_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class SearchAdapter(
-    private val listener: SearchResultClickListener
-) : BaseAdapter<SearchResult>(), KoinComponent {
+class SearchAdapter : BaseAdapter<SearchResult>(), KoinComponent {
 
     private val context: Context by inject()
     private val dateFormatter: DateFormatter by inject()
+
+    var onSearchResultClick: (SearchResult) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -31,7 +31,7 @@ class SearchAdapter(
         return BaseViewHolder(view).apply {
             view.setOnClickListener {
                 val result = getItem(adapterPosition) ?: return@setOnClickListener
-                listener.onSearchResultClick(result)
+                onSearchResultClick(result)
             }
         }
     }

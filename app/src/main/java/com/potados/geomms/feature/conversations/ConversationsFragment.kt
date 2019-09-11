@@ -20,33 +20,23 @@ import kotlinx.android.synthetic.main.main_hint.view.*
 import org.koin.core.inject
 import timber.log.Timber
 
-/**
- * 메시지 대화 목록을 보여주는 프래그먼트입니다.
- */
-class ConversationsFragment :
-    NavigationFragment(),
-    ConversationsAdapter.ConversationClickListener,
-    SearchAdapter.SearchResultClickListener {
+class ConversationsFragment : NavigationFragment() {
 
     override val optionMenuId: Int? = R.menu.conversations
     override val navigationItemId: Int = R.id.menu_item_navigation_message
     override val titleId: Int = R.string.title_conversations
 
-    private val deleteConversations: DeleteConversations by inject()
 
-    private val navigator: Navigator by inject()
     private val permissionManager: PermissionManager by inject()
 
     private lateinit var conversationsViewModel: ConversationsViewModel
     private lateinit var viewDataBinding: ConversationsFragmentBinding
 
-    private val conversationsAdapter = ConversationsAdapter(this)
-    private val searchAdapter = SearchAdapter(this)
+    private val conversationsAdapter = ConversationsAdapter()
+    private val searchAdapter = SearchAdapter()
 
     init {
         failables += this
-        failables += deleteConversations
-        failables += navigator
         failables += permissionManager
         failables += conversationsAdapter
         failables += searchAdapter
@@ -99,16 +89,11 @@ class ConversationsFragment :
 
         when (item.itemId) {
             R.id.write -> {
-                navigator.showCompose()
+                conversationsViewModel.showCompose()
             }
         }
 
         return true
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
     }
 
     override fun onShow() {
@@ -125,12 +110,6 @@ class ConversationsFragment :
     }
 
     private fun initializeView(view: View) {
-        with(view.change) {
-            setOnClickListener {
-                navigator.showDefaultSmsDialogIfNeeded()
-            }
-        }
-
         with(view.empty) {
             conversationsAdapter.emptyView = this
         }
@@ -138,8 +117,16 @@ class ConversationsFragment :
         with(view.conversations) {
             setHasFixedSize(true)
 
-            conversationsAdapter.autoScrollToStart(this@with)
-            adapter = conversationsAdapter
+            adapter = conversationsAdapter.apply {
+                autoScrollToStart(this@with)
+
+                onConversationClick = { conversationsViewModel.showConversation(it) }
+                onConversationLongClick = { conversationsViewModel.showConversationDeletionConfirmation(activity, it) }
+            }
+
+            searchAdapter.apply {
+                onSearchResultClick = { conversationsViewModel.showConversation(it) }
+            }
 
             // Change adapter when search state changes.
             observe(conversationsViewModel.searching) {
@@ -155,23 +142,5 @@ class ConversationsFragment :
                 }
             }
         }
-    }
-
-    override fun onConversationClick(conversation: Conversation) {
-        navigator.showConversation(conversation.id)
-    }
-    override fun onConversationLongClick(conversation: Conversation) {
-        Popup(context)
-            .withTitle(R.string.title_delete_conversation)
-            .withMessage(R.string.delete_conversation_message, conversation.getTitle())
-            .withPositiveButton(R.string.button_delete) {
-                deleteConversations(listOf(conversation.id))
-            }
-            .withNegativeButton(R.string.button_cancel)
-            .show()
-    }
-
-    override fun onSearchResultClick(result: SearchResult) {
-        navigator.showConversation(result.conversation.id, result.query.takeIf { result.messages > 0 })
     }
 }

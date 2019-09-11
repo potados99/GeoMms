@@ -5,17 +5,9 @@ import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
 
-/**
- * AlertDialog의 wrapper입니다.
- *
- * 메소드 체인으로 Dialog를 만들어서 띄울 수 있습니다.
- * 아니면 static 메소드를 사용하여 바로 띄울 수도 있습니다.
- */
 class Popup(private val context: Context?) {
 
-    private val dialogBuilder = AlertDialog.Builder(context).apply {
-        setPositiveButton("OK", null)
-    }
+    private val dialogBuilder = AlertDialog.Builder(context)
     private val messageBuilder = StringBuilder()
 
     fun show() {
@@ -69,10 +61,6 @@ class Popup(private val context: Context?) {
     }
 
     companion object {
-        /**
-         * 위의 것들이 귀찮을 때에 아주 빠르게 쓸 수 있는 간단한 함수입니다.
-         * 컨텍스트와 내용을 받아서 다이얼로그를 만들어서 띄웁니다.
-         */
         fun show(context: Context, message: String) {
             AlertDialog.Builder(context).apply {
                 setPositiveButton("OK", null)

@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 
 
-fun createBroadcastReceiver(onReceive: (intent: Intent?) -> Unit): BroadcastReceiver {
+fun newBroadcastReceiver(onReceive: (intent: Intent?) -> Unit): BroadcastReceiver {
     return object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             onReceive(intent)

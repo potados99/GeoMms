@@ -132,5 +132,7 @@
     <string name="connection_request_sent_to">Invitation sent to %s.</string>
     <string name="notify_fail_clear">Failed to clear all connections and requests.</string>
     <string name="button_refresh">Refresh</string>
+    <string name="button_invite">Invite</string>
+    <string name="title_invitation_sent">Invitation sent</string>
 
 </resources>

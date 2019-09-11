@@ -10,12 +10,10 @@ import com.potados.geomms.model.ConnectionRequest
 import kotlinx.android.synthetic.main.request_list_item.view.*
 import org.koin.core.KoinComponent
 
-class RequestsAdapter(
-    private val listener: RequestClickListener
-) :
-    BaseRealmAdapter<ConnectionRequest>(),
-    KoinComponent
-{
+class RequestsAdapter : BaseRealmAdapter<ConnectionRequest>(), KoinComponent {
+
+    var onRequestClick: (ConnectionRequest) -> Unit = {}
+    var onRequestLongClick: (ConnectionRequest) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -24,11 +22,11 @@ class RequestsAdapter(
         return BaseViewHolder(view).apply {
             view.setOnClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
-                listener.onRequestClick(item)
+                onRequestClick(item)
             }
             view.setOnLongClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnLongClickListener false
-                listener.onRequestLongClick(item)
+                onRequestLongClick(item)
                 true
             }
         }

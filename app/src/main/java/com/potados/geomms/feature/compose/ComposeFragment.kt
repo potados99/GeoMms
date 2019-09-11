@@ -27,32 +27,19 @@ import android.content.Intent
 import android.net.Uri
 import com.potados.geomms.model.Recipient
 
-class ComposeFragment :
-    BaseFragment(),
-    ContactAdapter.ContactClickListener,
-    MessagesAdapter.MessageClickListener{
+class ComposeFragment : BaseFragment() {
 
     override val optionMenuId: Int? = R.menu.compose
-
-    private val syncRepo: SyncRepository by inject()
-    private val deleteMessage: DeleteMessages by inject()
-
-    private val permissionManager: PermissionManager by inject()
-    private val navigator: Navigator by inject()
 
     private lateinit var composeViewModel: ComposeViewModel
     private lateinit var viewDataBinding: ComposeFragmentBinding
 
     private val chipsAdapter = ChipsAdapter()
-    private val contactAdapter = ContactAdapter(this)
-    private val messagesAdapter = MessagesAdapter(this)
+    private val contactAdapter = ContactAdapter()
+    private val messagesAdapter = MessagesAdapter()
 
     init {
         failables += this
-        failables += syncRepo
-        failables += deleteMessage
-        failables += permissionManager
-        failables += navigator
         failables += chipsAdapter
         failables += contactAdapter
         failables += messagesAdapter
@@ -135,57 +122,48 @@ class ComposeFragment :
             }
         }
 
-        with(chipsAdapter) {
-            editText.setOnTextChanged {
-                val query = it.toString()
+        with(view.chips) {
+            adapter = chipsAdapter.apply {
+                editText.setOnTextChanged {
+                    val query = it.toString()
 
-                var contacts = composeViewModel.getContacts(query)
+                    var contacts = composeViewModel.getContacts(query)
 
-                if (PhoneNumberUtils.isWellFormedSmsAddress(query)) {
-                    val newAddress = PhoneNumberUtils.formatNumber(query, Locale.getDefault().country)
-                    val newContact = Contact(numbers = RealmList(PhoneNumber(address = newAddress ?: query)))
-                    contacts = listOf(newContact) + contacts
+                    if (PhoneNumberUtils.isWellFormedSmsAddress(query)) {
+                        val newAddress = PhoneNumberUtils.formatNumber(query, Locale.getDefault().country)
+                        val newContact = Contact(numbers = RealmList(PhoneNumber(address = newAddress ?: query)))
+                        contacts = listOf(newContact) + contacts
+                    }
+
+                    contactAdapter.data = contacts
                 }
-
-                contactAdapter.data = contacts
             }
         }
 
-        with(contactAdapter) {
-            data = composeViewModel.getContacts()
-        }
-
-        with(view.chips) {
-            adapter = chipsAdapter
-        }
-
         with(view.contacts) {
-            adapter = contactAdapter
+            adapter = contactAdapter.apply {
+                data = composeViewModel.getContacts()
+
+                onContactClick = { composeViewModel.setConversationByContact(it) }
+            }
+
             itemAnimator = null
         }
 
         with(view.messages) {
             setHasFixedSize(true)
-            messagesAdapter.autoScrollToStart(this)
-            messagesAdapter.emptyView = view.messages_empty
-            adapter = messagesAdapter
+
+            adapter = messagesAdapter.apply {
+                autoScrollToStart(this@with)
+                emptyView = view.messages_empty
+
+                onMessageClick = { true /* TODO */ }
+                onMessageLongClick = { composeViewModel.showMessageDeletionConfirmation(activity, it) }
+            }
         }
 
         with(view.send) {
-            setOnClickListener {
-                with(view.message) {
-                    if (!permissionManager.isDefaultSms()) {
-                        navigator.showDefaultSmsDialogIfNeeded()
-                    }
-                    else if (syncRepo.syncProgress.value is SyncRepository.SyncProgress.Running) {
-                        Notify(context).short(R.string.notify_cannot_send_while_sync)
-                    }
-                    else {
-                        composeViewModel.sendSms(text.toString())
-                        text.clear()
-                    }
-                }
-            }
+            setOnClickListener { composeViewModel.sendMessageIfCan(activity) }
         }
 
         with(view.message) {
@@ -217,28 +195,4 @@ class ComposeFragment :
         return composeViewModel.conversation.value?.recipients?.get(0)
     }
 
-    override fun onContactClick(contact: Contact) {
-        composeViewModel.setConversationByContact(contact)
-    }
-
-    override fun onMessageClick(message: Message): Boolean {
-        // Do something here...
-        return true // Keep click default action (show/hide status)
-    }
-
-    override fun onMessageLongClick(message: Message) {
-        Popup(context)
-            .withTitle(R.string.title_delete_message)
-            .withMessage(R.string.dialog_ask_delete_message)
-            .withPositiveButton(R.string.button_delete) {
-                deleteMessage(
-                    DeleteMessages.Params(
-                        listOf(message.id),
-                        composeViewModel.conversation.value?.id
-                    )
-                )
-            }
-            .withNegativeButton(R.string.button_cancel)
-            .show()
-    }
 }

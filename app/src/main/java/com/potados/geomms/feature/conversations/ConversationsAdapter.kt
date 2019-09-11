@@ -17,14 +17,12 @@ import kotlinx.android.synthetic.main.conversation_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class ConversationsAdapter(
-    private val listener: ConversationClickListener
-) : BaseRealmAdapter<Conversation>(), KoinComponent {
+class ConversationsAdapter : BaseRealmAdapter<Conversation>(), KoinComponent {
 
     private val dateFormatter: DateFormatter by inject()
-    private val navigator: Navigator by inject()
 
-    private val syncMessages: SyncMessages by inject()
+    var onConversationClick: (Conversation) -> Unit = {}
+    var onConversationLongClick: (Conversation) -> Unit = {}
 
     override fun updateData(data: OrderedRealmCollection<Conversation>?) {
         if (getData() === data) return
@@ -51,12 +49,12 @@ class ConversationsAdapter(
         return BaseViewHolder(view).apply {
             view.setOnClickListener {
                 val conversation = getItem(adapterPosition) ?: return@setOnClickListener
-                listener.onConversationClick(conversation)
+                onConversationClick(conversation)
             }
             view.setOnLongClickListener {
                 val conversation = getItem(adapterPosition) ?: return@setOnLongClickListener false
 
-                listener.onConversationLongClick(conversation)
+                onConversationLongClick(conversation)
                 true
             }
         }
@@ -81,13 +79,8 @@ class ConversationsAdapter(
             else -> VIEW_TYPE_UNREAD
         }
 
-    interface ConversationClickListener {
-        fun onConversationClick(conversation: Conversation)
-        fun onConversationLongClick(conversation: Conversation)
-    }
-
     companion object {
-        private val VIEW_TYPE_READ = 1
-        private val VIEW_TYPE_UNREAD = 0
+        private const val VIEW_TYPE_READ = 1
+        private const val VIEW_TYPE_UNREAD = 0
     }
 }

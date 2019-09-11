@@ -63,7 +63,8 @@
                 app:layout_constraintBottom_toBottomOf="@id/message"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/title"
-                android:text="@string/main_default_sms_change" />
+                android:text="@string/main_default_sms_change"
+                android:onClick="@{() -> vm.changeDefaultSmsApp()}"/>
 
         <!-- Separator -->
         <View

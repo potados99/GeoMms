@@ -35,18 +35,18 @@ import org.koin.core.inject
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class MessagesAdapter(
-    private val listener: MessageClickListener
-) : BaseRealmAdapter<Message>(), KoinComponent {
+class MessagesAdapter : BaseRealmAdapter<Message>(), KoinComponent {
 
     lateinit var conversation: Conversation
 
-    private val context: Context by inject()
     private val dateFormatter: DateFormatter by inject()
     private val navigator: Navigator by inject()
 
     private val partsViewPool = RecyclerView.RecycledViewPool()
     private val contactCache = ContactCache()
+
+    var onMessageClick: (Message) -> Boolean = { true }
+    var onMessageLongClick: (Message) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
 
@@ -68,13 +68,13 @@ class MessagesAdapter(
         return BaseViewHolder(view).apply {
             containerView.setOnClickListener {
                 val message = getItem(adapterPosition) ?: return@setOnClickListener
-                if (listener.onMessageClick(message)) {
+                if (onMessageClick(message)) {
                     it.status.setVisible(!it.status.isVisible)
                 }
             }
             containerView.setOnLongClickListener {
                 val message = getItem(adapterPosition) ?: return@setOnLongClickListener false
-                listener.onMessageLongClick(message)
+                onMessageLongClick(message)
                 true
             }
         }
@@ -189,13 +189,6 @@ class MessagesAdapter(
 
     }
 
-    interface MessageClickListener {
-        /**
-         * @return False if you want to override default click action.
-         */
-        fun onMessageClick(message: Message): Boolean
-        fun onMessageLongClick(message: Message)
-    }
 
     companion object {
         private const val VIEW_TYPE_MESSAGE_IN = 0

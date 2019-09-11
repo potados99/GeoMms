@@ -17,7 +17,7 @@ abstract class BaseRealmAdapter<T: RealmModel>
     : RealmRecyclerViewAdapter<T, BaseViewHolder>(null, true), Failable, KoinComponent
 {
 
-    private val mContext: Context by inject()
+    protected val context: Context by inject()
 
     private val failure = MutableLiveData<Failable.Failure>()
 
@@ -31,7 +31,7 @@ abstract class BaseRealmAdapter<T: RealmModel>
     }
 
     override fun fail(@StringRes message: Int, vararg formatArgs: Any?, show: Boolean) {
-        setFailure(Failable.Failure(mContext.getString(message, *formatArgs), show))
+        setFailure(Failable.Failure(context.getString(message, *formatArgs), show))
     }
 
     var emptyView: View? = null

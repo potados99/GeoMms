@@ -11,11 +11,11 @@ import com.potados.geomms.model.Contact
 import kotlinx.android.synthetic.main.contact_list_item.view.*
 import kotlin.math.min
 
-class ContactAdapter(
-    private val listener: ContactClickListener
-) : BaseAdapter<Contact>() {
+class ContactAdapter : BaseAdapter<Contact>() {
 
     private val numbersViewPool = RecyclerView.RecycledViewPool()
+
+    var onContactClick: (Contact) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -26,11 +26,11 @@ class ContactAdapter(
         return BaseViewHolder(view).apply {
             view.primary.setOnClickListener {
                 val contact = getItem(adapterPosition) ?: return@setOnClickListener
-                listener.onContactClick(copyContact(contact, 0))
+                onContactClick(copyContact(contact, 0))
             }
 
             view.addresses.adapter = PhoneNumberAdapter { contact, index ->
-                listener.onContactClick(copyContact(contact, index + 1))
+                onContactClick(copyContact(contact, index + 1))
             }
         }
     }
