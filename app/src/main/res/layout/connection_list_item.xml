@@ -108,17 +108,13 @@
         app:layout_constraintTop_toTopOf="@+id/name"
         app:srcCompat="@drawable/ic_info_black_24dp" />
 
-    <ImageButton
+    <Button
         android:id="@+id/refresh_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="3dp"
+        style="@style/TightTextButton"
         android:src="@drawable/ic_refresh_24dp"
-        android:tint="@color/white"
         android:background="@drawable/rounded_rectangle_4dp"
         android:backgroundTint="?attr/tintPrimary"
-        android:text="Refresh"
-        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:text="@string/button_refresh"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

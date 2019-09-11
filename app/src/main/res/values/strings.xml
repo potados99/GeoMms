@@ -131,5 +131,6 @@
     <string name="fail_cannot_make_a_call_invalid_recipient">Failed to make a call. Recipient is not found.</string>
     <string name="connection_request_sent_to">Invitation sent to %s.</string>
     <string name="notify_fail_clear">Failed to clear all connections and requests.</string>
+    <string name="button_refresh">Refresh</string>
 
 </resources>

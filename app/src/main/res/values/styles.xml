@@ -78,4 +78,14 @@
         <item name="android:textSize">@dimen/textPrimary</item>
     </style>
 
+    <style name="TightTextButton">
+        <item name="android:textSize">@dimen/textTertiary</item>
+        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
 </resources>
