@@ -11,7 +11,6 @@ import com.potados.geomms.common.base.BaseAdapter
 import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.common.extension.resolveThemeColor
 import com.potados.geomms.common.extension.setVisible
-import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.SearchResult
 import kotlinx.android.synthetic.main.search_list_item.view.*
@@ -38,13 +37,14 @@ class SearchAdapter : BaseAdapter<SearchResult>(), KoinComponent {
 
     override fun onBindViewHolder(viewHolder: BaseViewHolder, position: Int) {
         val previous = data.getOrNull(position - 1)
-        val result = getItem(position) ?: return
+
+        val item = getItem(position) ?: return
         val view = viewHolder.containerView
 
-        view.results_header.setVisible(result.messages > 0 && previous?.messages == 0)
+        view.results_header.setVisible(item.messages > 0 && previous?.messages == 0)
 
-        val query = result.query
-        val title = SpannableString(result.conversation.getTitle())
+        val query = item.query
+        val title = SpannableString(item.conversation.getTitle())
         var index = title.indexOf(query, ignoreCase = true)
 
         while (index >= 0) {
@@ -58,18 +58,18 @@ class SearchAdapter : BaseAdapter<SearchResult>(), KoinComponent {
         }
         view.title.text = title
 
-        view.avatars.contacts = result.conversation.recipients
+        view.avatars.contacts = item.conversation.recipients
 
-        when (result.messages == 0) {
+        when (item.messages == 0) {
             true -> {
                 view.date.setVisible(true)
-                view.date.text = dateFormatter.getConversationTimestamp(result.conversation.date)
-                view.snippet.text = result.conversation.snippet
+                view.date.text = dateFormatter.getConversationTimestamp(item.conversation.date)
+                view.snippet.text = item.conversation.snippet
             }
 
             false -> {
                 view.date.setVisible(false)
-                view.snippet.text = context.getString(R.string.main_message_results, result.messages)
+                view.snippet.text = context.getString(R.string.main_message_results, item.messages)
             }
         }
     }
@@ -82,9 +82,5 @@ class SearchAdapter : BaseAdapter<SearchResult>(), KoinComponent {
         return old.query == new.query && // Queries are the same
                 old.conversation.id == new.conversation.id // Conversation id is the same
                 && old.messages == new.messages // Result count is the same
-    }
-
-    interface SearchResultClickListener {
-        fun onSearchResultClick(result: SearchResult)
     }
 }

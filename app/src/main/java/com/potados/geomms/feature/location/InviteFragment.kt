@@ -25,18 +25,13 @@ import kotlinx.android.synthetic.main.invite_fragment.view.*
 import org.koin.core.KoinComponent
 import java.util.*
 
-class InviteFragment :
-    BaseFragment(),
-    KoinComponent,
-    ContactAdapter.ContactClickListener{
+class InviteFragment : BaseFragment(), KoinComponent {
 
     private lateinit var inviteViewModel: InviteViewModel
     private lateinit var viewDataBinding: InviteFragmentBinding
 
     private val chipsAdapter = ChipsAdapter()
     private val contactAdapter = ContactAdapter()
-
-    private var textWatcher: TextWatcher? = null
 
     init {
         failables += this
@@ -60,51 +55,44 @@ class InviteFragment :
             .root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        chipsAdapter.editText.removeTextChangedListener(textWatcher)
-    }
-
     private fun initializeView(view: View) {
-        with(chipsAdapter) {
-            textWatcher = editText.setOnTextChanged {
-                val query = it.toString()
 
-                var contacts = inviteViewModel.getContacts(query)
+        with(view.chips) {
+            adapter = chipsAdapter.apply {
+                editText.setOnTextChanged {
+                    val query = it.toString()
 
-                if (PhoneNumberUtils.isWellFormedSmsAddress(query)) {
-                    val newAddress = PhoneNumberUtils.formatNumber(query, Locale.getDefault().country)
-                    val newContact = Contact(numbers = RealmList(PhoneNumber(address = newAddress ?: query)))
-                    contacts = listOf(newContact) + contacts
+                    var contacts = inviteViewModel.getContacts(query)
+
+                    if (PhoneNumberUtils.isWellFormedSmsAddress(query)) {
+                        val newAddress = PhoneNumberUtils.formatNumber(query, Locale.getDefault().country)
+                        val newContact = Contact(numbers = RealmList(PhoneNumber(address = newAddress ?: query)))
+                        contacts = listOf(newContact) + contacts
+                    }
+
+                    contactAdapter.data = contacts
                 }
 
-                contactAdapter.data = contacts
+                editText.requestFocus()
             }
         }
 
-        with(contactAdapter) {
-            data = inviteViewModel.getContacts()
-        }
-
-        with(view.chips) {
-            adapter = chipsAdapter
-        }
-
         with(view.contacts) {
-            adapter = contactAdapter
+            adapter = contactAdapter.apply {
+                data = inviteViewModel.getContacts()
+
+                onContactClick = {
+                    val address= it.numbers[0]?.address
+
+                    if (address == null) {
+                        fail(R.string.fail_cannot_select_address_not_exist, show = true)
+                    } else {
+                        context?.sendBroadcast(Intent(ACTION_SET_ADDRESS).putExtra(EXTRA_ADDRESS, address))
+                    }
+
+                    activity?.finish()
+                }
+            }
         }
-    }
-
-    override fun onContactClick(contact: Contact) {
-        val address= contact.numbers[0]?.address
-
-        if (address == null) {
-            fail(R.string.fail_cannot_select_address_not_exist, show = true)
-        } else {
-            context?.sendBroadcast(Intent(ACTION_SET_ADDRESS).putExtra(EXTRA_ADDRESS, address))
-        }
-
-        activity?.finish()
     }
 }

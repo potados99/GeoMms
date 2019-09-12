@@ -9,7 +9,7 @@ abstract class ConversationRepository : Repository() {
 
     abstract fun getConversations(archived: Boolean = false): RealmResults<Conversation>?
 
-    abstract fun getConversationsSnapshot(): List<Conversation>?
+    abstract fun getUnmanagedConversations(): List<Conversation>?
 
     /**
      * Returns the top conversations that were active in the last week

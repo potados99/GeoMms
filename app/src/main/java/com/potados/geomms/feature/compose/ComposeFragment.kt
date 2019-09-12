@@ -137,6 +137,8 @@ class ComposeFragment : BaseFragment() {
 
                     contactAdapter.data = contacts
                 }
+
+                editText.requestFocus()
             }
         }
 

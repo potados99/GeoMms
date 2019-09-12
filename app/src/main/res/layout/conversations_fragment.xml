@@ -22,7 +22,7 @@
             android:animateLayoutChanges="true">
 
         <TextView
-            android:id="@+id/empty"
+            android:id="@+id/empty_view"
             style="@style/TextSecondary"
             android:text="@string/start_a_new_conversation"
             android:layout_width="match_parent"
@@ -60,7 +60,7 @@
                 app:vm="@{vm}"
                 app:layout_constraintBottom_toTopOf="@id/syncing"/>
 
-        <!-- 동기화 상태창 -->
+        <!-- Sync progress -->
         <include
                 android:id="@+id/syncing"
                 android:layout_width="match_parent"

@@ -129,16 +129,14 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
     }
 
     fun getContacts(query: String = ""): List<Contact> {
-        val contacts = contactRepo.getUnmanagedContacts()?.filter {
-            contactFilter.filter(it, query)
-        }
+        val contacts = contactRepo.getUnmanagedContacts()
 
         if (contacts == null) {
             fail(R.string.fail_get_contacts, true)
             return listOf()
         }
 
-        return contacts
+        return contacts.filter { contactFilter.filter(it, query) }
     }
 
     fun showMessageDeletionConfirmation(activity: FragmentActivity?, message: Message) {

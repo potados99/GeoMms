@@ -110,7 +110,7 @@ class ConversationsFragment : NavigationFragment() {
     }
 
     private fun initializeView(view: View) {
-        with(view.empty) {
+        with(view.empty_view) {
             conversationsAdapter.emptyView = this
         }
 

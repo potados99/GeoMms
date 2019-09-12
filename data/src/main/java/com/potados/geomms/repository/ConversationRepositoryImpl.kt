@@ -39,7 +39,7 @@ class ConversationRepositoryImpl(
                 .findAllAsync()
         }
 
-    override fun getConversationsSnapshot(): List<Conversation>? = nullOnFail {
+    override fun getUnmanagedConversations(): List<Conversation>? = nullOnFail {
         val realm = Realm.getDefaultInstance()
         return@nullOnFail realm.copyFromRealm(
             realm.where(Conversation::class.java)
@@ -87,14 +87,14 @@ class ConversationRepositoryImpl(
     }
 
     override fun searchConversations(query: String): List<SearchResult>? = nullOnFail {
-        val conversations = getConversationsSnapshot() ?: return@nullOnFail null
+        val conversations = getUnmanagedConversations() ?: return@nullOnFail null
 
         val messagesByConversation = Realm.getDefaultInstance()
             .where(Message::class.java)
             .contains("body", query, Case.INSENSITIVE)
             .findAll()
             .groupBy { message -> message.threadId }
-            .filter { (threadId, _) -> conversations.firstOrNull { it.id == threadId } != null }
+            .filter { (threadId, _) -> conversations.find { it.id == threadId } != null }
             .map { (threadId, messages) -> Pair(conversations.first { it.id == threadId }, messages.size) }
             .map { (conversation, messages) -> SearchResult(query, conversation, messages) }
             .sortedByDescending { result -> result.messages }

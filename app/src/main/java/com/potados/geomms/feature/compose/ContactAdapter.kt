@@ -63,8 +63,4 @@ class ContactAdapter : BaseAdapter<Contact>() {
     override fun areItemsTheSame(old: Contact, new: Contact): Boolean {
         return old.lookupKey == new.lookupKey
     }
-
-    interface ContactClickListener {
-        fun onContactClick(contact: Contact)
-    }
 }

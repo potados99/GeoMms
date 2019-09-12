@@ -18,11 +18,11 @@
 
     <!-- Header group -->
     <androidx.constraintlayout.widget.Group
-            android:id="@+id/results_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:constraint_referenced_ids="results_separator,results_title" />
+        android:id="@+id/results_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="results_separator,results_title"
+        tools:visibility="gone" />
 
     <!-- Separator -->
     <View
