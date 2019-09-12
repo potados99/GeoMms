@@ -64,7 +64,7 @@
                 android:descendantFocusability="blocksDescendants">
 
                 <!-- Recent -->
-                <!-- TODO implement -->
+                <!-- TODO Implement -->
 
                 <!-- Contacts -->
                 <androidx.recyclerview.widget.RecyclerView
