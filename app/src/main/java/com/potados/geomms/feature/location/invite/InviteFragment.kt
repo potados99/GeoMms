@@ -1,16 +1,15 @@
-package com.potados.geomms.feature.location
+package com.potados.geomms.feature.location.invite
 
 import android.content.Intent
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.potados.geomms.R
-import com.potados.geomms.base.Failable
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.getViewModel
+import com.potados.geomms.common.extension.isVisible
 import com.potados.geomms.common.extension.setOnTextChanged
 import com.potados.geomms.common.extension.setSupportActionBar
 import com.potados.geomms.databinding.InviteFragmentBinding
@@ -31,11 +30,13 @@ class InviteFragment : BaseFragment(), KoinComponent {
     private lateinit var viewDataBinding: InviteFragmentBinding
 
     private val chipsAdapter = ChipsAdapter()
+    private val recentAdapter = ContactAdapter()
     private val contactAdapter = ContactAdapter()
 
     init {
         failables += this
         failables += chipsAdapter
+        failables += recentAdapter
         failables += contactAdapter
     }
 
@@ -49,6 +50,8 @@ class InviteFragment : BaseFragment(), KoinComponent {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return InviteFragmentBinding
             .inflate(inflater, container, false)
+            .apply { vm = inviteViewModel }
+            .apply { lifecycleOwner = this@InviteFragment }
             .apply { viewDataBinding = this }
             .apply { setSupportActionBar(toolbar = root.toolbar, title = false, upButton = true) }
             .apply { initializeView(root) }
@@ -59,39 +62,21 @@ class InviteFragment : BaseFragment(), KoinComponent {
 
         with(view.chips) {
             adapter = chipsAdapter.apply {
-                editText.setOnTextChanged {
-                    val query = it.toString()
-
-                    var contacts = inviteViewModel.getContacts(query)
-
-                    if (PhoneNumberUtils.isWellFormedSmsAddress(query)) {
-                        val newAddress = PhoneNumberUtils.formatNumber(query, Locale.getDefault().country)
-                        val newContact = Contact(numbers = RealmList(PhoneNumber(address = newAddress ?: query)))
-                        contacts = listOf(newContact) + contacts
-                    }
-
-                    contactAdapter.data = contacts
-                }
-
+                editText.setOnTextChanged(inviteViewModel::onSearch)
                 editText.requestFocus()
+            }
+        }
+
+        with(view.recents) {
+            adapter = recentAdapter.apply {
+                companionView = view.recent_group
+                onContactClick = { inviteViewModel.onContactClick(activity, it) }
             }
         }
 
         with(view.contacts) {
             adapter = contactAdapter.apply {
-                data = inviteViewModel.getContacts()
-
-                onContactClick = {
-                    val address= it.numbers[0]?.address
-
-                    if (address == null) {
-                        fail(R.string.fail_cannot_select_address_not_exist, show = true)
-                    } else {
-                        context?.sendBroadcast(Intent(ACTION_SET_ADDRESS).putExtra(EXTRA_ADDRESS, address))
-                    }
-
-                    activity?.finish()
-                }
+                onContactClick = { inviteViewModel.onContactClick(activity, it) }
             }
         }
     }

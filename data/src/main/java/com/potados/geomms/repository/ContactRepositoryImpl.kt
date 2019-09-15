@@ -10,6 +10,8 @@ import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.model.Contact
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.Sort
+import timber.log.Timber
 
 class ContactRepositoryImpl(private val context: Context) : ContactRepository() {
 
@@ -39,6 +41,15 @@ class ContactRepositoryImpl(private val context: Context) : ContactRepository() 
         val realm = Realm.getDefaultInstance()
         return@nullOnFail realm.where(Contact::class.java)
             .sort("name")
+            .findAll()
+    }
+
+    override fun getRecentContacts(): RealmResults<Contact>? = nullOnFail {
+        val realm = Realm.getDefaultInstance()
+        return@nullOnFail realm.where(Contact::class.java)
+            .greaterThan("lastConnected", 0)
+            .sort("lastConnected", Sort.DESCENDING)
+            .limit(5)
             .findAll()
     }
 

@@ -134,5 +134,6 @@
     <string name="button_refresh">Refresh</string>
     <string name="button_invite">Invite</string>
     <string name="title_invitation_sent">Invitation sent</string>
+    <string name="title_recent">Recent</string>
 
 </resources>

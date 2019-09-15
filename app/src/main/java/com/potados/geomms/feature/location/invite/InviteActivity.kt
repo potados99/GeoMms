@@ -1,4 +1,4 @@
-package com.potados.geomms.feature.location
+package com.potados.geomms.feature.location.invite
 
 import android.content.Context
 import android.content.Intent

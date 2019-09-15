@@ -11,7 +11,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="vm" type="com.potados.geomms.feature.location.MapViewModel" />
+        <variable name="vm" type="com.potados.geomms.feature.location.invite.InviteViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,12 +63,48 @@
                 android:orientation="vertical"
                 android:descendantFocusability="blocksDescendants">
 
-                <!-- Recent -->
-                <!-- TODO Implement -->
+                <!-- Recent group -->
+                <LinearLayout
+                    android:id="@+id/recent_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Results title -->
+                    <com.potados.geomms.common.widget.CollapseTextView
+                        android:id="@+id/recent_title"
+                        style="@style/TextSecondary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/title_recent"
+                        android:textStyle="bold" />
+
+                    <!-- Recent recipients -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recents"
+                        app:recents="@{vm.recentContacts}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                    <!-- Separator -->
+                    <View
+                        android:id="@+id/recent_separator"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="?android:attr/divider"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </LinearLayout>
 
                 <!-- Contacts -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/contacts"
+                    app:contacts="@{vm.contacts}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipChildren="false"
@@ -81,7 +117,6 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
-
 
         <!-- Toolbar shadow -->
         <View

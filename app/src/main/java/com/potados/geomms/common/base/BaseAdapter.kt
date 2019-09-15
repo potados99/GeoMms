@@ -46,6 +46,7 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable
             onDatasetChanged()
 
             emptyView?.setVisible(value.isEmpty())
+            companionView?.setVisible(value.isNotEmpty())
         }
 
     /**
@@ -56,6 +57,17 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable
         set(value) {
             field = value
             field?.setVisible(data.isEmpty())
+        }
+
+    /**
+     * Opposite to emptyView.
+     * Shown when data exists.
+     * Useful when we want to hide something when data does not exist.
+     */
+    var companionView: View? = null
+        set(value) {
+            field = value
+            field?.setVisible(data.isNotEmpty())
         }
 
     private val selection = mutableListOf<Long>()

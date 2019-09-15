@@ -8,7 +8,7 @@ import com.potados.geomms.R
 import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.common.GiveMePermissionActivity
 import com.potados.geomms.feature.compose.ComposeActivity
-import com.potados.geomms.feature.location.InviteActivity
+import com.potados.geomms.feature.location.invite.InviteActivity
 import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.settings.SettingsActivity
 import com.potados.geomms.util.Notify

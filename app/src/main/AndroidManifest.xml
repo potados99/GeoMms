@@ -35,7 +35,7 @@
         <activity android:name=".common.GiveMePermissionActivity" />
         <activity android:name=".feature.main.MainActivity"
                   android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".feature.location.InviteActivity" />
+        <activity android:name=".feature.location.invite.InviteActivity" />
         <activity android:name=".feature.compose.ComposeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>

@@ -123,5 +123,6 @@
     <string name="button_refresh">새로고침</string>
     <string name="button_invite">초대하기</string>
     <string name="title_invitation_sent">초대 전송됨</string>
+    <string name="title_recent">최근</string>
 
 </resources>

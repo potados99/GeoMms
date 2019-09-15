@@ -250,9 +250,14 @@ class LocationSupportServiceImpl(
         // Add this not-yet accepted connection to getRealm.
         val temporalConnection = Connection.fromAcceptedRequest(request).apply { isTemporal = true }
 
-        executeInDefaultInstance {
-            it.insertOrUpdate(request)
-            it.insertOrUpdate(temporalConnection)
+        executeInDefaultInstance { realm ->
+            recipient.contact?.let {
+                realm.insertOrUpdate(it.apply {
+                    lastConnected = System.currentTimeMillis()
+                })
+            }
+            realm.insertOrUpdate(request)
+            realm.insertOrUpdate(temporalConnection)
         }
 
         Timber.i("Requested connection to ${recipient.getDisplayName()} with id ${request.connectionId}.")

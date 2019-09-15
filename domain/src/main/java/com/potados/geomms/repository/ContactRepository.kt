@@ -10,5 +10,10 @@ abstract class ContactRepository : Repository() {
 
     abstract fun getContacts(): RealmResults<Contact>?
 
+    /**
+     * Get recently connected contacts.
+     */
+    abstract fun getRecentContacts(): RealmResults<Contact>?
+
     abstract fun getUnmanagedContacts(): List<Contact>?
 }

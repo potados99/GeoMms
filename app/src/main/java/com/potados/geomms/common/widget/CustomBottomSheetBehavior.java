@@ -50,6 +50,7 @@ import androidx.customview.view.AbsSavedState;
 import androidx.customview.widget.ViewDragHelper;
 
 import com.google.android.material.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
@@ -1064,7 +1065,8 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
         @Nullable ColorStateList bottomSheetColor) {
         if (this.shapeThemingEnabled) {
             this.shapeAppearanceModelDefault =
-                new ShapeAppearanceModel(context, attrs, R.attr.bottomSheetStyle, DEF_STYLE_RES);
+                    ShapeAppearanceModel.builder(context, attrs, R.attr.bottomSheetStyle, DEF_STYLE_RES)
+                            .build();
 
             this.materialShapeDrawable = new MaterialShapeDrawable(shapeAppearanceModelDefault);
             this.materialShapeDrawable.initializeElevationOverlay(context);
