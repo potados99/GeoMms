@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Telephony
+import androidx.fragment.app.FragmentActivity
 import com.potados.geomms.R
 import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.common.GiveMePermissionActivity
@@ -103,5 +104,9 @@ class Navigator (
 
     fun saveVcard(uri: Uri) {
         Timber.i("Save vcard: $uri")
+    }
+
+    fun showSyncDialogIfNeeded(activity: FragmentActivity) {
+        // TODO
     }
 }

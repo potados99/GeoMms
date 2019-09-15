@@ -54,7 +54,6 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
 
     override fun start() {
         super.start()
-
         sync()
     }
 
