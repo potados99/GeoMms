@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.common.navigation.Navigator
-import com.potados.geomms.functional.Result
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.SearchResult
@@ -14,11 +13,13 @@ import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.DeleteConversations
 import com.potados.geomms.usecase.SyncMessages
+import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
 import io.realm.Realm
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
+import java.util.*
 
 /**
  * View Model of [ConversationsFragment].
@@ -35,6 +36,8 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
 
     private val permissionManager: PermissionManager by inject()
     private val navigator: Navigator by inject()
+
+    val syncEvent = syncRepo.syncEvent()
 
     /**
      * Binding properties.
@@ -61,15 +64,9 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
      * Sync messages on condition.
      */
     private fun sync() {
-        // If we have all permissions and we've never run a sync, run a sync. This will be the case
-        // when upgrading from 2.7.3, or if the app's data was cleared
         val lastSync = Realm.getDefaultInstance().use { realm -> realm.where(SyncLog::class.java)?.max("date") ?: 0 }
         if (lastSync == 0 && permissionManager.isDefaultSms() && permissionManager.hasReadSms() && permissionManager.hasContacts()) {
-            syncMessages(Unit) {
-                if (it is Result.Error) {
-                    Timber.w("Failed to sync message.")
-                }
-            }
+            syncRepo.triggerSyncMessages()
         }
     }
 
@@ -114,5 +111,22 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
             searching.value = true
             searchResults.value = conversationRepo.searchConversations(query)
         }
+    }
+
+    /**
+     * This method is recommended to be invoked by its owner fragment,
+     * in response of [syncEvent].
+     *
+     * This is supposed to be the only entry for sync in this whole application.
+     */
+    fun showSyncDialog(activity: FragmentActivity?) {
+        navigator.showSyncDialog(activity)
+    }
+
+    /**
+     * Update value of current default sms app in permission manager.
+     */
+    fun refresh() {
+        permissionManager.refresh()
     }
 }

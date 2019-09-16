@@ -8,10 +8,8 @@ import com.potados.geomms.common.base.BaseViewHolder
 import com.potados.geomms.common.extension.setBold
 import com.potados.geomms.common.extension.setTextColorRes
 import com.potados.geomms.common.extension.setVisible
-import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Conversation
-import com.potados.geomms.usecase.SyncMessages
 import io.realm.OrderedRealmCollection
 import kotlinx.android.synthetic.main.conversation_list_item.view.*
 import org.koin.core.KoinComponent

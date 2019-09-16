@@ -125,4 +125,15 @@
     <string name="title_invitation_sent">초대 전송됨</string>
     <string name="title_recent">최근</string>
 
+
+    <string-array name="sync_limits">
+        <item>최근 1개월</item>
+        <item>최근 6개월</item>
+        <item>최근 1년</item>
+        <item>모두 동기화</item>
+    </string-array>
+    <string name="dialog_ask_sync_all">총 %s개의 메시지, 대화, 연락처가 존재합니다. 동기화 작업에 시간이 조금 걸릴 수 있습니다. 최근 메시지만 동기화하면 시간을 단축할 수 있습니다.</string>
+    <string name="title_choose_range">범위를 선택해주세요</string>
+    <string name="title_sync_slow">동기화가 오래 걸릴 수 있습니다.</string>
+
 </resources>

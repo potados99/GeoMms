@@ -4,7 +4,6 @@ import com.potados.geomms.extension.elapsedTimeMillis
 import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.repository.SyncRepository
-import com.potados.geomms.service.LocationSupportService
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -13,10 +12,12 @@ class SyncMessages(
     private val clearAll: ClearAll,
     private val processMessages: ProcessMessages,
     private val updateBadge: UpdateBadge
-) : UseCase<Unit>() {
+) : UseCase<Long>() {
 
-    override fun run(params: Unit): Result<*> =
+    override fun run(params: Long): Result<*> =
         Result.of {
+            Timber.i("Will sync messages from date $params.")
+
             // Connections relay on Recipient, which will be deleted after sync.
             // Disconnect all connections before sync to prevent connection having
             // no recipient.
@@ -26,7 +27,10 @@ class SyncMessages(
 
             Timber.i("Clear all.")
 
-            val elapsedMillis = elapsedTimeMillis(syncRepo::syncMessages)
+            val elapsedMillis = elapsedTimeMillis {
+                syncRepo.syncMessages(params)
+            }
+
             val elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedMillis)
 
             Timber.i("Completed sync in $elapsedSeconds seconds.")

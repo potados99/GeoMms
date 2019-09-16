@@ -22,8 +22,9 @@ class CursorToMessageImpl(
     private val permissionManager: PermissionManager
 ) : CursorToMessage {
 
-    private val uri = "content://mms-sms/complete-conversations".toUri()
-    private val projection = arrayOf(
+    companion object {
+        private val uri = "content://mms-sms/complete-conversations".toUri()
+        private val projection = arrayOf(
             MmsSms.TYPE_DISCRIMINATOR_COLUMN,
             MmsSms._ID,
             Mms.DATE,
@@ -48,7 +49,8 @@ class CursorToMessageImpl(
             Mms.READ_REPORT,
             MmsSms.PendingMessages.ERROR_TYPE,
             Mms.STATUS
-    )
+        )
+    }
 
     override fun map(from: Pair<Cursor, CursorToMessage.MessageColumns>): Message {
         val cursor = from.first
@@ -111,14 +113,19 @@ class CursorToMessageImpl(
         }
     }
 
-    override fun getMessagesCursor(): Cursor? {
+    override fun getMessagesCursor(dateFrom: Long): Cursor? {
         val projection = when (true /* TODO */) {
-            true -> this.projection + Mms.SUBSCRIPTION_ID
-            false -> this.projection
+            true -> projection + Mms.SUBSCRIPTION_ID
+            false -> projection
         }
 
         return when (permissionManager.hasReadSms()) {
-            true -> SqliteWrapper.query(context, uri, projection, sortOrder = "normalized_date desc")
+            true -> SqliteWrapper.query(
+                context,
+                uri,
+                projection,
+                selection = "date >= $dateFrom",
+                sortOrder = "normalized_date desc")
             false -> null
         }
     }
@@ -145,5 +152,4 @@ class CursorToMessageImpl(
 
         return ""
     }
-
 }

@@ -2,6 +2,7 @@
 package com.potados.geomms.common.widget
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -23,6 +24,18 @@ class GroupAvatarView(context: Context, attrs: AttributeSet? = null) : Constrain
         View.inflate(context, R.layout.group_avatar_view, this)
         setBackgroundResource(R.drawable.circle)
         clipToOutline = true
+    }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+
+        avatars.forEach { avatar ->
+            avatar.setBackgroundResource(R.drawable.rectangle)
+        }
+
+        if (!isInEditMode) {
+            updateView()
+        }
     }
 
     private fun updateView() {

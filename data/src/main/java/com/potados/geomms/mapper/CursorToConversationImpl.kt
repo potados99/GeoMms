@@ -9,6 +9,7 @@ import android.provider.Telephony.Threads
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.Recipient
+import com.potados.geomms.util.SqliteWrapper
 
 class CursorToConversationImpl (
     private val context: Context,
@@ -16,12 +17,12 @@ class CursorToConversationImpl (
 ) : CursorToConversation {
 
     companion object {
-        val URI: Uri = Telephony.MmsSms.CONTENT_CONVERSATIONS_URI
+        val uri: Uri = Telephony.MmsSms.CONTENT_CONVERSATIONS_URI
             .buildUpon()
             .appendQueryParameter("simple", "true")
             .build()
 
-        val PROJECTION = arrayOf(
+        val projection = arrayOf(
                 Threads._ID,
                 Threads.DATE,
                 Threads.RECIPIENT_IDS,
@@ -53,9 +54,14 @@ class CursorToConversationImpl (
         }
     }
 
-    override fun getConversationsCursor(): Cursor? {
+    override fun getConversationsCursor(dateFrom: Long): Cursor? {
         return when (permissionManager.hasReadSms()) {
-            true -> context.contentResolver.query(URI, PROJECTION, null, null, "date desc")
+            true -> SqliteWrapper.query(
+                context,
+                uri,
+                projection,
+                selection = "date >= $dateFrom",
+                sortOrder = "date desc")
             false -> null
         }
     }

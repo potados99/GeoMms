@@ -3,6 +3,7 @@ package com.potados.geomms.feature.conversations
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.FragmentActivity
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.autoScrollToStart
@@ -26,9 +27,6 @@ class ConversationsFragment : NavigationFragment() {
     override val navigationItemId: Int = R.id.menu_item_navigation_message
     override val titleId: Int = R.string.title_conversations
 
-
-    private val permissionManager: PermissionManager by inject()
-
     private lateinit var conversationsViewModel: ConversationsViewModel
     private lateinit var viewDataBinding: ConversationsFragmentBinding
 
@@ -37,7 +35,6 @@ class ConversationsFragment : NavigationFragment() {
 
     init {
         failables += this
-        failables += permissionManager
         failables += conversationsAdapter
         failables += searchAdapter
     }
@@ -46,7 +43,6 @@ class ConversationsFragment : NavigationFragment() {
         super.onCreate(savedInstanceState)
 
         conversationsViewModel = getViewModel()
-
         failables += conversationsViewModel.failables
     }
 
@@ -106,7 +102,7 @@ class ConversationsFragment : NavigationFragment() {
     }
     override fun onResume() {
         super.onResume()
-        permissionManager.refresh()
+        conversationsViewModel.refresh()
     }
 
     private fun initializeView(view: View) {

@@ -2,7 +2,9 @@ package com.potados.geomms.util
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.view.View
+import androidx.annotation.ArrayRes
 import androidx.annotation.StringRes
 
 class Popup(private val context: Context?) {
@@ -54,6 +56,18 @@ class Popup(private val context: Context?) {
         return this
     }
     fun withNegativeButton(@StringRes text: Int, listener: () -> Unit = {}) = withNegativeButton(context?.getString(text), listener)
+
+    fun withSingleChoiceItems(
+        @ArrayRes itemId: Int,
+        defaultSelection: Int = 0,
+        listener: (Int) -> Unit = { _ -> }
+    ): Popup {
+        return this.apply {
+            dialogBuilder.setSingleChoiceItems(itemId, defaultSelection) { _, which ->
+                listener(which)
+            }
+        }
+    }
 
     fun withView(view: View): Popup {
         dialogBuilder.setView(view)

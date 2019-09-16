@@ -5,7 +5,5 @@ import android.database.Cursor
 import com.potados.geomms.model.Conversation
 
 interface CursorToConversation : Mapper<Cursor, Conversation> {
-
-    fun getConversationsCursor(): Cursor?
-
+    fun getConversationsCursor(dateFrom: Long = 0): Cursor?
 }

@@ -12,7 +12,6 @@
     android:id="@+id/avatar_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/circle"
     android:backgroundTint="?attr/avatarColor"
     tools:parentTag="com.potados.geomms.common.widget.AvatarView">
 

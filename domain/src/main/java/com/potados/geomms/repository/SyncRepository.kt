@@ -22,7 +22,21 @@ abstract class SyncRepository : Repository() {
 
     abstract val syncProgress: LiveData<SyncProgress>
 
-    abstract fun syncMessages()
+    /**
+     * Sum of messages count, conversations count, and recipients count.
+     */
+    abstract val rows: Int
+
+    abstract fun syncEvent(): LiveData<Boolean>
+
+    /**
+     * Not directly sync messages.
+     * Ask user by setting syncEvent and then
+     * syncMessages will be called in fragment, not here.
+     */
+    abstract fun triggerSyncMessages()
+
+    abstract fun syncMessages(dateFrom: Long = 0)
 
     abstract fun syncMessage(uri: Uri): Message?
 

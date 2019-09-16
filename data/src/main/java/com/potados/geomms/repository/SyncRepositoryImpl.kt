@@ -44,9 +44,32 @@ class SyncRepositoryImpl(
         value = SyncProgress.Idle
     }
 
+    private val _syncEvent = MutableLiveData<Boolean>().apply { value = false }
+
     override val syncProgress: LiveData<SyncProgress> = _progress
-    
-    override fun syncMessages() = unitOnFail {
+
+    override val rows: Int
+        get() {
+            return (cursorToMessage.getMessagesCursor()?.count ?: 0) +
+                    (cursorToMessage.getMessagesCursor()?.count ?: 0) +
+                    (cursorToRecipient.getRecipientCursor()?.count ?: 0)
+        }
+
+    override fun syncEvent(): LiveData<Boolean> {
+        return _syncEvent
+    }
+
+    /**
+     * This is useful when not able to sync directly from navigator.
+     */
+    override fun triggerSyncMessages() {
+        // This will tell all the observers that it is time to do sync.
+        // They will ask user what to do, and then they will call
+        // syncMessages by themselves.
+        _syncEvent.postValue( true)
+    }
+
+    override fun syncMessages(dateFrom: Long) = unitOnFail {
         if (_progress.value is SyncProgress.Running) {
             Timber.i("sync already in progress; return")
             return@unitOnFail
@@ -57,7 +80,7 @@ class SyncRepositoryImpl(
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
 
-        Timber.i("realm transaction began")
+        Timber.i("Realm transaction began")
 
         val persistedData = realm.where(Conversation::class.java)
                 .beginGroup()
@@ -80,17 +103,21 @@ class SyncRepositoryImpl(
 
         keys.reset(CHANNEL_MESSAGE)
 
-        Timber.v("removed everything except persistedData")
+        Timber.v("Removed everything except persistedData")
 
-        val messageCursor = cursorToMessage.getMessagesCursor()
-        val conversationCursor = cursorToConversation.getConversationsCursor()
+        Timber.i("Will sync messages and conversations after date $dateFrom")
+
+        // Apply date filter here.
+        // Only messages and conversations after the [dateFrom] will be queried.
+        val messageCursor = cursorToMessage.getMessagesCursor(dateFrom)
+        val conversationCursor = cursorToConversation.getConversationsCursor(dateFrom)
         val recipientCursor = cursorToRecipient.getRecipientCursor()
 
         val max = (messageCursor?.count ?: 0) +
                 (conversationCursor?.count ?: 0) +
                 (recipientCursor?.count ?: 0)
 
-        Timber.v("sum of cursor rows: $max")
+        Timber.v("Sum of cursor rows: $max")
 
         var progress = 0
 
@@ -100,14 +127,14 @@ class SyncRepositoryImpl(
         messageCursor?.use {
             val messageColumns = CursorToMessage.MessageColumns(messageCursor)
             val messages = messageCursor.map { cursor ->
-                Timber.v("main_syncing messages...$progress")
+                Timber.v("Syncing messages...$progress")
 
                 progress++
-                _progress.postValue(SyncRepository.SyncProgress.Running(max, progress, false))
+                _progress.postValue(SyncProgress.Running(max, progress, false))
                 cursorToMessage.map(Pair(cursor, messageColumns))
             }
             realm.insertOrUpdate(messages)
-            Timber.i("messages inserted to realm.")
+            Timber.i("Messages inserted to realm.")
         }
 
         /**
@@ -116,7 +143,7 @@ class SyncRepositoryImpl(
         conversationCursor?.use {
             val conversations = conversationCursor
                     .map { cursor ->
-                        Timber.v("main_syncing conversations...$progress")
+                        Timber.v("Syncing conversations...$progress")
                         postProgress(max, ++progress, false)
                         cursorToConversation.map(cursor)
                     }
@@ -129,7 +156,7 @@ class SyncRepositoryImpl(
                 conversation?.name = data.name
             }
 
-            Timber.i("applied persisted data to conversations.")
+            Timber.i("Applied persisted data to conversations.")
 
             realm.where(Message::class.java)
                     .sort("date", Sort.DESCENDING)
@@ -142,18 +169,17 @@ class SyncRepositoryImpl(
                             ?.apply { snippet = message.getSummary() }
                             ?.apply { me = message.isMe() }
 
-                        Timber.v("updating conversations using latest messages.")
+                        Timber.v("Updating conversations using latest messages.")
                     }
 
             realm.insertOrUpdate(conversations)
-            Timber.i("conversations inserted to realm.")
+            Timber.i("Conversations inserted to realm.")
         }
 
         /**
-         * Recepient
+         * Recipient
          *
-         * Conversation을 가져올 때에는 recipient id만 채운 채로 가져온 뒤,
-         * 여기서 Contact와 이어줍니다.
+         * Fill contacts in the recipients of the conversations.
          */
         recipientCursor?.use {
             val contacts = realm.copyToRealm(getContacts() as MutableList)
@@ -173,14 +199,13 @@ class SyncRepositoryImpl(
             Timber.i("Recipients inserted to realm")
         }
 
-
         postProgress(0, 0, false)
 
         realm.insert(SyncLog())
         realm.commitTransaction()
         realm.close()
 
-        Timber.i("sync finished")
+        Timber.i("Szync finished")
 
         postIdle()
     }

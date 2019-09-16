@@ -2,9 +2,11 @@ package com.potados.geomms.common.widget
 
 import android.content.Context
 import android.graphics.Color
+import android.telephony.PhoneNumberUtils
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import com.bumptech.glide.Glide
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.resolveThemeColor
 import com.potados.geomms.common.extension.setBackgroundTint
@@ -22,6 +24,7 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
     init {
         View.inflate(context, R.layout.avatar_view, this)
 
+        setBackgroundResource(R.drawable.circle)
         clipToOutline = true
     }
 
@@ -29,6 +32,7 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
         super.onFinishInflate()
 
         if (!isInEditMode) {
+            setBackgroundTint(context.resolveThemeColor(R.attr.tintPrimary))
             updateView()
         }
     }
@@ -73,7 +77,7 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
 
         photo.setImageDrawable(null)
         address?.let { address ->
-            // Glide.with(photo).load(PhoneNumberUtils.stripSeparators(address)).into(photo)
+            Glide.with(photo).load(PhoneNumberUtils.stripSeparators(address)).into(photo)
         }
 
     }

@@ -9,7 +9,7 @@ import java.util.*
 
 interface CursorToMessage : Mapper<Pair<Cursor, CursorToMessage.MessageColumns>, Message> {
 
-    fun getMessagesCursor(): Cursor?
+    fun getMessagesCursor(dateFrom: Long = 0): Cursor?
 
     fun getMessageCursor(id: Long): Cursor?
 

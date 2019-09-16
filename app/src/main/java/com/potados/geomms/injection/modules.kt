@@ -41,7 +41,14 @@ val myModules = module {
     single { androidContext().contentResolver }
 
     /** Navigator */
-    single { Navigator(context = get(), permissionManager = get()) }
+    single {
+        Navigator(
+            context = get(),
+            permissionManager = get(),
+            syncRepo = get(),
+            syncMessages = get()
+        )
+    }
 
 
     /** Scheduler */
