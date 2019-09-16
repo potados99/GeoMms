@@ -165,7 +165,7 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
                 threadId = conversation.id,
                 addresses = conversation.recipients.map { recipient -> recipient.address },
                 body = messageText.get().orEmpty(),
-                attachments = listOf()
+                attachments = attachments
             )
 
             sendMessage(params) {
