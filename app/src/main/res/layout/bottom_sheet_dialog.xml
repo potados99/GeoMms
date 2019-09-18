@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Bottom sheet grip-->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="5dp"
+        android:id="@+id/grip"
+        android:background="@drawable/small_rounded"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Incoming requests -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/incoming_requests_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/grip"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Incoming requests title -->
+        <TextView
+            android:id="@+id/incoming_requests_text"
+            style="@style/TextSecondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_incoming_requests"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="12dp"/>
+
+        <!-- Requests -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:id="@+id/incoming_requests"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/incoming_requests_text"
+            tools:listitem="@layout/request_list_item"/>
+
+        <!-- Separator -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:id="@+id/incoming_requests_separator"
+            android:background="?android:attr/divider"
+            app:layout_constraintTop_toBottomOf="@id/incoming_requests"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Connections -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/connections"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:nestedScrollingEnabled="true"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/incoming_requests_layout"
+        android:layout_marginStart="8dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/connection_list_item"/>
+
+    <!-- Empty view group -->
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/connections">
+
+        <!-- Empty text -->
+        <TextView
+            android:id="@+id/empty_text"
+            android:textSize="@dimen/textPrimary"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/connections_empty" />
+
+        <!-- Invite friend button -->
+        <Button
+            android:id="@+id/invite_button"
+            style="@style/TightTextButton"
+            android:textSize="@dimen/textSecondary"
+            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:backgroundTint="?attr/tintPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
+            android:text="@string/button_invite" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

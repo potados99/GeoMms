@@ -21,12 +21,20 @@ import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 
+fun View.setHidable(hidable: Boolean) {
+    CustomBottomSheetBehavior.from(this).isHideable = hidable
+}
+
 fun View.hideSheet() {
     CustomBottomSheetBehavior.from(this).state = CustomBottomSheetBehavior.STATE_HIDDEN
 }
 
 fun View.collapseSheet() {
     CustomBottomSheetBehavior.from(this).state = CustomBottomSheetBehavior.STATE_COLLAPSED
+}
+
+fun View.halfExpandSheet() {
+    CustomBottomSheetBehavior.from(this).state = CustomBottomSheetBehavior.STATE_HALF_EXPANDED
 }
 
 fun View.expandSheet() {

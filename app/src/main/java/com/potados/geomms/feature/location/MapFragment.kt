@@ -14,8 +14,10 @@ import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
+import com.potados.geomms.common.widget.bottomsheet.BottomSheetManager
 import com.potados.geomms.databinding.MapFragmentBinding
-import com.potados.geomms.util.Notify
+import com.potados.geomms.feature.conversations.ConversationsFragment
+import com.potados.geomms.feature.license.LicenseFragment
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 import timber.log.Timber
@@ -33,6 +35,9 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
     private val requestsAdapter = RequestsAdapter()
 
     private var map: GoogleMap? = null
+
+    private lateinit var manager: BottomSheetManager
+
 
     /**
      * Invoked when ACTION_SET_ADDRESS intent received.
@@ -143,6 +148,8 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
     }
 
     private fun initializeView(view: View, savedInstanceState: Bundle?) {
+        manager = BottomSheetManager(this@MapFragment, view.root_layout)
+
         with(view.map_view) {
             onCreate(savedInstanceState)
             getMapAsync(this@MapFragment) // onMapReady called after this done
@@ -152,7 +159,13 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             adapter = connectionsAdapter.apply {
                 emptyView = view.empty_view
 
-                onConnectionClick = { mapViewModel.showConnectionInfo(activity, map, it) }
+                onConnectionClick = {
+                    // mapViewModel.showConnectionInfo(activity, map, it)
+
+                    /**TEST CODE*/
+
+                    manager.push(LicenseFragment())
+                }
                 onConnectionLongClick = { mapViewModel.showConnectionDeletionConfirmation(activity!!, it) }
             }
 

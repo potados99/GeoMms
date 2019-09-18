@@ -138,6 +138,7 @@
     <string name="title_sync_slow">Sync may take a while</string>
     <string name="dialog_ask_sync_all">There are %s of messages, conversations, and contacts. Syncing them all might take a while. Would you like to sync recent messages only?</string>
     <string name="title_choose_range">Choose range</string>
+    <string name="description_cancel_button">This is a cancel button.</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>

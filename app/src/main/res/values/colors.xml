@@ -21,4 +21,6 @@
 
     <color name="bubbleLight">#EFF1F3</color>
 
+    <color name="lightGray">#FFE0E0E0</color>
+
 </resources>
