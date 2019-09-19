@@ -868,6 +868,10 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
         this.callback = callback;
     }
 
+    public BottomSheetCallback getBottomSheetCallback() {
+        return this.callback;
+    }
+
     /**
      * Sets the state of the bottom sheet. The bottom sheet will transition to that state with
      * animation.

@@ -18,7 +18,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
-import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 import timber.log.Timber
 import java.util.*
@@ -60,7 +59,8 @@ fun View.toggleSheet() {
     }
 }
 
-fun View.bottomSheetBehavior() = CustomBottomSheetBehavior.from(this)
+val View.bottomSheetBehavior
+    get() = CustomBottomSheetBehavior.from(this)!!
 
 
 
@@ -203,6 +203,7 @@ fun View.setBackgroundRadiusByOffset(offset: Float, changeStart: Float = 0.8f, r
  * Set vertical bias by bottom sheet offset.
  */
 fun View.setVerticalBiasByOffset(offset: Float) {
+    Timber.i("offset: $offset")
     val param = layoutParams as ConstraintLayout.LayoutParams
     param.verticalBias = offset / 2 + 0.05f
     layoutParams = param

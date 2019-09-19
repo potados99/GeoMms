@@ -51,7 +51,6 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     private val dateFormatter: DateFormatter by inject()
     private val navigator: Navigator by inject()
 
-    val incomingRequests = locationService.getIncomingRequests()
     val connections = locationService.getConnections()
 
     private val _markers = mutableListOf<MarkerOptions>()
@@ -109,7 +108,6 @@ class MapViewModel : BaseViewModel(), KoinComponent {
 
     fun invite() {
         navigator.showInvite()
-        Timber.i("Invite clicked!")
     }
 
     fun request(activity: FragmentActivity?, address: String) {
@@ -121,60 +119,11 @@ class MapViewModel : BaseViewModel(), KoinComponent {
             .show()
     }
 
-    fun showConnectionInfo(activity: FragmentActivity?, map: GoogleMap?, connection: Connection) {
-        if (connection.isTemporal) {
-            // Sent request not accepted yet
-            Notify(activity).short(R.string.notify_request_not_yet_accepted)
-            return
-        }
-
-        withNonNull(map) {
-            if (connection.lastUpdate != 0L) {
-                moveTo(connection.latitude, connection.longitude, 15f)
-            } else {
-                Notify(activity).short(R.string.notify_no_location_data)
-            }
-        }
-    }
-
-    fun showConnectionDeletionConfirmation(activity: FragmentActivity?, connection: Connection) {
-        if (connection.isTemporal) {
-            Popup(activity)
-                .withTitle(R.string.title_cancel_request)
-                .withMessage(R.string.dialog_ask_cancel_request, connection.recipient?.getDisplayName())
-                .withPositiveButton(R.string.button_yes) { cancel(connection) }
-                .withNegativeButton(R.string.button_no)
-                .show()
-
-        } else {
-            Popup(activity)
-                .withTitle(R.string.title_disconnect)
-                .withMessage(R.string.dialog_ask_disconnect, connection.recipient?.getDisplayName())
-                .withPositiveButton(R.string.button_confirm) { delete(connection) }
-                .withNegativeButton(R.string.button_cancel)
-                .show()
-        }
-    }
-
-    fun showRequestInfo(activity: FragmentActivity?, request: ConnectionRequest) {
-        Popup(activity)
-            .withTitle(R.string.dialog_request_from, request.recipient?.getDisplayName())
-            .withMessage(R.string.dialog_ask_accept_request, request.recipient?.getDisplayName(), dateFormatter.getDuration(request.duration))
-            .withPositiveButton(R.string.button_accept) { accept(request) }
-            .withNegativeButton(R.string.button_later)
-            .show()
-    }
-
-    fun showRequestDeletionConfirmation(activity: FragmentActivity?, request: ConnectionRequest) {
-        Popup(activity)
-            .withTitle(R.string.dialog_refuse_request)
-            .withMessage(R.string.dialog_ask_refuse, request.recipient?.getDisplayName())
-            .withPositiveButton(R.string.button_refuse) { refuse(request)  }
-            .withNegativeButton(R.string.button_cancel)
-            .show()
-    }
-
     fun getLocation(onLocation: (Location) -> Unit) {
         locationRepo.getLocationWithCallback(onLocation)
+    }
+
+    fun collapseSheet() {
+        navigator.collapseSheet()
     }
 }

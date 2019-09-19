@@ -63,6 +63,23 @@ class Navigator (
         }
     }
 
+    /**
+     * ConnectionsFragment exclusive.
+     * A bottom sheet manager MUST be set before this call.
+     */
+    fun showConnectionInfo(connectionId: Long) {
+        // TODO
+        // Push a bottom sheet to a bottom sheet manager bound to map fragment.
+    }
+    fun showRequestInfo(requestId: Long) {
+        // TODO
+        // Push to show a request info.
+    }
+    fun collapseSheet() {
+        // TODO
+        // collapse active bottom sheet.
+    }
+
     fun showDefaultSmsDialogIfNeeded() {
         if (Telephony.Sms.getDefaultSmsPackage(context) != context.packageName) {
             val intent = Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT)

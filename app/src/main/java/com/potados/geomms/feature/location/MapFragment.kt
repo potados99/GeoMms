@@ -3,6 +3,8 @@ package com.potados.geomms.feature.location
 import android.animation.LayoutTransition
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +18,14 @@ import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import com.potados.geomms.common.widget.bottomsheet.BottomSheetManager
 import com.potados.geomms.databinding.MapFragmentBinding
+import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.feature.conversations.ConversationsFragment
 import com.potados.geomms.feature.license.LicenseFragment
-import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import kotlinx.android.synthetic.main.connections_fragment.*
+import kotlinx.android.synthetic.main.connections_fragment.empty_view
+import kotlinx.android.synthetic.main.connections_fragment.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
+import kotlinx.android.synthetic.main.map_fragment.view.root_layout
 import timber.log.Timber
 
 class MapFragment : NavigationFragment(), OnMapReadyCallback {
@@ -31,13 +37,11 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
     private lateinit var mapViewModel: MapViewModel
     private lateinit var viewDataBinding: MapFragmentBinding
 
-    private var connectionsAdapter = ConnectionsAdapter()
-    private val requestsAdapter = RequestsAdapter()
+    private lateinit var sheetView: View
 
     private var map: GoogleMap? = null
 
     private lateinit var manager: BottomSheetManager
-
 
     /**
      * Invoked when ACTION_SET_ADDRESS intent received.
@@ -48,8 +52,6 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
 
     init {
         failables += this
-        failables += requestsAdapter
-        failables += connectionsAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,7 +131,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             // Hide bottom sheet when map moving.
             setOnCameraMoveStartedListener {
                 if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                    viewDataBinding.sheet.collapseSheet()
+                    mapViewModel.collapseSheet()
                 }
             }
 
@@ -155,78 +157,60 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             getMapAsync(this@MapFragment) // onMapReady called after this done
         }
 
-        with(view.connections) {
-            adapter = connectionsAdapter.apply {
-                emptyView = view.empty_view
-
-                onConnectionClick = {
-                    // mapViewModel.showConnectionInfo(activity, map, it)
-
-                    /**TEST CODE*/
-
-                    manager.push(LicenseFragment())
-                }
-                onConnectionLongClick = { mapViewModel.showConnectionDeletionConfirmation(activity!!, it) }
-            }
-
-            // For scroll in bottom sheet.
-            addOnItemTouchListener(onItemTouchListener)
-        }
-
-        with(view.incoming_requests) {
-            adapter = requestsAdapter.apply {
-                companionView = view.incoming_requests_layout
-
-                onRequestClick = { mapViewModel.showRequestInfo(activity, it) }
-                onRequestLongClick = { mapViewModel.showRequestDeletionConfirmation(activity, it) }
-            }
-
-            // For scroll in bottom sheet.
-            addOnItemTouchListener(onItemTouchListener)
-        }
-
-        with(view.sheet) {
-            onSlideBottomSheet(view, 0f)
-
-            collapseSheet()
-
-            bottomSheetBehavior().setBottomSheetCallback(object: CustomBottomSheetBehavior.BottomSheetCallback() {
-                override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    when (newState) {
-                        CustomBottomSheetBehavior.STATE_EXPANDED -> {
-                            view.grip.alpha = 0f
-                        }
-                        else -> {
-                            view.grip.alpha = 1f
-                        }
-                    }
-                }
-
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    onSlideBottomSheet(view, slideOffset)
-                }
-            })
-
-            setOnClickListener {
-                toggleSheet()
-            }
-        }
-
-        with(view.bottom_sheet_root_layout) {
-            animateLayoutChanges = true
-            layoutTransition = LayoutTransition().apply {
-                setAnimateParentHierarchy(false)
-            }
-        }
+        // With sheet.
+        sheetView = manager.push(ConnectionsFragment(), cancelable = false).view
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        with(sheetView) {
+
+            // Setting a behavior of the bottom sheet MUST take place
+            // at where the parent of the sheet is available.
+            bottomSheetBehavior.addCallback(
+                // TODO
+                // This code makes bottom sheet scroll slower.
+                // onSlide = { empty_view.setVerticalBiasByOffset(it) }
+            )
+
+            Handler(Looper.getMainLooper()).postDelayed({
+
+                // Finally achieved nested scroll for over two recycler views.
+                // TODO: Get them out of postDelayed.
+                
+                with(connections) {
+                    addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+                        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                            setScrollable(sheetView, rv)
+                            return false
+                        }
+                        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
+                        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+                    })
+                }
+
+                with(incoming_requests) {
+                    addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+                        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                            setScrollable(sheetView, rv)
+                            return false
+                        }
+                        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
+                        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+                    })
+                }
+
+            }, 1000)
+        }
+    }
 
     /**
      * Pass touch events of Bottom Sheet to Recycler View.
      */
     private val onItemTouchListener: RecyclerView.OnItemTouchListener = object : RecyclerView.OnItemTouchListener {
         override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-            setScrollable(viewDataBinding.sheet, rv)
+            setScrollable(viewDataBinding.rootLayout, rv)
             return false
         }
         override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
@@ -239,14 +223,6 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             val behavior = params.behavior
             if (behavior != null && behavior is CustomBottomSheetBehavior<*>)
                 behavior.setNestedScrollingChildRef(recyclerView)
-        }
-    }
-
-    private fun onSlideBottomSheet(view: View, offset: Float) {
-        with(view) {
-            empty_view.setVerticalBiasByOffset(offset)
-            grip.setAlphaByOffset(offset)
-            sheet.setBackgroundRadiusByOffset(offset)
         }
     }
 

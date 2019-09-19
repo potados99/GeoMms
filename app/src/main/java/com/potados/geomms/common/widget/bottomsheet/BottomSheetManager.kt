@@ -9,10 +9,8 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.*
-import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.bottom_sheet.view.*
+import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import kotlinx.android.synthetic.main.bottom_sheet_container.view.*
-import kotlinx.android.synthetic.main.map_fragment.view.*
 import timber.log.Timber
 import java.util.*
 
@@ -33,7 +31,7 @@ class BottomSheetManager(
 
     private val sheetStack = Stack<Sheet>()
 
-    fun push(fragment: Fragment, cancelable: Boolean = true) {
+    fun push(fragment: Fragment, cancelable: Boolean = true): Sheet {
         val sheet = createSheet(fragment, cancelable)
 
         // Hide currently active sheet if possible.
@@ -59,6 +57,8 @@ class BottomSheetManager(
         }, 100)
 
         sheetStack.push(sheet)
+
+        return sheet
     }
 
     fun pop() {
@@ -100,11 +100,11 @@ class BottomSheetManager(
                 setOnClickListener { pop() }
             }
 
+            addSheetBehavior(view)
             addToRoot(view)
             addFragment(this, fragment)
         }
     }
-
     private fun disposeSheet(sheet: Sheet) {
         removeFragment(sheet)
         removeFromRoot(sheet.view)
@@ -118,7 +118,6 @@ class BottomSheetManager(
 
         sheet.fragment = fragment
     }
-
     private fun removeFragment(sheet: Sheet) {
         sheet.fragment?.let {
             parent.childFragmentManager.inTransaction {
@@ -158,9 +157,39 @@ class BottomSheetManager(
     private fun addToRoot(view: View) {
         rootView.addView(view)
     }
-
     private fun removeFromRoot(view: View) {
         rootView.removeView(view)
+    }
+
+    private fun addSheetBehavior(view: View) {
+        with(view) {
+       //    onSlideBottomSheet(view, 0f)
+
+      //      collapseSheet()
+
+            bottomSheetBehavior.setCallback(
+                onStateChanged = {
+                    when (it) {
+                        CustomBottomSheetBehavior.STATE_EXPANDED -> view.sheet_grip.alpha = 0f
+                        else -> view.sheet_grip.alpha = 1f
+                    }
+                },
+                onSlide = {
+                    onSlideBottomSheet(view, it)
+                }
+            )
+
+            setOnClickListener {
+                toggleSheet()
+            }
+        }
+    }
+
+    private fun onSlideBottomSheet(sheet: View, offset: Float) {
+        with(sheet) {
+            sheet_grip.setAlphaByOffset(offset)
+            setBackgroundRadiusByOffset(offset)
+        }
     }
 
     /**
