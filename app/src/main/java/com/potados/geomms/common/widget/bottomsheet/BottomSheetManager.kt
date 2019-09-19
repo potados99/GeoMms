@@ -9,8 +9,10 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.*
-import com.potados.geomms.util.Types
+import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.bottom_sheet_container.view.*
+import kotlinx.android.synthetic.main.map_fragment.view.*
 import timber.log.Timber
 import java.util.*
 
@@ -34,7 +36,6 @@ class BottomSheetManager(
     fun push(fragment: Fragment, cancelable: Boolean = true) {
         val sheet = createSheet(fragment, cancelable)
 
-        /*
         // Hide currently active sheet if possible.
         if (!sheetStack.empty()) {
             val former = sheetStack.peek()
@@ -48,8 +49,6 @@ class BottomSheetManager(
                 }
             }
         }
-        */
-
 
         // Show new sheet.
         handler.postDelayed({
@@ -101,8 +100,8 @@ class BottomSheetManager(
                 setOnClickListener { pop() }
             }
 
-            addFragment(this, fragment)
             addToRoot(view)
+            addFragment(this, fragment)
         }
     }
 
@@ -113,7 +112,7 @@ class BottomSheetManager(
 
     private fun addFragment(sheet: Sheet, fragment: Fragment) {
         parent.childFragmentManager.inTransaction {
-            // add(sheet.fragmentContainerId, fragment)
+            add(sheet.fragmentContainerId, fragment)
             this
         }
 
@@ -129,7 +128,7 @@ class BottomSheetManager(
     }
 
     private fun inflateBottomSheet(): Sheet {
-        val idForFragmentContainer = View.generateViewId()
+        val containerId = generateId()
 
         val view = inflater.inflate(R.layout.bottom_sheet_container, rootView, false).apply {
             // When the bottom sheet is first shown, it should be hidden.
@@ -145,10 +144,15 @@ class BottomSheetManager(
             //
             // One solution is to change the id of the fragment container to a random id
             // and storing it.
-            fragment_container.id = idForFragmentContainer
+            //
+            // The method above has a serious problem where generated id
+            // collides other view that has id not defined in this package.
+            // For example, ID 2 does not exist in R.id of this project, but does in GoogleMap.
+            // FUCK
+            findViewById<FrameLayout>(R.id.template_fragment_container).id = containerId
         }
 
-        return Sheet(view, idForFragmentContainer)
+        return Sheet(view, containerId)
     }
 
     private fun addToRoot(view: View) {
@@ -157,6 +161,23 @@ class BottomSheetManager(
 
     private fun removeFromRoot(view: View) {
         rootView.removeView(view)
+    }
+
+    /**
+     * View.generateViewId prevents collide
+     * with ID values generated at build time
+     * BUT the FUCK google map makes collision.
+     * So we need to check every view's id in the root view
+     * and avoid selecting id that already exists.
+     */
+    private fun generateId(): Int {
+        val ids = rootView.ids()
+        while (true) {
+            val generated = View.generateViewId()
+            if (generated !in ids) {
+                return generated
+            }
+        }
     }
 
     data class Sheet(val view: View, @IdRes val fragmentContainerId: Int, var fragment: Fragment? = null)

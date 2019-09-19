@@ -20,6 +20,8 @@ import androidx.viewpager.widget.ViewPager
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
+import timber.log.Timber
+import java.util.*
 
 fun View.setHidable(hidable: Boolean) {
     CustomBottomSheetBehavior.from(this).isHideable = hidable
@@ -204,4 +206,35 @@ fun View.setVerticalBiasByOffset(offset: Float) {
     val param = layoutParams as ConstraintLayout.LayoutParams
     param.verticalBias = offset / 2 + 0.05f
     layoutParams = param
+}
+
+fun View.dump() {
+    Timber.i("================ View dump start ================")
+    Timber.i(flatten().joinToString("\n") { it.toString() })
+    Timber.i("================ View dump finished ================")
+}
+
+fun View.ids(): List<Int> {
+    return flattenMap { it.id }
+}
+
+fun <T> View.flattenMap(transform: (View) -> T): List<T> {
+    return flatten().map(transform)
+}
+
+fun View.flatten(): List<View> {
+    return flatten(this)
+}
+
+/**
+ * Flatten recursive.
+ */
+fun View.flatten(view: View): List<View> {
+    if (view !is ViewGroup) {
+        return listOf(view)
+    }
+
+    return listOf(view) + List(view.childCount) { view.getChildAt(it) }
+        .map { flatten(it) }
+        .flatten()
 }
