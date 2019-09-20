@@ -52,7 +52,7 @@ class ContactAdapter : BaseAdapter<Contact>() {
 
     /**
      * Creates a copy of the contact with only one phone number, so that the chips
-     * view can still display the packageName/photo, and not get confused about which phone number to use
+     * sheetView can still display the packageName/photo, and not get confused about which phone number to use
      */
     private fun copyContact(contact: Contact, numberIndex: Int) = Contact().apply {
         lookupKey = contact.lookupKey

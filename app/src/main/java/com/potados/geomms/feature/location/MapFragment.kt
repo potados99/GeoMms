@@ -24,6 +24,7 @@ import com.potados.geomms.feature.license.LicenseFragment
 import kotlinx.android.synthetic.main.connections_fragment.*
 import kotlinx.android.synthetic.main.connections_fragment.empty_view
 import kotlinx.android.synthetic.main.connections_fragment.view.*
+import kotlinx.android.synthetic.main.main_activity.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.root_layout
 import timber.log.Timber
@@ -157,51 +158,45 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             getMapAsync(this@MapFragment) // onMapReady called after this done
         }
 
-        // With sheet.
-        sheetView = manager.push(ConnectionsFragment(), cancelable = false).view
-    }
+        // Add sheet.
+        manager.push(ConnectionsFragment(), cancelable = false).apply {
+            // Below will be invoked when the child fragment is initialized.
+            observe(isInitialized) {
+                it ?: return@observe
+                if (!it) return@observe
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+                with(sheetView) {
+                    // Setting a behavior of the bottom sheet MUST take place
+                    // at where the parent of the sheet is available.
+                    bottomSheetBehavior.addCallback(
+                        // TODO
+                        // This code makes bottom sheet scroll slower.
+                        // onSlide = { empty_view.setVerticalBiasByOffset(it) }
+                    )
 
-        with(sheetView) {
+                    with(sheetView.connections) {
+                        addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+                            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                                setScrollable(sheetView, rv)
+                                return false
+                            }
+                            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
+                            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+                        })
+                    }
 
-            // Setting a behavior of the bottom sheet MUST take place
-            // at where the parent of the sheet is available.
-            bottomSheetBehavior.addCallback(
-                // TODO
-                // This code makes bottom sheet scroll slower.
-                // onSlide = { empty_view.setVerticalBiasByOffset(it) }
-            )
-
-            Handler(Looper.getMainLooper()).postDelayed({
-
-                // Finally achieved nested scroll for over two recycler views.
-                // TODO: Get them out of postDelayed.
-
-                with(connections) {
-                    addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
-                        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                            setScrollable(sheetView, rv)
-                            return false
-                        }
-                        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
-                        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
-                    })
+                    with(sheetView.incoming_requests) {
+                        addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+                            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                                setScrollable(sheetView, rv)
+                                return false
+                            }
+                            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
+                            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+                        })
+                    }
                 }
-
-                with(incoming_requests) {
-                    addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
-                        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                            setScrollable(sheetView, rv)
-                            return false
-                        }
-                        override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
-                        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
-                    })
-                }
-
-            }, 1000)
+            }
         }
     }
 

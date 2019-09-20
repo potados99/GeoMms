@@ -41,7 +41,7 @@ inline fun FragmentManager.inImmediateTransaction(func: FragmentTransaction.() -
 
 
 /**
- * Show only one fragment.
+ * Show only one childFragment.
  */
 inline fun FragmentManager.showOnly(predicate: (Fragment) -> Boolean): Boolean  {
     inTransaction {
@@ -84,14 +84,14 @@ fun FragmentTransaction.addAll(@IdRes containerViewId: Int, fragments: Array<out
 }
 
 /**
- * Get ViewModel of the fragment with SingleUseCaseViewModelFactory.
+ * Get ViewModel of the childFragment with SingleUseCaseViewModelFactory.
  */
 inline fun <reified T : ViewModel> Fragment.getViewModel(factory: Factory, body: T.() -> Unit = {}): T {
     return ViewModelProviders.of(this, factory).get(T::class.java).apply(body)
 }
 
 /**
- * Get ViewModel of the fragment without SingleUseCaseViewModelFactory.
+ * Get ViewModel of the childFragment without SingleUseCaseViewModelFactory.
  */
 inline fun <reified T : ViewModel> Fragment.getViewModel(body: T.() -> Unit = {}): T {
     return ViewModelProviders.of(this).get(T::class.java).apply(body)
@@ -99,7 +99,7 @@ inline fun <reified T : ViewModel> Fragment.getViewModel(body: T.() -> Unit = {}
 
 /**
  * For Activity.
- * Get ViewModel of the fragment with SingleUseCaseViewModelFactory.
+ * Get ViewModel of the childFragment with SingleUseCaseViewModelFactory.
  */
 inline fun <reified T : ViewModel> FragmentActivity.getViewModel(factory: Factory, body: T.() -> Unit = {}): T {
     return ViewModelProviders.of(this, factory).get(T::class.java).apply(body)
@@ -107,7 +107,7 @@ inline fun <reified T : ViewModel> FragmentActivity.getViewModel(factory: Factor
 
 /**
  * For Activity
- * Get ViewModel of the fragment without SingleUseCaseViewModelFactory.
+ * Get ViewModel of the childFragment without SingleUseCaseViewModelFactory.
  */
 inline fun <reified T : ViewModel> FragmentActivity.getViewModel(body: T.() -> Unit): T {
     return ViewModelProviders.of(this).get(T::class.java).apply(body)

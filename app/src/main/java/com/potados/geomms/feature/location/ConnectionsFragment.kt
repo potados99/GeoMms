@@ -39,7 +39,7 @@ class ConnectionsFragment : BaseFragment() {
 
     /**
      * Propagate actions to outside
-     * Place this here, not in the view model.
+     * Place this here, not in the sheetView model.
      */
     var onShowConnectionOnMap: (connection: Connection) -> Unit = {}
 

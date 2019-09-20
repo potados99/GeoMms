@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -35,6 +36,12 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
     private var menu: Menu? = null
     fun getOptionsMenu(): Menu? = menu
 
+    /**
+     * This is launched along with onViewCreated(sheetView: View, savedInstanceState: Bundle?).
+     * It enable other components to listen to the status of this childFragment.
+     */
+    var onViewCreated: (View) -> Unit = {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(optionMenuId != null)
@@ -47,6 +54,11 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
         // We can add failables in init.
         // Adding itself is recommended.
         startObservingFailables(failables)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        onViewCreated(view)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

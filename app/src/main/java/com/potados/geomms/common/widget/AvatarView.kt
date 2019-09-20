@@ -77,7 +77,8 @@ class AvatarView(context: Context, attrs: AttributeSet? = null) : FrameLayout(co
 
         photo.setImageDrawable(null)
         address?.let { address ->
-            Glide.with(photo).load(PhoneNumberUtils.stripSeparators(address)).into(photo)
+            // TODO
+            // Glide.with(photo).load(PhoneNumberUtils.stripSeparators(address)).into(photo)
         }
 
     }

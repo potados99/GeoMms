@@ -48,41 +48,41 @@ abstract class NavigationActivity : BaseActivity() {
     private fun setToolbar() {
         setSupportActionBar(toolbar)
         withNonNull(supportActionBar) {
-            setDisplayShowTitleEnabled(false)   // use title text view instead.
+            setDisplayShowTitleEnabled(false)   // use title text sheetView instead.
             setDisplayHomeAsUpEnabled(false)    // no up button
         }
     }
 
     /**
-     * Show only fragment that has [id] as NavigationItemId.
-     * If the destination fragment is not added to fragment manager, add it.
+     * Show only childFragment that has [id] as NavigationItemId.
+     * If the destination childFragment is not added to childFragment manager, add it.
      *
-     * @param id is navigation menu id of fragment.
-     * An id and a fragment should consist a pair.
+     * @param id is navigation menu id of childFragment.
+     * An id and a childFragment should consist a pair.
      *
-     * @return false if [id] has no paired fragment
-     * or Fragment Manager has fragment other than [NavigationFragment].
+     * @return false if [id] has no paired childFragment
+     * or Fragment Manager has childFragment other than [NavigationFragment].
      */
     private fun addOrShowFragment(id: Int): Boolean {
         val transaction = supportFragmentManager.beginTransaction()
 
         try {
-            // Ensure destination fragment is added
+            // Ensure destination childFragment is added
             if (supportFragmentManager.findFragmentByNavigationId(id) == null) {
                 val fragmentToAdd = fragments.find { it.navigationItemId == id } as? Fragment
-                    ?: throw IllegalArgumentException("fragment of corresponding id $id not exist.")
+                    ?: throw IllegalArgumentException("childFragment of corresponding id $id not exist.")
 
                 transaction.add(R.id.fragment_container, fragmentToAdd)
-                Timber.i("add new fragment of id $id")
+                Timber.i("add new childFragment of id $id")
             }
 
             if (activeFragmentId == id) {
                 return true
             }
 
-            // Show only destination fragment
-            // Do this only when destination fragment is not a
-            // currently active fragment
+            // Show only destination childFragment
+            // Do this only when destination childFragment is not a
+            // currently active childFragment
             supportFragmentManager.fragments.forEach {
                     // ensure all fragments are NavigationFragment
                     if (it !is NavigationFragment) throw RuntimeException("only NavigationFragment is allowed in NavigationActivity.")
@@ -104,9 +104,9 @@ abstract class NavigationActivity : BaseActivity() {
             Timber.w(e)
             return false
         } finally {
-            // commit() does not add fragment immediately.
+            // commit() does not add childFragment immediately.
             // It makes problem when calling [addOrShowFragment] rapidly
-            // because it does not ensure fragment is added after the call.
+            // because it does not ensure childFragment is added after the call.
             // So the addition can occur over one time, which throws exception.
             // Use commitNow instead.
             transaction.commitNow()

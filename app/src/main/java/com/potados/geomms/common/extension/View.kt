@@ -109,10 +109,10 @@ fun View.setVisible(visible: Boolean, invisible: Int = View.GONE) {
 }
 
 /**
- * If a view captures clicks at all, then the parent won't ever receive touch events. This is a
+ * If a sheetView captures clicks at all, then the parent won't ever receive touch events. This is a
  * problem when we're trying to capture link clicks, but tapping or long pressing other areas of
- * the view no longer work. Also problematic when we try to long press on an image in the message
- * view
+ * the sheetView no longer work. Also problematic when we try to long press on an image in the message
+ * sheetView
  */
 fun View.forwardTouches(parent: View) {
     var isLongClick = false

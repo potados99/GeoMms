@@ -71,7 +71,7 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
         failables += contactFilter
     }
 
-    // Setup fragment with Intent of parent Activity.
+    // Setup childFragment with Intent of parent Activity.
     fun startWithIntent(intent: Intent) {
 
         // Not a direct call from Fragment, but it's okay.

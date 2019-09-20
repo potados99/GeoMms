@@ -14,12 +14,12 @@ abstract class NavigationFragment : BaseFragment() {
     }
 
     /**
-     * Called after this fragment is shown
+     * Called after this childFragment is shown
      */
     open fun onShow() {}
 
     /**
-     * Called after this fragment is hidden
+     * Called after this childFragment is hidden
      */
     open fun onHide() {}
 }

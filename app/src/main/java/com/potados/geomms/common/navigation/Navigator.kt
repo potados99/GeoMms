@@ -69,7 +69,7 @@ class Navigator (
      */
     fun showConnectionInfo(connectionId: Long) {
         // TODO
-        // Push a bottom sheet to a bottom sheet manager bound to map fragment.
+        // Push a bottom sheet to a bottom sheet manager bound to map childFragment.
     }
     fun showRequestInfo(requestId: Long) {
         // TODO
@@ -103,7 +103,7 @@ class Navigator (
     }
 
     /**
-     * This method is recommended to be invoked by its owner fragment,
+     * This method is recommended to be invoked by its owner childFragment,
      * in response of [syncEvent].
      *
      * This is supposed to be the only entry for sync in this whole application.

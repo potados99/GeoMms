@@ -59,7 +59,7 @@ class ConversationsFragment : NavigationFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        // Start after view initiated.
+        // Start after sheetView initiated.
         conversationsViewModel.start()
     }
 

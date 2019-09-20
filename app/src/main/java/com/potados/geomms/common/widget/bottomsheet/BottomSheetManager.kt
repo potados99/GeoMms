@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
+import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import kotlinx.android.synthetic.main.bottom_sheet_container.view.*
@@ -15,48 +18,47 @@ import timber.log.Timber
 import java.util.*
 
 /**
- * Manages Bottom sheets like parent.
+ * Manages Bottom sheets like parentFragment.
  * Spawn new bottom sheet then the existing one will be hidden
  * and the new one will be shown.
  *
- * Each bottom sheet will have its parent in its fragment_container.
+ * Each bottom sheet will have its parentFragment in its fragment_container.
  */
 class BottomSheetManager(
-    private val parent: Fragment,
+    private val parentFragment: Fragment,
     private val rootView: ViewGroup
 ) {
 
     private val handler = Handler(Looper.getMainLooper())
-    private val inflater = parent.layoutInflater
+    private val inflater = parentFragment.layoutInflater
 
     private val sheetStack = Stack<Sheet>()
 
-    fun push(fragment: Fragment, cancelable: Boolean = true): Sheet {
+    fun push(fragment: BaseFragment, cancelable: Boolean = true): Sheet {
         val sheet = createSheet(fragment, cancelable)
 
         // Hide currently active sheet if possible.
         if (!sheetStack.empty()) {
             val former = sheetStack.peek()
 
-            handler.post {
+            handler.doAfter(0) {
                 // Hide the former sheet before showing the new one.
-                former.view.apply {
+                former.sheetView.apply {
                     setHidable(true)
                     hideSheet()
-                    Timber.e("Hide the former.")
                 }
             }
         }
 
+        sheetStack.push(sheet)
+
         // Show new sheet.
-        handler.postDelayed({
-            sheet.view.apply {
+        handler.doAfter(100) {
+            sheet.sheetView.apply {
                 halfExpandSheet()
                 setHidable(false)
             }
-        }, 100)
-
-        sheetStack.push(sheet)
+        }
 
         return sheet
     }
@@ -69,8 +71,8 @@ class BottomSheetManager(
         val activeSheet = sheetStack.pop()
 
         // Hide currently active sheet.
-        handler.post {
-            activeSheet.view.apply {
+        handler.doAfter(0) {
+            activeSheet.sheetView.apply {
                 setHidable(true)
                 hideSheet()
             }
@@ -78,49 +80,57 @@ class BottomSheetManager(
 
         // Show the last sheet.
         if (!sheetStack.empty()) {
-            handler.postDelayed({
+            handler.doAfter(100) {
                 // Hide the former sheet before showing the new one.
-                sheetStack.peek().view.apply {
+                sheetStack.peek().sheetView.apply {
                     halfExpandSheet()
                     setHidable(false)
                 }
-            }, 100)
+            }
         }
 
-        handler.postDelayed({
+        // Dispose later.
+        handler.doAfter(100) {
             disposeSheet(activeSheet)
-        }, 100)
-
+        }
     }
 
-    private fun createSheet(fragment: Fragment, cancelable: Boolean): Sheet {
+    private fun createSheet(fragment: BaseFragment, cancelable: Boolean): Sheet {
         return inflateBottomSheet().apply {
-            view.cancel_button.apply {
+            sheetView.cancel_button.apply {
                 isVisible = cancelable
                 setOnClickListener { pop() }
             }
 
-            addSheetBehavior(view)
-            addToRoot(view)
+            addSheetBehavior(sheetView)
+            addToRoot(sheetView)
+
+            // Adding childFragment to a childFragment container requires
+            // the container to be in the layout tree,
+            // so it must be done after the sheetView(sheet) is added to the root.
             addFragment(this, fragment)
         }
     }
     private fun disposeSheet(sheet: Sheet) {
         removeFragment(sheet)
-        removeFromRoot(sheet.view)
+        removeFromRoot(sheet.sheetView)
     }
 
-    private fun addFragment(sheet: Sheet, fragment: Fragment) {
-        parent.childFragmentManager.inTransaction {
+    private fun addFragment(sheet: Sheet, fragment: BaseFragment) {
+        parentFragment.childFragmentManager.inTransaction {
             add(sheet.fragmentContainerId, fragment)
             this
         }
 
-        sheet.fragment = fragment
+        fragment.onViewCreated = {
+            sheet.setInitialized(true)
+        }
+
+        sheet.childFragment = fragment
     }
     private fun removeFragment(sheet: Sheet) {
-        sheet.fragment?.let {
-            parent.childFragmentManager.inTransaction {
+        sheet.childFragment?.let {
+            parentFragment.childFragmentManager.inTransaction {
                 remove(it)
             }
         }
@@ -134,18 +144,18 @@ class BottomSheetManager(
             // The sheet then will be half expanded.
             hideSheet()
 
-            // We want to add fragment to the fragment_container inside this sheet.
-            // To achieve it we need fragment manager.
-            // One problem is, that the fragment manager only takes a id of view
-            // to be a fragment container.
-            // That is a problem because we need to add fragment for each bottom sheets.
-            // In this case the id of a fragment container is not unique.
+            // We want to add childFragment to the fragment_container inside this sheet.
+            // To achieve it we need childFragment manager.
+            // One problem is, that the childFragment manager only takes a id of sheetView
+            // to be a childFragment container.
+            // That is a problem because we need to add childFragment for each bottom sheets.
+            // In this case the id of a childFragment container is not unique.
             //
-            // One solution is to change the id of the fragment container to a random id
+            // One solution is to change the id of the childFragment container to a random id
             // and storing it.
             //
             // The method above has a serious problem where generated id
-            // collides other view that has id not defined in this package.
+            // collides other sheetView that has id not defined in this package.
             // For example, ID 2 does not exist in R.id of this project, but does in GoogleMap.
             // FUCK
             findViewById<FrameLayout>(R.id.template_fragment_container).id = containerId
@@ -163,10 +173,6 @@ class BottomSheetManager(
 
     private fun addSheetBehavior(view: View) {
         with(view) {
-       //    onSlideBottomSheet(view, 0f)
-
-      //      collapseSheet()
-
             bottomSheetBehavior.setCallback(
                 onStateChanged = {
                     when (it) {
@@ -196,7 +202,7 @@ class BottomSheetManager(
      * View.generateViewId prevents collide
      * with ID values generated at build time
      * BUT the FUCK google map makes collision.
-     * So we need to check every view's id in the root view
+     * So we need to check every sheetView's id in the root sheetView
      * and avoid selecting id that already exists.
      */
     private fun generateId(): Int {
@@ -209,5 +215,26 @@ class BottomSheetManager(
         }
     }
 
-    data class Sheet(val view: View, @IdRes val fragmentContainerId: Int, var fragment: Fragment? = null)
+    data class Sheet(
+        val sheetView: View,
+        @IdRes val fragmentContainerId: Int,
+        var childFragment: Fragment? = null
+    ) {
+        /**
+         * Set childFragment initialization state.
+         * This is propagated to all its receivers.
+         */
+        fun setInitialized(initialized: Boolean) {
+            _isInitialized.postValue(initialized)
+        }
+
+        private var _isInitialized = MutableLiveData<Boolean>().apply {
+            postValue(false)
+        }
+
+        /**
+         * Indicates if the childFragment is initialized and views are in place.
+         */
+        val isInitialized: LiveData<Boolean> = _isInitialized
+    }
 }

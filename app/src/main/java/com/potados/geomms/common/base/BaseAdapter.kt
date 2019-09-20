@@ -50,7 +50,7 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable
         }
 
     /**
-     * This view can be set, and the adapter will automatically control the visibility of this view
+     * This sheetView can be set, and the adapter will automatically control the visibility of this sheetView
      * based on the data
      */
     var emptyView: View? = null
@@ -76,7 +76,7 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable
 
 
     /**
-     * Toggles the selected state for a particular view
+     * Toggles the selected state for a particular sheetView
      *
      * If we are currently in selection mode (we have an active selection), then the state will
      * toggle. If we are not in selection mode, then we will only toggle if [force]

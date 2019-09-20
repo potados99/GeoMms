@@ -83,7 +83,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/connection_list_item"/>
 
-    <!-- Empty view group -->
+    <!-- Empty sheetView group -->
     <LinearLayout
         android:id="@+id/empty_view"
         android:layout_width="0dp"

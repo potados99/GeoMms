@@ -64,7 +64,7 @@ import java.util.Map;
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 
 /**
- * An interaction behavior plugin for a child view of {@link CoordinatorLayout} to make it work as a
+ * An interaction behavior plugin for a child sheetView of {@link CoordinatorLayout} to make it work as a
  * bottom sheet.
  */
 public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
@@ -75,7 +75,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
         /**
          * Called when the bottom sheet changes its state.
          *
-         * @param bottomSheet The bottom sheet view.
+         * @param bottomSheet The bottom sheet sheetView.
          * @param newState The new state. This will be one of {@link #STATE_DRAGGING}, {@link
          *     #STATE_SETTLING}, {@link #STATE_EXPANDED}, {@link #STATE_COLLAPSED}, {@link
          *     #STATE_HIDDEN}, or {@link #STATE_HALF_EXPANDED}.
@@ -85,7 +85,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
         /**
          * Called when the bottom sheet is being dragged.
          *
-         * @param bottomSheet The bottom sheet view.
+         * @param bottomSheet The bottom sheet sheetView.
          * @param slideOffset The new offset of this bottom sheet within [-1,1] range. Offset increases
          *     as this bottom sheet is moving upward. From 0 to 1 the sheet is between collapsed and
          *     expanded states and from -1 to 0 it is between hidden and collapsed states.
@@ -158,7 +158,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
     public static final int SAVE_ALL = -1;
 
     /**
-     * This flag will not preserve the aforementioned values set at runtime if the view is
+     * This flag will not preserve the aforementioned values set at runtime if the sheetView is
      * destroyed and recreated. The only value preserved will be the positional state,
      * e.g. collapsed, hidden, expanded, etc. This is the default behavior.
      */
@@ -330,7 +330,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
     @Override
     public void onDetachedFromLayoutParams() {
         super.onDetachedFromLayoutParams();
-        // Release references so we don't run unnecessary codepaths while not attached to a view.
+        // Release references so we don't run unnecessary codepaths while not attached to a sheetView.
         viewRef = null;
         viewDragHelper = null;
     }
@@ -347,7 +347,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
         }
         // Set elevation on MaterialShapeDrawable
         if (materialShapeDrawable != null) {
-            // Use elevation attr if set on bottomsheet; otherwise, use elevation of child view.
+            // Use elevation attr if set on bottomsheet; otherwise, use elevation of child sheetView.
             materialShapeDrawable.setElevation(
                 elevation == -1 ? ViewCompat.getElevation(child) : elevation);
         }
@@ -424,7 +424,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
             case MotionEvent.ACTION_DOWN:
             int initialX = (int) event.getX();
             initialY = (int) event.getY();
-            // Only intercept nested scrolling events here if the view not being moved by the
+            // Only intercept nested scrolling events here if the sheetView not being moved by the
             // ViewDragHelper.
             if (state != STATE_SETTLING) {
                 View scroll = nestedScrollingChildRef != null ? nestedScrollingChildRef.get() : null;
@@ -445,7 +445,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
             return true;
         }
         // We have to handle cases that the ViewDragHelper does not capture the bottom sheet because
-        // it is not the top most view of its parent. This is not necessary when the touch event is
+        // it is not the top most sheetView of its parent. This is not necessary when the touch event is
         // happening over the scrolling content as nested scrolling logic handles that case.
         View scroll = nestedScrollingChildRef != null ? nestedScrollingChildRef.get() : null;
         return action == MotionEvent.ACTION_MOVE
@@ -885,7 +885,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
             return;
         }
         if (viewRef == null) {
-            // The view is not laid out yet; modify mState and let onLayoutChild handle it later
+            // The sheetView is not laid out yet; modify mState and let onLayoutChild handle it later
             if (state == STATE_COLLAPSED
                 || state == STATE_EXPANDED
                 || state == STATE_HALF_EXPANDED
@@ -1194,7 +1194,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
             } else if (hideable
                 && shouldHide(releasedChild, yvel)
                 && (releasedChild.getTop() > collapsedOffset || Math.abs(xvel) < Math.abs(yvel))) {
-                // Hide if we shouldn't collapse and the view was either released low or it was a
+                // Hide if we shouldn't collapse and the sheetView was either released low or it was a
                 // vertical swipe.
                 top = parentHeight;
                 targetState = STATE_HIDDEN;
@@ -1400,20 +1400,20 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
     }
 
     /**
-     * A utility function to get the {@link CustomBottomSheetBehavior} associated with the {@code view}.
+     * A utility function to get the {@link CustomBottomSheetBehavior} associated with the {@code sheetView}.
      *
      * @param view The {@link View} with {@link CustomBottomSheetBehavior}.
-     * @return The {@link CustomBottomSheetBehavior} associated with the {@code view}.
+     * @return The {@link CustomBottomSheetBehavior} associated with the {@code sheetView}.
      */
     @SuppressWarnings("unchecked")
     public static <V extends View> CustomBottomSheetBehavior<V> from(V view) {
         ViewGroup.LayoutParams params = view.getLayoutParams();
         if (!(params instanceof CoordinatorLayout.LayoutParams)) {
-            throw new IllegalArgumentException("The view is not a child of CoordinatorLayout");
+            throw new IllegalArgumentException("The sheetView is not a child of CoordinatorLayout");
         }
         CoordinatorLayout.Behavior behavior = ((CoordinatorLayout.LayoutParams) params).getBehavior();
         if (!(behavior instanceof CustomBottomSheetBehavior)) {
-            throw new IllegalArgumentException("The view is not associated with CustomBottomSheetBehavior");
+            throw new IllegalArgumentException("The sheetView is not associated with CustomBottomSheetBehavior");
         }
         return (CustomBottomSheetBehavior<V>) behavior;
     }
@@ -1448,11 +1448,11 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
         if (!expanded) {
             if (importantForAccessibilityMap != null
                 && importantForAccessibilityMap.containsKey(child)) {
-                // Restores the original important for accessibility value of the child view.
+                // Restores the original important for accessibility value of the child sheetView.
                 ViewCompat.setImportantForAccessibility(child, importantForAccessibilityMap.get(child));
             }
         } else {
-            // Saves the important for accessibility value of the child view.
+            // Saves the important for accessibility value of the child sheetView.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 importantForAccessibilityMap.put(child, child.getImportantForAccessibility());
             }
