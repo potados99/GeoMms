@@ -12,7 +12,9 @@
  * Difference to the original copy of this file:
  *   1) ADD public SMILRootLayoutElement getRootLayout();
  *   2) ADD public NodeList getRegions();
- */package org.w3c.dom.smil;
+ */
+
+package org.w3c.dom.smil;
 
 import org.w3c.dom.NodeList;
 

@@ -39,7 +39,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with GeoMms.  If not, see <http://www.gnu.org/licenses/>.
- */package com.potados.geomms
+ */
+
+package com.potados.geomms
 
 /**
  * Example local unit test, which will execute on the development machine (host).

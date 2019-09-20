@@ -39,7 +39,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with GeoMms.  If not, see <http://www.gnu.org/licenses/>.
- */package com.potados.geomms.extension
+ */
+
+package com.potados.geomms.extension
 
 fun <R> elapsedTimeMillis(action: () -> R): Long {
     val startTime = System.currentTimeMillis()

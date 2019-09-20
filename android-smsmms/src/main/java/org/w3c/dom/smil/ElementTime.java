@@ -14,7 +14,9 @@
  *   2) ADD public short getFillDefault();
  *   3) AND public void setFillDefault(short fillDefault)
  *                   throws DOMException;
- */package org.w3c.dom.smil;
+ */
+
+package org.w3c.dom.smil;
 
 import org.w3c.dom.DOMException;
 

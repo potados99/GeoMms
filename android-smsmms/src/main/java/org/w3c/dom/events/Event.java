@@ -8,7 +8,9 @@
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE.
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
- */package org.w3c.dom.events;
+ */
+
+package org.w3c.dom.events;
 
 /**
  * The <code>Event</code> interface is used to provide contextual information 

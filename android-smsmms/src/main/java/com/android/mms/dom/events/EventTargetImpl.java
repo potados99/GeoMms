@@ -12,7 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package com.android.mms.dom.events;
+ */
+
+package com.android.mms.dom.events;
 
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventException;

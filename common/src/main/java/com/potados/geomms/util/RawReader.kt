@@ -39,7 +39,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with GeoMms.  If not, see <http://www.gnu.org/licenses/>.
- */package com.potados.geomms.util
+ */
+
+package com.potados.geomms.util
 
 import android.content.Context
 import androidx.annotation.RawRes

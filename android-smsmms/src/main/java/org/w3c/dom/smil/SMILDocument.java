@@ -13,7 +13,9 @@
  *   1) ADD public SMILElement getHead();
  *   2) ADD public SMILElement getBody();
  *   3) ADD public SMILLayoutElement getLayout();
- */package org.w3c.dom.smil;
+ */
+
+package org.w3c.dom.smil;
 
 import org.w3c.dom.Document;
 

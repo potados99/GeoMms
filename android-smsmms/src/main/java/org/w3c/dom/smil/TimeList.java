@@ -8,7 +8,9 @@
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See W3C License http://www.w3.org/Consortium/Legal/ for more
  * details.
- */package org.w3c.dom.smil;
+ */
+
+package org.w3c.dom.smil;
 
 /**
  *  The <code>TimeList</code> interface provides the abstraction of an ordered 

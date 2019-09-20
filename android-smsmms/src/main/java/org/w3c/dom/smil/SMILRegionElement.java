@@ -14,7 +14,9 @@
  *   2) ADD public void setLeft(int top) throws DOMException;
  *   3) MODIFY public String getTop() to public int getTop();
  *   4) MODIFY public void setTop(String) to public void setTop(int);
- */package org.w3c.dom.smil;
+ */
+
+package org.w3c.dom.smil;
 
 import org.w3c.dom.DOMException;
 
