@@ -67,7 +67,7 @@ class Navigator (
     }
 
     fun showConnectionInfo(sheetManager: BottomSheetManager, connectionId: Long) {
-        sheetManager.push(ConnectionDetailFragment())
+        sheetManager.push(ConnectionDetailFragment.ofConnection(connectionId))
     }
 
     fun showRequestInfo(sheetManager: BottomSheetManager, requestId: Long) {

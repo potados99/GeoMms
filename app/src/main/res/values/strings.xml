@@ -72,7 +72,7 @@
     <string name="button_no">No</string>
     <string name="button_accept">Accept</string>
     <string name="button_cancel">Cancel</string>
-    <string name="button_delete">Delelte</string>
+    <string name="button_delete">Delete</string>
     <string name="button_ok">OK</string>
     <string name="title_permission">This app requires these permissions</string>
     <string name="settings_category_location">Location Share</string>
@@ -116,7 +116,7 @@
     <string name="fail_get_contacts">Failed to get contacts.</string>
     <string name="fail_send_message">Failed to send SMS.</string>
     <string name="start_a_new_conversation">Start a new conversation</string>
-    <string name="dialog_invitation_sent">Sent an invitation</string>
+    <string name="dialog_invitation_sent">Invitation is sent.</string>
     <string name="dialog_sent_at">Date Sent: %s</string>
     <string name="dialog_connection_id">Connection ID: %s</string>
     <string name="dialog_duration">Duration: %s</string>
@@ -139,6 +139,10 @@
     <string name="dialog_ask_sync_all">There are %s of messages, conversations, and contacts. Syncing them all might take a while. Would you like to sync recent messages only?</string>
     <string name="title_choose_range">Choose range</string>
     <string name="description_cancel_button">This is a cancel button.</string>
+    <string name="dialog_location_not_available">Location is not available.</string>
+    <string name="string_not_good">Not good</string>
+    <string name="button_resend">Resend</string>
+    <string name="button_disconnect">Disconnect</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>

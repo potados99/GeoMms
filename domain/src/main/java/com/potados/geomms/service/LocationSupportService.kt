@@ -82,11 +82,11 @@ abstract class LocationSupportService : Service() {
      * Get managed connection with id and temporal condition.
      *
      * @param id id of the connection.
-     * @param temporal filter isTemporal.
+     * @param temporal filter isTemporal. Null for don't care.
      *
      * @return null if any exceptions.
      */
-    abstract fun getConnection(id: Long, temporal: Boolean): Connection?
+    abstract fun getConnection(id: Long, temporal: Boolean? = null): Connection?
 
     /**
      * Get managed connection requests from realm with id and inbound connection.

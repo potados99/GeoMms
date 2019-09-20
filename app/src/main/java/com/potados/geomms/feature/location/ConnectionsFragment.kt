@@ -47,6 +47,7 @@ class ConnectionsFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
 
         connectionsViewModel = getViewModel()
+        failables += connectionsViewModel
     }
 
     override fun onCreateView(

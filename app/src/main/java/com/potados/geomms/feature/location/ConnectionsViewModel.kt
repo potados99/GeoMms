@@ -23,6 +23,11 @@ class ConnectionsViewModel : BaseViewModel() {
     val incomingRequests = locationService.getIncomingRequests()
     val connections = locationService.getConnections()
 
+    init {
+        failables += locationService
+        failables += navigator
+    }
+
     fun invite() {
         navigator.showInvite()
     }

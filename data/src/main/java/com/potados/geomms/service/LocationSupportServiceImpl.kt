@@ -164,11 +164,14 @@ class LocationSupportServiceImpl(
     /**
      * Auto correct connection without recipient.
      */
-    override fun getConnection(id: Long, temporal: Boolean): Connection? = nullOnFail {
+    override fun getConnection(id: Long, temporal: Boolean?): Connection? = nullOnFail {
         return@nullOnFail getRealm()
             .where(Connection::class.java)
             .equalTo("id", id)
-            .equalTo("isTemporal", temporal)
+            .let {
+                if (temporal != null) it.equalTo("isTemporal", temporal)
+                else it
+            }
             .findFirst()
     }
 
