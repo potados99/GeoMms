@@ -150,7 +150,7 @@ abstract class LocationSupportService : Service() {
     abstract fun beRequestedDisconnect(packet: Packet): Boolean
 
     /** I send a packet to YOU. */
-    abstract fun sendPacket(address: String, packet: Packet): Boolean
+    abstract fun sendPacket(address: String, packet: Packet, postFix: String = ""): Boolean
     /** YOU sent me a packet. I handle it and call methods above. */
     abstract fun receivePacket(address: String, body: String): Boolean
 

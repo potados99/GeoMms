@@ -248,7 +248,10 @@ class LocationSupportServiceImpl(
             duration = duration
         )
 
-        sendPacket(address, Packet.ofRequestingNewConnection(request))
+        // TODO
+        val postfix = "\n::애플리케이션 설치 안내::"
+
+        sendPacket(address, Packet.ofRequestingNewConnection(request), postfix)
 
         // Add this not-yet accepted connection to getRealm.
         val temporalConnection = Connection.fromAcceptedRequest(request).apply { isTemporal = true }
@@ -311,6 +314,7 @@ class LocationSupportServiceImpl(
             request.deleteFromRealm()
 
             realm.insertOrUpdate(connection)
+
             registerTask(connection.id)
         }
 
@@ -594,18 +598,20 @@ class LocationSupportServiceImpl(
      * PACKET PROCESS
      ************************************/
 
-    override fun sendPacket(address: String, packet: Packet) = falseOnFail {
+    override fun sendPacket(address: String, packet: Packet, postFix: String) = falseOnFail {
         val serialized = serializePacket(packet) ?: return@falseOnFail false
+
+        val payload = serialized + postFix
 
         SmsManager.getDefault().sendTextMessage(
             address,
             null,
-            serialized,
+            payload,
             null,
             null
         )
 
-        Timber.i("Sent packet: \"$serialized\"")
+        Timber.i("Sent packet: \"$payload\"")
 
         return@falseOnFail true
     }
@@ -833,7 +839,11 @@ class LocationSupportServiceImpl(
     }
 
     /**
-     * Register periodic update task of connection.
+     * Delete connection when expired.
+     *
+     * Originally this method also scheduled the connection
+     * to send data for every [UPDATE_INTERVAL].
+     *
      * The connection id is good to use as a task id.
      *
      * @param connection must be a realm managed object.
@@ -846,28 +856,15 @@ class LocationSupportServiceImpl(
             return@falseOnFail false
         }
 
-        val sendBroadcast = {
-            // This closure may be launched in a thread which is
-            // not a thread the connection object is created.
-            context.sendBroadcast(
-                Intent(context, SendUpdateReceiver::class.java).apply {
-                    putExtra(EXTRA_CONNECTION_ID, connectionId)
-                }
-            )
-        }
         val expireConnection = {
             // Also here, avoid using realm object.
             closeExpiredConnection(connectionId)
         }
 
-        // Send update every [UPDATE_INTERVAL].
-        scheduler.doOnEvery(connection.id, UPDATE_INTERVAL, sendBroadcast)
-
         // Request disconnect when expired.
         scheduler.doAtTime(connection.id, connection.due, expireConnection)
 
-        Timber.i("Task registered: connection ${connection.id}, for every ${Duration(UPDATE_INTERVAL).toShortenString()}")
-        Timber.i("Will be disconnected at ${DateTime(connection.due)}")
+        Timber.i("Connection $connection.id will be disconnected at ${DateTime(connection.due)}")
 
         return@falseOnFail true
     }

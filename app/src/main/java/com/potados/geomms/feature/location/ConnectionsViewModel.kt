@@ -17,6 +17,7 @@ import org.koin.core.inject
 
 class ConnectionsViewModel : BaseViewModel() {
 
+    private val service: LocationSupportService by inject()
     private val locationService: LocationSupportService by inject()
     private val navigator: Navigator by inject()
 
@@ -52,5 +53,9 @@ class ConnectionsViewModel : BaseViewModel() {
     fun askDeleteRequest(activity: FragmentActivity?, request: ConnectionRequest) {
         // TODO
         // Delete request here directly.
+    }
+
+    fun refreshConnection(connection: Connection) {
+        service.requestUpdate(connection.id)
     }
 }

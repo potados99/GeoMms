@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
+import com.potados.geomms.common.extension.doEvery
+import com.potados.geomms.common.extension.isVisible
 import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Connection
@@ -24,7 +26,7 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
 
     var onConnectionClick: (Connection) -> Unit = {}
     var onConnectionLongClick: (Connection) -> Unit = {}
-    var onInfoClick: (Connection) -> Unit = {}
+    var onRefreshClick: (Connection) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -40,72 +42,72 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
                 onConnectionLongClick(item)
                 true
             }
-            view.info.setOnClickListener {
+            view.refresh_button.setOnClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
-                onInfoClick(item)
+                onRefreshClick(item)
             }
         }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        val connection = getItem(position) ?: return
         val view = holder.containerView
+        val item = getItem(position) ?: return
 
-        view.name.text = connection.recipient?.getDisplayName()
-        view.avatar.setContact(connection.recipient)
+        view.name.text = item.recipient?.getDisplayName()
+        view.avatar.setContact(item.recipient)
 
-        val alpha = if (connection.isTemporal) 0.5f else 1.0f
-        val timeLeftVisibility = !connection.isTemporal
+        val alpha = if (item.isTemporal) 0.5f else 1.0f
+        val timeLeftVisibility = !item.isTemporal
+        val refreshVisibility = !item.isTemporal
 
         view.name.alpha = alpha
         view.status.alpha = alpha
         view.duration_group.setVisible(timeLeftVisibility)
 
-        view.status.text = when (connection.isTemporal) {
+        view.status.text = when (item.isTemporal) {
             true -> context.getString(R.string.connection_request_sent)
 
-            false -> when (connection.lastUpdate) {
+            false -> when (item.lastUpdate) {
                 0L -> {
                     context.getString(R.string.connection_location_not_available)
                 }
                 else -> {
-                    val update = dateFormatter.getConversationTimestamp(connection.lastUpdate)
+                    val update = dateFormatter.getConversationTimestamp(item.lastUpdate)
                     context.getString(R.string.connection_last_update, update)
                 }
             }
         }
 
-        view.time_label.text = when (connection.isTemporal) {
+        view.time_label.text = when (item.isTemporal) {
             true -> null
             false -> {
-                val duration = dateFormatter.getDuration(connection.timeLeft, short = true)
+                val duration = dateFormatter.getDuration(item.timeLeft, short = true)
                 context.getString(R.string.connection_time_left, duration)
             }
         }
 
+        view.refresh_button.isVisible = refreshVisibility
+
+        // Refresh left time every second.
         (holder as TimerViewHolder).apply {
             timer?.cancel()
 
             if (timeLeftVisibility) {
                 timer = Timer()
-                timer?.schedule(object: TimerTask() {
-                    override fun run() {
-                        handler.post {
-                            if (!connection.isValid) {
-                                timer = null
-                                return@post
-                            }
-                            with(view.time_progress) {
-                                max = connection.duration.toInt()
-                                progress = (connection.due - System.currentTimeMillis()).toInt()
-                            }
-                            with(view.time_label) {
-                                val duration = dateFormatter.getDuration(connection.timeLeft, short = true)
-                                text = context.getString(R.string.connection_time_left, duration)
-                            }
+                timer?.doEvery(1000) {
+                    handler.post {
+                        if (!item.isValid) {
+                            timer = null
+                            return@post
+                        }
+
+                        val duration = dateFormatter.getDuration(item.timeLeft, short = true)
+
+                        with(view.time_label) {
+                            text = context.getString(R.string.connection_time_left, duration)
                         }
                     }
-                }, 0, 1000)
+                }
             }
         }
     }

@@ -77,19 +77,20 @@ class ConnectionsFragment : BaseFragment() {
                 emptyView = view.empty_view
 
                 onConnectionClick = {
-
                     connectionsViewModel.showConnectionInfo(bottomSheetManager, it)
 
                     // Running the outside code should be happened here, I think.
                     onShowConnectionOnMap(it)
                 }
+
                 onConnectionLongClick = {
                     connectionsViewModel.askDeleteConnection(activity, it)
                 }
-            }
 
-            // For scroll in bottom sheet.
-            // addOnItemTouchListener(onItemTouchListener)
+                onRefreshClick = {
+                    connectionsViewModel.refreshConnection(it)
+                }
+            }
         }
 
         with(view.incoming_requests) {
@@ -103,11 +104,6 @@ class ConnectionsFragment : BaseFragment() {
                     connectionsViewModel.askDeleteRequest(activity, it)
                 }
             }
-
-            // For scroll in bottom sheet.
-            // addOnItemTouchListener(onItemTouchListener)
         }
     }
-
-
 }

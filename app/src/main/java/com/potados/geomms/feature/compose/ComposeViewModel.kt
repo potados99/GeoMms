@@ -173,5 +173,10 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
             }
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        activeConversationManager.setActiveConversation(null)
+    }
 }
 
