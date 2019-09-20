@@ -5,6 +5,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.common.extension.moveTo
+import com.potados.geomms.common.manager.BottomSheetManager
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.extension.withNonNull
 import com.potados.geomms.model.Connection
@@ -26,14 +27,16 @@ class ConnectionsViewModel : BaseViewModel() {
         navigator.showInvite()
     }
 
-    fun showConnectionInfo(connection: Connection) {
-        navigator.showConnectionInfo(connection.id)
-
-
+    fun showConnectionInfo(sheetManager: BottomSheetManager?, connection: Connection) {
+        sheetManager?.let {
+            navigator.showConnectionInfo(it, connection.id)
+        }
     }
 
-    fun showRequestInfo(request: ConnectionRequest) {
-        navigator.showRequestInfo(request.connectionId)
+    fun showRequestInfo(sheetManager: BottomSheetManager?, request: ConnectionRequest) {
+        sheetManager?.let {
+            navigator.showRequestInfo(it, request.connectionId)
+        }
     }
 
     fun askDeleteConnection(activity: FragmentActivity?, connection: Connection) {

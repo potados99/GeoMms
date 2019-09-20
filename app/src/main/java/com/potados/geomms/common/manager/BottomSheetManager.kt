@@ -100,6 +100,20 @@ class BottomSheetManager(
         return sheetStack.find { it.childFragment == fragment }
     }
 
+    /**
+     * Collapse active sheet.
+     */
+    fun collapseSheet() {
+        peekView()?.collapseSheet()
+    }
+
+    /**
+     * Half-expand active sheet.
+     */
+    fun halfExpandSheet() {
+        peekView()?.halfExpandSheet()
+    }
+
     private fun createSheet(fragment: BaseFragment, cancelable: Boolean): Sheet {
         return inflateBottomSheet().apply {
             sheetView.cancel_button.apply {
@@ -218,6 +232,11 @@ class BottomSheetManager(
                 return generated
             }
         }
+    }
+
+    private fun peekView(): View? {
+        return if (sheetStack.isEmpty()) null
+        else sheetStack.peek().sheetView
     }
 
     data class Sheet(

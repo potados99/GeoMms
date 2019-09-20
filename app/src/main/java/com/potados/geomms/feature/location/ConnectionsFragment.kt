@@ -76,8 +76,8 @@ class ConnectionsFragment : BaseFragment() {
                 emptyView = view.empty_view
 
                 onConnectionClick = {
-                    bottomSheetManager?.push(ConnectionDetailFragment())
-                    // connectionsViewModel.showConnectionInfo(it)
+
+                    connectionsViewModel.showConnectionInfo(bottomSheetManager, it)
 
                     // Running the outside code should be happened here, I think.
                     onShowConnectionOnMap(it)
@@ -96,7 +96,7 @@ class ConnectionsFragment : BaseFragment() {
                 companionView = view.incoming_requests_layout
 
                 onRequestClick = {
-                    connectionsViewModel.showRequestInfo(it)
+                    connectionsViewModel.showRequestInfo(bottomSheetManager, it)
                 }
                 onRequestLongClick = {
                     connectionsViewModel.askDeleteRequest(activity, it)

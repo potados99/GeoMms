@@ -147,7 +147,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             // Hide bottom sheet when map moving.
             setOnCameraMoveStartedListener {
                 if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
-                    mapViewModel.collapseSheet()
+                    childBottomSheetManager?.collapseSheet()
                 }
             }
 

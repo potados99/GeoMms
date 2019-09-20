@@ -122,8 +122,4 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     fun getLocation(onLocation: (Location) -> Unit) {
         locationRepo.getLocationWithCallback(onLocation)
     }
-
-    fun collapseSheet() {
-        navigator.collapseSheet()
-    }
 }

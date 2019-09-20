@@ -46,11 +46,17 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
      */
     var onViewCreated: (View) -> Unit = {}
 
+    /**
+     * The bottom sheet manager we are associated with.
+     */
     val bottomSheetManager: BottomSheetManager?
         get() {
             return bottomSheetManagers.find(this)
         }
 
+    /**
+     * Private bottom sheet manager for child bottom sheets inside of this one.
+     */
     val childBottomSheetManager: BottomSheetManager?
         get() {
             return bottomSheetManagers.get(this)

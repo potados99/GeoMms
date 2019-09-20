@@ -11,6 +11,7 @@ import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.common.GiveMePermissionActivity
 import com.potados.geomms.common.manager.BottomSheetManager
 import com.potados.geomms.feature.compose.ComposeActivity
+import com.potados.geomms.feature.location.ConnectionDetailFragment
 import com.potados.geomms.feature.location.invite.InviteActivity
 import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.settings.SettingsActivity
@@ -65,23 +66,13 @@ class Navigator (
         }
     }
 
-    /**
-     * ConnectionsFragment exclusive.
-     * A bottom sheet manager MUST be set before this call.
-     */
-    fun showConnectionInfo(connectionId: Long) {
-        // TODO
-        // Push a bottom sheet to a bottom sheet manager bound to map childFragment.
-
-
+    fun showConnectionInfo(sheetManager: BottomSheetManager, connectionId: Long) {
+        sheetManager.push(ConnectionDetailFragment())
     }
-    fun showRequestInfo(requestId: Long) {
+
+    fun showRequestInfo(sheetManager: BottomSheetManager, requestId: Long) {
         // TODO
         // Push to show a request info.
-    }
-    fun collapseSheet() {
-        // TODO
-        // collapse active bottom sheet.
     }
 
     fun showDefaultSmsDialogIfNeeded() {
