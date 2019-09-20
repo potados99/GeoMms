@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentActivity
 import com.potados.geomms.R
 import com.potados.geomms.base.FailableComponent
 import com.potados.geomms.common.GiveMePermissionActivity
-import com.potados.geomms.common.widget.bottomsheet.BottomSheetManager
+import com.potados.geomms.common.manager.BottomSheetManager
 import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.feature.location.invite.InviteActivity
 import com.potados.geomms.feature.main.MainActivity
@@ -30,18 +30,6 @@ class Navigator (
     private val syncRepo: SyncRepository,
     private val syncMessages: SyncMessages
 ) : FailableComponent(), KoinComponent {
-
-    // Only one sheet manager for a type.
-    private val bottomSheetManagers = HashMap<Class<*>, BottomSheetManager>()
-
-    fun addBottomSheetManager(manager: BottomSheetManager) {
-        bottomSheetManagers[manager.parentFragment()::class.java] = manager
-    }
-
-    fun getBottomSheetManager(fragment: Fragment): BottomSheetManager {
-        return bottomSheetManagers[fragment::class.java] ?:
-                throw IllegalStateException("Manager not added yet!")
-    }
 
     fun showMain() {
         whenPossible {
@@ -84,6 +72,8 @@ class Navigator (
     fun showConnectionInfo(connectionId: Long) {
         // TODO
         // Push a bottom sheet to a bottom sheet manager bound to map childFragment.
+
+
     }
     fun showRequestInfo(requestId: Long) {
         // TODO

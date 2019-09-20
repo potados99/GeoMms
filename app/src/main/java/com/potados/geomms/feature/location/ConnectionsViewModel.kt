@@ -28,6 +28,8 @@ class ConnectionsViewModel : BaseViewModel() {
 
     fun showConnectionInfo(connection: Connection) {
         navigator.showConnectionInfo(connection.id)
+
+
     }
 
     fun showRequestInfo(request: ConnectionRequest) {

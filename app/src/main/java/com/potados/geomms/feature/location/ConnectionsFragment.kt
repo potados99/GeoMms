@@ -76,7 +76,8 @@ class ConnectionsFragment : BaseFragment() {
                 emptyView = view.empty_view
 
                 onConnectionClick = {
-                    connectionsViewModel.showConnectionInfo(it)
+                    bottomSheetManager?.push(ConnectionDetailFragment())
+                    // connectionsViewModel.showConnectionInfo(it)
 
                     // Running the outside code should be happened here, I think.
                     onShowConnectionOnMap(it)

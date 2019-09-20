@@ -1,6 +1,7 @@
 package com.potados.geomms.injection
 
 import android.Manifest
+import com.potados.geomms.common.manager.BottomSheetManagers
 import com.potados.geomms.common.manager.NotificationManagerImplTest
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
@@ -50,9 +51,11 @@ val myModules = module {
         )
     }
 
-
     /** Scheduler */
     single { Scheduler() }
+
+    /** Bottom Sheet Managers */
+    single { BottomSheetManagers() }
 
 
 

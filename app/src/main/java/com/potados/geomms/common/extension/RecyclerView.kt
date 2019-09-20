@@ -18,7 +18,6 @@ fun RecyclerView.makeThisWorkInBottomSheet(sheet: View) {
             val params = sheet.layoutParams
 
             if (params is CoordinatorLayout.LayoutParams) {
-                Timber.e("sex!")
                 val behavior = params.behavior
                 if (behavior != null && behavior is CustomBottomSheetBehavior<*>)
                     behavior.setNestedScrollingChildRef(rv)

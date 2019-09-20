@@ -10,7 +10,7 @@ import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.navigation.Navigator
-import com.potados.geomms.common.widget.bottomsheet.BottomSheetManager
+import com.potados.geomms.common.manager.BottomSheetManager
 import com.potados.geomms.databinding.MapFragmentBinding
 import kotlinx.android.synthetic.main.connections_fragment.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
@@ -26,8 +26,6 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
 
     private lateinit var mapViewModel: MapViewModel
     private lateinit var viewDataBinding: MapFragmentBinding
-
-    private val navigator: Navigator by inject()
 
     private var map: GoogleMap? = null
 
@@ -77,9 +75,19 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             .inflate(inflater, container, false)
             .apply { vm = mapViewModel }
             .apply { viewDataBinding = this }
-            .apply { navigator.addBottomSheetManager(BottomSheetManager(this@MapFragment, root.root_layout)) }
             .apply { initializeView(root, savedInstanceState) }
             .root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        // Add connections list sheet.
+        childBottomSheetManager
+            ?.push(ConnectionsFragment(), cancelable = false)
+            ?.apply {
+                observe(isInitialized) { if (it == true) { initializeSheetView(sheetView) } }
+            }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -162,15 +170,9 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             onCreate(savedInstanceState)
             getMapAsync(this@MapFragment) // onMapReady called after this done
         }
-
-        // Add connections list sheet.
-        navigator
-            .getBottomSheetManager(this)
-            .push(ConnectionsFragment(), cancelable = false)
-            .apply {
-                observe(isInitialized) { if (it == true) { initializeSheetView(sheetView) } }
-            }
     }
+
+
 
 
     companion object {

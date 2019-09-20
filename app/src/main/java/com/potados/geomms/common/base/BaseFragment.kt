@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -18,6 +19,8 @@ import com.potados.geomms.common.extension.notify
 import com.potados.geomms.common.extension.observe
 import com.potados.geomms.common.extension.resolveThemeColor
 import com.potados.geomms.common.extension.setTint
+import com.potados.geomms.common.manager.BottomSheetManager
+import com.potados.geomms.common.manager.BottomSheetManagers
 import com.potados.geomms.preference.MyPreferences
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -30,6 +33,7 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
 
     private val mContext: Context by inject()
     private val preferences: MyPreferences by inject()
+    private val bottomSheetManagers: BottomSheetManagers by inject()
 
     open val optionMenuId: Int? = null
 
@@ -42,9 +46,30 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
      */
     var onViewCreated: (View) -> Unit = {}
 
+    val bottomSheetManager: BottomSheetManager?
+        get() {
+            return bottomSheetManagers.find(this)
+        }
+
+    val childBottomSheetManager: BottomSheetManager?
+        get() {
+            return bottomSheetManagers.get(this)
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(optionMenuId != null)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (view is ViewGroup) {
+            // Add child bottom sheet manager.
+            bottomSheetManagers.add(BottomSheetManager(this, view))
+        }
+
+        onViewCreated(view)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -56,9 +81,11 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
         startObservingFailables(failables)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        onViewCreated(view)
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        // Remove child bottom sheet manager.
+        bottomSheetManagers.remove(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

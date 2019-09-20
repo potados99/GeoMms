@@ -1,4 +1,4 @@
-package com.potados.geomms.common.widget.bottomsheet
+package com.potados.geomms.common.manager
 
 import android.os.Handler
 import android.os.Looper
@@ -14,7 +14,6 @@ import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import kotlinx.android.synthetic.main.bottom_sheet_container.view.*
-import timber.log.Timber
 import java.util.*
 
 /**
@@ -25,7 +24,7 @@ import java.util.*
  * Each bottom sheet will have its parentFragment in its fragment_container.
  */
 class BottomSheetManager(
-    private val parentFragment: Fragment,
+    private val parentFragment: BaseFragment,
     private val rootView: ViewGroup
 ) {
 
@@ -95,7 +94,11 @@ class BottomSheetManager(
         }
     }
 
-    fun parentFragment(): Fragment = parentFragment
+    fun parentFragment(): BaseFragment = parentFragment
+
+    fun findSheetByFragment(fragment: BaseFragment): Sheet? {
+        return sheetStack.find { it.childFragment == fragment }
+    }
 
     private fun createSheet(fragment: BaseFragment, cancelable: Boolean): Sheet {
         return inflateBottomSheet().apply {
