@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.service_alt;
+ */package com.android.mms.service_alt;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -47,18 +45,18 @@ public abstract class MmsRequest {
     /**
      * Interface for certain functionalities from MmsService
      */
-    public static interface RequestManager {
+    public interface RequestManager {
         /**
          * Enqueue an MMS request
          *
          * @param request the request to enqueue
          */
-        public void addSimRequest(MmsRequest request);
+        void addSimRequest(MmsRequest request);
 
         /*
          * @return Whether to auto persist received MMS
          */
-        public boolean getAutoPersistingPref();
+        boolean getAutoPersistingPref();
 
         /**
          * Read pdu (up to maxSize bytes) from supplied content uri
@@ -66,7 +64,7 @@ public abstract class MmsRequest {
          * @param maxSize maximum number of bytes to read
          * @return read pdu (else null in case of error or too big)
          */
-        public byte[] readPduFromContentUri(final Uri contentUri, final int maxSize);
+        byte[] readPduFromContentUri(final Uri contentUri, final int maxSize);
 
         /**
          * Write pdu to supplied content uri
@@ -74,7 +72,7 @@ public abstract class MmsRequest {
          * @param pdu pdu bytes to write
          * @return true in case of success (else false)
          */
-        public boolean writePduToContentUri(final Uri contentUri, final byte[] pdu);
+        boolean writePduToContentUri(final Uri contentUri, final byte[] pdu);
     }
 
     // The reference to the pending requests manager (i.e. the MmsService)
@@ -297,9 +295,7 @@ public abstract class MmsRequest {
             ConnectivityManager mConnMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (mConnMgr != null) {
                 NetworkInfo niWF = mConnMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-                if ((niWF != null) && (niWF.isConnected())) {
-                    return true;
-                }
+                return (niWF != null) && (niWF.isConnected());
             }
         }
         return false;

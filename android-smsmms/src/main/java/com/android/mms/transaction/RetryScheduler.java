@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.transaction;
+ */package com.android.mms.transaction;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -63,7 +61,7 @@ public class RetryScheduler implements Observer {
         ConnectivityManager mConnMgr = (ConnectivityManager)
                 mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = mConnMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE_MMS);
-        return (ni == null ? false : ni.isConnected());
+        return (ni != null && ni.isConnected());
     }
 
     public void update(Observable observable) {

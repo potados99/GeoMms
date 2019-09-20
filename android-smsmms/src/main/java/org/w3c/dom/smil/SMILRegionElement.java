@@ -14,9 +14,7 @@
  *   2) ADD public void setLeft(int top) throws DOMException;
  *   3) MODIFY public String getTop() to public int getTop();
  *   4) MODIFY public void setTop(String) to public void setTop(int);
- */
-
-package org.w3c.dom.smil;
+ */package org.w3c.dom.smil;
 
 import org.w3c.dom.DOMException;
 
@@ -29,32 +27,32 @@ public interface SMILRegionElement extends SMILElement, ElementLayout {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public String getFit();
-    public void setFit(String fit)
+    String getFit();
+    void setFit(String fit)
                                       throws DOMException;
 
     /**
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public int getLeft();
-    public void setLeft(int top)
+    int getLeft();
+    void setLeft(int top)
                                       throws DOMException;
 
     /**
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public int getTop();
-    public void setTop(int top)
+    int getTop();
+    void setTop(int top)
                                       throws DOMException;
 
     /**
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public int getZIndex();
-    public void setZIndex(int zIndex)
+    int getZIndex();
+    void setZIndex(int zIndex)
                                       throws DOMException;
 
 }

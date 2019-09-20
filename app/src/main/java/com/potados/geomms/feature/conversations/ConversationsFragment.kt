@@ -1,12 +1,7 @@
-/**
- * Copyright (C) 2019 Song Byeong Jun and original authors
+/*
+ * Copyright (C) 2019 Song Byeong Jun <potados99@gmail.com>
  *
  * This file is part of GeoMms.
- *
- * This software makes use of third-party patent which belongs to
- * KANG MOON KYOU and LEE GWI BONG:
- * System and Method for sharing service of location information
- * 10-1235884-0000 (2013.02.15)
  *
  * GeoMms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,22 +22,13 @@ package com.potados.geomms.feature.conversations
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.FragmentActivity
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.autoScrollToStart
 import com.potados.geomms.common.extension.getViewModel
 import com.potados.geomms.common.extension.observe
-import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.ConversationsFragmentBinding
-import com.potados.geomms.manager.PermissionManager
-import com.potados.geomms.model.Conversation
-import com.potados.geomms.model.SearchResult
-import com.potados.geomms.usecase.DeleteConversations
-import com.potados.geomms.util.Popup
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
-import kotlinx.android.synthetic.main.main_hint.view.*
-import org.koin.core.inject
 import timber.log.Timber
 
 class ConversationsFragment : NavigationFragment() {

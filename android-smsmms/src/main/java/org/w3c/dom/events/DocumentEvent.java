@@ -8,9 +8,7 @@
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE.
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
- */
-
-package org.w3c.dom.events;
+ */package org.w3c.dom.events;
 
 import org.w3c.dom.DOMException;
 
@@ -50,7 +48,7 @@ public interface DocumentEvent {
      *   NOT_SUPPORTED_ERR: Raised if the implementation does not support the 
      *   type of <code>Event</code> interface requested
      */
-    public Event createEvent(String eventType)
+    Event createEvent(String eventType)
                              throws DOMException;
 
 }

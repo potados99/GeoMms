@@ -1,12 +1,7 @@
-/**
- * Copyright (C) 2019 Song Byeong Jun and original authors
+/*
+ * Copyright (C) 2019 Song Byeong Jun <potados99@gmail.com>
  *
  * This file is part of GeoMms.
- *
- * This software makes use of third-party patent which belongs to
- * KANG MOON KYOU and LEE GWI BONG:
- * System and Method for sharing service of location information
- * 10-1235884-0000 (2013.02.15)
  *
  * GeoMms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,20 +21,19 @@ package com.potados.geomms.feature.location
 
 import android.content.IntentFilter
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
-import com.potados.geomms.common.navigation.Navigator
-import com.potados.geomms.common.manager.BottomSheetManager
 import com.potados.geomms.databinding.MapFragmentBinding
 import kotlinx.android.synthetic.main.connections_fragment.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
-import kotlinx.android.synthetic.main.map_fragment.view.root_layout
-import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 class MapFragment : NavigationFragment(), OnMapReadyCallback {

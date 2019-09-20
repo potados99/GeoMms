@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.service_alt;
+ */package com.android.mms.service_alt;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -438,9 +436,9 @@ public class MmsHttpClient {
         final String extraHttpParams = mmsConfig.getHttpParams();
         if (!TextUtils.isEmpty(extraHttpParams)) {
             // Parse the parameter list
-            String paramList[] = extraHttpParams.split("\\|");
+            String[] paramList = extraHttpParams.split("\\|");
             for (String paramPair : paramList) {
-                String splitPair[] = paramPair.split(":", 2);
+                String[] splitPair = paramPair.split(":", 2);
                 if (splitPair.length == 2) {
                     final String name = splitPair[0].trim();
                     final String value = resolveMacro(mContext, splitPair[1].trim(), mmsConfig);

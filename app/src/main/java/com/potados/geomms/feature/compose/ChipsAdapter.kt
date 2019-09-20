@@ -1,12 +1,7 @@
-/**
- * Copyright (C) 2019 Song Byeong Jun and original authors
+/*
+ * Copyright (C) 2019 Song Byeong Jun <potados99@gmail.com>
  *
  * This file is part of GeoMms.
- *
- * This software makes use of third-party patent which belongs to
- * KANG MOON KYOU and LEE GWI BONG:
- * System and Method for sharing service of location information
- * 10-1235884-0000 (2013.02.15)
  *
  * GeoMms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -93,7 +88,7 @@ class ChipsAdapter : BaseAdapter<Contact>() {
 
                 view.avatar.setContact(contact)
 
-                // If the contact's packageName is empty, try to display a phone number instead
+                // If the contact'spackageName is empty, try to display a phone number instead
                 // The contacts provided here should only have one number
                 view.name.text = if (contact.name.isNotBlank()) {
                     contact.name

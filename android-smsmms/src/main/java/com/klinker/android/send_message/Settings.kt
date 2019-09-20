@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.klinker.android.send_message
+ */package com.klinker.android.send_message
 
 /**
  * Class to house all of the settings that can be used to send a message

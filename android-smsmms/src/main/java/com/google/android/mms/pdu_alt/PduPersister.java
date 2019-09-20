@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.google.android.mms.pdu_alt;
+ */package com.google.android.mms.pdu_alt;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -54,7 +52,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -823,7 +821,7 @@ public class PduPersister {
                     || ContentType.TEXT_HTML.equals(contentType)) {
                 ContentValues cv = new ContentValues();
                 if (data == null) {
-                    data = new String("").getBytes(CharacterSets.DEFAULT_CHARSET_NAME);
+                    data = "".getBytes(CharacterSets.DEFAULT_CHARSET_NAME);
                 }
                 String dataText = new EncodedStringValue(data).getString();
                 cv.put(Part.TEXT, dataText);
@@ -1501,8 +1499,7 @@ public class PduPersister {
         for (EncodedStringValue v : array) {
             if (v != null) {
                 String number = v.getString();
-                if ((myNumber == null || !PhoneNumberUtils.compare(number, myNumber)) &&
-                        !recipients.contains(number)) {
+                if ((myNumber == null || !PhoneNumberUtils.compare(number, myNumber))) {
                     // Only add numbers which aren't my own number.
                     recipients.add(number);
                 }
@@ -1548,26 +1545,14 @@ public class PduPersister {
      * Wrap a byte[] into a String.
      */
     public static String toIsoString(byte[] bytes) {
-        try {
-            return new String(bytes, CharacterSets.MIMENAME_ISO_8859_1);
-        } catch (UnsupportedEncodingException e) {
-            // Impossible to reach here!
-            Timber.e(e, "ISO_8859_1 must be supported!");
-            return "";
-        }
+        return new String(bytes, StandardCharsets.ISO_8859_1);
     }
 
     /**
      * Unpack a given String into a byte[].
      */
     public static byte[] getBytes(String data) {
-        try {
-            return data.getBytes(CharacterSets.MIMENAME_ISO_8859_1);
-        } catch (UnsupportedEncodingException e) {
-            // Impossible to reach here!
-            Timber.e(e, "ISO_8859_1 must be supported!");
-            return new byte[0];
-        }
+        return data.getBytes(StandardCharsets.ISO_8859_1);
     }
 
     /**

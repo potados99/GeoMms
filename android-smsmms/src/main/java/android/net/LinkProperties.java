@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package android.net;
+ */package android.net;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -192,8 +190,7 @@ public class LinkProperties implements Parcelable {
     public boolean isIdenticalAddresses(LinkProperties target) {
         Collection<InetAddress> targetAddresses = target.getAddresses();
         Collection<InetAddress> sourceAddresses = getAddresses();
-        return (sourceAddresses.size() == targetAddresses.size()) ?
-                sourceAddresses.containsAll(targetAddresses) : false;
+        return (sourceAddresses.size() == targetAddresses.size()) && sourceAddresses.containsAll(targetAddresses);
     }
 
     /**
@@ -204,8 +201,7 @@ public class LinkProperties implements Parcelable {
      */
     public boolean isIdenticalDnses(LinkProperties target) {
         Collection<InetAddress> targetDnses = target.getDnses();
-        return (mDnses.size() == targetDnses.size()) ?
-                mDnses.containsAll(targetDnses) : false;
+        return (mDnses.size() == targetDnses.size()) && mDnses.containsAll(targetDnses);
     }
 
     /**
@@ -216,8 +212,7 @@ public class LinkProperties implements Parcelable {
      */
     public boolean isIdenticalRoutes(LinkProperties target) {
         Collection<RouteInfo> targetRoutes = target.getRoutes();
-        return (mRoutes.size() == targetRoutes.size()) ?
-                mRoutes.containsAll(targetRoutes) : false;
+        return (mRoutes.size() == targetRoutes.size()) && mRoutes.containsAll(targetRoutes);
     }
 
     /**

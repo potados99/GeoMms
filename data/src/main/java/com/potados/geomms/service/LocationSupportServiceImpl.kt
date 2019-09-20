@@ -1,12 +1,7 @@
-/**
- * Copyright (C) 2019 Song Byeong Jun and original authors
+/*
+ * Copyright (C) 2019 Song Byeong Jun <potados99@gmail.com>
  *
  * This file is part of GeoMms.
- *
- * This software makes use of third-party patent which belongs to
- * KANG MOON KYOU and LEE GWI BONG:
- * System and Method for sharing service of location information
- * 10-1235884-0000 (2013.02.15)
  *
  * GeoMms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +20,6 @@
 package com.potados.geomms.service
 
 import android.content.Context
-import android.content.Intent
 import android.telephony.SmsManager
 import androidx.annotation.StringRes
 import com.google.gson.Gson
@@ -33,18 +27,19 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonSyntaxException
 import com.potados.geomms.base.Failable
 import com.potados.geomms.data.R
-import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.falseOnFail
+import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.unitOnFail
 import com.potados.geomms.manager.KeyManager
 import com.potados.geomms.model.*
-import com.potados.geomms.receiver.SendUpdateReceiver
-import com.potados.geomms.receiver.SendUpdateReceiver.Companion.EXTRA_CONNECTION_ID
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.LocationRepository
 import com.potados.geomms.usecase.DeleteMessages
 import com.potados.geomms.usecase.DeleteMessages.Params
-import com.potados.geomms.util.*
+import com.potados.geomms.util.DateTime
+import com.potados.geomms.util.Reflection
+import com.potados.geomms.util.Scheduler
+import com.potados.geomms.util.Types
 import io.realm.Realm
 import io.realm.RealmObject
 import io.realm.RealmResults

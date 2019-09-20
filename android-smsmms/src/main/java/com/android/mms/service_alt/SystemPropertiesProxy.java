@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.service_alt;
+ */package com.android.mms.service_alt;
 
 import android.content.Context;
 
@@ -57,7 +55,7 @@ public class SystemPropertiesProxy {
 
             //Parameters
             Object[] params = new Object[1];
-            params[0] = new String(key);
+            params[0] = key;
 
             ret = (String) get.invoke(SystemProperties, params);
 
@@ -98,8 +96,8 @@ public class SystemPropertiesProxy {
 
             //Parameters
             Object[] params = new Object[2];
-            params[0] = new String(key);
-            params[1] = new String(def);
+            params[0] = key;
+            params[1] = def;
 
             ret = (String) get.invoke(SystemProperties, params);
 
@@ -143,7 +141,7 @@ public class SystemPropertiesProxy {
 
             //Parameters
             Object[] params = new Object[2];
-            params[0] = new String(key);
+            params[0] = key;
             params[1] = new Integer(def);
 
             ret = (Integer) getInt.invoke(SystemProperties, params);
@@ -188,7 +186,7 @@ public class SystemPropertiesProxy {
 
             //Parameters
             Object[] params = new Object[2];
-            params[0] = new String(key);
+            params[0] = key;
             params[1] = new Long(def);
 
             ret = (Long) getLong.invoke(SystemProperties, params);
@@ -238,7 +236,7 @@ public class SystemPropertiesProxy {
 
             //Parameters
             Object[] params = new Object[2];
-            params[0] = new String(key);
+            params[0] = key;
             params[1] = new Boolean(def);
 
             ret = (Boolean) getBoolean.invoke(SystemProperties, params);
@@ -281,8 +279,8 @@ public class SystemPropertiesProxy {
 
             //Parameters
             Object[] params = new Object[2];
-            params[0] = new String(key);
-            params[1] = new String(val);
+            params[0] = key;
+            params[1] = val;
 
             set.invoke(SystemProperties, params);
 

@@ -1,12 +1,7 @@
-/**
- * Copyright (C) 2019 Song Byeong Jun and original authors
+/*
+ * Copyright (C) 2019 Song Byeong Jun <potados99@gmail.com>
  *
  * This file is part of GeoMms.
- *
- * This software makes use of third-party patent which belongs to
- * KANG MOON KYOU and LEE GWI BONG:
- * System and Method for sharing service of location information
- * 10-1235884-0000 (2013.02.15)
  *
  * GeoMms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,16 +20,12 @@
 package com.potados.geomms.common.widget
 
 import android.content.Context
-import android.graphics.Color
-import android.telephony.PhoneNumberUtils
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import com.bumptech.glide.Glide
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.resolveThemeColor
 import com.potados.geomms.common.extension.setBackgroundTint
-import com.potados.geomms.common.extension.setTint
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.Recipient
 import kotlinx.android.synthetic.main.avatar_view.view.*

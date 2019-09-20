@@ -14,9 +14,7 @@
  *   2) ADD public short getFillDefault();
  *   3) AND public void setFillDefault(short fillDefault)
  *                   throws DOMException;
- */
-
-package org.w3c.dom.smil;
+ */package org.w3c.dom.smil;
 
 import org.w3c.dom.DOMException;
 
@@ -31,8 +29,8 @@ public interface ElementTime {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public TimeList getBegin();
-    public void setBegin(TimeList begin)
+    TimeList getBegin();
+    void setBegin(TimeList begin)
                      throws DOMException;
 
     /**
@@ -40,8 +38,8 @@ public interface ElementTime {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public TimeList getEnd();
-    public void setEnd(TimeList end)
+    TimeList getEnd();
+    void setEnd(TimeList end)
                      throws DOMException;
 
     /**
@@ -50,14 +48,14 @@ public interface ElementTime {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public float getDur();
-    public void setDur(float dur)
+    float getDur();
+    void setDur(float dur)
                      throws DOMException;
 
     // restartTypes
-    public static final short RESTART_ALWAYS            = 0;
-    public static final short RESTART_NEVER             = 1;
-    public static final short RESTART_WHEN_NOT_ACTIVE   = 2;
+    short RESTART_ALWAYS            = 0;
+    short RESTART_NEVER             = 1;
+    short RESTART_WHEN_NOT_ACTIVE   = 2;
 
     /**
      *  A code representing the value of the  restart attribute, as defined
@@ -65,14 +63,14 @@ public interface ElementTime {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public short getRestart();
-    public void setRestart(short restart)
+    short getRestart();
+    void setRestart(short restart)
                      throws DOMException;
 
     // fillTypes
-    public static final short FILL_REMOVE               = 0;
-    public static final short FILL_FREEZE               = 1;
-    public static final short FILL_AUTO                 = 2;
+    short FILL_REMOVE               = 0;
+    short FILL_FREEZE               = 1;
+    short FILL_AUTO                 = 2;
 
     /**
      *  A code representing the value of the  fill attribute, as defined
@@ -80,8 +78,8 @@ public interface ElementTime {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public short getFill();
-    public void setFill(short fill)
+    short getFill();
+    void setFill(short fill)
                      throws DOMException;
 
     /**
@@ -91,8 +89,8 @@ public interface ElementTime {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public float getRepeatCount();
-    public void setRepeatCount(float repeatCount)
+    float getRepeatCount();
+    void setRepeatCount(float repeatCount)
                      throws DOMException;
 
     /**
@@ -101,8 +99,8 @@ public interface ElementTime {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
-    public float getRepeatDur();
-    public void setRepeatDur(float repeatDur)
+    float getRepeatDur();
+    void setRepeatDur(float repeatDur)
                      throws DOMException;
 
     /**
@@ -119,7 +117,7 @@ public interface ElementTime {
      *   (the <code>restart</code> attribute is set to <code>"never"</code> ).
      *
      */
-    public boolean beginElement();
+    boolean beginElement();
 
     /**
      *  Causes this element to end the local timeline (subject to sync
@@ -131,18 +129,18 @@ public interface ElementTime {
      *   attribute is not set to <code>"undefinite"</code> )  The element is
      *   not active.
      */
-    public boolean endElement();
+    boolean endElement();
 
     /**
      *  Causes this element to pause the local timeline (subject to sync
      * constraints).
      */
-    public void pauseElement();
+    void pauseElement();
 
     /**
      *  Causes this element to resume a paused local timeline.
      */
-    public void resumeElement();
+    void resumeElement();
 
     /**
      *  Seeks this element to the specified point on the local timeline
@@ -151,10 +149,10 @@ public interface ElementTime {
      * @param seekTo  The desired position on the local timeline in
      *   milliseconds.
      */
-    public void seekElement(float seekTo);
+    void seekElement(float seekTo);
 
-    public short getFillDefault();
-    public void setFillDefault(short fillDefault)
+    short getFillDefault();
+    void setFillDefault(short fillDefault)
                      throws DOMException;
 
 }

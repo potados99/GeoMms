@@ -8,9 +8,7 @@
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE.
  * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
- */
-
-package org.w3c.dom.events;
+ */package org.w3c.dom.events;
 
 /**
  *  The <code>EventListener</code> interface is the primary method for 
@@ -36,6 +34,6 @@ public interface EventListener {
      *   and <code>preventDefault</code> methods which are used in 
      *   determining the event's flow and default action. 
      */
-    public void handleEvent(Event evt);
+    void handleEvent(Event evt);
 
 }

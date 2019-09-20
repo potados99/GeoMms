@@ -12,13 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.google.android.mms.pdu_alt;
+ */package com.google.android.mms.pdu_alt;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import timber.log.Timber;
@@ -140,11 +139,7 @@ public class EncodedStringValue implements Cloneable {
             	if (LOCAL_LOGV) {
             		Timber.v(e, e.getMessage());
             	}
-            	try {
-                    return new String(mData, CharacterSets.MIMENAME_ISO_8859_1);
-                } catch (UnsupportedEncodingException f) {
-                    return new String(mData); // system default encoding.
-                }
+                return new String(mData, StandardCharsets.ISO_8859_1);
             }
         }
     }

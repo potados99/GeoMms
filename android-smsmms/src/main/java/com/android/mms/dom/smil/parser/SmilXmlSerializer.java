@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.dom.smil.parser;
+ */package com.android.mms.dom.smil.parser;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -28,6 +26,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 import timber.log.Timber;
 
@@ -35,7 +34,7 @@ public class SmilXmlSerializer {
 
     public static void serialize(SMILDocument smilDoc, OutputStream out) {
         try {
-            Writer writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"), 2048);
+            Writer writer = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), 2048);
 
             writeElement(writer, smilDoc.getDocumentElement());
             writer.flush();

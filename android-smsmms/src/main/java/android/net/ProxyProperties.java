@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package android.net;
+ */package android.net;
 
 
 import android.annotation.SuppressLint;
@@ -88,7 +86,7 @@ public class ProxyProperties implements Parcelable {
         if (mExclusionList == null) {
             mParsedExclusionList = new String[0];
         } else {
-            String splitExclusionList[] = exclusionList.toLowerCase().split(",");
+            String[] splitExclusionList = exclusionList.toLowerCase().split(",");
             mParsedExclusionList = new String[splitExclusionList.length * 2];
             for (int i = 0; i < splitExclusionList.length; i++) {
                 String s = splitExclusionList[i].trim();
@@ -134,7 +132,7 @@ public class ProxyProperties implements Parcelable {
             sb.append("[");
             sb.append(mHost);
             sb.append("] ");
-            sb.append(Integer.toString(mPort));
+            sb.append(mPort);
             if (mExclusionList != null) {
                 sb.append(" xl=").append(mExclusionList);
             }
@@ -154,8 +152,7 @@ public class ProxyProperties implements Parcelable {
         }
         if (mHost != null && p.mHost == null) return false;
         if (mHost == null && p.mHost != null) return false;
-        if (mPort != p.mPort) return false;
-        return true;
+        return mPort == p.mPort;
     }
 
     /**

@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms;
+ */package com.android.mms;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
@@ -169,7 +167,6 @@ public class MmsConfig {
         int type;
         while ((type=parser.next()) != parser.START_TAG
                    && type != parser.END_DOCUMENT) {
-            ;
         }
 
         if (type != parser.START_TAG) {
@@ -187,7 +184,6 @@ public class MmsConfig {
         int type;
         while ((type=parser.next()) != parser.START_TAG
                    && type != parser.END_DOCUMENT) {
-            ;
         }
     }
 

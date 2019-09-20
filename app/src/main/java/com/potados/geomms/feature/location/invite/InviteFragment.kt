@@ -1,12 +1,7 @@
-/**
- * Copyright (C) 2019 Song Byeong Jun and original authors
+/*
+ * Copyright (C) 2019 Song Byeong Jun <potados99@gmail.com>
  *
  * This file is part of GeoMms.
- *
- * This software makes use of third-party patent which belongs to
- * KANG MOON KYOU and LEE GWI BONG:
- * System and Method for sharing service of location information
- * 10-1235884-0000 (2013.02.15)
  *
  * GeoMms is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,29 +19,19 @@
 
 package com.potados.geomms.feature.location.invite
 
-import android.content.Intent
 import android.os.Bundle
-import android.telephony.PhoneNumberUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.getViewModel
-import com.potados.geomms.common.extension.isVisible
 import com.potados.geomms.common.extension.setOnTextChanged
 import com.potados.geomms.common.extension.setSupportActionBar
 import com.potados.geomms.databinding.InviteFragmentBinding
 import com.potados.geomms.feature.compose.ChipsAdapter
 import com.potados.geomms.feature.compose.ContactAdapter
-import com.potados.geomms.feature.location.MapFragment.Companion.ACTION_SET_ADDRESS
-import com.potados.geomms.feature.location.MapFragment.Companion.EXTRA_ADDRESS
-import com.potados.geomms.model.Contact
-import com.potados.geomms.model.PhoneNumber
-import io.realm.RealmList
 import kotlinx.android.synthetic.main.invite_fragment.view.*
 import org.koin.core.KoinComponent
-import java.util.*
 
 class InviteFragment : BaseFragment(), KoinComponent {
 

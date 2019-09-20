@@ -12,9 +12,7 @@
  * Difference to the original copy of this file:
  *   1) ADD public SMILRootLayoutElement getRootLayout();
  *   2) ADD public NodeList getRegions();
- */
-
-package org.w3c.dom.smil;
+ */package org.w3c.dom.smil;
 
 import org.w3c.dom.NodeList;
 
@@ -27,22 +25,22 @@ public interface SMILLayoutElement extends SMILElement {
      *  The mime type of the layout langage used in this layout element.The
      * default value of the type attribute is "text/smil-basic-layout".
      */
-    public String getType();
+    String getType();
 
     /**
      *  <code>true</code> if the player can understand the mime type,
      * <code>false</code> otherwise.
      */
-    public boolean getResolved();
+    boolean getResolved();
 
     /**
      * Returns the root layout element of this document.
      */
-    public SMILRootLayoutElement getRootLayout();
+    SMILRootLayoutElement getRootLayout();
 
     /**
      * Return the region elements of this document.
      */
-    public NodeList getRegions();
+    NodeList getRegions();
 }
 

@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.dom.smil;
+ */package com.android.mms.dom.smil;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.smil.ElementTime;
@@ -242,7 +240,7 @@ public abstract class ElementTimeImpl implements ElementTime {
                  */
                 return FILL_AUTO;
             } else {
-                return ((ElementTimeImpl) parent).getFillDefault();
+                return parent.getFillDefault();
             }
         }
     }
@@ -294,7 +292,7 @@ public abstract class ElementTimeImpl implements ElementTime {
     public void setDur(float dur) throws DOMException {
         // In SMIL 3.0, the dur could be a timecount-value which may contain fractions.
         // However, in MMS 1.3, the dur SHALL be expressed in integer milliseconds.
-        mSmilElement.setAttribute("dur", Integer.toString((int)(dur * 1000)) + "ms");
+        mSmilElement.setAttribute("dur", (int) (dur * 1000) + "ms");
     }
 
     public void setEnd(TimeList end) throws DOMException {
@@ -329,7 +327,7 @@ public abstract class ElementTimeImpl implements ElementTime {
     public void setRepeatDur(float repeatDur) throws DOMException {
         String repeatDurString = "indefinite";
         if (repeatDur > 0) {
-            repeatDurString = Float.toString(repeatDur) + "ms";
+            repeatDurString = repeatDur + "ms";
         }
         mSmilElement.setAttribute("repeatDur", repeatDurString);
     }

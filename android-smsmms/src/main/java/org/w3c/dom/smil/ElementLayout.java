@@ -8,9 +8,7 @@
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See W3C License http://www.w3.org/Consortium/Legal/ for more
  * details.
- */
-
-package org.w3c.dom.smil;
+ */package org.w3c.dom.smil;
 
 import org.w3c.dom.DOMException;
 
@@ -23,32 +21,32 @@ public interface ElementLayout {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
      */
-    public String getTitle();
-    public void setTitle(String title)
+    String getTitle();
+    void setTitle(String title)
                                       throws DOMException;
 
     /**
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
      */
-    public String getBackgroundColor();
-    public void setBackgroundColor(String backgroundColor)
+    String getBackgroundColor();
+    void setBackgroundColor(String backgroundColor)
                                       throws DOMException;
 
     /**
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
      */
-    public int getHeight();
-    public void setHeight(int height)
+    int getHeight();
+    void setHeight(int height)
                                       throws DOMException;
 
     /**
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
      */
-    public int getWidth();
-    public void setWidth(int width)
+    int getWidth();
+    void setWidth(int width)
                                       throws DOMException;
 
 }

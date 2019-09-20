@@ -8,9 +8,7 @@
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See W3C License http://www.w3.org/Consortium/Legal/ for more
  * details.
- */
-
-package org.w3c.dom.smil;
+ */package org.w3c.dom.smil;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
@@ -32,8 +30,8 @@ public interface SMILElement extends Element {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
      */
-    public String getId();
-    public void setId(String id)
+    String getId();
+    void setId(String id)
                                       throws DOMException;
 
 }

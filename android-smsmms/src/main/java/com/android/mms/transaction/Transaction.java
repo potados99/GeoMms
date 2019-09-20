@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.transaction;
+ */package com.android.mms.transaction;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -241,9 +239,7 @@ public abstract class Transaction extends Observable {
             ConnectivityManager mConnMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (mConnMgr != null) {
                 NetworkInfo niWF = mConnMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-                if ((niWF != null) && (niWF.isConnected())) {
-                    return true;
-                }
+                return (niWF != null) && (niWF.isConnected());
             }
         }
         return false;

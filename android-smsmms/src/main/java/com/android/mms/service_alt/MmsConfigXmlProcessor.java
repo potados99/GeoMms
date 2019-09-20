@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.service_alt;
+ */package com.android.mms.service_alt;
 
 import android.content.ContentValues;
 
@@ -31,7 +29,7 @@ import timber.log.Timber;
 public class MmsConfigXmlProcessor {
 
     public interface MmsConfigHandler {
-        public void process(String key, String value, String type);
+        void process(String key, String value, String type);
     }
 
     private static final String TAG_MMS_CONFIG = "mms_config";

@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.transaction;
+ */package com.android.mms.transaction;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -54,7 +52,7 @@ public class MmsSystemEventReceiver extends BroadcastReceiver {
 
         String action = intent.getAction();
         if (action.equals(Mms.Intents.CONTENT_CHANGED_ACTION)) {
-            Uri changed = (Uri) intent.getParcelableExtra(Mms.Intents.DELETED_CONTENTS);
+            Uri changed = intent.getParcelableExtra(Mms.Intents.DELETED_CONTENTS);
         } else if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
             if (mConnMgr == null) {
                 mConnMgr = (ConnectivityManager) context

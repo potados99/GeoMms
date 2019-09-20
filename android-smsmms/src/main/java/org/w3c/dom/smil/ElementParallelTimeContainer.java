@@ -8,9 +8,7 @@
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See W3C License http://www.w3.org/Consortium/Legal/ for more
  * details.
- */
-
-package org.w3c.dom.smil;
+ */package org.w3c.dom.smil;
 
 import org.w3c.dom.DOMException;
 
@@ -25,8 +23,8 @@ public interface ElementParallelTimeContainer extends ElementTimeContainer {
      * @exception DOMException
      *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
      */
-    public String getEndSync();
-    public void setEndSync(String endSync)
+    String getEndSync();
+    void setEndSync(String endSync)
                                         throws DOMException;
 
     /**
@@ -34,7 +32,7 @@ public interface ElementParallelTimeContainer extends ElementTimeContainer {
      * @return  The implicit duration in seconds or -1 if the implicit is 
      *   unknown (indefinite?). 
      */
-    public float getImplicitDuration();
+    float getImplicitDuration();
 
 }
 

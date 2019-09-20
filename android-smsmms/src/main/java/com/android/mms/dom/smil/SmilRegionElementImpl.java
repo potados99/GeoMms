@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.dom.smil;
+ */package com.android.mms.dom.smil;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.smil.SMILDocument;
@@ -218,7 +216,7 @@ public class SmilRegionElementImpl extends SmilElementImpl implements
     }
 
     public void setHeight(int height) throws DOMException {
-        this.setAttribute(HEIGHT_ATTRIBUTE_NAME, String.valueOf(height) + "px");
+        this.setAttribute(HEIGHT_ATTRIBUTE_NAME, height + "px");
     }
 
     public void setTitle(String title) throws DOMException {
@@ -226,7 +224,7 @@ public class SmilRegionElementImpl extends SmilElementImpl implements
     }
 
     public void setWidth(int width) throws DOMException {
-        this.setAttribute(WIDTH_ATTRIBUTE_NAME, String.valueOf(width) + "px");
+        this.setAttribute(WIDTH_ATTRIBUTE_NAME, width + "px");
     }
 
     /*

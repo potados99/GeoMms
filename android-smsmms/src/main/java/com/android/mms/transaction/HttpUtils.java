@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.transaction;
+ */package com.android.mms.transaction;
 
 import android.content.Context;
 import android.net.http.AndroidHttpClient;
@@ -170,10 +168,10 @@ public class HttpUtils {
                         .getSystemService(Context.TELEPHONY_SERVICE))
                         .getLine1Number();
                 String line1Key = MmsConfig.getHttpParamsLine1Key();
-                String paramList[] = extraHttpParams.split("\\|");
+                String[] paramList = extraHttpParams.split("\\|");
 
                 for (String paramPair : paramList) {
-                    String splitPair[] = paramPair.split(":", 2);
+                    String[] splitPair = paramPair.split(":", 2);
 
                     if (splitPair.length == 2) {
                         String name = splitPair[0].trim();
@@ -240,7 +238,7 @@ public class HttpUtils {
                                 // bytesRead will be -1 if the data was read till the eof
                                 body = new byte[offset];
                                 System.arraycopy(tempBody, 0, body, 0, offset);
-                                Timber.v("httpConnection: Chunked response length [" + Integer.toString(offset) + "]");
+                                Timber.v("httpConnection: Chunked response length [" + offset + "]");
                             } else {
                                 Timber.e("httpConnection: Response entity too large or empty");
                             }
@@ -282,8 +280,7 @@ public class HttpUtils {
             throws IOException {
         // Inner exception should be logged to make life easier.
         Timber.e("Url: " + url + "\n" + exception.getMessage());
-        IOException e = new IOException(exception.getMessage());
-        e.initCause(exception);
+        IOException e = new IOException(exception.getMessage(), exception);
         throw e;
     }
 

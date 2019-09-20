@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.service_alt;
+ */package com.android.mms.service_alt;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
@@ -27,8 +25,8 @@ import android.util.Base64;
 
 import com.klinker.android.send_message.R;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -603,16 +601,8 @@ public class MmsConfig {
                     nai = nai + naiSuffix;
                 }
                 byte[] encoded = null;
-                try {
-                    encoded = Base64.encode(nai.getBytes("UTF-8"), Base64.NO_WRAP);
-                } catch (UnsupportedEncodingException e) {
-                    encoded = Base64.encode(nai.getBytes(), Base64.NO_WRAP);
-                }
-                try {
-                    nai = new String(encoded, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    nai = new String(encoded);
-                }
+                encoded = Base64.encode(nai.getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP);
+                nai = new String(encoded, StandardCharsets.UTF_8);
             }
             return nai;
         }

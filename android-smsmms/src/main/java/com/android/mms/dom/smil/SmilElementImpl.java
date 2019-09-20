@@ -13,9 +13,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-
-package com.android.mms.dom.smil;
+ */package com.android.mms.dom.smil;
 
 import com.android.mms.dom.ElementImpl;
 

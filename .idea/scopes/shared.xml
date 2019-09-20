@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="shared" pattern="src[app]:*..*||src[common]:*..*||src[domain]:*..*||src[data]:*..*||src[GeoMms]:*..*||test[app]:*..*||test[common]:*..*||test[data]:*..*||test[domain]:*..*" />
+</component>

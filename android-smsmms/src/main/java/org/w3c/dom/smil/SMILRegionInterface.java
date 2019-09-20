@@ -8,9 +8,7 @@
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See W3C License http://www.w3.org/Consortium/Legal/ for more
  * details.
- */
-
-package org.w3c.dom.smil;
+ */package org.w3c.dom.smil;
 
 /**
  *  Declares rendering surface for an element. See the  region attribute 
@@ -19,8 +17,8 @@ package org.w3c.dom.smil;
 public interface SMILRegionInterface {
     /**
      */
-    public SMILRegionElement getRegion();
-    public void setRegion(SMILRegionElement region);
+    SMILRegionElement getRegion();
+    void setRegion(SMILRegionElement region);
 
 }
 
