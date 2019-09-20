@@ -15,7 +15,7 @@ buildscript {
     ext.circularimageview_version = '4.0.1'
     ext.koin_version = '2.0.1'
     ext.preference_version = '1.1.0'
-    ext.glide_version = '4.9.0'
+    ext.glide_version = '4.10.0'
     ext.rxandroid_version = '2.1.1'
     ext.rxjava_version = '2.2.12'
     ext.rxkotlin_version = '2.4.0'

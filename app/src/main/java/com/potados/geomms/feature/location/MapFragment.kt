@@ -178,7 +178,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
 
                 // Finally achieved nested scroll for over two recycler views.
                 // TODO: Get them out of postDelayed.
-                
+
                 with(connections) {
                     addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
                         override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
