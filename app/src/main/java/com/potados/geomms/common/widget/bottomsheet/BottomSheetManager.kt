@@ -95,6 +95,8 @@ class BottomSheetManager(
         }
     }
 
+    fun parentFragment(): Fragment = parentFragment
+
     private fun createSheet(fragment: BaseFragment, cancelable: Boolean): Sheet {
         return inflateBottomSheet().apply {
             sheetView.cancel_button.apply {
