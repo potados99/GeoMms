@@ -63,8 +63,6 @@ class SyncRepositoryImpl(
         value = SyncProgress.Idle
     }
 
-    private val _syncEvent = MutableLiveData<Boolean>().apply { value = false }
-
     override val syncProgress: LiveData<SyncProgress> = _progress
 
     override val rows: Int
@@ -73,20 +71,6 @@ class SyncRepositoryImpl(
                     (cursorToMessage.getMessagesCursor()?.count ?: 0) +
                     (cursorToRecipient.getRecipientCursor()?.count ?: 0)
         }
-
-    override fun syncEvent(): LiveData<Boolean> {
-        return _syncEvent
-    }
-
-    /**
-     * This is useful when not able to sync directly from navigator.
-     */
-    override fun triggerSyncMessages() {
-        // This will tell all the observers that it is time to do sync.
-        // They will ask user what to do, and then they will call
-        // syncMessages by themselves.
-        _syncEvent.postValue( true)
-    }
 
     override fun syncMessages(dateFrom: Long) = unitOnFail {
         if (_progress.value is SyncProgress.Running) {
