@@ -27,10 +27,12 @@ import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.SearchResult
+import com.potados.geomms.model.SyncLog
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.DeleteConversations
 import com.potados.geomms.util.Popup
+import io.realm.Realm
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
@@ -50,7 +52,7 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
     private val permissionManager: PermissionManager by inject()
     private val navigator: Navigator by inject()
 
-    val isDefaultApp = permissionManager.isDefaultSmsLiveData()
+    val syncEvent = syncRepo.syncEvent()
 
     /**
      * Binding properties.
@@ -66,6 +68,21 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
         failables += conversationRepo
         failables += syncRepo
         failables += permissionManager
+    }
+
+    override fun start() {
+        super.start()
+        sync()
+    }
+
+    /**
+     * Sync messages on condition.
+     */
+    private fun sync() {
+        val lastSync = Realm.getDefaultInstance().use { realm -> realm.where(SyncLog::class.java)?.max("date") ?: 0 }
+        if (lastSync == 0 && permissionManager.isDefaultSms() && permissionManager.hasReadSms() && permissionManager.hasContacts()) {
+            syncRepo.triggerSyncMessages()
+        }
     }
 
     fun showCompose() {

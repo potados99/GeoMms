@@ -24,6 +24,7 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
 import com.potados.geomms.manager.PermissionManager
+import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.SyncMessages
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -40,6 +41,8 @@ import timber.log.Timber
  */
 class DefaultSmsChangedReceiver : BroadcastReceiver(), KoinComponent {
 
+    private val syncRepository: SyncRepository by inject()
+
     private val permissionManager: PermissionManager by inject()
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -47,12 +50,14 @@ class DefaultSmsChangedReceiver : BroadcastReceiver(), KoinComponent {
 
         if (intent.getBooleanExtra(Telephony.Sms.Intents.EXTRA_IS_DEFAULT_SMS_APP, false)) {
             // Update default sms packet name
-            // This will trigger sync action and let user decide it.
+            permissionManager.refresh()
+
+            // Just trigger sync action and let user decide it.
             // If no observer exists for this event, this does nothing.
-            // That can be a problem when user changed default sms app and done something,
+            // That can be a problem when user changed default sms app and done somthing,
             // and then return the default app back to this app, without this app detecting
             // need to sync again.
-            permissionManager.refresh()
+            syncRepository.triggerSyncMessages()
         }
     }
 }
