@@ -80,7 +80,7 @@ class ContactRepositoryImpl(private val context: Context) : ContactRepository() 
             realm
                 .where(Contact::class.java)
                 .contains("numbers.type", mobileLabel)
-                .sort("name")
+                .sort(arrayOf("lastConnected", "name"), arrayOf(Sort.DESCENDING, Sort.ASCENDING))
                 .findAll()
                 .map { realm.copyFromRealm(it) }
         }
