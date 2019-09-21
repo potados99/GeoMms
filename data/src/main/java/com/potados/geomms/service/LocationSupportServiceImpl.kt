@@ -1082,6 +1082,8 @@ class LocationSupportServiceImpl(
         private fun <T: RealmObject> performCorrection(locationObject: T?): T? {
             locationObject ?: return null
 
+            Timber.i("Performing correction for invalid object $locationObject.")
+
             val foundCorrector = getValidation(locationObject)?.corrector
             if (foundCorrector == null) {
                 fail(R.string.fail_validator_not_found, locationObject::class.java.name, show = true)
