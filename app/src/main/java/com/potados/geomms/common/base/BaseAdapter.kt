@@ -123,7 +123,7 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable
     }
 
     fun getItem(position: Int): T? {
-        if (position < 0) {
+        if (position < 0 || position >= data.size) {
             Timber.w("Trying to access index $position!!")
             return null
         }

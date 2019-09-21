@@ -45,10 +45,6 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
         value = getContacts()
     }
 
-    val recentContacts = MutableLiveData<List<Contact>>().apply {
-        value = getRecents()
-    }
-
     init {
         failables += this
         failables += contactRepo
@@ -67,7 +63,6 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
         }
 
         this.contacts.value = contacts
-        this.recentContacts.value = if (queryString.isEmpty()) getRecents() else null
     }
 
     fun onContactClick(activity: FragmentActivity?, contact: Contact) {
@@ -84,33 +79,14 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
         activity?.finish()
     }
 
-    private fun getRecents(): List<Contact> {
-        val contacts = contactRepo.getRecentContacts()
-
-        if (contacts == null) {
-            fail(R.string.fail_get_contacts, show = true)
-            return listOf()
-        }
-
-        return contacts
-    }
-
     private fun getContacts(query: String = ""): List<Contact> {
-        val contacts = contactRepo.getContacts()?.filter { contact ->
-            // Exclude recent contact only when query is empty.
-            // The excluded contacts will be displayed as recent ones.
-            val include = if (query.isEmpty())
-                contact.lookupKey !in getRecents().map { it.lookupKey }
-            else true
-
-            contactFilter.filter(contact, query) && include
-        }
+        val contacts = contactRepo.getUnmanagedContacts()
 
         if (contacts == null) {
-            fail(R.string.fail_get_contacts, show = true)
+            fail(R.string.fail_get_contacts, true)
             return listOf()
         }
 
-        return contacts
+        return contacts.filter { contactFilter.filter(it, query) }
     }
 }
