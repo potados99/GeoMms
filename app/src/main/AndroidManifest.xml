@@ -101,7 +101,7 @@
         <receiver android:name=".receiver.DeleteMessagesReceiver" />
         <receiver android:name=".receiver.DefaultSmsChangedReceiver">
             <intent-filter>
-                <action android:name="android.provider.action.DEFAULT_SMS_ _CHANGED" />
+                <action android:name="android.provider.action.DEFAULT_SMS_PACKAGE_CHANGED" />
             </intent-filter>
         </receiver>
         <receiver android:name=".receiver.SendUpdateReceiver" />

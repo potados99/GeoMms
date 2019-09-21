@@ -31,7 +31,6 @@ import com.potados.geomms.model.SyncLog
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.DeleteConversations
-import com.potados.geomms.usecase.SyncMessages
 import com.potados.geomms.util.Popup
 import io.realm.Realm
 import org.koin.core.KoinComponent
@@ -45,7 +44,6 @@ import timber.log.Timber
  */
 class ConversationsViewModel : BaseViewModel(), KoinComponent {
 
-    private val syncMessages: SyncMessages by inject()
     private val deleteConversations: DeleteConversations by inject()
 
     private val conversationRepo: ConversationRepository by inject()

@@ -63,7 +63,7 @@ class SyncRepositoryImpl(
         value = SyncProgress.Idle
     }
 
-    private val _syncEvent = MutableLiveData<Boolean>().apply { value = false }
+    private val _syncEvent = MutableLiveData<Boolean>()
 
     override val syncProgress: LiveData<SyncProgress> = _progress
 
@@ -85,7 +85,9 @@ class SyncRepositoryImpl(
         // This will tell all the observers that it is time to do sync.
         // They will ask user what to do, and then they will call
         // syncMessages by themselves.
-        _syncEvent.postValue( true)
+        _syncEvent.postValue(true)
+
+        Timber.i("value posted to _syncEvent")
     }
 
     override fun syncMessages(dateFrom: Long) = unitOnFail {
