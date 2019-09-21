@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseAdapter
 import com.potados.geomms.common.base.BaseViewHolder
+import com.potados.geomms.common.extension.isVisible
 import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.model.Contact
 import kotlinx.android.synthetic.main.contact_list_item.view.*
@@ -55,18 +56,28 @@ class ContactAdapter : BaseAdapter<Contact>() {
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        val contact = getItem(position) ?: return
         val view = holder.containerView
+        val item = getItem(position) ?: return
+        val next = getItem(position + 1)
 
-        view.avatar.setContact(contact)
-        view.name.text = contact.name
+        val isRecent = item.lastConnected != 0L
+        val isNextRecent = next?.lastConnected != 0L
+        val isFirstRecent = isRecent && position == 0
+        val isLastRecent = isRecent && !isNextRecent
+
+        view.avatar.setContact(item)
+        view.name.text = item.name
         view.name.setVisible(view.name.text.isNotEmpty())
-        view.address.text = contact.numbers.firstOrNull()?.address ?: ""
-        view.type.text = contact.numbers.firstOrNull()?.type ?: ""
+        view.address.text = item.numbers.firstOrNull()?.address ?: ""
+        view.type.text = item.numbers.firstOrNull()?.type ?: ""
 
         val adapter = view.addresses.adapter as PhoneNumberAdapter
-        adapter.contact = contact
-        adapter.data = contact.numbers.drop(min(contact.numbers.size, 1))
+        adapter.contact = item
+        adapter.data = item.numbers.drop(min(item.numbers.size, 1))
+
+        // Distinct recent contacts.
+        view.recent_title.isVisible = isFirstRecent
+        view.recent_separator.isVisible = isLastRecent
     }
 
     /**

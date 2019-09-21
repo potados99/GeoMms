@@ -39,13 +39,11 @@ class InviteFragment : BaseFragment(), KoinComponent {
     private lateinit var viewDataBinding: InviteFragmentBinding
 
     private val chipsAdapter = ChipsAdapter()
-    private val recentAdapter = ContactAdapter()
     private val contactAdapter = ContactAdapter()
 
     init {
         failables += this
         failables += chipsAdapter
-        failables += recentAdapter
         failables += contactAdapter
     }
 
@@ -73,13 +71,6 @@ class InviteFragment : BaseFragment(), KoinComponent {
             adapter = chipsAdapter.apply {
                 editText.setOnTextChanged(inviteViewModel::onSearch)
                 editText.requestFocus()
-            }
-        }
-
-        with(view.recents) {
-            adapter = recentAdapter.apply {
-                companionView = view.recent_group
-                onContactClick = { inviteViewModel.onContactClick(activity, it) }
             }
         }
 

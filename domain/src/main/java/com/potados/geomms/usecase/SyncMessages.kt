@@ -40,24 +40,25 @@ class SyncMessages(
             // Connections relay on Recipient, which will be deleted after sync.
             // Disconnect all connections before sync to prevent connection having
             // no recipient.
-            clearAll(Unit) {
-                it.onError { Timber.w("Failed to clear all.") }
+            clearAll(Unit) { clearResult ->
+                clearResult.onError { Timber.w("Failed to clear all.") }
+
+                Timber.i("Clear all.")
+
+                // We do it after clearAll is finished.
+                val elapsedMillis = elapsedTimeMillis {
+                    syncRepo.syncMessages(params)
+                }
+
+                val elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedMillis)
+
+                Timber.i("Completed sync in $elapsedSeconds seconds.")
+
+                processMessages(Unit) {
+                    it.onError { Timber.w("Failed to process messages.") }
+                }
+
+                updateBadge(Unit)
             }
-
-            Timber.i("Clear all.")
-
-            val elapsedMillis = elapsedTimeMillis {
-                syncRepo.syncMessages(params)
-            }
-
-            val elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedMillis)
-
-            Timber.i("Completed sync in $elapsedSeconds seconds.")
-
-            processMessages(Unit) {
-                it.onError { Timber.w("Failed to process messages.") }
-            }
-
-            updateBadge(Unit)
         }
 }
