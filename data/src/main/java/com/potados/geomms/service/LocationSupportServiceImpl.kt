@@ -267,8 +267,8 @@ class LocationSupportServiceImpl(
             duration = duration
         )
 
-        // TODO
-        val postfix = "\n::애플리케이션 설치 안내::"
+        // Add google play store link at the end of the serialized packet.
+        val postfix = "\nhttp://play.google.com/store/apps/details?id=" + context.packageName
 
         sendPacket(address, Packet.ofRequestingNewConnection(request), postfix)
 
