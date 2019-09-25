@@ -255,13 +255,28 @@ class LocationSupportServiceImpl(
         )
     }
 
+    override fun canInvite(address: String) = falseOnFail {
+        val invited = getOutgoingRequests()?.mapNotNull{ it.recipient } ?: listOf()
+        val asked = getIncomingRequests()?.mapNotNull{ it.recipient } ?: listOf()
+        val connected = getConnections()?.mapNotNull { it.recipient } ?: listOf()
 
-    /************************************
-     * TAKE & HANDLE ACTION
-     ************************************/
+        return@falseOnFail address !in (invited + asked + connected).map { it.address }
+    }
 
     override fun requestNewConnection(address: String, duration: Long) = falseOnFail {
         val recipient = getRecipient(address) ?: return@falseOnFail false
+
+        // We have to prevent duplicated invitation.
+        // If the target already has been invited? break.
+        // If the target invited you? break.
+        // If the target is already connected? break.
+        if (!canInvite(recipient.address)) {
+            // This is a duplication or error.
+            Timber.w("Cannot invite $address. Duplicated.")
+            fail(R.string.fail_already_invited, address)
+
+            return@falseOnFail false
+        }
 
         val request = ConnectionRequest(
             connectionId = keyManager.randomId(99999),

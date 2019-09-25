@@ -131,6 +131,8 @@ abstract class LocationSupportService : Service() {
      */
     abstract fun getOutgoingRequests(): RealmResults<ConnectionRequest>?
 
+    /** Can I invite this guy? without duplicates? */
+    abstract fun canInvite(address: String): Boolean
 
     /** I request YOU to join. */
     abstract fun requestNewConnection(address: String, duration: Long): Boolean

@@ -89,13 +89,13 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
             return listOf()
         }
 
-        val invitedContacts = service.getOutgoingRequests()?.mapNotNull{ it.recipient?.contact } ?: listOf()
-        val askedContacts = service.getIncomingRequests()?.mapNotNull{ it.recipient?.contact } ?: listOf()
-        val connectedContacts = service.getConnections()?.mapNotNull { it.recipient?.contact } ?: listOf()
-
         return contacts.filter { contact ->
+            // If any address of a contact is being used, it is filtered.
             contactFilter.filter(contact, query) &&
-                    contact.lookupKey !in (invitedContacts + askedContacts + connectedContacts).map { it.lookupKey }
+                    contact.numbers
+                        .map { service.canInvite(it.address) }
+                        .takeIf { it.isNotEmpty() }
+                        ?.reduce { acc: Boolean, b: Boolean -> acc && b } ?: true
         }
     }
 }

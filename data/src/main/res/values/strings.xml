@@ -43,4 +43,5 @@
     <string name="fail_close_expired_connection_invalid">Failed to close expired connection. Connection is invalid.</string>
     <string name="notify_not_implemented">This feature is not implemented yet :)</string>
     <string name="fail_close_connection_not_expired">Failed to close connection. Connections is not expired yet.</string>
+    <string name="fail_already_invited">Cannot invite %s. Already invited or connected.</string>
 </resources>
