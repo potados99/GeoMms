@@ -33,7 +33,8 @@ open class Connection(
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
 
-    @Index var isTemporal: Boolean = false // is isTemporal when not accepted yet.
+    @Index var isTemporal: Boolean = false, // is isTemporal when not accepted yet.
+    var isWaitingForReply: Boolean = false // is waiting for ricipient to send update/
 
 ) : RealmObject() {
 

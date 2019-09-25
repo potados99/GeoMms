@@ -81,7 +81,7 @@ class Scheduler {
             task()
             Timber.v("Repeating $taskId.")
         }
-        
+
         for (i: Long in (0 until repeat)) {
             handler.postDelayed(runnable, interval * i)
         }

@@ -27,11 +27,12 @@ import android.view.ViewGroup
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
+import com.potados.geomms.common.extension.doAfter
 import com.potados.geomms.common.extension.doEvery
-import com.potados.geomms.common.extension.isVisible
 import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Connection
+import io.realm.Realm
 import kotlinx.android.synthetic.main.connection_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -63,7 +64,18 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
             }
             view.refresh_button.setOnClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
+                Realm.getDefaultInstance().use {
+                    it.executeTransaction { item.isWaitingForReply = true }
+                }
+
                 onRefreshClick(item)
+
+                // TODO set proper duration.
+                handler.doAfter(5000) {
+                    Realm.getDefaultInstance().use {
+                        it.executeTransaction { item.isWaitingForReply = false }
+                    }
+                }
             }
         }
     }
@@ -72,40 +84,56 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
         val view = holder.containerView
         val item = getItem(position) ?: return
 
-        view.name.text = item.recipient?.getDisplayName()
-        view.avatar.setContact(item.recipient)
-
         val alpha = if (item.isTemporal) 0.5f else 1.0f
         val timeLeftVisibility = !item.isTemporal
         val refreshVisibility = !item.isTemporal
 
-        view.name.alpha = alpha
-        view.status.alpha = alpha
-        view.duration_group.setVisible(timeLeftVisibility)
+        with(view.name) {
+            text = item.recipient?.getDisplayName()
+            setAlpha(alpha)
+        }
 
-        view.status.text = when (item.isTemporal) {
-            true -> context.getString(R.string.connection_request_sent)
+        with(view.status) {
+            setAlpha(alpha)
 
-            false -> when (item.lastUpdate) {
-                0L -> {
-                    context.getString(R.string.connection_location_not_available)
-                }
-                else -> {
-                    val update = dateFormatter.getConversationTimestamp(item.lastUpdate)
-                    context.getString(R.string.connection_last_update, update)
+            text = when (item.isTemporal) {
+                true -> context.getString(R.string.connection_request_sent)
+
+                false -> when (item.lastUpdate) {
+                    0L -> {
+                        context.getString(R.string.connection_location_not_available)
+                    }
+                    else -> {
+                        val update = dateFormatter.getConversationTimestamp(item.lastUpdate)
+                        context.getString(R.string.connection_last_update, update)
+                    }
                 }
             }
         }
 
-        view.time_label.text = when (item.isTemporal) {
-            true -> null
-            false -> {
-                val duration = dateFormatter.getDuration(item.timeLeft, short = true)
-                context.getString(R.string.connection_time_left, duration)
+        with(view.avatar) {
+            setContact(item.recipient)
+        }
+
+        with(view.duration_group) {
+            setVisible(timeLeftVisibility)
+        }
+
+        with(view.time_label) {
+            text = when (item.isTemporal) {
+                true -> null
+                false -> {
+                    val duration = dateFormatter.getDuration(item.timeLeft, short = true)
+                    context.getString(R.string.connection_time_left, duration)
+                }
             }
         }
 
-        view.refresh_button.isVisible = refreshVisibility
+        with(view.refresh_button) {
+            setVisible(refreshVisibility)
+            setAlpha(if (item.isWaitingForReply) 0.5f else 1.0f)
+            isClickable = !item.isWaitingForReply
+        }
 
         // Refresh left time every second.
         (holder as TimerViewHolder).apply {
