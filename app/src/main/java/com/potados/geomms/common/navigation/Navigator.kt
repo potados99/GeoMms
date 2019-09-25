@@ -34,6 +34,7 @@ import com.potados.geomms.feature.location.invite.InviteActivity
 import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.settings.SettingsActivity
 import com.potados.geomms.manager.PermissionManager
+import com.potados.geomms.preference.MyPreferences
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.SyncMessages
 import com.potados.geomms.util.Notify
@@ -46,6 +47,7 @@ import kotlin.collections.ArrayList
 class Navigator (
     private val context: Context,
     private val permissionManager: PermissionManager,
+    private val preferences: MyPreferences,
     private val syncRepo: SyncRepository,
     private val syncMessages: SyncMessages
 ) : FailableComponent(), KoinComponent {
@@ -134,7 +136,7 @@ class Navigator (
      * will call this method.
      */
     fun showSyncDialog(activity: FragmentActivity?) {
-        if (syncRepo.rows > 5) {
+        if (syncRepo.rows > preferences.messagesBig) {
             var fromDate: Long = 0
 
             Popup(activity)

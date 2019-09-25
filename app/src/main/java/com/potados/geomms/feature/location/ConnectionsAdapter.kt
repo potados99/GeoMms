@@ -32,6 +32,7 @@ import com.potados.geomms.common.extension.doEvery
 import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Connection
+import com.potados.geomms.preference.MyPreferences
 import io.realm.Realm
 import kotlinx.android.synthetic.main.connection_list_item.view.*
 import org.koin.core.KoinComponent
@@ -40,6 +41,7 @@ import java.util.*
 
 class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
 
+    private val preferences: MyPreferences by inject()
     private val dateFormatter: DateFormatter by inject()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -70,8 +72,7 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
 
                 onRefreshClick(item)
 
-                // TODO set proper duration.
-                handler.doAfter(5000) {
+                handler.doAfter(preferences.requestUpdateCoolTime) {
                     Realm.getDefaultInstance().use {
                         it.executeTransaction { item.isWaitingForReply = false }
                     }

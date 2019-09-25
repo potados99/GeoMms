@@ -226,7 +226,7 @@ class SyncRepositoryImpl(
         realm.commitTransaction()
         realm.close()
 
-        Timber.i("Szync finished")
+        Timber.i("Sync finished")
 
         postIdle()
     }

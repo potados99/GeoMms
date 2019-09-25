@@ -31,4 +31,15 @@ class MyPreferences(context: Context) {
     val receiveGeoMms get() = pref.getBoolean("receive_geomms", true)
 
     val showAllError get() = pref.getBoolean("show_all_error", false)
+
+
+    /**
+     * Amount of messages, conversations and contacts to be considered large.
+     */
+    val messagesBig: Int = 5000
+
+    /**
+     * Minimum delay between update requests.
+     */
+    val requestUpdateCoolTime: Long = 5000
 }

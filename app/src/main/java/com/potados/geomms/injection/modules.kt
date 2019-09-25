@@ -65,6 +65,7 @@ val myModules = module {
         Navigator(
             context = get(),
             permissionManager = get(),
+            preferences = get(),
             syncRepo = get(),
             syncMessages = get()
         )
