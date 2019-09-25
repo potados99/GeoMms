@@ -30,6 +30,7 @@ import com.potados.geomms.filter.ContactFilter
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.PhoneNumber
 import com.potados.geomms.repository.ContactRepository
+import com.potados.geomms.service.LocationSupportService
 import io.realm.RealmList
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -37,6 +38,7 @@ import java.util.*
 
 class InviteViewModel : BaseViewModel(), KoinComponent {
 
+    private val service: LocationSupportService by inject()
     private val contactRepo: ContactRepository by inject()
 
     private val contactFilter: ContactFilter by inject()
@@ -87,6 +89,13 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
             return listOf()
         }
 
-        return contacts.filter { contactFilter.filter(it, query) }
+        val invitedContacts = service.getOutgoingRequests()?.mapNotNull{ it.recipient?.contact } ?: listOf()
+        val askedContacts = service.getIncomingRequests()?.mapNotNull{ it.recipient?.contact } ?: listOf()
+        val connectedContacts = service.getConnections()?.mapNotNull { it.recipient?.contact } ?: listOf()
+
+        return contacts.filter { contact ->
+            contactFilter.filter(contact, query) &&
+                    contact.lookupKey !in (invitedContacts + askedContacts + connectedContacts).map { it.lookupKey }
+        }
     }
 }
