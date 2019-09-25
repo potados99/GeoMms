@@ -43,10 +43,8 @@ class Scheduler {
             }
         }
 
-        with(runnable) {
-            addRunnable(taskId, this)
-            handler.postDelayed(this, 1000) // Start first job after 1 sec.
-        }
+        addRunnable(taskId, runnable)
+        handler.postDelayed(runnable, 1000) // Start first job after 1 sec.
 
         Timber.i("Task $taskId scheduled.")
     }
@@ -55,21 +53,42 @@ class Scheduler {
      * Add task to be done at time.
      */
     fun doAtTime(taskId: Long, time: Long, task: () -> Any?) {
-        val runnable = Runnable {
-            task()
-            Timber.v("On time task $taskId ran.")
+        // Auto remove after invoked.
+        val runnable = object: Runnable {
+            override fun run() {
+                task()
+                Timber.v("On time task $taskId ran.")
+                tasks[taskId]?.remove(this)
+            }
         }
 
-        with(runnable) {
-            addRunnable(taskId, this)
-            handler.postDelayed(this, time - System.currentTimeMillis())
-        }
+        addRunnable(taskId, runnable)
+        handler.postDelayed(runnable, time - System.currentTimeMillis())
 
         Timber.i("Task $taskId scheduled.")
     }
 
     /**
-     * Stop periodic task and remove it from handler.
+     * Repeat a [task] for [repeat] times, with [interval].
+     * Each repeat will make a runnable.
+     * They will NOT be added to [tasks].
+     * This action is not cancelable.
+     *
+     * If you want to repeat a task forever, use [doOnEvery].
+     */
+    fun doFor(taskId: Long, repeat: Long, interval: Long, task: () -> Any?) {
+        val runnable = Runnable {
+            task()
+            Timber.v("Repeating $taskId.")
+        }
+        
+        for (i: Long in (0 until repeat)) {
+            handler.postDelayed(runnable, interval * i)
+        }
+    }
+
+    /**
+     * Stop and remove evey runnable related to taskId.
      */
     fun cancel(taskId: Long) {
         tasks[taskId]?.let {

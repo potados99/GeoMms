@@ -29,8 +29,8 @@ class Packet(
     var longitude: Double = 0.0,
 
     var address: String = "",
-    var date: Long = 0,         // 받은 시점
-    var dateSent: Long = 0,     // 보낸 시점
+    var date: Long = 0,         // Date received.
+    var dateSent: Long = 0,     // Date sent.
 
     var isInbound: Boolean = false
 

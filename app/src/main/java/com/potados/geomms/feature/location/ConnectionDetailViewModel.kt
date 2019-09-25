@@ -30,6 +30,7 @@ import com.potados.geomms.model.Connection
 import com.potados.geomms.model.Recipient
 import com.potados.geomms.service.LocationSupportService
 import org.koin.core.inject
+import timber.log.Timber
 
 class ConnectionDetailViewModel : BaseViewModel() {
 
@@ -47,7 +48,15 @@ class ConnectionDetailViewModel : BaseViewModel() {
 
         val connectionId = arguments.getLong(ARG_CONNECTION_ID).takeIf { it != 0L } ?: return
 
-        service.getConnection(connectionId)?.let(::setDetails)
+        service.getConnection(connectionId)?.let {
+            setDetails(it)
+
+            // This does not invoke listener right after added.
+            it.addChangeListener<Connection> { changed, _ ->
+                setDetails(changed)
+                Timber.i("Update connection detail.")
+            }
+        }
     }
 
     private fun setDetails(connection: Connection) {
@@ -70,12 +79,11 @@ class ConnectionDetailViewModel : BaseViewModel() {
     }
 
     private fun getDetailString(connection: Connection): String {
-        if (connection.isTemporal) {
-            return str(R.string.dialog_connection_id, connection.id.toString()) + "\n" +
+        return when (connection.isTemporal) {
+            true -> str(R.string.dialog_connection_id, connection.id.toString()) + "\n" +
                     str(R.string.dialog_sent_at, dateFormatter.getMessageTimestamp(connection.date)) + "\n" +
                     str(R.string.dialog_duration, dateFormatter.getDuration(connection.duration))
-        } else {
-            return str(R.string.dialog_connection_id, connection.id) + "\n" +
+            else -> str(R.string.dialog_connection_id, connection.id) + "\n" +
                     str(R.string.dialog_from, dateFormatter.getMessageTimestamp(connection.date)) + "\n" +
                     str(R.string.dialog_until, dateFormatter.getMessageTimestamp(connection.due))
         }

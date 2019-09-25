@@ -20,6 +20,7 @@
 package com.potados.geomms.service
 
 import android.content.Context
+import android.content.Intent
 import android.telephony.SmsManager
 import androidx.annotation.StringRes
 import com.google.gson.Gson
@@ -32,6 +33,8 @@ import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.unitOnFail
 import com.potados.geomms.manager.KeyManager
 import com.potados.geomms.model.*
+import com.potados.geomms.receiver.SendUpdateReceiver
+import com.potados.geomms.receiver.SendUpdateReceiver.Companion.EXTRA_CONNECTION_ID
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.LocationRepository
 import com.potados.geomms.usecase.DeleteMessages
@@ -75,6 +78,7 @@ class LocationSupportServiceImpl(
      * This will be used for validating requests and connections.
      */
     private val validator = Validator()
+
 
     /************************************
      * STATE CONTROL
@@ -563,9 +567,11 @@ class LocationSupportServiceImpl(
             return@falseOnFail false
         }
 
-        sendUpdate(connection.id)
+        // We have to reply to the update request
+        // for three times, with each delay for 1 sec.
+        scheduleSendUpdate(connection.id, 3, 1000)
 
-        Timber.i("Sent update of connection ${connection.id} in response of ${connection.recipient?.getDisplayName()}'s request.")
+        Timber.i("Send update of connection ${connection.id} in response of ${connection.recipient?.getDisplayName()}'s request.")
 
         return@falseOnFail true
     }
@@ -899,6 +905,26 @@ class LocationSupportServiceImpl(
         Timber.i("Task unregistered: connection $connectionId.")
 
         return@falseOnFail true
+    }
+
+    /**
+     * Send update for connection of [connectionId] for [repeat] times,
+     * with [interval] of interval.
+     */
+    private fun scheduleSendUpdate(connectionId: Long, repeat: Long, interval: Long) {
+        val sendBroadcast = {
+            // This closure may be launched in a thread which is
+            // not a thread the connection object is created.
+            context.sendBroadcast(
+                Intent(context, SendUpdateReceiver::class.java).apply {
+                    putExtra(EXTRA_CONNECTION_ID, connectionId)
+                }
+            )
+        }
+
+        scheduler.doFor(connectionId, repeat, interval, sendBroadcast)
+
+        scheduler
     }
 
     private fun closeExpiredConnection(connectionId: Long) = falseOnFail {

@@ -46,7 +46,7 @@ abstract class UseCase<in Params> : FailableComponent() {
     operator fun invoke(params: Params, onResult: (Result<*>) -> Unit = {}) {
         Thread {
             try {
-                Timber.v("UseCase running on ${Thread.currentThread().name}")
+                Timber.v("UseCase ${this::class.java.name} running on ${Thread.currentThread().name}")
                 val result = run(params)
                 Handler(Looper.getMainLooper()).post { onResult(result) }
             } catch (e: Exception) {
