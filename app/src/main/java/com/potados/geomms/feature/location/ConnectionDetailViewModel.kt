@@ -57,6 +57,7 @@ class ConnectionDetailViewModel : BaseViewModel() {
     val detail = MutableLiveData<String>()
     val positiveButtonText = MutableLiveData<String>()
     val negativeButtonText = MutableLiveData<String>()
+    val positiveButtonAlpha = MutableLiveData<Float>().apply { value = 1.0f }
 
     private lateinit var mConnection: Connection
 
@@ -66,19 +67,25 @@ class ConnectionDetailViewModel : BaseViewModel() {
         failables += dateFormatter
     }
 
-    fun startWithArguments(arguments: Bundle?) {
+    fun startWithArguments(fragment: BaseFragment, arguments: Bundle?) {
         arguments ?: return
 
-        val connectionId = arguments.getLong(ARG_CONNECTION_ID).takeIf { it != 0L } ?: return
+        val connectionId = arguments
+            .getLong(ARG_CONNECTION_ID)
+            .takeIf { it != 0L } ?: return
 
         service.getConnection(connectionId)?.let { connection ->
             setDetails(connection.takeIf { it.isValid })
 
             // This does not invoke listener right after added.
             connection.addChangeListener<Connection> { changed, _ ->
-                setDetails(changed.takeIf { it.isValid })
+                if (changed.isValid) {
+                    setDetails(changed)
 
-                Timber.i("Updated mConnection detail.")
+                    Timber.i("Updated mConnection detail.")
+                } else {
+                    fragment.bottomSheetManager?.pop()
+                }
             }
         }
     }
@@ -176,6 +183,7 @@ class ConnectionDetailViewModel : BaseViewModel() {
         detail.value = getDetailString(connection)
         positiveButtonText.value = getPositiveButtonText(connection)
         negativeButtonText.value = getNegativeButtonText(connection)
+        positiveButtonAlpha.value = if (connection.isWaitingForReply) 0.5f else 1.0f
     }
 
     private fun getStatusString(connection: Connection): String {

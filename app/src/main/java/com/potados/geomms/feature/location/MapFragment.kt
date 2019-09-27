@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -77,7 +78,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
     /**
      * Initialization for connection list sheet.
      */
-    private val initializeSheetView: (View) -> Unit = { sheetView ->
+    private val initializeSheetView: (ConnectionsFragment, View) -> Unit = { fragment, sheetView ->
         with(sheetView) {
             // Setting a behavior of the bottom sheet MUST take place
             // at where the parent of the sheet is available.
@@ -89,6 +90,12 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
 
             connections.makeThisWorkInBottomSheet(sheetView)
             incoming_requests.makeThisWorkInBottomSheet(sheetView)
+        }
+
+        fragment.onShowConnectionOnMap = {
+            if (it.lastUpdate != 0L) {
+                map?.moveTo(it.latitude, it.longitude, 15f)
+            }
         }
     }
 
@@ -103,7 +110,6 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
 
         mapViewModel = getViewModel { start() }
         failables += mapViewModel.failables
-        Timber.e(failables.toString())
 
         context?.registerReceiver(addressSetReceiver, IntentFilter(ACTION_SET_ADDRESS))
     }
@@ -124,7 +130,11 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
         childBottomSheetManager
             ?.push(ConnectionsFragment(), cancelable = false)
             ?.apply {
-                observe(isInitialized) { if (it == true) { initializeSheetView(sheetView) } }
+                observe(isInitialized) {
+                    if (it == true) {
+                        initializeSheetView(childFragment as ConnectionsFragment, sheetView)
+                    }
+                }
             }
     }
 
@@ -209,8 +219,6 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             getMapAsync(this@MapFragment) // onMapReady called after this done
         }
     }
-
-
 
 
     companion object {

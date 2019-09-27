@@ -7,6 +7,7 @@ import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.common.util.DateFormatter
+import com.potados.geomms.feature.location.RequestDetailFragment.Companion.ARG_REQUEST_ID
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.model.Recipient
@@ -38,15 +39,17 @@ class RequestDetailViewModel : BaseViewModel() {
         arguments ?: return
 
         val requestId = arguments
-            .getLong(RequestDetailFragment.ARG_REQUEST_ID)
+            .getLong(ARG_REQUEST_ID)
             .takeIf { it != 0L } ?: return
 
         service.getRequest(requestId, inbound = true)?.let { request ->
             setDetails(request.takeIf { it.isValid })
 
+            // This does not invoke listener right after added.
             request.addChangeListener<ConnectionRequest> { changed, _ ->
                 if (changed.isValid) {
                     setDetails(changed)
+
                     Timber.i("Updated mConnection detail.")
                 } else {
                     fragment.bottomSheetManager?.pop()

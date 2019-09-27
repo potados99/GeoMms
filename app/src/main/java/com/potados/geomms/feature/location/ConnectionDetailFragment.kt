@@ -25,6 +25,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.getViewModel
+import com.potados.geomms.common.extension.observe
+import com.potados.geomms.common.extension.setVisible
 import com.potados.geomms.databinding.ConnectionDetailFragmentBinding
 import kotlinx.android.synthetic.main.connection_detail_fragment.view.*
 
@@ -41,7 +43,16 @@ class ConnectionDetailFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
 
         connectionDetailViewModel = getViewModel {
-            startWithArguments(arguments)
+            startWithArguments(this@ConnectionDetailFragment, arguments)
+            observe(positiveButtonAlpha) {
+                it?.let {
+                    with(viewDataBinding.positive) {
+                        isClickable = it > 0.6f
+                        alpha = it
+                    }
+                    viewDataBinding.positive.alpha = it
+                }
+            }
         }
         failables += connectionDetailViewModel.failables
     }
