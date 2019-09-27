@@ -32,6 +32,7 @@ import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.databinding.MapFragmentBinding
+import com.potados.geomms.util.Popup
 import kotlinx.android.synthetic.main.connections_fragment.view.*
 import kotlinx.android.synthetic.main.map_fragment.view.*
 import timber.log.Timber
@@ -52,7 +53,25 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
      * It is needed because this fragment and invite fragment has no connection.
      */
     private val addressSetReceiver = newBroadcastReceiver {
-        it?.getStringExtra(EXTRA_ADDRESS)?.let { address -> mapViewModel.request(activity, address) }
+        it?.getStringExtra(EXTRA_ADDRESS)?.let { address ->
+            // Default 30 min.
+            var duration = 1000L * 60 * 30
+
+            Popup(activity)
+                .withTitle(R.string.title_duration)
+                .withSingleChoiceItems(R.array.durations, 0) { selected ->
+                    duration = when (selected) {
+                        0 -> 1000L * 60 * 30
+                        1 -> 1000L * 60 * 60
+                        2 -> 1000L * 60 * 180
+                        else -> throw RuntimeException("This is IMPOSSIBLE. Check your code.")
+                    }
+                }
+                .withPositiveButton(R.string.button_confirm) {
+                    mapViewModel.request(activity, address, duration)
+                }
+                .show()
+        }
     }
 
     /**
@@ -84,6 +103,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
 
         mapViewModel = getViewModel { start() }
         failables += mapViewModel.failables
+        Timber.e(failables.toString())
 
         context?.registerReceiver(addressSetReceiver, IntentFilter(ACTION_SET_ADDRESS))
     }

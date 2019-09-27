@@ -158,7 +158,7 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
     override val observedFailables: MutableList<Failable> = mutableListOf()
     @CallSuper override fun onFail(failure: Failable.Failure) {
         if (failure.show || preferences.showAllError) {
-            notify(failure.message, long = true)
+            notify(failure.message, long = failure.show)
         }
 
         Timber.w("Failure with message: $failure")

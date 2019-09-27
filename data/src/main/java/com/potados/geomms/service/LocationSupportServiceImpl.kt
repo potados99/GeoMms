@@ -273,7 +273,7 @@ class LocationSupportServiceImpl(
         if (!canInvite(recipient.address)) {
             // This is a duplication or error.
             Timber.w("Cannot invite $address. Duplicated.")
-            fail(R.string.fail_already_invited, address)
+            fail(R.string.fail_already_invited, address, show = true)
 
             return@falseOnFail false
         }
@@ -311,7 +311,7 @@ class LocationSupportServiceImpl(
     override fun beRequestedNewConnection(packet: Packet) = falseOnFail {
         // requests can be duplicated but connections cannot.
         getConnection(packet.connectionId, temporal = false)?.let {
-            fail(R.string.fail_ignore_illegal_request, false)
+            fail(R.string.fail_ignore_illegal_request, show = false)
             return@falseOnFail false
         }
 

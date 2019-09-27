@@ -163,12 +163,19 @@
     <string name="button_resend">Resend</string>
     <string name="button_disconnect">Disconnect</string>
     <string name="notify_back_again_to_exit">Press back button again to exit.</string>
+    <string name="title_duration">Share Location for</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>
         <item>Past 6 months</item>
         <item>Past year</item>
         <item>Sync all</item>
+    </string-array>
+
+    <string-array name="durations">
+        <item>30 minutes</item>
+        <item>1 hours</item>
+        <item>3 hours</item>
     </string-array>
 
 </resources>

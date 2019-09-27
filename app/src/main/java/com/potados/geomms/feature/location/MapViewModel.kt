@@ -47,12 +47,12 @@ import java.util.*
  */
 class MapViewModel : BaseViewModel(), KoinComponent {
 
-    private val locationService: LocationSupportService by inject()
+    private val service: LocationSupportService by inject()
     private val locationRepo: LocationRepository by inject()
     private val dateFormatter: DateFormatter by inject()
     private val navigator: Navigator by inject()
 
-    val connections = locationService.getConnections()
+    val connections = service.getConnections()
 
     private val _markers = mutableListOf<MarkerOptions>()
     val markers =  MutableLiveData<MutableList<MarkerOptions>>()
@@ -84,7 +84,7 @@ class MapViewModel : BaseViewModel(), KoinComponent {
 
     init {
         failables += this
-        failables += locationService
+        failables += service
         failables += locationRepo
         failables += dateFormatter
         failables += navigator
@@ -94,30 +94,31 @@ class MapViewModel : BaseViewModel(), KoinComponent {
         super.start()
 
         connections?.let {
-            // Setting chagne listener does not invoke it on register time.
+            // Setting change listener does not invoke it on register time.
             // Do it for one time manually.
             it.addChangeListener(refreshMarkers)
             refreshMarkers(it)
         }
     }
 
-    private fun request(address: String) = locationService.requestNewConnection(address, 1800000)
-    private fun accept(request: ConnectionRequest) = locationService.acceptConnectionRequest(request)
-    private fun refuse(request: ConnectionRequest) = locationService.refuseConnectionRequest(request)
-    private fun delete(connection: Connection) = locationService.requestDisconnect(connection.id)
-    private fun cancel(connection: Connection) = locationService.cancelConnectionRequest(connection)
+    private fun request(address: String, duration: Long) = service.requestNewConnection(address, duration)
+    private fun accept(request: ConnectionRequest) = service.acceptConnectionRequest(request)
+    private fun refuse(request: ConnectionRequest) = service.refuseConnectionRequest(request)
+    private fun delete(connection: Connection) = service.requestDisconnect(connection.id)
+    private fun cancel(connection: Connection) = service.cancelConnectionRequest(connection)
 
     fun invite() {
         navigator.showInvite()
     }
 
-    fun request(activity: FragmentActivity?, address: String) {
-        request(address)
-        Popup(activity)
-            .withTitle(R.string.title_invitation_sent)
-            .withMessage(R.string.connection_request_sent_to, address)
-            .withPositiveButton(R.string.button_ok)
-            .show()
+    fun request(activity: FragmentActivity?, address: String, duration: Long) {
+        if (request(address, duration)) {
+            Popup(activity)
+                .withTitle(R.string.title_invitation_sent)
+                .withMessage(R.string.connection_request_sent_to, address)
+                .withPositiveButton(R.string.button_ok)
+                .show()
+        }
     }
 
     fun getLocation(onLocation: (Location) -> Unit) {

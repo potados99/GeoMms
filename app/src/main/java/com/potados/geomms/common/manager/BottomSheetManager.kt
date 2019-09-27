@@ -223,7 +223,7 @@ class BottomSheetManager(
                     onSlideBottomSheet(view, it)
                 }
             )
-              */
+             */
 
             setOnClickListener {
                 toggleSheet()

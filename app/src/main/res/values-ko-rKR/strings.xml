@@ -151,6 +151,13 @@
         <item>최근 1년</item>
         <item>모두 동기화</item>
     </string-array>
+
+    <string-array name="durations">
+        <item>30분</item>
+        <item>1시간</item>
+        <item>3시간</item>
+    </string-array>
+
     <string name="dialog_ask_sync_all">총 %s개의 메시지, 대화, 연락처가 존재합니다. 동기화 작업에 시간이 조금 걸릴 수 있습니다. 최근 메시지만 동기화하면 시간을 단축할 수 있습니다.</string>
     <string name="title_choose_range">범위를 선택해주세요</string>
     <string name="title_sync_slow">동기화가 오래 걸릴 수 있습니다.</string>
@@ -160,5 +167,6 @@
     <string name="notify_back_again_to_exit">다시 한번 누르면 종료됩니다.</string>
     <string name="string_not_good">비정상</string>
     <string name="description_cancel_button">취소 버튼입니다.</string>
+    <string name="title_duration">공유 시간</string>
 
 </resources>
