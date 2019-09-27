@@ -189,7 +189,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
 
             // Move to current location.
             mapViewModel.getLocation {
-                moveTo(it.latitude, it.longitude, 10f)
+                moveTo(it.latitude, it.longitude, 10f, bias = false)
             }
 
             // Hide bottom sheet when map moving.

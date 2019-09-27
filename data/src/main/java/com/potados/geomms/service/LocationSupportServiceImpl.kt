@@ -674,6 +674,7 @@ class LocationSupportServiceImpl(
     override fun receivePacket(address: String, body: String) = falseOnFail {
         val packet = parsePacket(body)?.apply {
             this.address = address
+            this.date = System.currentTimeMillis()
             this.isInbound = true
         } ?: return@falseOnFail false
 
