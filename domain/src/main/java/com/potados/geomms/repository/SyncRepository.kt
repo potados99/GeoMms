@@ -46,14 +46,14 @@ abstract class SyncRepository : Repository() {
      */
     abstract val rows: Int
 
-    abstract fun syncEvent(): LiveData<Boolean>
+    abstract fun syncEvent(): LiveData<SyncEvent>
 
     /**
      * Not directly sync messages.
      * Ask user by setting syncEvent and then
      * syncMessages will be called in fragment, not here.
      */
-    abstract fun triggerSyncMessages()
+    abstract fun triggerSyncMessages(event: SyncEvent)
 
     abstract fun syncMessages(dateFrom: Long = 0)
 
@@ -68,4 +68,9 @@ abstract class SyncRepository : Repository() {
      */
     abstract fun syncContact(address: String): Boolean?
 
+    enum class SyncEvent {
+        EVENT_NONE,
+        EVENT_INITIAL,
+        EVENT_SMS_APP_CHANGED
+    }
 }

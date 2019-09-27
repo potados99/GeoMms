@@ -28,6 +28,7 @@ import com.potados.geomms.common.extension.autoScrollToStart
 import com.potados.geomms.common.extension.getViewModel
 import com.potados.geomms.common.extension.observe
 import com.potados.geomms.databinding.ConversationsFragmentBinding
+import com.potados.geomms.repository.SyncRepository
 import kotlinx.android.synthetic.main.conversations_fragment.view.*
 import timber.log.Timber
 
@@ -64,20 +65,6 @@ class ConversationsFragment : NavigationFragment() {
             .apply { viewDataBinding = this }
             .apply { initializeView(root) }
             .root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        conversationsViewModel.apply {
-            start()
-
-            observe(syncEvent) {
-                if (it == true) {
-                    showSyncDialog(activity)
-                }
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

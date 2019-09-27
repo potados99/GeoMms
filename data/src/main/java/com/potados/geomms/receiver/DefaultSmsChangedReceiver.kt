@@ -42,7 +42,6 @@ import timber.log.Timber
 class DefaultSmsChangedReceiver : BroadcastReceiver(), KoinComponent {
 
     private val syncRepository: SyncRepository by inject()
-
     private val permissionManager: PermissionManager by inject()
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -54,10 +53,10 @@ class DefaultSmsChangedReceiver : BroadcastReceiver(), KoinComponent {
 
             // Just trigger sync action and let user decide it.
             // If no observer exists for this event, this does nothing.
-            // That can be a problem when user changed default sms app and done somthing,
+            // That can be a problem when user changed default sms app and done something,
             // and then return the default app back to this app, without this app detecting
             // need to sync again.
-            syncRepository.triggerSyncMessages()
+            syncRepository.triggerSyncMessages(SyncRepository.SyncEvent.EVENT_SMS_APP_CHANGED)
         }
     }
 }

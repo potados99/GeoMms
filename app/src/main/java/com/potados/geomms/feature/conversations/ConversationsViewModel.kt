@@ -52,8 +52,6 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
     private val permissionManager: PermissionManager by inject()
     private val navigator: Navigator by inject()
 
-    val syncEvent = syncRepo.syncEvent()
-
     /**
      * Binding properties.
      */
@@ -68,21 +66,6 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
         failables += conversationRepo
         failables += syncRepo
         failables += permissionManager
-    }
-
-    override fun start() {
-        super.start()
-        sync()
-    }
-
-    /**
-     * Sync messages on condition.
-     */
-    private fun sync() {
-        val lastSync = Realm.getDefaultInstance().use { realm -> realm.where(SyncLog::class.java)?.max("date") ?: 0 }
-        if (lastSync == 0 && permissionManager.isDefaultSms() && permissionManager.hasReadSms() && permissionManager.hasContacts()) {
-            syncRepo.triggerSyncMessages()
-        }
     }
 
     fun showCompose() {
@@ -126,16 +109,6 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
             searching.value = true
             searchResults.value = conversationRepo.searchConversations(query)
         }
-    }
-
-    /**
-     * This method is recommended to be invoked by its owner childFragment,
-     * in response of [syncEvent].
-     *
-     * This is supposed to be the only entry for sync in this whole application.
-     */
-    fun showSyncDialog(activity: FragmentActivity?) {
-        navigator.showSyncDialog(activity)
     }
 
     /**

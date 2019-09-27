@@ -162,6 +162,7 @@
     <string name="string_not_good">Not good</string>
     <string name="button_resend">Resend</string>
     <string name="button_disconnect">Disconnect</string>
+    <string name="notify_back_again_to_exit">Press back button again to exit.</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>

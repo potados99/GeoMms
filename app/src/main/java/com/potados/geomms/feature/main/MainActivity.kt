@@ -27,21 +27,21 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationActivity
 import com.potados.geomms.common.base.NavigationFragment
+import com.potados.geomms.common.extension.getViewModel
+import com.potados.geomms.common.extension.observe
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.feature.conversations.ConversationsFragment
 import com.potados.geomms.feature.license.LicenseActivity
 import com.potados.geomms.feature.location.MapFragment
+import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.util.Notify
 import kotlinx.android.synthetic.main.drawer_view.*
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import kotlin.system.exitProcess
 
-
-/**
- * 권한 획득과 기본 앱 설정 후 나타나는 주 액티비티입니다.
- */
 class MainActivity : NavigationActivity(), KoinComponent {
 
     override val fragments: List<NavigationFragment> = listOf(ConversationsFragment(), MapFragment())
@@ -51,10 +51,12 @@ class MainActivity : NavigationActivity(), KoinComponent {
     override val layoutId: Int = R.layout.main_activity
 
     private val service: LocationSupportService by inject()
-
     private val navigator: Navigator by inject()
 
     private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var viewModel: MainViewModel
+
+    private var lastBackButtonPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +65,36 @@ class MainActivity : NavigationActivity(), KoinComponent {
         setService()
 
         navigator.showDefaultSmsDialogIfNeeded()
+
+        viewModel = getViewModel()
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+
+        viewModel.apply {
+            start()
+
+            observe(syncEvent) {
+                // Avoid duplicated sync.
+                // Ignore sync event before first sync.
+                val conditionToSync = (it == SyncRepository.SyncEvent.EVENT_INITIAL || !isNotSyncedYet())
+                if (it != SyncRepository.SyncEvent.EVENT_NONE && conditionToSync) {
+                    showSyncDialog(this@MainActivity)
+                }
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (lastBackButtonPressed != 0L &&
+            System.currentTimeMillis() - lastBackButtonPressed < 1000L) {
+            // combo success
+            exitProcess(0)
+        } else {
+            lastBackButtonPressed = System.currentTimeMillis()
+            Notify(this).short(R.string.notify_back_again_to_exit)
+        }
     }
 
     private fun setDrawer() {
