@@ -46,7 +46,7 @@ abstract class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder>(), Failable
         Timber.w("Failure is set: ${failure.message}")
     }
 
-    final override fun getFailure(): LiveData<Failable.Failure> {
+    final override fun getFailure(): MutableLiveData<Failable.Failure> {
         return failure
     }
 

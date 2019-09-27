@@ -21,7 +21,6 @@ package com.potados.geomms.base
 
 import android.content.Context
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -40,7 +39,7 @@ abstract class FailableComponent : Failable, KoinComponent {
         Timber.w("Failure is set: ${failure.message}")
     }
 
-    final override fun getFailure(): LiveData<Failable.Failure> {
+    final override fun getFailure(): MutableLiveData<Failable.Failure> {
         return failure
     }
 

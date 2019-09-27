@@ -71,12 +71,13 @@ class ConnectionDetailViewModel : BaseViewModel() {
 
         val connectionId = arguments.getLong(ARG_CONNECTION_ID).takeIf { it != 0L } ?: return
 
-        service.getConnection(connectionId)?.let {
-            setDetails(it)
+        service.getConnection(connectionId)?.let { connection ->
+            setDetails(connection.takeIf { it.isValid })
 
             // This does not invoke listener right after added.
-            it.addChangeListener<Connection> { changed, _ ->
-                setDetails(changed)
+            connection.addChangeListener<Connection> { changed, _ ->
+                setDetails(changed.takeIf { it.isValid })
+
                 Timber.i("Updated mConnection detail.")
             }
         }
@@ -152,8 +153,8 @@ class ConnectionDetailViewModel : BaseViewModel() {
 
     private fun askDisconnect(fragment: BaseFragment, connection: Connection) {
         Popup(fragment.activity)
-            .withTitle(R.string.title_cancel_request)
-            .withMessage(R.string.dialog_ask_cancel_request)
+            .withTitle(R.string.title_disconnect)
+            .withMessage(R.string.dialog_ask_disconnect, connection.recipient?.getDisplayName().orEmpty())
             .withPositiveButton(R.string.button_confirm) {
                 service.requestDisconnect(connection.id)
                 fragment.bottomSheetManager?.pop()
@@ -162,8 +163,8 @@ class ConnectionDetailViewModel : BaseViewModel() {
             .show()
     }
 
-    private fun setDetails(connection: Connection) {
-        if (!connection.isValid) {
+    private fun setDetails(connection: Connection?) {
+        if (connection == null || !connection.isValid) {
             return
         }
 

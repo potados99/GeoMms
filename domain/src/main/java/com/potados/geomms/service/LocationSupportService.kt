@@ -115,7 +115,7 @@ abstract class LocationSupportService : Service() {
      *
      * @return null if any exceptions.
      */
-    abstract fun getRequest(connectionId: Long, inbound: Boolean): ConnectionRequest?
+    abstract fun getRequest(connectionId: Long, inbound: Boolean?): ConnectionRequest?
 
     /**
      * Get all managed incoming(received) requests from realm.

@@ -47,7 +47,6 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
     private val handler = Handler(Looper.getMainLooper())
 
     var onConnectionClick: (Connection) -> Unit = {}
-    var onConnectionLongClick: (Connection) -> Unit = {}
     var onRefreshClick: (Connection) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -58,11 +57,6 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
             view.setOnClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
                 onConnectionClick(item)
-            }
-            view.setOnLongClickListener {
-                val item = getItem(adapterPosition) ?: return@setOnLongClickListener false
-                onConnectionLongClick(item)
-                true
             }
             view.refresh_button.setOnClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener

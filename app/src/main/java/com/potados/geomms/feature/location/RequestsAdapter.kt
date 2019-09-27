@@ -32,7 +32,6 @@ import org.koin.core.KoinComponent
 class RequestsAdapter : BaseRealmAdapter<ConnectionRequest>(), KoinComponent {
 
     var onRequestClick: (ConnectionRequest) -> Unit = {}
-    var onRequestLongClick: (ConnectionRequest) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -42,11 +41,6 @@ class RequestsAdapter : BaseRealmAdapter<ConnectionRequest>(), KoinComponent {
             view.setOnClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
                 onRequestClick(item)
-            }
-            view.setOnLongClickListener {
-                val item = getItem(adapterPosition) ?: return@setOnLongClickListener false
-                onRequestLongClick(item)
-                true
             }
         }
     }

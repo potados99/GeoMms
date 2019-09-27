@@ -28,7 +28,6 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
 import com.potados.geomms.base.Failable
@@ -138,7 +137,7 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
      * AS A Failable
      ******************************/
     private val failure = MutableLiveData<Failable.Failure>()
-    override fun getFailure(): LiveData<Failable.Failure> = failure
+    override fun getFailure(): MutableLiveData<Failable.Failure> = failure
     override fun setFailure(failure: Failable.Failure) {
         this.failure.postValue(failure)
         Timber.w("Failure is set: ${failure.message}")
@@ -167,7 +166,12 @@ abstract class BaseFragment : Fragment(), Failable, FailableContainer, FailableH
         failables.forEach {
             // remove before observe to prevent double observing.
             it.getFailure().removeObservers(this)
-            observe(it.getFailure()) { failure -> failure?.let(::onFail) }
+            observe(it.getFailure()) { failure ->
+                failure?.let(::onFail)
+
+                // The failure is handled.
+                it.getFailure().postValue(null)
+            }
             observedFailables.add(it)
         }
 

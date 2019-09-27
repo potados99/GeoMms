@@ -100,9 +100,11 @@ class BottomSheetManager(
         if (!sheetStack.empty()) {
             handler.doAfter(100) {
                 // Hide the former sheet before showing the new one.
-                sheetStack.peek().sheetView.apply {
-                    halfExpandSheet()
-                    setHidable(false)
+                if (!sheetStack.empty()) {
+                    sheetStack.peek().sheetView.apply {
+                        halfExpandSheet()
+                        setHidable(false)
+                    }
                 }
             }
         }

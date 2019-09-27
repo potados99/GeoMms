@@ -20,7 +20,7 @@
 package com.potados.geomms.base
 
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 /**
  * Represents a component that can fail.
@@ -29,7 +29,7 @@ interface Failable {
     /**
      * Get failure Live Data.
      */
-    fun getFailure(): LiveData<Failure>
+    fun getFailure(): MutableLiveData<Failure>
 
     /**
      * Set failure Live Data.

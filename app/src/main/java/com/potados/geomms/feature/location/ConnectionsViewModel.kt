@@ -58,16 +58,6 @@ class ConnectionsViewModel : BaseViewModel() {
         }
     }
 
-    fun askDeleteConnection(activity: FragmentActivity?, connection: Connection) {
-        // TODO
-        // Delete connection here directly.
-    }
-
-    fun askDeleteRequest(activity: FragmentActivity?, request: ConnectionRequest) {
-        // TODO
-        // Delete request here directly.
-    }
-
     fun refreshConnection(connection: Connection) {
         service.requestUpdate(connection.id)
     }

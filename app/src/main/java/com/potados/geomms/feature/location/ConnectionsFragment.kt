@@ -91,10 +91,6 @@ class ConnectionsFragment : BaseFragment() {
                     onShowConnectionOnMap(it)
                 }
 
-                onConnectionLongClick = {
-                    connectionsViewModel.askDeleteConnection(activity, it)
-                }
-
                 onRefreshClick = {
                     connectionsViewModel.refreshConnection(it)
                 }
@@ -107,9 +103,6 @@ class ConnectionsFragment : BaseFragment() {
 
                 onRequestClick = {
                     connectionsViewModel.showRequestInfo(bottomSheetManager, it)
-                }
-                onRequestLongClick = {
-                    connectionsViewModel.askDeleteRequest(activity, it)
                 }
             }
         }

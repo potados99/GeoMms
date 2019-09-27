@@ -30,6 +30,7 @@ import com.potados.geomms.common.GiveMePermissionActivity
 import com.potados.geomms.common.manager.BottomSheetManager
 import com.potados.geomms.feature.compose.ComposeActivity
 import com.potados.geomms.feature.location.ConnectionDetailFragment
+import com.potados.geomms.feature.location.RequestDetailFragment
 import com.potados.geomms.feature.location.invite.InviteActivity
 import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.feature.settings.SettingsActivity
@@ -91,8 +92,7 @@ class Navigator (
     }
 
     fun showRequestInfo(sheetManager: BottomSheetManager, requestId: Long) {
-        // TODO
-        // Push to show a request info.
+        sheetManager.push(RequestDetailFragment.ofIncomingRequest(requestId))
     }
 
     fun showDefaultSmsDialogIfNeeded() {

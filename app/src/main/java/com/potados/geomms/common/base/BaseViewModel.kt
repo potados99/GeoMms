@@ -22,7 +22,6 @@ package com.potados.geomms.common.base
 import android.content.Context
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.potados.geomms.base.Failable
@@ -54,7 +53,7 @@ abstract class BaseViewModel : ViewModel(), Startable, Failable, FailableContain
         Timber.w("Failure is set: ${failure.message}")
     }
 
-    final override fun getFailure(): LiveData<Failable.Failure> {
+    final override fun getFailure(): MutableLiveData<Failable.Failure> {
         return failure
     }
 

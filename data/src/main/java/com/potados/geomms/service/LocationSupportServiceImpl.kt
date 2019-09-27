@@ -182,11 +182,14 @@ class LocationSupportServiceImpl(
             .findFirst()
     }
 
-    override fun getRequest(connectionId: Long, inbound: Boolean): ConnectionRequest? = nullOnFail {
+    override fun getRequest(connectionId: Long, inbound: Boolean?): ConnectionRequest? = nullOnFail {
         return@nullOnFail getRealm()
             .where(ConnectionRequest::class.java)
             .equalTo("connectionId", connectionId)
-            .equalTo("isInbound", inbound)
+            .let {
+                if (inbound != null) it.equalTo("isInbound", inbound)
+                else it
+            }
             .findFirst()
     }
 
@@ -289,7 +292,6 @@ class LocationSupportServiceImpl(
 
         return@falseOnFail true
     }
-
     override fun requestNewConnectionAgain(address: String, duration: Long, id: Long) = falseOnFail {
         val recipient = getRecipient(address) ?: return@falseOnFail false
 
@@ -308,8 +310,24 @@ class LocationSupportServiceImpl(
         return@falseOnFail true
     }
     override fun beRequestedNewConnection(packet: Packet) = falseOnFail {
-        // requests can be duplicated but connections cannot.
-        getConnection(packet.connectionId, temporal = false)?.let {
+        // We have to prevent duplicated invitation.
+        // If the target already has been invited? break.
+        // If the target invited you? break.
+        // If the target is already connected? break.
+        if (!canInvite(packet.address)) {
+            fail(R.string.fail_ignore_illegal_request, show = false)
+            return@falseOnFail false
+        }
+
+        // There could be a case of same connection id with from different guys.
+        // Block them.
+
+        getConnection(packet.connectionId, temporal = null)?.let {
+            fail(R.string.fail_ignore_illegal_request, show = false)
+            return@falseOnFail false
+        }
+
+        getRequest(packet.connectionId, inbound = null)?.let {
             fail(R.string.fail_ignore_illegal_request, show = false)
             return@falseOnFail false
         }
@@ -402,12 +420,12 @@ class LocationSupportServiceImpl(
             sendPacket(it.address, Packet.ofRefusingRequest(request))
         }
 
+        Timber.i("Will delete request of id ${request.connectionId} from ${request.recipient?.getDisplayName()}.")
+
         // delete
         executeInDefaultInstance {
             request.deleteFromRealm()
         }
-
-        Timber.i("Refused request of id ${request.connectionId} from ${request.recipient?.getDisplayName()}.")
 
         return@falseOnFail true
     }
@@ -1104,6 +1122,11 @@ class LocationSupportServiceImpl(
         private fun <T: RealmObject> isValid(locationObject: T?, additionalPredicate: (T) -> Boolean = { true }): Boolean {
             if (locationObject == null) {
                 Timber.i("Location object is null :(")
+                return false
+            }
+
+            if (!locationObject.isValid) {
+                Timber.i("Location object is not realm valid :(")
                 return false
             }
 

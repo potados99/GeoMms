@@ -22,7 +22,6 @@ package com.potados.geomms.common.base
 import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.potados.geomms.base.Failable
@@ -45,7 +44,7 @@ abstract class BaseRealmAdapter<T: RealmModel>
         Timber.w("Failure is set: ${failure.message}")
     }
 
-    final override fun getFailure(): LiveData<Failable.Failure> {
+    final override fun getFailure(): MutableLiveData<Failable.Failure> {
         return failure
     }
 
