@@ -168,5 +168,9 @@
     <string name="string_not_good">비정상</string>
     <string name="description_cancel_button">취소 버튼입니다.</string>
     <string name="title_duration">공유 시간</string>
+    <string name="description_incoming_invitation">상대방의 초대</string>
+    <string name="fail_refresh_no_recipient">업데이트를 요청하는 데에 실패했습니다. 수신자가 없습니다.</string>
+    <string name="fail_resend_no_recipient">초대를 다시 보내는 데에 실패했습니다. 수신자가 없습니다.</string>
+    <string name="notify_invitation_canceled">초대 취소됨.</string>
 
 </resources>
