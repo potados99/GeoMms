@@ -89,12 +89,12 @@ class SyncRepositoryImpl(
         // syncMessages by themselves.
         _syncEvent.postValue(event)
 
-        Timber.i("value $event posted to _syncEvent")
+        Timber.i("Value $event posted to _syncEvent")
     }
 
     override fun syncMessages(dateFrom: Long) = unitOnFail {
         if (_progress.value is SyncProgress.Running) {
-            Timber.i("sync already in progress; return")
+            Timber.i("Sync already in progress; return")
             return@unitOnFail
         }
 

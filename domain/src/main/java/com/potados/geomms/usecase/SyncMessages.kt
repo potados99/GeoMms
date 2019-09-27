@@ -39,7 +39,7 @@ class SyncMessages(
 
     override fun run(params: Long): Result<*> =
         Result.of {
-            Timber.i("Will sync messages from date $params.")
+            Timber.i("Will sync messages from date $params to ${System.currentTimeMillis()}.")
 
             service.clearAll()
 

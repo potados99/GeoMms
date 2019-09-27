@@ -137,7 +137,11 @@ class Navigator (
      */
     fun showSyncDialog(activity: FragmentActivity?) {
         if (syncRepo.rows > preferences.messagesBig) {
-            var fromDate: Long = 0
+
+            // Assign default.
+            var fromDate: Long = Calendar.getInstance().apply {
+                add(Calendar.MONTH, -1)
+            }.timeInMillis
 
             Popup(activity)
                 .withTitle(R.string.title_sync_slow)
