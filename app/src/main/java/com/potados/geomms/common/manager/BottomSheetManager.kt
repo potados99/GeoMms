@@ -211,6 +211,7 @@ class BottomSheetManager(
 
     private fun addSheetBehavior(view: View) {
         with(view) {
+            /*
             bottomSheetBehavior.setCallback(
                 onStateChanged = {
                     when (it) {
@@ -222,6 +223,7 @@ class BottomSheetManager(
                     onSlideBottomSheet(view, it)
                 }
             )
+              */
 
             setOnClickListener {
                 toggleSheet()
