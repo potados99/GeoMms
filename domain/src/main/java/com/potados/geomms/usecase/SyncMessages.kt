@@ -23,12 +23,16 @@ import com.potados.geomms.extension.elapsedTimeMillis
 import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.repository.SyncRepository
+import com.potados.geomms.service.LocationSupportService
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
+/**
+ * Sync all messages, contacts, and before them clear all connections.
+ */
 class SyncMessages(
     private val syncRepo: SyncRepository,
-    private val clearAll: ClearAll,
+    private val service: LocationSupportService,
     private val processMessages: ProcessMessages,
     private val updateBadge: UpdateBadge
 ) : UseCase<Long>() {
@@ -37,28 +41,23 @@ class SyncMessages(
         Result.of {
             Timber.i("Will sync messages from date $params.")
 
-            // Connections relay on Recipient, which will be deleted after sync.
-            // Disconnect all connections before sync to prevent connection having
-            // no recipient.
-            clearAll(Unit) { clearResult ->
-                clearResult.onError { Timber.w("Failed to clear all.") }
+            service.clearAll()
 
-                Timber.i("Clear all.")
+            Timber.i("Cleared all connections and requests.")
 
-                // We do it after clearAll is finished.
-                val elapsedMillis = elapsedTimeMillis {
-                    syncRepo.syncMessages(params)
-                }
-
-                val elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedMillis)
-
-                Timber.i("Completed sync in $elapsedSeconds seconds.")
-
-                processMessages(Unit) {
-                    it.onError { Timber.w("Failed to process messages.") }
-                }
-
-                updateBadge(Unit)
+            // We do it after clearAll is finished.
+            val elapsedMillis = elapsedTimeMillis {
+                syncRepo.syncMessages(params)
             }
+
+            val elapsedSeconds = TimeUnit.MILLISECONDS.toSeconds(elapsedMillis)
+
+            Timber.i("Completed sync in $elapsedSeconds seconds.")
+
+            processMessages(Unit) {
+                it.onError { Timber.w("Failed to process messages.") }
+            }
+
+            updateBadge(Unit)
         }
 }

@@ -332,7 +332,7 @@ val myModules = module {
     single {
         SyncMessages(
             syncRepo = get(),
-            clearAll = get(),
+            service = get(),
             processMessages = get(),
             updateBadge = get()
         )

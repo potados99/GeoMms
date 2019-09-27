@@ -20,6 +20,7 @@
 package com.potados.geomms.receiver
 
 import com.android.mms.transaction.PushReceiver
+import timber.log.Timber
 
 /**
  * Manifest registered.
