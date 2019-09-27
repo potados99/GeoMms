@@ -44,4 +44,6 @@
     <string name="notify_not_implemented">This feature is not implemented yet :)</string>
     <string name="fail_close_connection_not_expired">Failed to close connection. Connections is not expired yet.</string>
     <string name="fail_already_invited">Cannot invite %s. Already invited or connected.</string>
+    <string name="fail_resend_packet_no_connection">Failed to resend packet. No valid connection found.</string>
+    <string name="fail_resend_not_sent_before">Failed to resend packet. No packet has been sent before.</string>
 </resources>

@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.getViewModel
 import com.potados.geomms.databinding.ConnectionDetailFragmentBinding
+import kotlinx.android.synthetic.main.connection_detail_fragment.view.*
 
 class ConnectionDetailFragment : BaseFragment() {
 
@@ -60,7 +61,13 @@ class ConnectionDetailFragment : BaseFragment() {
     }
 
     private fun initializeView(view: View) {
+        with(view.negative) {
+            setOnClickListener { connectionDetailViewModel.onNegativeButton(this@ConnectionDetailFragment) }
+        }
 
+        with(view.positive) {
+            setOnClickListener { connectionDetailViewModel.onPositiveButton(this@ConnectionDetailFragment) }
+        }
     }
 
     companion object {

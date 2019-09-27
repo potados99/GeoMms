@@ -164,6 +164,9 @@
     <string name="button_disconnect">Disconnect</string>
     <string name="notify_back_again_to_exit">Press back button again to exit.</string>
     <string name="title_duration">Share Location for</string>
+    <string name="fail_resend_no_recipient">Failed to resend invitation. No recipient.</string>
+    <string name="fail_refresh_no_recipient">Fail to request update. No recipient.</string>
+    <string name="notify_invitation_canceled">Invitation canceled.</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>

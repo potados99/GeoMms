@@ -20,15 +20,23 @@
 package com.potados.geomms.feature.location
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
+import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.base.BaseViewModel
+import com.potados.geomms.common.extension.doAfter
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.feature.location.ConnectionDetailFragment.Companion.ARG_CONNECTION_ID
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.Recipient
+import com.potados.geomms.preference.MyPreferences
 import com.potados.geomms.service.LocationSupportService
+import com.potados.geomms.util.Notify
+import com.potados.geomms.util.Popup
+import io.realm.Realm
 import org.koin.core.inject
 import timber.log.Timber
 
@@ -36,6 +44,21 @@ class ConnectionDetailViewModel : BaseViewModel() {
 
     private val service: LocationSupportService by inject()
     private val dateFormatter: DateFormatter by inject()
+    private val preferences: MyPreferences by inject()
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    /**
+     * Binding elements
+     */
+    val recipient = MutableLiveData<Recipient>()
+    val name = MutableLiveData<String>()
+    val status = MutableLiveData<String>()
+    val detail = MutableLiveData<String>()
+    val positiveButtonText = MutableLiveData<String>()
+    val negativeButtonText = MutableLiveData<String>()
+
+    private lateinit var mConnection: Connection
 
     init {
         failables += this
@@ -54,12 +77,98 @@ class ConnectionDetailViewModel : BaseViewModel() {
             // This does not invoke listener right after added.
             it.addChangeListener<Connection> { changed, _ ->
                 setDetails(changed)
-                Timber.i("Update connection detail.")
+                Timber.i("Updated mConnection detail.")
             }
         }
     }
 
+    fun onPositiveButton(fragment: BaseFragment) {
+        if (mConnection.recipient == null) {
+            fail(R.string.fail_no_recipient, show = true)
+            return
+        }
+
+        if (mConnection.isTemporal) {
+            resendInvitation(fragment, mConnection)
+        } else {
+            requestUpdate(mConnection)
+        }
+    }
+
+    private fun resendInvitation(fragment: BaseFragment, temporalConnection: Connection) {
+        // Resend invitation.
+        val address = temporalConnection.recipient!!.address
+        val duration = temporalConnection.duration
+        val id = temporalConnection.id
+
+        if (service.requestNewConnectionAgain(address, duration, id)) {
+            Notify(fragment.activity).short(R.string.connection_request_sent)
+        }
+    }
+
+    private fun requestUpdate(connection: Connection) {
+        // Connection on sharing
+        if (service.requestUpdate(connection.id)) {
+            Realm.getDefaultInstance().use {
+                it.executeTransaction {
+                    mConnection.isWaitingForReply = true
+                }
+            }
+
+            handler.doAfter(preferences.requestUpdateCoolTime) {
+                Realm.getDefaultInstance().use {
+                    it.executeTransaction {
+                        connection.isWaitingForReply = false
+                    }
+                }
+            }
+        }
+    }
+
+    fun onNegativeButton(fragment: BaseFragment) {
+        if (mConnection.recipient == null) {
+            fail(R.string.fail_no_recipient, show = true)
+            return
+        }
+
+        if (mConnection.isTemporal) {
+            askCancelInvitation(fragment, mConnection)
+        } else {
+            askDisconnect(fragment, mConnection)
+        }
+    }
+
+    private fun askCancelInvitation(fragment: BaseFragment, temporalConnection: Connection) {
+        Popup(fragment.activity)
+            .withTitle(R.string.title_cancel_request)
+            .withMessage(R.string.dialog_ask_cancel_request, temporalConnection.recipient?.getDisplayName().orEmpty())
+            .withPositiveButton(R.string.button_confirm) {
+                service.cancelConnectionRequest(temporalConnection)
+                fragment.bottomSheetManager?.pop()
+            }
+            .withNegativeButton(R.string.button_cancel)
+            .show()
+    }
+
+    private fun askDisconnect(fragment: BaseFragment, connection: Connection) {
+        Popup(fragment.activity)
+            .withTitle(R.string.title_cancel_request)
+            .withMessage(R.string.dialog_ask_cancel_request)
+            .withPositiveButton(R.string.button_confirm) {
+                service.requestDisconnect(connection.id)
+                fragment.bottomSheetManager?.pop()
+            }
+            .withNegativeButton(R.string.button_cancel)
+            .show()
+    }
+
     private fun setDetails(connection: Connection) {
+        if (!connection.isValid) {
+            return
+        }
+
+        this.mConnection = connection
+
         recipient.value = connection.recipient
         name.value = connection.recipient?.getDisplayName()
         status.value = getStatusString(connection)
@@ -103,18 +212,7 @@ class ConnectionDetailViewModel : BaseViewModel() {
         )
     }
 
-
-    fun str(@StringRes res: Int, vararg formatArgs: Any?): String {
+    private fun str(@StringRes res: Int, vararg formatArgs: Any?): String {
         return context.getString(res, *formatArgs)
     }
-
-    /**
-     * Binding elements
-     */
-    val recipient = MutableLiveData<Recipient>()
-    val name = MutableLiveData<String>()
-    val status = MutableLiveData<String>()
-    val detail = MutableLiveData<String>()
-    val positiveButtonText = MutableLiveData<String>()
-    val negativeButtonText = MutableLiveData<String>()
 }

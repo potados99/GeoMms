@@ -136,6 +136,7 @@ abstract class LocationSupportService : Service() {
 
     /** I request YOU to join. */
     abstract fun requestNewConnection(address: String, duration: Long): Boolean
+    abstract fun requestNewConnectionAgain(address: String, duration: Long, id: Long): Boolean
     /** YOU requested me to join. So I handle it. */
     abstract fun beRequestedNewConnection(packet: Packet): Boolean
 
@@ -171,12 +172,13 @@ abstract class LocationSupportService : Service() {
     abstract fun beRequestedDisconnect(packet: Packet): Boolean
 
     /** I send a packet to YOU. */
-    abstract fun sendPacket(address: String, packet: Packet, postFix: String = ""): Boolean
+    abstract fun sendPacket(address: String, packet: Packet): Boolean
+
     /** YOU sent me a packet. I handle it and call methods above. */
     abstract fun receivePacket(address: String, body: String): Boolean
 
     /**
-     * Parse string to packet
+     * Parse string to packet.
      *
      * @return null if any exceptions or wrong packet form.
      */

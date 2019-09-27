@@ -32,8 +32,8 @@ class Packet(
     var date: Long = 0,         // Date received.
     var dateSent: Long = 0,     // Date sent.
 
-    var isInbound: Boolean = false
-
+    var isInbound: Boolean = false,
+    var postFix: String = ""
 ) {
 
     companion object {
@@ -41,8 +41,9 @@ class Packet(
             Packet(
                 type = PacketType.REQUEST_CONNECT.number,
                 connectionId = request.connectionId,
-                duration = request.duration
-            )
+                duration = request.duration,
+                postFix = "\nhttp://play.google.com/store/apps/details?id=com.potados.geomms"
+        )
 
         fun ofAcceptingRequest(request: ConnectionRequest) =
             Packet(

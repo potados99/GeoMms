@@ -22,6 +22,8 @@ package com.potados.geomms.model
 import io.realm.RealmObject
 import io.realm.annotations.Index
 import io.realm.annotations.PrimaryKey
+import java.util.*
+import kotlin.collections.HashMap
 
 open class Connection(
     @PrimaryKey var id: Long = 0,

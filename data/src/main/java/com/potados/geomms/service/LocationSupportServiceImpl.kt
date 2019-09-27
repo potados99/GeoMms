@@ -158,22 +158,6 @@ class LocationSupportServiceImpl(
 
 
     /************************************
-     * INTERNAL STATE CONTROL
-     ************************************/
-
-    /**
-     * Request location updates.
-     * Not need anymore because we use getLocationWithCallback() instead.
-     *
-     * @see [LocationRepository]
-     */
-    private fun startLocationUpdates() = falseOnFail {
-        locationRepo.startLocationUpdates()
-        return@falseOnFail true
-    }
-
-
-    /************************************
      * GETTER
      ************************************/
 
@@ -286,10 +270,7 @@ class LocationSupportServiceImpl(
             duration = duration
         )
 
-        // Add google play store link at the end of the serialized packet.
-        val postfix = "\nhttp://play.google.com/store/apps/details?id=" + context.packageName
-
-        sendPacket(address, Packet.ofRequestingNewConnection(request), postfix)
+        sendPacket(address, Packet.ofRequestingNewConnection(request))
 
         // Add this not-yet accepted connection to getRealm.
         val temporalConnection = Connection.fromAcceptedRequest(request).apply { isTemporal = true }
@@ -305,6 +286,24 @@ class LocationSupportServiceImpl(
         }
 
         Timber.i("Requested connection to ${recipient.getDisplayName()} with id ${request.connectionId}.")
+
+        return@falseOnFail true
+    }
+
+    override fun requestNewConnectionAgain(address: String, duration: Long, id: Long) = falseOnFail {
+        val recipient = getRecipient(address) ?: return@falseOnFail false
+
+        val request = ConnectionRequest(
+            connectionId = id,
+            recipient = recipient,
+            isInbound = false, // outbound
+            date = System.currentTimeMillis(), // now
+            duration = duration
+        )
+
+        sendPacket(address, Packet.ofRequestingNewConnection(request))
+
+        Timber.i("Requested connection to ${recipient.getDisplayName()} with id ${request.connectionId} again.")
 
         return@falseOnFail true
     }
@@ -449,7 +448,7 @@ class LocationSupportServiceImpl(
             return@falseOnFail false
         }
 
-        // TOOD: There could be some cases
+        // TODO: There could be some cases
         // where request is gone but the temporal connection stays valid.
 
         // Notify canceled.
@@ -557,7 +556,7 @@ class LocationSupportServiceImpl(
     }
 
     override fun requestUpdate(connectionId: Long) = falseOnFail {
-        val connection = getConnection(connectionId, temporal = false)
+        val connection = validator.validate(getConnection(connectionId, temporal = false))
 
         if (connection == null) {
             fail(R.string.fail_cannot_request_update_invalid_connection, show = true)
@@ -638,10 +637,8 @@ class LocationSupportServiceImpl(
      * PACKET PROCESS
      ************************************/
 
-    override fun sendPacket(address: String, packet: Packet, postFix: String) = falseOnFail {
-        val serialized = serializePacket(packet) ?: return@falseOnFail false
-
-        val payload = serialized + postFix
+    override fun sendPacket(address: String, packet: Packet) = falseOnFail {
+        val payload = serializePacket(packet) ?: return@falseOnFail false
 
         SmsManager.getDefault().sendTextMessage(
             address,
@@ -655,6 +652,7 @@ class LocationSupportServiceImpl(
 
         return@falseOnFail true
     }
+
     override fun receivePacket(address: String, body: String) = falseOnFail {
         val packet = parsePacket(body)?.apply {
             this.address = address
@@ -837,6 +835,8 @@ class LocationSupportServiceImpl(
                 builder.append(FIELD_SPLITTER)
             }
         }
+
+        builder.append(packet.postFix)
 
         return@nullOnFail builder.toString()
     }
