@@ -42,7 +42,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:padding="56dp"
-            app:layout_constraintBottom_toTopOf="@+id/snackbar"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -60,27 +60,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/snackbar"/>
-
-        <!-- Default app hint -->
-        <include
-                android:id="@+id/snackbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inflatedId="@id/snackbar"
-                layout="@layout/main_hint"
-                app:vm="@{vm}"
-                app:layout_constraintBottom_toTopOf="@id/syncing"/>
-
-        <!-- Sync progress -->
-        <include
-                android:id="@+id/syncing"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inflatedId="@id/syncing"
-                layout="@layout/main_syncing"
-                app:vm="@{vm}"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     

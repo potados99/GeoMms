@@ -53,36 +53,3 @@ fun setSearchResults(listView: RecyclerView, results: List<SearchResult>?) {
         Timber.i("Search results updated.")
     } ?: Timber.w("Adapter not set.")
 }
-
-@BindingAdapter("defaultSmsState")
-fun setDefaultSmsState(layout: ConstraintLayout, isDefaultSms: Boolean) {
-    // show when this is not a default sms app
-    layout.isVisible = !isDefaultSms
-
-    Timber.i("Default sms state updated")
-}
-
-@BindingAdapter("syncState")
-fun setSyncState(layout: LinearLayout, state: SyncRepository.SyncProgress) {
-    when (state) {
-        is SyncRepository.SyncProgress.Idle -> {
-            layout.isVisible = false
-        }
-        is SyncRepository.SyncProgress.Running -> {
-            with(layout) {
-                isVisible = true
-                title.text = context.getString(R.string.main_syncing, state.progress, state.max)
-                progress.max = state.max
-                ObjectAnimator
-                    .ofInt(progress, "progress", 0, 0)
-                    .apply { setIntValues(progress.progress, state.progress) }
-                    .start()
-                progress.isIndeterminate = state.indeterminate
-            }
-        }
-    }
-
-    Timber.i("sync state updated")
-}
-
-

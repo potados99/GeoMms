@@ -23,13 +23,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationActivity
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.getViewModel
 import com.potados.geomms.common.extension.observe
 import com.potados.geomms.common.navigation.Navigator
+import com.potados.geomms.databinding.MainActivityBinding
 import com.potados.geomms.feature.conversations.ConversationsFragment
 import com.potados.geomms.feature.license.LicenseActivity
 import com.potados.geomms.feature.location.MapFragment
@@ -37,7 +41,9 @@ import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.util.Notify
 import kotlinx.android.synthetic.main.drawer_view.*
+import kotlinx.android.synthetic.main.drawer_view.view.*
 import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.android.synthetic.main.main_activity.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import kotlin.system.exitProcess
@@ -53,20 +59,27 @@ class MainActivity : NavigationActivity(), KoinComponent {
     private val service: LocationSupportService by inject()
     private val navigator: Navigator by inject()
 
-    private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var viewDataBinding: MainActivityBinding
     private lateinit var viewModel: MainViewModel
+    private lateinit var toggle: ActionBarDrawerToggle
 
     private var lastTimeBackButtonPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setDrawer()
-        setService()
-
-        navigator.showDefaultSmsDialogIfNeeded()
+        viewDataBinding = DataBindingUtil.setContentView(this, R.layout.main_activity)
 
         viewModel = getViewModel()
+
+        viewDataBinding.apply {
+            lifecycleOwner = this@MainActivity
+            vm = viewModel
+
+            initializeView(root)
+        }
+
+        service.start()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -97,10 +110,10 @@ class MainActivity : NavigationActivity(), KoinComponent {
         }
     }
 
-    private fun setDrawer() {
+    private fun setDrawer(root: DrawerLayout) {
         toggle = ActionBarDrawerToggle(
             this,
-            root_layout,
+            root,
             toolbar,
             R.string.open_drawer,
             R.string.close_drawer
@@ -111,46 +124,40 @@ class MainActivity : NavigationActivity(), KoinComponent {
         }
 
         toggle.syncState()
-
-        setDrawerItemListeners()
     }
 
-    private fun setDrawerItemListeners() {
-        setDrawerItemClickListener(header) {
+    private fun setDrawerItemListeners(view: View) {
+        setDrawerItemClickListener(view.header) {
             navigator.showGuides()
         }
 
-        setDrawerItemClickListener(settings) {
+        setDrawerItemClickListener(view.settings) {
             navigator.showSettings()
         }
 
-        setDrawerItemClickListener(help, autoClose = false) {
+        setDrawerItemClickListener(view.help, autoClose = false) {
             // TODO
             Notify(this).short(R.string.notify_not_implemented)
         }
 
-        setDrawerItemClickListener(rate, autoClose = false) {
+        setDrawerItemClickListener(view.rate, autoClose = false) {
             // TODO
             Notify(this).short(R.string.notify_not_implemented)
         }
 
-        setDrawerItemClickListener(invite, autoClose = false) {
+        setDrawerItemClickListener(view.invite, autoClose = false) {
             // TODO
             Notify(this).short(R.string.notify_not_implemented)
         }
 
-        setDrawerItemClickListener(oss_license) {
+        setDrawerItemClickListener(view.oss_license) {
             startActivity(Intent(this, LicenseActivity::class.java))
         }
     }
 
-
-    /**
-     * Until user tab the Map tab, this service does not get started.
-     * So do it here manually.
-     */
-    private fun setService() {
-        service.start()
+    private fun initializeView(view: View) {
+        setDrawer(view.root_layout)
+        setDrawerItemListeners(view)
     }
 
     private fun setDrawerItemClickListener(item: View,  autoClose: Boolean = true, listener: (View) -> Unit) {
@@ -161,6 +168,7 @@ class MainActivity : NavigationActivity(), KoinComponent {
             }
         }
     }
+
 
     companion object {
         fun callingIntent(context: Context) = Intent(context, MainActivity::class.java)

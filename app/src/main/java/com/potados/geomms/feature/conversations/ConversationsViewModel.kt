@@ -57,8 +57,6 @@ class ConversationsViewModel : BaseViewModel(), KoinComponent {
      */
     val conversations = conversationRepo.getConversations()
     val searchResults = MutableLiveData<List<SearchResult>>()
-    val defaultSmsState = permissionManager.isDefaultSmsLiveData()
-    val syncState = syncRepo.syncProgress
     val searching = MutableLiveData<Boolean>().apply { value = false }
 
     init {

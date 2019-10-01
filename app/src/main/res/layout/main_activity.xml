@@ -18,20 +18,28 @@
   ~ along with GeoMms.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<androidx.drawerlayout.widget.DrawerLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <data>
+        <variable
+            name="vm"
+            type="com.potados.geomms.feature.main.MainViewModel" />
+    </data>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <!-- Toolbar -->
-        <androidx.appcompat.widget.Toolbar
+            <!-- Toolbar -->
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/Toolbar"
                 android:animateLayoutChanges="true"
@@ -42,18 +50,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Toolbar title -->
-            <TextView
+                <!-- Toolbar title -->
+                <TextView
                     android:id="@+id/toolbar_title"
                     style="@style/ToolbarText"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     tools:text="Toolbar Title" />
 
-        </androidx.appcompat.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
-        <!-- Contents -->
-        <FrameLayout
+            <!-- Contents -->
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -61,18 +69,18 @@
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 android:id="@+id/fragment_container"
                 app:layout_constraintBottom_toTopOf="@+id/nav_view">
-        </FrameLayout>
+            </FrameLayout>
 
-        <!-- Nav sheetView -->
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+            <!-- Nav sheetView -->
+            <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/nav_view"
                 style="@style/BottomNavigation"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 
-        <!-- Toolbar shadow -->
-        <View
+            <!-- Toolbar shadow -->
+            <View
                 android:layout_width="0dp"
                 android:layout_height="8dp"
                 android:background="@drawable/ab_shadow"
@@ -81,21 +89,42 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:id="@+id/toolbar_shadow" />
 
-        <!-- Nav sheetView shadow -->
-        <View
-            android:layout_width="0dp"
-            android:layout_height="4dp"
-            android:background="@drawable/ab_shadow_reversed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/nav_view" />
+            <!-- Nav sheetView shadow -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="4dp"
+                android:background="@drawable/ab_shadow_reversed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/nav_view" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Default app hint -->
+            <include
+                android:id="@+id/default_app"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inflatedId="@id/default_app"
+                layout="@layout/main_hint"
+                app:vm="@{vm}"
+                app:layout_constraintBottom_toTopOf="@id/syncing"/>
 
-    <include
-        layout="@layout/drawer_view"
+            <!-- Sync progress -->
+            <include
+                android:id="@+id/syncing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inflatedId="@id/syncing"
+                layout="@layout/main_syncing"
+                app:vm="@{vm}"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            layout="@layout/drawer_view"
             android:layout_width="320dp"
             android:layout_height="match_parent"
             android:layout_gravity="start" />
 
-</androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
+</layout>

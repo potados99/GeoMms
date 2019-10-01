@@ -17,6 +17,12 @@ class MainViewModel : BaseViewModel() {
 
     val syncEvent = syncRepo.syncEvent()
 
+    /**
+     * Binding elements
+     */
+    val defaultSmsState = permissionManager.isDefaultSmsLiveData()
+    val syncState = syncRepo.syncProgress
+
     init {
         failables += syncRepo
         failables += permissionManager
@@ -25,6 +31,7 @@ class MainViewModel : BaseViewModel() {
 
     override fun start() {
         super.start()
+
         syncIfNeeded()
     }
 

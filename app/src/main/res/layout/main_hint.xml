@@ -23,7 +23,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="vm" type="com.potados.geomms.feature.conversations.ConversationsViewModel"/>
+        <variable name="vm" type="com.potados.geomms.feature.main.MainViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
