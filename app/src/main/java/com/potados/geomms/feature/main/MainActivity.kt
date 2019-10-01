@@ -56,7 +56,7 @@ class MainActivity : NavigationActivity(), KoinComponent {
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var viewModel: MainViewModel
 
-    private var lastBackButtonPressed = 0L
+    private var lastTimeBackButtonPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,12 +87,12 @@ class MainActivity : NavigationActivity(), KoinComponent {
     }
 
     override fun onBackPressed() {
-        if (lastBackButtonPressed != 0L &&
-            System.currentTimeMillis() - lastBackButtonPressed < 1000L) {
+        if (lastTimeBackButtonPressed != 0L &&
+            System.currentTimeMillis() - lastTimeBackButtonPressed < 1000L) {
             // combo success
             exitProcess(0)
         } else {
-            lastBackButtonPressed = System.currentTimeMillis()
+            lastTimeBackButtonPressed = System.currentTimeMillis()
             Notify(this).short(R.string.notify_back_again_to_exit)
         }
     }
