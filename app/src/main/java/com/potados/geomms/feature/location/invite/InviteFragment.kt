@@ -66,10 +66,12 @@ class InviteFragment : BaseFragment(), KoinComponent {
     }
 
     private fun initializeView(view: View) {
-
         with(view.chips) {
             adapter = chipsAdapter.apply {
-                editText.setOnTextChanged(inviteViewModel::onSearch)
+                editText.setOnTextChanged {
+                    contactAdapter.data = inviteViewModel.getSearchResult(it)
+                }
+
                 editText.requestFocus()
             }
         }
@@ -77,7 +79,11 @@ class InviteFragment : BaseFragment(), KoinComponent {
         with(view.contacts) {
             adapter = contactAdapter.apply {
                 onContactClick = { inviteViewModel.onContactClick(activity, it) }
+
+                data = inviteViewModel.getSearchResult()
             }
+
+            itemAnimator = null
         }
     }
 }

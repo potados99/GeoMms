@@ -21,6 +21,7 @@ package com.potados.geomms.feature.compose
 
 import android.content.Intent
 import android.net.Uri
+import android.telephony.PhoneNumberUtils
 import androidx.databinding.ObservableField
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
@@ -41,10 +42,12 @@ import com.potados.geomms.usecase.MarkRead
 import com.potados.geomms.usecase.SendMessage
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
+import io.realm.RealmList
 import io.realm.RealmResults
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
+import java.util.*
 
 class ComposeViewModel : BaseViewModel(), KoinComponent {
 
@@ -112,7 +115,9 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
             conversation.value = conversationRepo.getConversation(mThreadId)
             messages.value = messageRepo.getMessages(mThreadId)
 
+            // To be clear...
             activeConversationManager.setActiveConversation(mThreadId)
+
             markRead(listOf(mThreadId)) {
                 if (it is Result.Error) {
                     fail(R.string.fail_mark_read, show = true)
@@ -203,10 +208,25 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
         activeConversationManager.setActiveConversation(null)
     }
 
+    fun getSearchResult(query: CharSequence? = ""): List<Contact> {
+        val queryString = (query ?: "").toString()
+
+        var contacts = getContacts(queryString)
+
+        if (PhoneNumberUtils.isWellFormedSmsAddress(queryString)) {
+            val newAddress = PhoneNumberUtils.formatNumber(queryString, Locale.getDefault().country)
+            val newContact = Contact(numbers = RealmList(PhoneNumber(address = newAddress ?: queryString)))
+            contacts = listOf(newContact) + contacts
+        }
+
+        return contacts
+    }
+
     override fun onCleared() {
         super.onCleared()
 
-        activeConversationManager.setActiveConversation(null)
+        // To be clear...
+        unsetActiveConversation()
     }
 }
 

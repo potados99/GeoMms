@@ -53,8 +53,8 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
         failables += contactFilter
     }
 
-    fun onSearch(query: CharSequence?) {
-        val queryString = query.toString()
+    fun getSearchResult(query: CharSequence? = ""): List<Contact> {
+        val queryString = (query ?: "").toString()
 
         var contacts = getContacts(queryString)
 
@@ -64,7 +64,7 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
             contacts = listOf(newContact) + contacts
         }
 
-        this.contacts.value = contacts
+        return contacts
     }
 
     fun onContactClick(activity: FragmentActivity?, contact: Contact) {

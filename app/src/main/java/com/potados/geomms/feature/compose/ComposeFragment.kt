@@ -147,17 +147,7 @@ class ComposeFragment : BaseFragment() {
         with(view.chips) {
             adapter = chipsAdapter.apply {
                 editText.setOnTextChanged {
-                    val query = it.toString()
-
-                    var contacts = composeViewModel.getContacts(query)
-
-                    if (PhoneNumberUtils.isWellFormedSmsAddress(query)) {
-                        val newAddress = PhoneNumberUtils.formatNumber(query, Locale.getDefault().country)
-                        val newContact = Contact(numbers = RealmList(PhoneNumber(address = newAddress ?: query)))
-                        contacts = listOf(newContact) + contacts
-                    }
-
-                    contactAdapter.data = contacts
+                    composeViewModel.getSearchResult(it)
                 }
 
                 editText.requestFocus()
@@ -166,9 +156,9 @@ class ComposeFragment : BaseFragment() {
 
         with(view.contacts) {
             adapter = contactAdapter.apply {
-                data = composeViewModel.getContacts()
-
                 onContactClick = { composeViewModel.setConversationByContact(it) }
+
+                data = composeViewModel.getContacts()
             }
 
             itemAnimator = null
