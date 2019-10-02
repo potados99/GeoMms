@@ -91,7 +91,8 @@ val myModules = module {
             conversationRepo = get(),
             locationRepo = get(),
             scheduler = get(),
-            keyManager = get()
+            keyManager = get(),
+            pref = get()
         ) as LocationSupportService
     }
 

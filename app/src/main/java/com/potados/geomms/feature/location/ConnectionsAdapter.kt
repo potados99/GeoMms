@@ -60,24 +60,14 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
             }
             view.refresh_button.setOnClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
-                Realm.getDefaultInstance().use {
-                    it.executeTransaction { item.isWaitingForReply = true }
-                }
-
                 onRefreshClick(item)
-
-                handler.doAfter(preferences.requestUpdateCoolTime) {
-                    Realm.getDefaultInstance().use {
-                        it.executeTransaction { item.isWaitingForReply = false }
-                    }
-                }
             }
         }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val view = holder.containerView
-        val item = getItem(position) ?: return
+        val item = getItem(position).takeIf { it?.isValid == true } ?: return
 
         val alpha = if (item.isTemporal) 0.5f else 1.0f
         val timeLeftVisibility = !item.isTemporal

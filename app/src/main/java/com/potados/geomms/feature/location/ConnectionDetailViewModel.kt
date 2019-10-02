@@ -116,21 +116,7 @@ class ConnectionDetailViewModel : BaseViewModel() {
 
     private fun requestUpdate(connection: Connection) {
         // Connection on sharing
-        if (service.requestUpdate(connection.id)) {
-            Realm.getDefaultInstance().use {
-                it.executeTransaction {
-                    mConnection.isWaitingForReply = true
-                }
-            }
-
-            handler.doAfter(preferences.requestUpdateCoolTime) {
-                Realm.getDefaultInstance().use {
-                    it.executeTransaction {
-                        connection.isWaitingForReply = false
-                    }
-                }
-            }
-        }
+        service.requestUpdate(connection.id)
     }
 
     fun onNegativeButton(fragment: BaseFragment) {
@@ -171,11 +157,7 @@ class ConnectionDetailViewModel : BaseViewModel() {
     }
 
     private fun setDetails(connection: Connection?) {
-        if (connection == null || !connection.isValid) {
-            return
-        }
-
-        this.mConnection = connection
+        this.mConnection = connection?.takeIf { it.isValid } ?: return
 
         recipient.value = connection.recipient
         name.value = connection.recipient?.getDisplayName()

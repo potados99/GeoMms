@@ -33,6 +33,7 @@ import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.unitOnFail
 import com.potados.geomms.manager.KeyManager
 import com.potados.geomms.model.*
+import com.potados.geomms.preference.MyPreferences
 import com.potados.geomms.receiver.SendUpdateReceiver
 import com.potados.geomms.receiver.SendUpdateReceiver.Companion.EXTRA_CONNECTION_ID
 import com.potados.geomms.repository.ConversationRepository
@@ -69,7 +70,8 @@ class LocationSupportServiceImpl(
     private val conversationRepo: ConversationRepository,
     private val locationRepo: LocationRepository,
     private val scheduler: Scheduler,
-    private val keyManager: KeyManager
+    private val keyManager: KeyManager,
+    private val pref: MyPreferences
 ) : LocationSupportService() {
 
     private var started = false
@@ -364,7 +366,7 @@ class LocationSupportServiceImpl(
 
         val connection = Connection.fromAcceptedRequest(request)
 
-        // add connection, delete request
+        // Add connection, delete request
         executeInDefaultInstance { realm ->
             request.deleteFromRealm()
 
@@ -373,7 +375,8 @@ class LocationSupportServiceImpl(
             registerTask(connection.id)
         }
 
-        // start sending updates
+        // Send initial data.
+        scheduleSendUpdate(connection.id, 3, 1000)
 
         Timber.i("Accept -> New connection(${connection.id}) established with ${connection.id}.")
 
@@ -392,12 +395,17 @@ class LocationSupportServiceImpl(
         // if there is a temporal connection already added, it will be updated.
         val connection = Connection.fromAcceptedRequest(request)
 
+        // Add connection, delete request
         executeInDefaultInstance { realm ->
             request.deleteFromRealm()
 
             realm.insertOrUpdate(connection)
+
             registerTask(connection.id)
         }
+
+        // Send initial data.
+        scheduleSendUpdate(connection.id, 3, 1000)
 
         Timber.i("Accepted -> New connection(${connection.id}) established with ${connection.id}.")
 
@@ -584,6 +592,20 @@ class LocationSupportServiceImpl(
         val packet = Packet.ofRequestingUpdate(connection)
 
         sendPacket(connection.recipient?.address ?: return@falseOnFail false, packet)
+
+        // Mark waiting for reply now
+        executeInDefaultInstance {
+            connection.isWaitingForReply = true
+        }
+
+        // Mark not waiting for reply after n sec.
+        scheduler.doAfter(connection.id, pref.requestUpdateCoolTime) {
+            validator.validate(connection)?.let { validated ->
+                executeInDefaultInstance {
+                    validated.isWaitingForReply = false
+                }
+            }
+        }
 
         Timber.i("Requested update of ${connection.id} to ${connection.recipient?.getDisplayName()}.")
 
@@ -945,8 +967,8 @@ class LocationSupportServiceImpl(
      * Send update for connection of [connectionId] for [repeat] times,
      * with [interval] of interval.
      */
-    private fun scheduleSendUpdate(connectionId: Long, repeat: Long, interval: Long) {
-        val sendBroadcast = {
+    private fun scheduleSendUpdate(connectionId: Long, repeat: Long = 3, interval: Long = 1000) {
+        scheduler.doFor(connectionId, repeat, interval) {
             // This closure may be launched in a thread which is
             // not a thread the connection object is created.
             context.sendBroadcast(
@@ -955,10 +977,6 @@ class LocationSupportServiceImpl(
                 }
             )
         }
-
-        scheduler.doFor(connectionId, repeat, interval, sendBroadcast)
-
-        scheduler
     }
 
     private fun closeExpiredConnection(connectionId: Long) = falseOnFail {

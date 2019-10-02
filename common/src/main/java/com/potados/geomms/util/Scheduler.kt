@@ -50,6 +50,25 @@ class Scheduler {
     }
 
     /**
+     * Do task after delay.
+     */
+    fun doAfter(taskId: Long, delay: Long, task: () -> Any?) {
+        // Auto remove after invoked.
+        val runnable = object: Runnable {
+            override fun run() {
+                task()
+                Timber.v("On time task $taskId ran.")
+                tasks[taskId]?.remove(this)
+            }
+        }
+
+        addRunnable(taskId, runnable)
+        handler.postDelayed(runnable, delay)
+
+        Timber.i("Task $taskId after ${delay}msec.")
+    }
+
+    /**
      * Add task to be done at time.
      */
     fun doAtTime(taskId: Long, time: Long, task: () -> Any?) {
