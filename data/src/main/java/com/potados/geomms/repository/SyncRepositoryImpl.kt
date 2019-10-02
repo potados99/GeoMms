@@ -160,9 +160,6 @@ class SyncRepositoryImpl(
             Timber.i("Messages inserted to realm.")
         }
 
-        // TODO test code
-        Thread.sleep(5000)
-
         /**
          * Conversation
          */

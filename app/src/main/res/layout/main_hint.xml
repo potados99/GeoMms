@@ -27,64 +27,65 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:defaultSmsState="@{vm.defaultSmsState}">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:defaultSmsState="@{vm.defaultSmsState}">
 
         <!-- Title -->
         <com.potados.geomms.common.widget.CollapseTextView
-                android:id="@+id/title"
-                style="@style/TextPrimary"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:paddingTop="16dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/message"
-                app:layout_constraintEnd_toStartOf="@id/change"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                android:text="@string/main_default_sms_title"/>
+            android:id="@+id/title"
+            style="@style/TextPrimary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:paddingTop="16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/message"
+            app:layout_constraintEnd_toStartOf="@id/change"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/main_default_sms_title"/>
 
         <!-- Message -->
         <com.potados.geomms.common.widget.CollapseTextView
-                android:id="@+id/message"
-                style="@style/TextSecondary"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
-                android:paddingBottom="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/change"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintStart_toStartOf="parent"
-                android:text="@string/main_default_sms_message"/>
+            android:id="@+id/message"
+            style="@style/TextSecondary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/change"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/main_default_sms_message"/>
 
         <!-- Button -->
         <com.potados.geomms.common.widget.CollapseTextView
-                android:id="@+id/change"
-                style="@style/TextSecondary"
-                android:textColor="?attr/tintPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:padding="16dp"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/message"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/title"
-                android:text="@string/main_default_sms_change"
-                android:onClick="@{() -> vm.showChangeDefaultAppDialog()}"/>
+            android:id="@+id/change"
+            style="@style/TextSecondary"
+            android:textColor="?attr/tintPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:padding="16dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title"
+            android:text="@string/main_default_sms_change"
+            android:onClick="@{() -> vm.showChangeDefaultAppDialog()}"/>
 
         <!-- Separator -->
         <View
-                android:id="@+id/bottom"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/divider"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/divider"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
