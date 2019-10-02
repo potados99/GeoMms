@@ -31,7 +31,6 @@ import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
-import com.potados.geomms.common.widget.CustomBottomSheetBehavior
 import kotlinx.android.synthetic.main.bottom_sheet_container.view.*
 import java.util.*
 
@@ -86,7 +85,12 @@ class BottomSheetManager(
             return
         }
 
-        val activeSheet = sheetStack.pop()
+        // Pop only cancelable sheets.
+        if (!sheetStack.peek().cancelable) {
+            return
+        }
+
+        val activeSheet = sheetStack.pop() ?: return
 
         // Hide currently active sheet.
         handler.doAfter(0) {
@@ -136,7 +140,8 @@ class BottomSheetManager(
     }
 
     private fun createSheet(fragment: BaseFragment, cancelable: Boolean): Sheet {
-        return inflateBottomSheet().apply {
+        return initializeBottomSheet(cancelable).apply {
+
             sheetView.cancel_button.apply {
                 isVisible = cancelable
                 setOnClickListener { pop() }
@@ -176,7 +181,11 @@ class BottomSheetManager(
         }
     }
 
-    private fun inflateBottomSheet(): Sheet {
+    /**
+     * This returns a Sheet,
+     * because the returned result should include container id.
+     */
+    private fun initializeBottomSheet(cancelable: Boolean): Sheet {
         val containerId = generateId()
 
         val view = inflater.inflate(R.layout.bottom_sheet_container, rootView, false).apply {
@@ -201,7 +210,7 @@ class BottomSheetManager(
             findViewById<FrameLayout>(R.id.template_fragment_container).id = containerId
         }
 
-        return Sheet(view, containerId)
+        return Sheet(view, containerId, cancelable = cancelable)
     }
 
     private fun addToRoot(view: View) {
@@ -265,7 +274,8 @@ class BottomSheetManager(
     data class Sheet(
         val sheetView: View,
         @IdRes val fragmentContainerId: Int,
-        var childFragment: Fragment? = null
+        var childFragment: Fragment? = null,
+        val cancelable: Boolean = true
     ) {
         /**
          * Set childFragment initialization state.
