@@ -46,6 +46,7 @@ import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.main_activity.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import timber.log.Timber
 import kotlin.system.exitProcess
 
 class MainActivity : NavigationActivity(), KoinComponent {
@@ -85,13 +86,8 @@ class MainActivity : NavigationActivity(), KoinComponent {
         super.onPostCreate(savedInstanceState)
 
         viewModel.apply {
-            start()
-
             observe(syncEvent) {
-                // Avoid duplicated sync.
-                // Ignore sync event before first sync.
-                val conditionToSync = (it == SyncRepository.SyncEvent.EVENT_INITIAL || !isNotSyncedYet())
-                if (it != SyncRepository.SyncEvent.EVENT_NONE && conditionToSync) {
+                if (it != SyncRepository.SyncEvent.EVENT_NONE) {
                     showSyncDialog(this@MainActivity)
                 }
             }

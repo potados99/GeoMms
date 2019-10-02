@@ -29,29 +29,6 @@ class MainViewModel : BaseViewModel() {
         failables += navigator
     }
 
-    override fun start() {
-        super.start()
-
-        syncIfNeeded()
-    }
-
-    /**
-     * Sync messages if not done.
-     */
-    private fun syncIfNeeded() {
-        if (isNotSyncedYet()) {
-            syncRepo.triggerSyncMessages(SyncRepository.SyncEvent.EVENT_INITIAL)
-        }
-    }
-
-    fun isNotSyncedYet(): Boolean {
-        val lastSync = Realm.getDefaultInstance().use { realm -> realm.where(SyncLog::class.java)?.max("date") ?: 0 }
-        return (lastSync == 0 &&
-                permissionManager.isDefaultSms() &&
-                permissionManager.hasReadSms() &&
-                permissionManager.hasContacts())
-    }
-
     /**
      * This method is recommended to be invoked by its owner childFragment,
      * in response of [syncEvent].

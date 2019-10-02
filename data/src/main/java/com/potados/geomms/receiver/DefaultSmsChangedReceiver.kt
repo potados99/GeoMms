@@ -24,8 +24,10 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
 import com.potados.geomms.manager.PermissionManager
+import com.potados.geomms.model.SyncLog
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.usecase.SyncMessages
+import io.realm.Realm
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
@@ -41,7 +43,7 @@ import timber.log.Timber
  */
 class DefaultSmsChangedReceiver : BroadcastReceiver(), KoinComponent {
 
-    private val syncRepository: SyncRepository by inject()
+    private val syncRepo: SyncRepository by inject()
     private val permissionManager: PermissionManager by inject()
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -56,7 +58,21 @@ class DefaultSmsChangedReceiver : BroadcastReceiver(), KoinComponent {
             // That can be a problem when user changed default sms app and done something,
             // and then return the default app back to this app, without this app detecting
             // need to sync again.
-            syncRepository.triggerSyncMessages(SyncRepository.SyncEvent.EVENT_SMS_APP_CHANGED)
+
+            syncRepo.triggerSyncMessages(
+                if (isNotSyncedYet())
+                    SyncRepository.SyncEvent.EVENT_INITIAL
+                else
+                    SyncRepository.SyncEvent.EVENT_SMS_APP_CHANGED
+            )
         }
+    }
+
+    private fun isNotSyncedYet(): Boolean {
+        val lastSync = Realm.getDefaultInstance().use { realm -> realm.where(SyncLog::class.java)?.max("date") ?: 0 }
+        return (lastSync == 0 &&
+                permissionManager.isDefaultSms() &&
+                permissionManager.hasReadSms() &&
+                permissionManager.hasContacts())
     }
 }
