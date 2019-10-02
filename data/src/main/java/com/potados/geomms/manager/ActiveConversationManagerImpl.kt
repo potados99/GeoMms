@@ -19,16 +19,21 @@
 
 package com.potados.geomms.manager
 
+import timber.log.Timber
+
 class ActiveConversationManagerImpl: ActiveConversationManager() {
 
     private var threadId: Long? = null
 
     override fun setActiveConversation(threadId: Long?) {
+        Timber.i("Active conversation is set to $threadId")
+
         this.threadId = threadId
     }
 
     override fun getActiveConversation(): Long? {
+        Timber.i("Active conversation is queried: $threadId")
+
         return threadId
     }
-
 }

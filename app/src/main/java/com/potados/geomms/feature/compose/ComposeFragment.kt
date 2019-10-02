@@ -110,6 +110,16 @@ class ComposeFragment : BaseFragment() {
         return true
     }
 
+    override fun onResume() {
+        super.onResume()
+        composeViewModel.setActiveConversation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        composeViewModel.unsetActiveConversation()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         composeViewModel.conversation.removeObservers(this)
@@ -208,5 +218,4 @@ class ComposeFragment : BaseFragment() {
     private fun getFirstRecipient(): Recipient? {
         return composeViewModel.conversation.value?.recipients?.get(0)
     }
-
 }

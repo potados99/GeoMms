@@ -78,6 +78,8 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
     // Binding element
     val messageText = ObservableField<String>()
 
+    private var mThreadId: Long = 0L
+
     init {
         failables += this
         failables += activeConversationManager
@@ -96,9 +98,9 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
         // Not a direct call from Fragment, but it's okay.
         start()
 
-        val threadId = intent.extras?.getLong("threadId") ?: 0L
+        mThreadId = intent.extras?.getLong("threadId") ?: 0L
 
-        if (threadId == 0L) {
+        if (mThreadId == 0L) {
             // conversation is not set.
             sharedText = ""
             attachments = Attachments(listOf())
@@ -107,11 +109,11 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
             // conversation is set.
             // handle messages, shared text and attachments.
 
-            conversation.value = conversationRepo.getConversation(threadId)
-            messages.value = messageRepo.getMessages(threadId)
+            conversation.value = conversationRepo.getConversation(mThreadId)
+            messages.value = messageRepo.getMessages(mThreadId)
 
-            activeConversationManager.setActiveConversation(threadId)
-            markRead(listOf(threadId)) {
+            activeConversationManager.setActiveConversation(mThreadId)
+            markRead(listOf(mThreadId)) {
                 if (it is Result.Error) {
                     fail(R.string.fail_mark_read, show = true)
                 }
@@ -193,8 +195,17 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
         }
     }
 
+    fun setActiveConversation() {
+        activeConversationManager.setActiveConversation(mThreadId)
+    }
+
+    fun unsetActiveConversation() {
+        activeConversationManager.setActiveConversation(null)
+    }
+
     override fun onCleared() {
         super.onCleared()
+
         activeConversationManager.setActiveConversation(null)
     }
 }
