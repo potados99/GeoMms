@@ -31,7 +31,7 @@
     <string name="menu_call">Call</string>
     <string name="menu_info">Details</string>
 
-    <string name="main_syncing">Syncing messages…(%d/%d)</string>
+    <string name="main_syncing">Syncing…(%d/%d)</string>
     <string name="main_message_results_title">Results in messages</string>
     <string name="main_message_results">%d messages</string>
     <string name="main_default_sms_title">Share your stories</string>

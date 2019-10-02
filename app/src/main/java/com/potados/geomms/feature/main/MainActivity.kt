@@ -54,7 +54,7 @@ class MainActivity : NavigationActivity(), KoinComponent {
 
     override val navigationMenuId: Int = R.menu.bottom_nav
     override val defaultMenuItemId: Int = R.id.menu_item_navigation_map
-    override val layoutId: Int = R.layout.main_activity
+    override val layoutId: Int? = null /* We use data binding here. */
 
     private val service: LocationSupportService by inject()
     private val navigator: Navigator by inject()
@@ -66,9 +66,8 @@ class MainActivity : NavigationActivity(), KoinComponent {
     private var lastTimeBackButtonPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         viewDataBinding = DataBindingUtil.setContentView(this, R.layout.main_activity)
+        super.onCreate(savedInstanceState)
 
         viewModel = getViewModel()
 

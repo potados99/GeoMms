@@ -27,39 +27,40 @@
     </data>
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:syncState="@{vm.syncState}">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="?android:attr/windowBackground"
+        app:syncState="@{vm.syncState}">
 
         <!-- Separator -->
         <View
-                android:id="@+id/bottom"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/divider"/>
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/divider"/>
 
         <!-- Title -->
         <com.potados.geomms.common.widget.CollapseTextView
-                android:id="@+id/title"
-                style="@style/TextPrimary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:paddingTop="16dp"
-                android:text="@string/main_syncing"
-                android:textStyle="bold" />
+            android:id="@+id/title"
+            style="@style/TextPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:paddingTop="16dp"
+            android:text="@string/main_syncing"
+            android:textStyle="bold" />
 
         <!-- Progress -->
         <ProgressBar
-                android:id="@+id/progress"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"/>
+            android:id="@+id/progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"/>
 
     </LinearLayout>
 

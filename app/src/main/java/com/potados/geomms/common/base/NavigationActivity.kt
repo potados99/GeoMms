@@ -48,7 +48,7 @@ abstract class NavigationActivity : BaseActivity() {
 
     abstract val navigationMenuId: Int
     open val defaultMenuItemId: Int = -1
-    open val layoutId: Int = R.layout.navigation_activity
+    open val layoutId: Int? = R.layout.navigation_activity
 
     private var activeFragmentId: Int = -1
 
@@ -58,7 +58,7 @@ abstract class NavigationActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layoutId)
+        layoutId?.let(::setContentView)
         setToolbar()
         savedInstanceState ?: addOrShowFragment(defaultMenuItemId)
         setNavigationView()

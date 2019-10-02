@@ -61,4 +61,8 @@ class MainViewModel : BaseViewModel() {
     fun showSyncDialog(activity: FragmentActivity?) {
         navigator.showSyncDialog(activity)
     }
+
+    fun showChangeDefaultAppDialog() {
+        navigator.showDefaultSmsDialogIfNeeded()
+    }
 }

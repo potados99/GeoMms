@@ -29,7 +29,7 @@
     <string name="title_compose">이름 또는 전화번호</string>
     <string name="menu_call">전화</string>
     <string name="menu_info">자세히</string>
-    <string name="main_syncing">메시지 동기화중 (%d/%d)</string>
+    <string name="main_syncing">동기화중 (%d/%d)</string>
     <string name="main_message_results_title">메시지 검색 결과</string>
     <string name="main_message_results">%d 개의 메시지</string>
     <string name="main_default_sms_title">당신의 이야기를 나누어 보세요</string>
