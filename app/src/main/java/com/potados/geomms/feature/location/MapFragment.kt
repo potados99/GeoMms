@@ -196,6 +196,8 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             setOnCameraMoveStartedListener {
                 if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                     childBottomSheetManager?.collapseSheet()
+
+                    // Stop tracking for friends location.
                     mapViewModel.untrack()
                 }
             }
