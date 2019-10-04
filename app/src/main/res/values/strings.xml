@@ -168,6 +168,10 @@
     <string name="fail_refresh_no_recipient">Fail to request update. No recipient.</string>
     <string name="notify_invitation_canceled">Invitation canceled.</string>
     <string name="description_incoming_invitation">Incomming invitation</string>
+    <string name="settings_title_sync_contacts">Sync contacts</string>
+    <string name="steeings_summary_sync_contacts">Update all contacts to the latest version in your phone.</string>
+    <string name="notify_fail_sync_contacts">Failed to sync contacts</string>
+    <string name="notify_sync_contacts_completed">Sync contact completed.</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>

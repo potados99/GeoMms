@@ -23,29 +23,34 @@
 
     <PreferenceCategory app:title="@string/settings_category_general">
         <SwitchPreference
-                app:key="in_app_notification"
-                app:defaultValue="true"
-                app:title="@string/settings_title_in_app_notification" />
+            app:key="in_app_notification"
+            app:defaultValue="true"
+            app:title="@string/settings_title_in_app_notification" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/settings_category_messaging">
         <Preference
-                app:key="sync"
-                app:title="@string/settings_title_sync"
-                app:summary="@string/settings_summary_sync" />
+            app:key="sync_contacts"
+            app:title="@string/settings_title_sync_contacts"
+            app:summary="@string/steeings_summary_sync_contacts" />
+
+        <Preference
+            app:key="sync_messages"
+            app:title="@string/settings_title_sync"
+            app:summary="@string/settings_summary_sync" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/settings_category_location">
         <SwitchPreference
-                app:key="receive_geomms"
-                app:defaultValue="true"
-                app:title="@string/settings_title_receive_geomms"
-                app:summary="@string/settings_summary_receive_geomms" />
+            app:key="receive_geomms"
+            app:defaultValue="true"
+            app:title="@string/settings_title_receive_geomms"
+            app:summary="@string/settings_summary_receive_geomms" />
 
         <Preference
-                app:key="clear_all_geomms"
-                app:title="@string/settings_title_clear_connections"
-                app:summary="@string/settings_summary_clear_connections"/>
+            app:key="clear_all_geomms"
+            app:title="@string/settings_title_clear_connections"
+            app:summary="@string/settings_summary_clear_connections"/>
 
     </PreferenceCategory>
 
@@ -56,7 +61,5 @@
             app:title="@string/settings_title_show_all_error"
             app:summary="@string/settings_summary_show_all_error" />
     </PreferenceCategory>
-
-
 
 </androidx.preference.PreferenceScreen>

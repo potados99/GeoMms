@@ -278,6 +278,11 @@ class SyncRepositoryImpl(
     }
 
     override fun syncContacts() = unitOnFail {
+        if (_progress.value is SyncProgress.Running) {
+            Timber.i("Sync already in progress; return")
+            return@unitOnFail
+        }
+
         // Load all the contacts
         var contacts = getContacts() ?: throw RuntimeException("Failed to sync contacts.")
 
@@ -289,7 +294,7 @@ class SyncRepositoryImpl(
 
                 contacts = realm.copyToRealm(contacts)
 
-                recipients.forEach {recipient ->
+                recipients.forEach { recipient ->
                     recipient.contact = contacts.find { contact ->
                         contact.numbers.any { PhoneNumberUtils.compare(recipient.address, it.address) }
                     }

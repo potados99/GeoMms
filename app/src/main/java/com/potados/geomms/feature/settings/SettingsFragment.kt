@@ -27,6 +27,7 @@ import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.usecase.ClearAll
+import com.potados.geomms.usecase.SyncContacts
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
 import org.koin.core.KoinComponent
@@ -34,8 +35,8 @@ import org.koin.core.inject
 
 class SettingsFragment : PreferenceFragmentCompat(), KoinComponent {
 
-    private val syncRepo: SyncRepository by inject()
     private val clearAll: ClearAll by inject()
+    private val syncContacts: SyncContacts by inject()
 
     private val service: LocationSupportService by inject()
 
@@ -44,7 +45,7 @@ class SettingsFragment : PreferenceFragmentCompat(), KoinComponent {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preference, rootKey)
 
-        findPreference<Preference>("sync")?.setOnPreferenceClickListener {
+        onPreferenceClick("sync_messages") {
             Popup(context)
                 .withTitle(R.string.dialog_sync_messages)
                 .withMessage(R.string.dialog_ask_sync_messages)
@@ -63,10 +64,19 @@ class SettingsFragment : PreferenceFragmentCompat(), KoinComponent {
                 .withNegativeButton(R.string.button_cancel)
                 .show()
 
-            true
         }
 
-        findPreference<Preference>("clear_all_geomms")?.setOnPreferenceClickListener {
+        onPreferenceClick("sync_contacts") {
+            syncContacts(Unit) {
+                it.either({
+                    Notify(context).short(R.string.notify_sync_contacts_completed)
+                }, {
+                    Notify(context).short(R.string.notify_fail_sync_contacts)
+                })
+            }
+        }
+
+        onPreferenceClick("clear_all_geomms") {
             if (!service.isIdle()) {
                 Popup(context)
                     .withTitle(R.string.dialog_warning)
@@ -85,7 +95,12 @@ class SettingsFragment : PreferenceFragmentCompat(), KoinComponent {
             } else {
                 Notify(context).short(R.string.notify_nothing_to_delete)
             }
+        }
+    }
 
+    private fun onPreferenceClick(key: String, body: () -> Any?) {
+        findPreference<Preference>(key)?.setOnPreferenceClickListener {
+            body()
             true
         }
     }
