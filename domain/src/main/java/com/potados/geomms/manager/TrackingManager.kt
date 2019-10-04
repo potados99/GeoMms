@@ -19,12 +19,12 @@
 
 package com.potados.geomms.manager
 
+import androidx.lifecycle.LiveData
+
 /**
- * Keeps track of the conversation that the user is currently viewing. This is useful when we
- * receive a message, because it allows us to immediately mark the message read and not display
- * a notification
+ * Manage location connection on tracking.
  */
-abstract class ActiveConversationManager : Manager() {
-    abstract fun setActiveConversation(threadId: Long?)
-    abstract fun getActiveConversation(): Long?
+abstract class TrackingManager : Manager() {
+    abstract fun setTracking(connectionId: Long?)
+    abstract fun getTracking(): LiveData<Long>
 }

@@ -19,12 +19,23 @@
 
 package com.potados.geomms.manager
 
-/**
- * Keeps track of the conversation that the user is currently viewing. This is useful when we
- * receive a message, because it allows us to immediately mark the message read and not display
- * a notification
- */
-abstract class ActiveConversationManager : Manager() {
-    abstract fun setActiveConversation(threadId: Long?)
-    abstract fun getActiveConversation(): Long?
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import timber.log.Timber
+
+class TrackingManagerImpl : TrackingManager() {
+
+    private val connectionIdLive = MutableLiveData<Long>().apply {
+        value = null
+    }
+
+    override fun setTracking(connectionId: Long?) {
+        Timber.i("Connection $connectionId is now being tracked.")
+
+        connectionIdLive.postValue(connectionId)
+    }
+
+    override fun getTracking(): LiveData<Long> {
+        return connectionIdLive
+    }
 }

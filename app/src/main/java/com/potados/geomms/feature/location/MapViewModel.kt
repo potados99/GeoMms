@@ -29,6 +29,7 @@ import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
+import com.potados.geomms.manager.TrackingManager
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.repository.LocationRepository
@@ -49,6 +50,7 @@ class MapViewModel : BaseViewModel(), KoinComponent {
 
     private val service: LocationSupportService by inject()
     private val locationRepo: LocationRepository by inject()
+    private val trackManager: TrackingManager by inject()
     private val dateFormatter: DateFormatter by inject()
     private val navigator: Navigator by inject()
 
@@ -101,18 +103,18 @@ class MapViewModel : BaseViewModel(), KoinComponent {
         }
     }
 
-    private fun request(address: String, duration: Long) = service.requestNewConnection(address, duration)
-    private fun accept(request: ConnectionRequest) = service.acceptConnectionRequest(request)
-    private fun refuse(request: ConnectionRequest) = service.refuseConnectionRequest(request)
-    private fun delete(connection: Connection) = service.requestDisconnect(connection.id)
-    private fun cancel(connection: Connection) = service.cancelConnectionRequest(connection)
-
+    /**
+     * Show contacts to invite.
+     */
     fun invite() {
         navigator.showInvite()
     }
 
+    /**
+     * Send request
+     */
     fun request(activity: FragmentActivity?, address: String, duration: Long) {
-        if (request(address, duration)) {
+        if (service.requestNewConnection(address, duration)) {
             Popup(activity)
                 .withTitle(R.string.title_invitation_sent)
                 .withMessage(R.string.connection_request_sent_to, address)
@@ -123,5 +125,9 @@ class MapViewModel : BaseViewModel(), KoinComponent {
 
     fun getLocation(onLocation: (Location) -> Unit) {
         locationRepo.getLocationWithCallback(onLocation)
+    }
+
+    fun untrack() {
+        trackManager.setTracking(null)
     }
 }

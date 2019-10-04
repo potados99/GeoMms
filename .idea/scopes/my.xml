@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="my" pattern="src[app]:*..*||src[data]:*..*||src[GeoMms]:*..*||src[common]:*..*||src[domain]:*..*||test[app]:*..*||test[common]:*..*||test[data]:*..*||test[domain]:*..*" />
-</component>

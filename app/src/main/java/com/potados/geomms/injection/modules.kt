@@ -92,7 +92,8 @@ val myModules = module {
             locationRepo = get(),
             scheduler = get(),
             keyManager = get(),
-            pref = get()
+            pref = get(),
+            trackingManager = get()
         ) as LocationSupportService
     }
 
@@ -104,6 +105,9 @@ val myModules = module {
 
     /** Active Conversation Manager */
     single { ActiveConversationManagerImpl() as ActiveConversationManager }
+
+    /** Tracking Manager */
+    single { TrackingManagerImpl() as TrackingManager }
 
     /** Key Manager */
     single { KeyManagerImpl() as KeyManager }

@@ -196,6 +196,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             setOnCameraMoveStartedListener {
                 if (it == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
                     childBottomSheetManager?.collapseSheet()
+                    mapViewModel.untrack()
                 }
             }
 
