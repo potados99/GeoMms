@@ -176,5 +176,6 @@
     <string name="settings_title_sync_contacts">연락처 동기화</string>
     <string name="notify_fail_sync_contacts">연락처를 동기화하는 데에 실패했습니다.</string>
     <string name="notify_sync_contacts_completed">연락처 동기화가 완료되었습니다.</string>
+    <string name="description_show_on_map">실시간 위치 보기  아이콘입니다.</string>
 
 </resources>
