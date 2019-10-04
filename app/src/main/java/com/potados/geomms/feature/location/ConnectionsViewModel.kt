@@ -19,10 +19,10 @@
 
 package com.potados.geomms.feature.location
 
-import androidx.fragment.app.FragmentActivity
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.common.manager.BottomSheetManager
 import com.potados.geomms.common.navigation.Navigator
+import com.potados.geomms.manager.MapManager
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.service.LocationSupportService
@@ -32,6 +32,7 @@ class ConnectionsViewModel : BaseViewModel() {
 
     private val service: LocationSupportService by inject()
     private val locationService: LocationSupportService by inject()
+    private val mapManager: MapManager by inject()
     private val navigator: Navigator by inject()
 
     val incomingRequests = locationService.getIncomingRequests()
@@ -50,6 +51,8 @@ class ConnectionsViewModel : BaseViewModel() {
         sheetManager?.let {
             navigator.showConnectionInfo(it, connection.id)
         }
+
+        showOnMapAndTrackForIt(connection)
     }
 
     fun showRequestInfo(sheetManager: BottomSheetManager?, request: ConnectionRequest) {
@@ -58,7 +61,24 @@ class ConnectionsViewModel : BaseViewModel() {
         }
     }
 
+    /**
+     * Locate friend on the map and track for it.
+     */
     fun refreshConnection(connection: Connection) {
-        service.requestUpdate(connection.id)
+        if (!connection.isWaitingForReply) {
+            service.requestUpdate(connection.id)
+        }
+
+        showOnMapAndTrackForIt(connection)
+    }
+
+    private fun showOnMapAndTrackForIt(connection: Connection) {
+        // Start tracking the guy
+        mapManager.setTracking(connection.id)
+
+        // Show location of the guy on the map immediately if the location is available.
+        if (connection.lastUpdate != 0L) {
+            mapManager.triggerShowOnMap(connection.latitude, connection.longitude)
+        }
     }
 }

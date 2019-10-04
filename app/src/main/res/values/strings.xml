@@ -150,7 +150,7 @@
     <string name="fail_cannot_make_a_call_invalid_recipient">Failed to make a call. Recipient is not found.</string>
     <string name="connection_request_sent_to">Invitation sent to %s.</string>
     <string name="notify_fail_clear">Failed to clear all connections and requests.</string>
-    <string name="button_refresh">Refresh</string>
+    <string name="button_refresh">Show on map</string>
     <string name="button_invite">Invite</string>
     <string name="title_invitation_sent">Invitation sent</string>
     <string name="title_recent">Recent</string>
@@ -167,11 +167,12 @@
     <string name="fail_resend_no_recipient">Failed to resend invitation. No recipient.</string>
     <string name="fail_refresh_no_recipient">Fail to request update. No recipient.</string>
     <string name="notify_invitation_canceled">Invitation canceled.</string>
-    <string name="description_incoming_invitation">Incomming invitation</string>
+    <string name="description_incoming_invitation">Incoming invitation</string>
     <string name="settings_title_sync_contacts">Sync contacts</string>
     <string name="steeings_summary_sync_contacts">Update all contacts to the latest version in your phone.</string>
     <string name="notify_fail_sync_contacts">Failed to sync contacts</string>
     <string name="notify_sync_contacts_completed">Sync contact completed.</string>
+    <string name="description_show_on_map">This is a show on map icon.</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>

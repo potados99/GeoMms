@@ -26,7 +26,7 @@
     </plurals>
 
     <plurals name="hour_short">
-        <item quantity="other">%d h</item>
+        <item quantity="other">%dh</item>
     </plurals>
 
     <plurals name="minute">
@@ -35,7 +35,7 @@
     </plurals>
 
     <plurals name="minute_short">
-        <item quantity="other">%d min</item>
+        <item quantity="other">%dm</item>
     </plurals>
 
     <plurals name="second">
@@ -44,8 +44,7 @@
     </plurals>
 
     <plurals name="second_short">
-        <item quantity="other">%d sec</item>
+        <item quantity="other">%ds</item>
     </plurals>
-
 
 </resources>

@@ -29,14 +29,15 @@ open class Connection(
     @PrimaryKey var id: Long = 0,
     var recipient: Recipient? = null,
     var duration: Long = 0,
-    var date: Long = 0, // date established or request sent(temproal)
+    var date: Long = 0, // date established or request sent(temporal)
     var lastUpdate: Long = 0,
     var lastSent: Long = 0,
     var latitude: Double = 0.0,
     var longitude: Double = 0.0,
 
     @Index var isTemporal: Boolean = false, // is isTemporal when not accepted yet.
-    var isWaitingForReply: Boolean = false // is waiting for ricipient to send update/
+    var isWaitingForReply: Boolean = false, // is waiting for recipient to send update?
+    @Index var isOnTrack: Boolean = false // is this being tracked?
 
 ) : RealmObject() {
 

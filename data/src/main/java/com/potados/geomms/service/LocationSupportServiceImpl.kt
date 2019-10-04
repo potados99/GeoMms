@@ -32,7 +32,7 @@ import com.potados.geomms.extension.falseOnFail
 import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.unitOnFail
 import com.potados.geomms.manager.KeyManager
-import com.potados.geomms.manager.TrackingManager
+import com.potados.geomms.manager.MapManager
 import com.potados.geomms.model.*
 import com.potados.geomms.preference.MyPreferences
 import com.potados.geomms.receiver.SendUpdateReceiver
@@ -73,7 +73,7 @@ class LocationSupportServiceImpl(
     private val scheduler: Scheduler,
     private val keyManager: KeyManager,
     private val pref: MyPreferences,
-    private val trackingManager: TrackingManager
+    private val mapManager: MapManager
 ) : LocationSupportService() {
 
     private var started = false
@@ -578,13 +578,19 @@ class LocationSupportServiceImpl(
             connection.longitude = packet.longitude
         }
 
+        if (connection.isOnTrack) {
+            mapManager.triggerShowOnMap(packet.latitude, packet.longitude)
+        }
+
         Timber.i("Received update of connection ${connection.id} from ${connection.recipient?.getDisplayName()}.")
 
         return@falseOnFail true
     }
 
     override fun requestUpdate(connectionId: Long) = falseOnFail {
-        val connection = validator.validate(getConnection(connectionId, temporal = false))
+        val connection = validator.validate(getConnection(connectionId, temporal = false)) {
+            !it.isWaitingForReply
+        }
 
         if (connection == null) {
             fail(R.string.fail_cannot_request_update_invalid_connection, show = true)
@@ -610,7 +616,7 @@ class LocationSupportServiceImpl(
         }
 
         // Track this connection on map.
-        trackingManager.setTracking(connection.id)
+        mapManager.setTracking(connection.id)
 
         Timber.i("Requested update of ${connection.id} to ${connection.recipient?.getDisplayName()}.")
 

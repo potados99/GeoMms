@@ -45,12 +45,6 @@ class ConnectionsFragment : BaseFragment() {
         failables += requestsAdapter
     }
 
-    /**
-     * Propagate actions to outside
-     * Place this here, not in the sheetView model.
-     */
-    var onShowConnectionOnMap: (connection: Connection) -> Unit = {}
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -86,9 +80,6 @@ class ConnectionsFragment : BaseFragment() {
 
                 onConnectionClick = {
                     connectionsViewModel.showConnectionInfo(bottomSheetManager, it)
-
-                    // Running the outside code should be happened here, I think.
-                    onShowConnectionOnMap(it)
                 }
 
                 onRefreshClick = {

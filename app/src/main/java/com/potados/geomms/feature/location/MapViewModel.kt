@@ -29,7 +29,7 @@ import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
-import com.potados.geomms.manager.TrackingManager
+import com.potados.geomms.manager.MapManager
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.ConnectionRequest
 import com.potados.geomms.repository.LocationRepository
@@ -50,7 +50,7 @@ class MapViewModel : BaseViewModel(), KoinComponent {
 
     private val service: LocationSupportService by inject()
     private val locationRepo: LocationRepository by inject()
-    private val trackManager: TrackingManager by inject()
+    private val mapManager: MapManager by inject()
     private val dateFormatter: DateFormatter by inject()
     private val navigator: Navigator by inject()
 
@@ -59,30 +59,11 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     private val _markers = mutableListOf<MarkerOptions>()
     val markers =  MutableLiveData<MutableList<MarkerOptions>>()
 
-    private val refreshMarkers = { connections: RealmResults<Connection> ->
-        _markers.clear()
-        connections.forEach {
-            if (it.lastUpdate != 0L) {
-                // do not display marker when having nothing to display.
-
-                val update = dateFormatter.getConversationTimestamp(it.lastUpdate)
-                val lastUpdateString = context.getString(R.string.connection_last_update, update)
-
-                val markerOption = MarkerOptions()
-                    .position(LatLng(it.latitude, it.longitude))
-                    .title(it.recipient?.getDisplayName())
-                    .snippet(lastUpdateString)
-                    .icon(BitmapDescriptorFactory.defaultMarker(Random(it.id).nextInt(360).toFloat()))
-
-                _markers.add(markerOption)
-
-                Timber.i("Marker added.")
-            }
-        }
-
-        // commit
-        markers.value = _markers
+    private val onConnectionsChange = { connections: RealmResults<Connection> ->
+        refreshMarkers(connections)
     }
+
+    val showOnMapEvent = mapManager.showOnMapEvent()
 
     init {
         failables += this
@@ -95,11 +76,13 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     override fun start() {
         super.start()
 
+        stopTracking()
+
         connections?.let {
             // Setting change listener does not invoke it on register time.
             // Do it for one time manually.
-            it.addChangeListener(refreshMarkers)
-            refreshMarkers(it)
+            it.addChangeListener(onConnectionsChange)
+            onConnectionsChange(it)
         }
     }
 
@@ -127,7 +110,32 @@ class MapViewModel : BaseViewModel(), KoinComponent {
         locationRepo.getLocationWithCallback(onLocation)
     }
 
-    fun untrack() {
-        trackManager.setTracking(null)
+    fun stopTracking() {
+        mapManager.setTracking(null)
+    }
+
+    private fun refreshMarkers(connections: RealmResults<Connection>) {
+        _markers.clear()
+        connections.forEach {
+            if (it.lastUpdate != 0L) {
+                // do not display marker when having nothing to display.
+
+                val update = dateFormatter.getConversationTimestamp(it.lastUpdate)
+                val lastUpdateString = context.getString(R.string.connection_last_update, update)
+
+                val markerOption = MarkerOptions()
+                    .position(LatLng(it.latitude, it.longitude))
+                    .title(it.recipient?.getDisplayName())
+                    .snippet(lastUpdateString)
+                    .icon(BitmapDescriptorFactory.defaultMarker(Random(it.id).nextInt(360).toFloat()))
+
+                _markers.add(markerOption)
+
+                Timber.i("Marker added.")
+            }
+        }
+
+        // commit
+        markers.value = _markers
     }
 }

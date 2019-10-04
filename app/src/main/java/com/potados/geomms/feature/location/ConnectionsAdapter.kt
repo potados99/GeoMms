@@ -27,13 +27,10 @@ import android.view.ViewGroup
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseRealmAdapter
 import com.potados.geomms.common.base.BaseViewHolder
-import com.potados.geomms.common.extension.doAfter
-import com.potados.geomms.common.extension.doEvery
-import com.potados.geomms.common.extension.setVisible
+import com.potados.geomms.common.extension.*
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.model.Connection
 import com.potados.geomms.preference.MyPreferences
-import io.realm.Realm
 import kotlinx.android.synthetic.main.connection_list_item.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -58,7 +55,7 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
                 onConnectionClick(item)
             }
-            view.refresh_button.setOnClickListener {
+            view.refresh.setOnClickListener {
                 val item = getItem(adapterPosition) ?: return@setOnClickListener
                 onRefreshClick(item)
             }
@@ -74,8 +71,9 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
         val refreshVisibility = !item.isTemporal
 
         with(view.name) {
-            text = item.recipient?.getDisplayName()
             setAlpha(alpha)
+
+            text = item.recipient?.getDisplayName()
         }
 
         with(view.status) {
@@ -114,10 +112,10 @@ class ConnectionsAdapter : BaseRealmAdapter<Connection>(), KoinComponent {
             }
         }
 
-        with(view.refresh_button) {
+        with(view.refresh) {
             setVisible(refreshVisibility)
             setAlpha(if (item.isWaitingForReply) 0.5f else 1.0f)
-            isClickable = !item.isWaitingForReply
+            setTint(context.resolveColor(if (item.isOnTrack) R.color.blue else R.color.textSecondary))
         }
 
         // Refresh left time every second.

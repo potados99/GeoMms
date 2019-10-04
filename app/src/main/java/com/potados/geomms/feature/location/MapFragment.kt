@@ -25,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -78,8 +77,8 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
     /**
      * Initialization for connection list sheet.
      */
-    private val initializeSheetView: (ConnectionsFragment, View) -> Unit = { fragment, sheetView ->
-        with(sheetView) {
+    private val initializeSheetView: (View) -> Unit = {
+        with(it) {
             // Setting a behavior of the bottom sheet MUST take place
             // at where the parent of the sheet is available.
             bottomSheetBehavior.addCallback(
@@ -88,14 +87,8 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
                 // onSlide = { empty_view.setVerticalBiasByOffset(it) }
             )
 
-            connections.makeThisWorkInBottomSheet(sheetView)
-            incoming_requests.makeThisWorkInBottomSheet(sheetView)
-        }
-
-        fragment.onShowConnectionOnMap = {
-            if (it.lastUpdate != 0L) {
-                map?.moveTo(it.latitude, it.longitude, 15f)
-            }
+            connections.makeThisWorkInBottomSheet(it)
+            incoming_requests.makeThisWorkInBottomSheet(it)
         }
     }
 
@@ -108,7 +101,13 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
 
         MapsInitializer.initialize(context)
 
-        mapViewModel = getViewModel { start() }
+        mapViewModel = getViewModel {
+            start()
+
+            observe(showOnMapEvent) {
+                it?.let { map?.moveTo(it.first, it.second, 15f) }
+            }
+        }
         failables += mapViewModel.failables
 
         context?.registerReceiver(addressSetReceiver, IntentFilter(ACTION_SET_ADDRESS))
@@ -132,7 +131,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             ?.apply {
                 observe(isInitialized) {
                     if (it == true) {
-                        initializeSheetView(childFragment as ConnectionsFragment, sheetView)
+                        initializeSheetView(sheetView)
                     }
                 }
             }
@@ -166,7 +165,9 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
     }
     override fun onDestroy() {
         super.onDestroy()
+
         viewDataBinding.mapView.onDestroy()
+
         context?.unregisterReceiver(addressSetReceiver)
     }
     override fun onLowMemory() {
@@ -198,7 +199,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
                     childBottomSheetManager?.collapseSheet()
 
                     // Stop tracking for friends location.
-                    mapViewModel.untrack()
+                    mapViewModel.stopTracking()
                 }
             }
 

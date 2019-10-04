@@ -44,10 +44,10 @@ class ConnectionDetailFragment : BaseFragment() {
 
         connectionDetailViewModel = getViewModel {
             startWithArguments(this@ConnectionDetailFragment, arguments)
+
             observe(positiveButtonAlpha) {
                 it?.let {
                     with(viewDataBinding.positive) {
-                        isClickable = it > 0.6f
                         alpha = it
                     }
                     viewDataBinding.positive.alpha = it

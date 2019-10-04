@@ -20,23 +20,19 @@
 package com.potados.geomms.feature.location
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.base.BaseViewModel
-import com.potados.geomms.common.extension.doAfter
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.feature.location.ConnectionDetailFragment.Companion.ARG_CONNECTION_ID
+import com.potados.geomms.manager.MapManager
 import com.potados.geomms.model.Connection
 import com.potados.geomms.model.Recipient
-import com.potados.geomms.preference.MyPreferences
 import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.util.Notify
 import com.potados.geomms.util.Popup
-import io.realm.Realm
 import org.koin.core.inject
 import timber.log.Timber
 
@@ -44,9 +40,7 @@ class ConnectionDetailViewModel : BaseViewModel() {
 
     private val service: LocationSupportService by inject()
     private val dateFormatter: DateFormatter by inject()
-    private val preferences: MyPreferences by inject()
-
-    private val handler = Handler(Looper.getMainLooper())
+    private val mapManager: MapManager by inject()
 
     /**
      * Binding elements
@@ -99,7 +93,7 @@ class ConnectionDetailViewModel : BaseViewModel() {
         if (mConnection.isTemporal) {
             resendInvitation(fragment, mConnection)
         } else {
-            requestUpdate(mConnection)
+            refreshConnection(mConnection)
         }
     }
 
@@ -114,9 +108,12 @@ class ConnectionDetailViewModel : BaseViewModel() {
         }
     }
 
-    private fun requestUpdate(connection: Connection) {
-        // Connection on sharing
-        service.requestUpdate(connection.id)
+    private fun refreshConnection(connection: Connection) {
+        if (!connection.isWaitingForReply) {
+            service.requestUpdate(connection.id)
+        }
+
+        showOnMapAndTrackForIt(connection)
     }
 
     fun onNegativeButton(fragment: BaseFragment) {
@@ -205,5 +202,15 @@ class ConnectionDetailViewModel : BaseViewModel() {
 
     private fun str(@StringRes res: Int, vararg formatArgs: Any?): String {
         return context.getString(res, *formatArgs)
+    }
+
+    private fun showOnMapAndTrackForIt(connection: Connection) {
+        // Start tracking the guy
+        mapManager.setTracking(connection.id)
+
+        // Show location of the guy on the map immediately if the location is available.
+        if (connection.lastUpdate != 0L) {
+            mapManager.triggerShowOnMap(connection.latitude, connection.longitude)
+        }
     }
 }
