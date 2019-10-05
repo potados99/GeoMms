@@ -147,7 +147,7 @@ class ComposeFragment : BaseFragment() {
         with(view.chips) {
             adapter = chipsAdapter.apply {
                 editText.setOnTextChanged {
-                    composeViewModel.getSearchResult(it)
+                    contactAdapter.data = composeViewModel.getSearchResult(it)
                 }
 
                 editText.requestFocus()
