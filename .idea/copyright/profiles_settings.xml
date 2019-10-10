@@ -1,0 +1,8 @@
+<component name="CopyrightManager">
+  <settings default="gpl">
+    <module2copyright>
+      <element module="All" copyright="gpl" />
+      <element module="my" copyright="gpl" />
+    </module2copyright>
+  </settings>
+</component>
