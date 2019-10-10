@@ -32,7 +32,7 @@
         <Preference
             app:key="sync_contacts"
             app:title="@string/settings_title_sync_contacts"
-            app:summary="@string/steeings_summary_sync_contacts" />
+            app:summary="@string/settings_summary_sync_contacts" />
 
         <Preference
             app:key="sync_messages"

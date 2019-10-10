@@ -172,10 +172,11 @@
     <string name="fail_refresh_no_recipient">업데이트를 요청하는 데에 실패했습니다. 수신자가 없습니다.</string>
     <string name="fail_resend_no_recipient">초대를 다시 보내는 데에 실패했습니다. 수신자가 없습니다.</string>
     <string name="notify_invitation_canceled">초대 취소됨.</string>
-    <string name="steeings_summary_sync_contacts">모든 연락처를 최신 상태로 동기화합니다.</string>
+    <string name="settings_summary_sync_contacts">모든 연락처를 최신 상태로 동기화합니다.</string>
     <string name="settings_title_sync_contacts">연락처 동기화</string>
     <string name="notify_fail_sync_contacts">연락처를 동기화하는 데에 실패했습니다.</string>
     <string name="notify_sync_contacts_completed">연락처 동기화가 완료되었습니다.</string>
     <string name="description_show_on_map">실시간 위치 보기  아이콘입니다.</string>
+    <string name="description_attach">첨부파일 버튼입니다.</string>
 
 </resources>
