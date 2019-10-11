@@ -21,6 +21,7 @@ package com.potados.geomms.common.base
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.potados.geomms.R
 import com.potados.geomms.common.extension.findFragmentByNavigationId
@@ -128,7 +129,14 @@ abstract class NavigationActivity : BaseActivity() {
             // because it does not ensure childFragment is added after the call.
             // So the addition can occur over one time, which throws exception.
             // Use commitNow instead.
-            transaction.commitNow()
+            //
+            // Update: commit or commitNow throws exception below in some cases:
+            //
+            // Fatal Exception: java.lang.IllegalStateException
+            // Can not perform this action after onSaveInstanceState
+            //
+            // Use commitAllowingStateLoss or commitNowAllowingStateLoss.
+            transaction.commitNowAllowingStateLoss()
         }
     }
 
@@ -140,5 +148,9 @@ abstract class NavigationActivity : BaseActivity() {
 
             defaultMenuItemId.takeIf { it > 0 }?.let(::setSelectedItemId)
         }
+    }
+
+    protected fun selectTab(@IdRes menuItemId: Int) {
+        nav_view.selectedItemId = menuItemId
     }
 }

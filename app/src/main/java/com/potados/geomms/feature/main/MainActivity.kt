@@ -21,9 +21,9 @@ package com.potados.geomms.feature.main
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -31,6 +31,7 @@ import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationActivity
 import com.potados.geomms.common.base.NavigationFragment
 import com.potados.geomms.common.extension.getViewModel
+import com.potados.geomms.common.extension.newBroadcastReceiver
 import com.potados.geomms.common.extension.observe
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.databinding.MainActivityBinding
@@ -40,13 +41,11 @@ import com.potados.geomms.feature.location.MapFragment
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.util.Notify
-import kotlinx.android.synthetic.main.drawer_view.*
 import kotlinx.android.synthetic.main.drawer_view.view.*
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.main_activity.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import timber.log.Timber
 import kotlin.system.exitProcess
 
 class MainActivity : NavigationActivity(), KoinComponent {
@@ -66,6 +65,10 @@ class MainActivity : NavigationActivity(), KoinComponent {
 
     private var lastTimeBackButtonPressed = 0L
 
+    private val showMapReceiver = newBroadcastReceiver {
+        it?.let { selectTab(R.id.menu_item_navigation_map) }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         viewDataBinding = DataBindingUtil.setContentView(this, R.layout.main_activity)
         super.onCreate(savedInstanceState)
@@ -80,6 +83,8 @@ class MainActivity : NavigationActivity(), KoinComponent {
         }
 
         service.start()
+
+        registerReceiver(showMapReceiver, IntentFilter(ACTION_SHOW_MAP))
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -92,6 +97,12 @@ class MainActivity : NavigationActivity(), KoinComponent {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        unregisterReceiver(showMapReceiver)
     }
 
     override fun onBackPressed() {
@@ -164,9 +175,10 @@ class MainActivity : NavigationActivity(), KoinComponent {
         }
     }
 
-
     companion object {
         fun callingIntent(context: Context) = Intent(context, MainActivity::class.java)
+
+        const val ACTION_SHOW_MAP = "com.potados.geomms.SHOW_MAP"
     }
 }
 

@@ -28,7 +28,8 @@ import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.common.navigation.Navigator
-import com.potados.geomms.extension.elapsedTimeMillis
+import com.potados.geomms.feature.location.MapFragment
+import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.filter.ContactFilter
 import com.potados.geomms.functional.Result
 import com.potados.geomms.manager.ActiveConversationManager
@@ -38,6 +39,7 @@ import com.potados.geomms.repository.ContactRepository
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.repository.SyncRepository
+import com.potados.geomms.service.LocationSupportService
 import com.potados.geomms.usecase.DeleteMessages
 import com.potados.geomms.usecase.MarkRead
 import com.potados.geomms.usecase.SendMessage
@@ -51,6 +53,9 @@ import timber.log.Timber
 import java.util.*
 
 class ComposeViewModel : BaseViewModel(), KoinComponent {
+
+    // Service
+    private val service: LocationSupportService by inject()
 
     // Use case
     private val sendMessage: SendMessage by inject()
@@ -221,6 +226,65 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
         }
 
         return contacts
+    }
+
+    fun call(activity: FragmentActivity?) {
+        getAddress(0)?.let {
+            activity?.startActivity(
+                Intent(Intent.ACTION_DIAL, Uri.parse("tel:$it"))
+            )
+        } ?: fail(R.string.fail_cannot_make_a_call_invalid_recipient, show = true)
+    }
+
+    fun showOnMap(activity: FragmentActivity?) {
+        val address = getAddress(0)
+
+        if (address == null) {
+            fail(R.string.fail_cannot_share_invalid_recipient, show = true)
+            return
+        }
+
+        if (service.canInvite(address)) {
+            Popup(activity)
+                .withTitle(R.string.title_share_location)
+                .withMessage(R.string.dialog_share_location_with, getTitle())
+                .withPositiveButton(R.string.button_ok) {
+                    activity?.let {
+                        // Finish this
+                        it.finish()
+
+                        // Show map fragment.
+                        it.sendBroadcast(
+                            Intent(MainActivity.ACTION_SHOW_MAP)
+                        )
+
+                        // Do invite.
+                        it.sendBroadcast(
+                            Intent(MapFragment.ACTION_SET_ADDRESS).putExtra(MapFragment.EXTRA_ADDRESS, address)
+                        )
+                    }
+                }
+                .withNegativeButton(R.string.button_no)
+                .show()
+        } else {
+            activity?.let {
+                // Finish this
+                it.finish()
+
+                // Show map fragment.
+                it.sendBroadcast(
+                    Intent(MainActivity.ACTION_SHOW_MAP)
+                )
+            }
+        }
+    }
+
+    private fun getAddress(recipientIndex: Int = 0): String? {
+        return conversation.value?.recipients?.get(recipientIndex)?.address
+    }
+
+    private fun getTitle(): String? {
+        return conversation.value?.getTitle()
     }
 
     override fun onCleared() {

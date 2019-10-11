@@ -28,12 +28,12 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".feature.compose.ComposeFragment"
-            android:id="@+id/root_layout"
-            android:background="?attr/composeBackground"
-            android:animateLayoutChanges="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".feature.compose.ComposeFragment"
+        android:id="@+id/root_layout"
+        android:background="?attr/composeBackground"
+        android:animateLayoutChanges="true">
 
         <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
@@ -146,37 +146,37 @@
 
         <!-- Attach -->
         <ImageView
-                android:id="@+id/attach"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/circle"
-                android:backgroundTint="?attr/tintPrimary"
-                android:contentDescription="@string/description_attach"
-                android:elevation="4dp"
-                android:padding="10dp"
-                android:src="@drawable/ic_add_black_24dp"
-                android:tint="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+            android:id="@+id/attach"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="?attr/tintPrimary"
+            android:contentDescription="@string/description_attach"
+            android:elevation="4dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_add_black_24dp"
+            android:tint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <!-- Attachments -->
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/attachments"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:elevation="4dp"
-                android:orientation="horizontal"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/message"
-                app:layout_constraintEnd_toEndOf="@id/message_background"
-                app:layout_constraintStart_toStartOf="@id/message_background"
-                tools:listitem="@layout/attachment_image_list_item" />
+            android:id="@+id/attachments"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:elevation="4dp"
+            android:orientation="horizontal"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/message"
+            app:layout_constraintEnd_toEndOf="@id/message_background"
+            app:layout_constraintStart_toStartOf="@id/message_background"
+            tools:listitem="@layout/attachment_image_list_item" />
 
         <!-- Message -->
         <EditText
@@ -219,51 +219,52 @@
 
         <!-- Send -->
         <ImageView
-                android:id="@+id/send"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:elevation="4dp"
-                android:padding="10dp"
-                android:src="@drawable/ic_send_black_24dp"
-                android:tint="?android:textColorSecondary"
-                app:layout_constraintBottom_toBottomOf="@id/message_background"
-                app:layout_constraintEnd_toEndOf="@id/message_background" />
+            android:id="@+id/send"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:elevation="4dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_send_black_24dp"
+            android:tint="?android:textColorSecondary"
+            android:contentDescription="@string/description_send_button"
+            app:layout_constraintBottom_toBottomOf="@id/message_background"
+            app:layout_constraintEnd_toEndOf="@id/message_background" />
 
         <!-- Bottom group -->
         <androidx.constraintlayout.widget.Group
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="compose_background,message_background,attach,attachments,message,counter,send"
-                android:visibility="@{vm.conversation != null ? View.VISIBLE : View.GONE}" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="compose_background,message_background,attach,attachments,message,counter,send"
+            android:visibility="@{vm.conversation != null ? View.VISIBLE : View.GONE}" />
 
         <!-- Contacts -->
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/contacts"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="@{vm.conversation == null ? View.VISIBLE : View.GONE}"
-                android:background="?android:attr/windowBackground"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
-                tools:listitem="@layout/contact_list_item"
-                tools:visibility="gone" />
+            android:id="@+id/contacts"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{vm.conversation == null ? View.VISIBLE : View.GONE}"
+            android:background="?android:attr/windowBackground"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:listitem="@layout/contact_list_item"
+            tools:visibility="gone" />
 
         <!-- Toolbar shadow -->
         <View
-                android:id="@+id/toolbar_shadow"
-                android:layout_width="0dp"
-                android:layout_height="8dp"
-                android:background="@drawable/ab_shadow"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            android:id="@+id/toolbar_shadow"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+            android:background="@drawable/ab_shadow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

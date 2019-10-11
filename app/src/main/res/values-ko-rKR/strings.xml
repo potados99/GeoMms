@@ -178,5 +178,9 @@
     <string name="notify_sync_contacts_completed">연락처 동기화가 완료되었습니다.</string>
     <string name="description_show_on_map">실시간 위치 보기  아이콘입니다.</string>
     <string name="description_attach">첨부파일 버튼입니다.</string>
+    <string name="dialog_share_location_with">%s님과 위치를 공유하시겠습니까?</string>
+    <string name="title_share_location">위치 공유</string>
+    <string name="description_send_button">보내기 버튼입니다.</string>
+    <string name="fail_cannot_share_invalid_recipient">위치를 공유할 수 없습니다. 상대방에 대한 정보가 없습니다.</string>
 
 </resources>

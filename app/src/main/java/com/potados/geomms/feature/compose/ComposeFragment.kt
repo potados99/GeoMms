@@ -19,10 +19,7 @@
 
 package com.potados.geomms.feature.compose
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.telephony.PhoneNumberUtils
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -30,14 +27,9 @@ import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.databinding.ComposeFragmentBinding
-import com.potados.geomms.model.Contact
-import com.potados.geomms.model.PhoneNumber
-import com.potados.geomms.model.Recipient
 import com.potados.geomms.util.Notify
-import io.realm.RealmList
 import kotlinx.android.synthetic.main.compose_fragment.view.*
 import timber.log.Timber
-import java.util.*
 
 class ComposeFragment : BaseFragment() {
 
@@ -93,14 +85,10 @@ class ComposeFragment : BaseFragment() {
 
         when (item.itemId) {
             R.id.call -> {
-                getFirstRecipient()?.let {
-                    startActivity(
-                        Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + it.address))
-                    )
-                } ?: fail(R.string.fail_cannot_make_a_call_invalid_recipient, show = true)
+                composeViewModel.call(activity)
             }
             R.id.location -> {
-                Notify(context).short(R.string.notify_not_implemented)
+                composeViewModel.showOnMap(activity)
             }
             R.id.info -> {
                 Notify(context).short(R.string.notify_not_implemented)
@@ -203,9 +191,5 @@ class ComposeFragment : BaseFragment() {
                 Notify(context).short(R.string.notify_not_implemented)
             }
         }
-    }
-
-    private fun getFirstRecipient(): Recipient? {
-        return composeViewModel.conversation.value?.recipients?.get(0)
     }
 }
