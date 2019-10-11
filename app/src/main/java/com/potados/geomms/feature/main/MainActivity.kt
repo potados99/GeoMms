@@ -22,11 +22,14 @@ package com.potados.geomms.feature.main
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import com.potados.geomms.BuildConfig
 import com.potados.geomms.R
 import com.potados.geomms.common.base.NavigationActivity
 import com.potados.geomms.common.base.NavigationFragment
@@ -47,6 +50,7 @@ import kotlinx.android.synthetic.main.main_activity.view.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import kotlin.system.exitProcess
+
 
 class MainActivity : NavigationActivity(), KoinComponent {
 
@@ -142,18 +146,33 @@ class MainActivity : NavigationActivity(), KoinComponent {
         }
 
         setDrawerItemClickListener(view.help, autoClose = false) {
-            // TODO
-            Notify(this).short(R.string.notify_not_implemented)
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "message/rfc822"
+
+                putExtra(Intent.EXTRA_EMAIL, arrayOf("potados99@example.com"))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.title_troubleshooting))
+                putExtra(Intent.EXTRA_TEXT, "")
+            }
+
+            try {
+                startActivity(Intent.createChooser(intent, "Send mail..."))
+            } catch (ex: android.content.ActivityNotFoundException) {
+                Toast.makeText(
+                    this,
+                    "There are no email clients installed.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
-        setDrawerItemClickListener(view.rate, autoClose = false) {
-            // TODO
-            Notify(this).short(R.string.notify_not_implemented)
+        setDrawerItemClickListener(view.rate, autoClose = true) {
+            startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.STORE_LINK))
+            )
         }
 
-        setDrawerItemClickListener(view.invite, autoClose = false) {
-            // TODO
-            Notify(this).short(R.string.notify_not_implemented)
+        setDrawerItemClickListener(view.invite, autoClose = true) {
+            navigator.showCompose(getString(R.string.message_get_geomms, BuildConfig.STORE_LINK))
         }
 
         setDrawerItemClickListener(view.oss_license) {

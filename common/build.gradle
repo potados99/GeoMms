@@ -24,7 +24,6 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
 
-
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 28
@@ -33,6 +32,8 @@ android {
         versionName project.ext.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "STORE_LINK", storeLink
     }
 
     buildTypes {

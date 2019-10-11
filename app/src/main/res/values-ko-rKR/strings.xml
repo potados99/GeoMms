@@ -182,5 +182,7 @@
     <string name="title_share_location">위치 공유</string>
     <string name="description_send_button">보내기 버튼입니다.</string>
     <string name="fail_cannot_share_invalid_recipient">위치를 공유할 수 없습니다. 상대방에 대한 정보가 없습니다.</string>
+    <string name="message_get_geomms">친구와 위치를 공유해보세요! 플레이스토어에서 GeoMMS 보기: %s</string>
+    <string name="title_troubleshooting">[GeoMMS] 문의사항</string>
 
 </resources>

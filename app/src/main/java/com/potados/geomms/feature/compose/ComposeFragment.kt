@@ -20,8 +20,6 @@
 package com.potados.geomms.feature.compose
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.*
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseFragment
@@ -165,25 +163,19 @@ class ComposeFragment : BaseFragment() {
         }
 
         with(view.send) {
+            isEnabled = false
+            imageAlpha = 128
+
             setOnClickListener { composeViewModel.sendMessageIfCan(activity) }
         }
 
         with(view.message) {
-            view.send.isEnabled = false
-            view.send.imageAlpha = 128
-
-            addTextChangedListener(object: TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            setOnTextChanged {
+                with(view.send) {
+                    isEnabled = length() > 0
+                    imageAlpha = if (length() > 0) 255 else 128
                 }
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    with(view.send) {
-                        isEnabled = length() > 0
-                        imageAlpha = if (length() > 0) 255 else 128
-                    }
-                }
-                override fun afterTextChanged(s: Editable?) {
-                }
-            })
+            }
         }
 
         with(view.attach) {

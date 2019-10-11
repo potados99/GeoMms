@@ -77,8 +77,7 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
     private val contactFilter: ContactFilter by inject()
 
     // Parameters
-    private lateinit var sharedText: String
-    private lateinit var attachments: Attachments
+    lateinit var attachments: Attachments
 
     // Conversation data
     val conversation = MutableLiveData<Conversation>()      // null on empty
@@ -103,18 +102,17 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
 
     // Setup childFragment with Intent of parent Activity.
     fun startWithIntent(intent: Intent) {
-
-        // Not a direct call from Fragment, but it's okay.
         start()
 
-        mThreadId = intent.extras?.getLong("threadId") ?: 0L
+        mThreadId = intent.getLongExtra("threadId", 0L)
+        messageText.set(intent.getStringExtra(Intent.EXTRA_TEXT) ?: "")
 
-        if (mThreadId == 0L) {
-            // conversation is not set.
-            sharedText = ""
-            attachments = Attachments(listOf())
+        val sharedImages = mutableListOf<Uri>()
+        intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let(sharedImages::add)
+        intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)?.let(sharedImages::addAll)
+        attachments = Attachments(sharedImages.map { Attachment.Image(it) })
 
-        } else {
+        if (mThreadId != 0L) {
             // conversation is set.
             // handle messages, shared text and attachments.
 
@@ -129,13 +127,6 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
                     fail(R.string.fail_mark_read, show = true)
                 }
             }
-
-            sharedText = intent.extras?.getString(Intent.EXTRA_TEXT) ?: ""
-
-            val sharedImages = mutableListOf<Uri>()
-            intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let(sharedImages::add)
-            intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)?.let(sharedImages::addAll)
-            attachments = Attachments(sharedImages.map { Attachment.Image(it) })
         }
 
         Timber.i("View model started.")

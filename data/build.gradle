@@ -35,6 +35,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField "String", "STORE_LINK", storeLink
     }
 
     buildTypes {

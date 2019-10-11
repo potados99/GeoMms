@@ -178,6 +178,8 @@
     <string name="title_share_location">Share Location</string>
     <string name="dialog_share_location_with">Do you want to share location with %s?</string>
     <string name="fail_cannot_share_invalid_recipient">Cannot make a location share with invalid recipient.</string>
+    <string name="message_get_geomms">Share location with friends! Get GeoMMS from play store: %s</string>
+    <string name="title_troubleshooting">[GeoMMS] Troubleshooting</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>

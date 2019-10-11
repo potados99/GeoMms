@@ -20,6 +20,7 @@
 package com.potados.geomms.model
 
 import android.location.Location
+import com.potados.geomms.BuildConfig
 
 class Packet(
     var type: Int = 0,
@@ -42,7 +43,7 @@ class Packet(
                 type = PacketType.REQUEST_CONNECT.number,
                 connectionId = request.connectionId,
                 duration = request.duration,
-                postFix = "\nhttp://play.google.com/store/apps/details?id=com.potados.geomms"
+                postFix = "\n${BuildConfig.STORE_LINK}"
         )
 
         fun ofAcceptingRequest(request: ConnectionRequest) =
