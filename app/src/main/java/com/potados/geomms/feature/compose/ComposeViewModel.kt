@@ -28,6 +28,7 @@ import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewModel
 import com.potados.geomms.common.navigation.Navigator
+import com.potados.geomms.extension.elapsedTimeMillis
 import com.potados.geomms.filter.ContactFilter
 import com.potados.geomms.functional.Result
 import com.potados.geomms.manager.ActiveConversationManager

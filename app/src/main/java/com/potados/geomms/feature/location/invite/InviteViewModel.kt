@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseViewModel
+import com.potados.geomms.extension.elapsedTimeMillis
 import com.potados.geomms.feature.location.MapFragment
 import com.potados.geomms.filter.ContactFilter
 import com.potados.geomms.model.Contact
@@ -34,6 +35,7 @@ import com.potados.geomms.service.LocationSupportService
 import io.realm.RealmList
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import timber.log.Timber
 import java.util.*
 
 class InviteViewModel : BaseViewModel(), KoinComponent {
@@ -90,12 +92,8 @@ class InviteViewModel : BaseViewModel(), KoinComponent {
         }
 
         return contacts.filter { contact ->
-            // If any address of a contact is being used, it is filtered.
-            contactFilter.filter(contact, query) &&
-                    contact.numbers
-                        .map { service.canInvite(it.address) }
-                        .takeIf { it.isNotEmpty() }
-                        ?.reduce { acc: Boolean, b: Boolean -> acc && b } ?: true
+            // Minimize filter here.
+            contactFilter.filter(contact, query)
         }
     }
 }

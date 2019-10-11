@@ -32,6 +32,7 @@ import com.potados.geomms.feature.compose.ChipsAdapter
 import com.potados.geomms.feature.compose.ContactAdapter
 import kotlinx.android.synthetic.main.invite_fragment.view.*
 import org.koin.core.KoinComponent
+import timber.log.Timber
 
 class InviteFragment : BaseFragment(), KoinComponent {
 
