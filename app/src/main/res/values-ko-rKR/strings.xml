@@ -122,7 +122,7 @@
     <string name="title_disconnect">연결 해제</string>
     <string name="title_without_permissions">권한이 없다면...</string>
     <string name="dialog_ask_cancel_request">%s님에게 보낸 요청을 취소하시겠습니까?</string>
-    <string name="dialog_ask_disconnect">%s님과의 위치 공유를 끝내시겠습니까?</string>
+    <string name="dialog_ask_disconnect">%s님과의 위치 공유를 중단하시겠습니까?</string>
     <string name="dialog_please_permission">권한이 없다면 이 애플리케이션은 메시지를 받거나 보낼 수도, 위치를 공유할 수도 없습니다. 이 애플리케이션이 정상적으로 작동할 수 있도록 도와주세요 :)</string>
     <string name="dialog_sent_at">전송 시각: %s</string>
     <string name="dialog_connection_id">연결 ID: %s</string>
