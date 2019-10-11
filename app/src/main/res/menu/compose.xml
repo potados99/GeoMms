@@ -35,11 +35,11 @@
         android:visible="true"
         app:showAsAction="ifRoom"/>
 
-    <item
+    <!--item
         android:id="@+id/info"
         android:icon="@drawable/ic_more_vert_black_24dp"
         android:title="@string/menu_info"
         android:visible="true"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" /-->
 
 </menu>
