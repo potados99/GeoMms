@@ -113,4 +113,17 @@ class InstrumentedTest : KoinTest {
         assert(connections != null && connections.isEmpty())
     }
 
+    @Test
+    fun parseTest() {
+        assert(false)
+
+        val service: LocationSupportService by inject()
+
+        val parsed = service.parsePacket("[GEOMMS]1:12345:1800000\nhello")
+
+        Timber.i(parsed.toString())
+
+        assert(parsed != null)
+        assert(parsed != null && parsed.duration == 1800000L)
+    }
 }

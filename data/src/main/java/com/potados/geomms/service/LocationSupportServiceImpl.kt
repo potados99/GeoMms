@@ -769,13 +769,13 @@ class LocationSupportServiceImpl(
      * @see [Packet]
      */
     override fun parsePacket(body: String): Packet? = nullOnFail {
-        if (isValidPacket(body) != true) {
+        if (!isValidPacket(body)) {
             Timber.w("Body is \"body\", which is not a LocationSupport packet.")
             return@nullOnFail null
         }
 
-        // Get fields by splitting them with [FIELD_SPLITTER].
-        val payload = body.removePrefix(GEO_MMS_PREFIX)
+        // Remove prefix and others after newline.
+        val payload = body.removePrefix(GEO_MMS_PREFIX).split("\n")[0]
         val payloadFields = payload.split(FIELD_SPLITTER)
 
         // Must be over 2 fields. (type, id)

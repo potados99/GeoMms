@@ -60,11 +60,11 @@ class SyncRepositoryImpl(
     )
 
     private val _progress = MutableLiveData<SyncProgress>().apply {
-        value = SyncProgress.Idle
+        postValue(SyncProgress.Idle)
     }
 
     private val _syncEvent = MutableLiveData<SyncEvent>().apply {
-        value = SyncEvent.EVENT_NONE
+        postValue(SyncEvent.EVENT_NONE)
     }
 
     override val syncProgress: LiveData<SyncProgress> = _progress

@@ -28,7 +28,7 @@ import timber.log.Timber
 class MapManagerImpl : MapManager() {
 
     private val coordinateLive = MutableLiveData<Pair<Double, Double>>().apply {
-        value = null
+        postValue(null)
     }
 
     override fun triggerShowOnMap(lat: Double, lng: Double) {
