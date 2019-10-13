@@ -37,6 +37,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "STORE_LINK", storeLink
+
+        archivesBaseName = "geomms-v" + versionName + "-" + new Date().format("yyyyMMdd")
     }
 
     buildTypes {
