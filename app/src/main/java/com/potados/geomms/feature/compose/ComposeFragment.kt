@@ -29,7 +29,6 @@ import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.databinding.ComposeFragmentBinding
 import com.potados.geomms.model.Attachment
-import com.potados.geomms.util.Notify
 import kotlinx.android.synthetic.main.compose_fragment.view.*
 import timber.log.Timber
 
@@ -96,9 +95,6 @@ class ComposeFragment : BaseFragment() {
             R.id.location -> {
                 composeViewModel.showOnMap(activity)
             }
-            R.id.info -> {
-                Notify(context).short(R.string.notify_not_implemented)
-            }
         }
 
         return true
@@ -163,12 +159,12 @@ class ComposeFragment : BaseFragment() {
 
         // Update send button when user add image.
         observe(composeViewModel.attachments) {
-            setEnableSend(view, composeViewModel.hasImage() || composeViewModel.hasMessage())
+            enableSendButton(view, composeViewModel.hasImage() || composeViewModel.hasMessage())
         }
 
         // Update send button when user type text.
         composeViewModel.messageText.onChange {
-            setEnableSend(view, composeViewModel.hasImage() || composeViewModel.hasMessage())
+            enableSendButton(view, composeViewModel.hasImage() || composeViewModel.hasMessage())
         }
 
         with(view.chips) {
@@ -229,12 +225,13 @@ class ComposeFragment : BaseFragment() {
         }
     }
 
-    private fun setEnableSend(view: View, enable: Boolean) {
+    private fun enableSendButton(view: View, enable: Boolean) {
         with(view.send) {
             isEnabled = enable
             imageAlpha = if (enable) 255 else 128
         }
     }
+
 
     companion object {
         private const val GALLERY_REQUEST_CODE = 1

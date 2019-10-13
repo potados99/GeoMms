@@ -17,14 +17,6 @@
  * along with GeoMms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
-/**
- * Lifecycle.kt
- *
- * Credits to Fernando Cejas.
- * https://github.com/android10/Android-CleanArchitecture-Kotlin
- */
 package com.potados.geomms.common.extension
 
 import androidx.lifecycle.LifecycleOwner
