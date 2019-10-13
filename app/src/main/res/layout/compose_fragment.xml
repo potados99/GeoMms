@@ -165,6 +165,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/attachments"
             android:layout_width="0dp"
+            app:attachments="@{vm.attachments}"
             android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"

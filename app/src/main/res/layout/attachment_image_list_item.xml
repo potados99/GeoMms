@@ -26,31 +26,33 @@
 
     <!-- Thumbnail -->
     <FrameLayout
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_rectangle_4dp">
+        android:id="@+id/thumbnail_bounds"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_rectangle_4dp">
 
         <ImageView
-                android:id="@+id/thumbnail"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                tools:src="@tools:sample/avatars" />
+            android:id="@+id/thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/avatars" />
     </FrameLayout>
 
     <!-- Detach button -->
     <ImageView
+        android:id="@+id/detach"
         android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="top|end"
-            android:layout_marginEnd="2dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/circle"
-            android:src="@drawable/ic_cancel_black_24dp"
-            android:tint="?android:attr/textColorSecondary"
-            android:contentDescription="@string/description_detach_button_icon"/>
+        android:layout_height="24dp"
+        android:layout_gravity="top|end"
+        android:layout_marginEnd="2dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/circle"
+        android:src="@drawable/ic_cancel_black_24dp"
+        android:tint="?android:attr/textColorSecondary"
+        android:contentDescription="@string/description_detach_button_icon"/>
 
 </FrameLayout>

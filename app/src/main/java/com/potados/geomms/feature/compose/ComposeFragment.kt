@@ -19,12 +19,16 @@
 
 package com.potados.geomms.feature.compose
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.Fragment
 import com.potados.geomms.R
 import com.potados.geomms.common.base.BaseFragment
 import com.potados.geomms.common.extension.*
 import com.potados.geomms.databinding.ComposeFragmentBinding
+import com.potados.geomms.model.Attachment
 import com.potados.geomms.util.Notify
 import kotlinx.android.synthetic.main.compose_fragment.view.*
 import timber.log.Timber
@@ -39,6 +43,7 @@ class ComposeFragment : BaseFragment() {
     private val chipsAdapter = ChipsAdapter()
     private val contactAdapter = ContactAdapter()
     private val messagesAdapter = MessagesAdapter()
+    private lateinit var attachmentAdapter: AttachmentAdapter
 
     init {
         failables += this
@@ -52,6 +57,9 @@ class ComposeFragment : BaseFragment() {
 
         composeViewModel = getViewModel { activity?.intent?.let(::startWithIntent) }
         failables += composeViewModel.failables
+
+        attachmentAdapter = AttachmentAdapter(context!!)
+        failables += attachmentAdapter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -111,7 +119,30 @@ class ComposeFragment : BaseFragment() {
         composeViewModel.conversation.removeObservers(this)
     }
 
+    private fun requestGallery(fragment: Fragment) {
+        val intent = Intent(Intent.ACTION_PICK)
+            .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+            .addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+            .putExtra(Intent.EXTRA_LOCAL_ONLY, false)
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            .setType("image/*")
+        fragment.startActivityForResult(Intent.createChooser(intent, null), GALLERY_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                GALLERY_REQUEST_CODE -> data?.data?.let {
+                    composeViewModel.addImage(it)
+                }
+            }
+        }
+    }
+
     private fun initializeView(view: View) {
+        // Update view when conversation is set.
         observe(composeViewModel.conversation) { conversation ->
             val conversationIsNull = (conversation == null)
             val conversationIsNotSetInitially = ((activity?.intent?.extras?.getLong("threadId") ?: 0L) == 0L)
@@ -128,6 +159,16 @@ class ComposeFragment : BaseFragment() {
                 Timber.i("Conversation is set. Request focus.")
                 view.postDelayed({ view.message.showKeyboard() }, 200)
             }
+        }
+
+        // Update send button when user add image.
+        observe(composeViewModel.attachments) {
+            setEnableSend(view, composeViewModel.hasImage() || composeViewModel.hasMessage())
+        }
+
+        // Update send button when user type text.
+        composeViewModel.messageText.onChange {
+            setEnableSend(view, composeViewModel.hasImage() || composeViewModel.hasMessage())
         }
 
         with(view.chips) {
@@ -157,7 +198,7 @@ class ComposeFragment : BaseFragment() {
                 autoScrollToStart(this@with)
                 emptyView = view.messages_empty
 
-                onMessageClick = { true /* TODO */ }
+                onMessageClick = { true /* Use default handler */ }
                 onMessageLongClick = { composeViewModel.showMessageDeletionConfirmation(activity, it) }
             }
         }
@@ -169,19 +210,33 @@ class ComposeFragment : BaseFragment() {
             setOnClickListener { composeViewModel.sendMessageIfCan(activity) }
         }
 
-        with(view.message) {
-            setOnTextChanged {
-                with(view.send) {
-                    isEnabled = length() > 0
-                    imageAlpha = if (length() > 0) 255 else 128
+        with(view.attachments) {
+            adapter = attachmentAdapter.apply {
+                onDetach = {
+                    when (it) {
+                        is Attachment.Image -> {
+                            composeViewModel.removeImage(it.getUri())
+                        }
+                    }
                 }
             }
         }
 
         with(view.attach) {
             setOnClickListener {
-                Notify(context).short(R.string.notify_not_implemented)
+                requestGallery(this@ComposeFragment)
             }
         }
+    }
+
+    private fun setEnableSend(view: View, enable: Boolean) {
+        with(view.send) {
+            isEnabled = enable
+            imageAlpha = if (enable) 255 else 128
+        }
+    }
+
+    companion object {
+        private const val GALLERY_REQUEST_CODE = 1
     }
 }

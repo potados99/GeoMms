@@ -77,7 +77,8 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
     private val contactFilter: ContactFilter by inject()
 
     // Parameters
-    lateinit var attachments: Attachments
+    private var _attachments = Attachments(listOf())
+    val attachments = MutableLiveData<Attachments>()
 
     // Conversation data
     val conversation = MutableLiveData<Conversation>()      // null on empty
@@ -110,7 +111,9 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
         val sharedImages = mutableListOf<Uri>()
         intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let(sharedImages::add)
         intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)?.let(sharedImages::addAll)
-        attachments = Attachments(sharedImages.map { Attachment.Image(it) })
+
+        _attachments = Attachments(sharedImages.map { Attachment.Image(it) })
+        attachments.postValue(_attachments)
 
         if (mThreadId != 0L) {
             // conversation is set.
@@ -188,11 +191,16 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
                 threadId = conversation.id,
                 addresses = conversation.recipients.map { recipient -> recipient.address },
                 body = messageText.get().orEmpty(),
-                attachments = attachments
+                attachments = attachments.value.orEmpty()
             )
 
             sendMessage(params) {
-                it.onError { fail(R.string.fail_send_message, show = true) }.onSuccess { messageText.set("") }
+                it
+                    .onError { fail(R.string.fail_send_message, show = true) }
+                    .onSuccess {
+                        messageText.set("")
+                        clearImages()
+                    }
             }
         }
     }
@@ -276,6 +284,29 @@ class ComposeViewModel : BaseViewModel(), KoinComponent {
 
     private fun getTitle(): String? {
         return conversation.value?.getTitle()
+    }
+
+    fun addImage(uri: Uri) {
+        _attachments = Attachments(_attachments + Attachment.Image(uri))
+        attachments.postValue(_attachments)
+    }
+
+    fun removeImage(uri: Uri?) {
+        _attachments = Attachments(_attachments.mapNotNull { it.takeIf { (it as? Attachment.Image)?.getUri() != uri } })
+        attachments.postValue(_attachments)
+    }
+
+    fun clearImages() {
+        _attachments = Attachments(listOf())
+        attachments.postValue(_attachments)
+    }
+
+    fun hasImage(): Boolean {
+        return _attachments.isNotEmpty()
+    }
+
+    fun hasMessage(): Boolean {
+        return !messageText.get().isNullOrEmpty()
     }
 
     override fun onCleared() {

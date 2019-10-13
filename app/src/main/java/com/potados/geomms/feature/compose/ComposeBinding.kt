@@ -21,6 +21,7 @@ package com.potados.geomms.feature.compose
 
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.potados.geomms.model.Attachments
 import com.potados.geomms.model.Contact
 import com.potados.geomms.model.Conversation
 import com.potados.geomms.model.Message
@@ -54,5 +55,13 @@ fun setContacts(listView: RecyclerView, data: List<Contact>?) {
     (listView.adapter as? ContactAdapter)?.let {
         it.data = data.orEmpty()
         Timber.i("Contacts updated.")
+    } ?: Timber.w("Adapter not set.")
+}
+
+@BindingAdapter("attachments")
+fun setAttachments(listView: RecyclerView, data: Attachments?) {
+    (listView.adapter as? AttachmentAdapter)?.let {
+        it.data = data.orEmpty()
+        Timber.i("Attachments updated.")
     } ?: Timber.w("Adapter not set.")
 }
