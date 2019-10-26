@@ -38,12 +38,14 @@ class Packet(
 ) {
 
     companion object {
-        fun ofRequestingNewConnection(request: ConnectionRequest) =
+        fun ofRequestingNewConnection(request: ConnectionRequest, explanation: String = "") =
             Packet(
                 type = PacketType.REQUEST_CONNECT.number,
                 connectionId = request.connectionId,
                 duration = request.duration,
-                postFix = "\n${BuildConfig.STORE_LINK}"
+                postFix = "\n".takeIf { explanation.isNotEmpty() }
+                        + explanation + "\n"
+                        + BuildConfig.STORE_LINK
         )
 
         fun ofAcceptingRequest(request: ConnectionRequest) =

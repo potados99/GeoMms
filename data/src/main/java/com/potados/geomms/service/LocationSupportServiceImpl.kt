@@ -277,7 +277,9 @@ class LocationSupportServiceImpl(
             duration = duration
         )
 
-        sendPacket(address, Packet.ofRequestingNewConnection(request))
+        // Add invitation message.
+        val explanation = context.getString(R.string.description_install_geomms)
+        sendPacket(address, Packet.ofRequestingNewConnection(request, explanation))
 
         // Add this not-yet accepted connection to getRealm.
         val temporalConnection = Connection.fromAcceptedRequest(request).apply { isTemporal = true }
