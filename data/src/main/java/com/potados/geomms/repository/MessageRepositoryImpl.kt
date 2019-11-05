@@ -159,7 +159,7 @@ class MessageRepositoryImpl(
 
     override fun markRead(vararg threadIds: Long) = unitOnFail {
         /**
-         * Realm 업데이트
+         * Update realm.
          */
         Realm.getDefaultInstance()?.use { realm ->
             val messages = realm.where(Message::class.java)
@@ -180,7 +180,7 @@ class MessageRepositoryImpl(
         }
 
         /**
-         * 네이티브 provider 업데이트
+         * Update native content provider.
          */
         val values = ContentValues()
         values.put(Telephony.Sms.SEEN, true)

@@ -38,18 +38,13 @@ class Packet(
 ) {
 
     companion object {
-        fun ofRequestingNewConnection(request: ConnectionRequest, explanation: String = ""): Packet {
-            val packet = Packet(
+        fun ofRequestingNewConnection(request: ConnectionRequest, explanation: String = "") =
+            Packet(
                 type = PacketType.REQUEST_CONNECT.number,
                 connectionId = request.connectionId,
-                duration = request.duration
-            )
-
-            return packet.apply {
+                duration = request.duration,
                 postFix = if (explanation.isNotEmpty()) "\n$explanation\n${BuildConfig.STORE_LINK}" else ""
-            }
-        }
-
+            )
 
         fun ofAcceptingRequest(request: ConnectionRequest) =
             Packet(

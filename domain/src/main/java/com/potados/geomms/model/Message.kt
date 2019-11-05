@@ -38,10 +38,7 @@ open class Message : RealmObject() {
     var threadId: Long = 0
 
     /**
-     * Content provider가 반환하는 message의 id는 중복될 수 있습니다.
-     * MMS와 SMS가 다른 테이블을 사용하기 때문입니다.
-     * 이는 Realm object의 primary key로 적절하지 않습니다.
-     * 원본 메시지가 필요한 경우를 대비해서 원본 메시지의 id를 저장해줍니다.
+     * Original id of content provider.
      */
     var contentId: Long = 0
 

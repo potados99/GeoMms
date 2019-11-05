@@ -693,17 +693,20 @@ class LocationSupportServiceImpl(
     override fun sendPacket(address: String, packet: Packet) = falseOnFail {
         val payload = serializePacket(packet) ?: return@falseOnFail false
 
-        SmsManager.getDefault().sendTextMessage(
-            address,
-            null,
-            payload,
-            null,
-            null
-        )
+        SmsManager.getDefault().apply {
+            sendMultipartTextMessage(
+                address,
+                null,
+                divideMessage(payload),
+                null,
+                null
+            )
+        }
 
         Timber.i("Sent packet: \"$payload\"")
 
         return@falseOnFail true
+
     }
 
     override fun receivePacket(address: String, body: String) = falseOnFail {
