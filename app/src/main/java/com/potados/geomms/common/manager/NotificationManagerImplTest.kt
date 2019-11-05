@@ -49,11 +49,13 @@ import com.potados.geomms.receiver.MarkReadReceiver
 import com.potados.geomms.receiver.MarkSeenReceiver
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
+import com.potados.geomms.service.LocationSupportService
 
 class NotificationManagerImplTest(
     private val context: Context,
     private val conversationRepo: ConversationRepository,
     private val messageRepo: MessageRepository,
+    private val service: LocationSupportService,
     private val permissionManager: PermissionManager
 ) : com.potados.geomms.manager.NotificationManager() {
 
@@ -78,11 +80,11 @@ class NotificationManagerImplTest(
     /**
      * Updates the notification for a particular conversation
      */
-    override fun update(threadId: Long) {
+    override fun updateThread(threadId: Long) {
         val messages = messageRepo.getUnreadUnseenMessages(threadId) ?: return
 
         // If there are no messages to be displayed, make sure that the notification is dismissed
-        if (messages.isEmpty() == true) {
+        if (messages.isEmpty()) {
             notificationManager.cancel(threadId.toInt())
             return
         }
@@ -184,6 +186,42 @@ class NotificationManagerImplTest(
         notification.addAction(noti)
 
         notificationManager.notify(threadId.toInt(), notification.build())
+    }
+
+    /**
+     * Updates the notification for a particular connection.
+     * Called when:
+     * - I am Invited
+     * - My invitation is accepted.
+     */
+    override fun updateConnection(connectionId: Long) {
+        val request = service.getIncomingRequests()?.find { it.connectionId == connectionId }
+        val connection = service.getConnection(connectionId, temporal = false)
+
+        if (request == null && connection == null) {
+            /**
+             * Cancel already shown notification.
+             * This may happen when the notification is shown and no longer needed to exist.
+             */
+            notificationManager.cancel(connectionId.toInt() + 99999)
+            return
+        }
+
+        request?.let {
+            /**
+             * If a request exists, a new request is just received.
+             */
+
+        }
+
+        connection?.let {
+            /**
+             * If a connection exists, a new connection is just established.
+             */
+        }
+
+
+
     }
 
     override fun notifyFailed(msgId: Long) {

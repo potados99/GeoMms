@@ -50,7 +50,7 @@ class ReceiveSms(
                 ?.threadId
                 ?.also { conversationRepo.updateConversations(it) }
                 ?.also { conversationRepo.getOrCreateConversation(it) }
-                ?.also { notificationManager.update(it) }
+                ?.also { notificationManager.updateThread(it) }
                 ?.also { updateBadge(Unit) }
         }
 }

@@ -37,7 +37,7 @@ class MarkRead(
             params.toLongArray()
                 .also { messageRepo.markRead(*it) }
                 .also { conversationRepo.updateConversations(*it) }
-                .also { it.forEach(notificationManager::update) }
+                .also { it.forEach(notificationManager::updateThread) }
                 .also { updateBadge(Unit) }
         }
 }

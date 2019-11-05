@@ -22,7 +22,9 @@ package com.potados.geomms.manager
 import androidx.core.app.NotificationCompat
 
 abstract class NotificationManager : Manager() {
-    abstract fun update(threadId: Long)
+    abstract fun updateThread(threadId: Long)
+
+    abstract fun updateConnection(connectionId: Long)
 
     abstract fun notifyFailed(msgId: Long)
 

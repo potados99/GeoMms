@@ -34,7 +34,7 @@ class DeleteConversations(
         Result.of {
             params.toLongArray()
                 .also { threadIds -> conversationRepo.deleteConversations(*threadIds) }
-                .also { threadIds -> threadIds.forEach(notificationManager::update) }
+                .also { threadIds -> threadIds.forEach(notificationManager::updateThread) }
                 .also { updateBadge(Unit) }
         }
 }

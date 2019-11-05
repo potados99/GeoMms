@@ -38,8 +38,8 @@ class DeleteMessages(
         Result.of {
             params.messageIds.toLongArray()
                 .also { messageIds -> messageRepo.deleteMessages(*messageIds) }                 // delete the messages
-                .also { params.threadId?.let { conversationRepo.updateConversations(it) } }     // update the conversation
-                .also { params.threadId?.let(notificationManager::update) }                     // remove notifications on the conversation
-                .also { updateBadge(Unit) }                                                     // update the badge
+                .also { params.threadId?.let { conversationRepo.updateConversations(it) } }     // updateThread the conversation
+                .also { params.threadId?.let(notificationManager::updateThread) }                     // remove notifications on the conversation
+                .also { updateBadge(Unit) }                                                     // updateThread the badge
         }
 }

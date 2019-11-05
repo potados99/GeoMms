@@ -118,6 +118,7 @@ val myModules = module {
             context = get(),
             conversationRepo = get(),
             messageRepo = get(),
+            service = get(),
             permissionManager = get()
         ) as NotificationManager
     }
