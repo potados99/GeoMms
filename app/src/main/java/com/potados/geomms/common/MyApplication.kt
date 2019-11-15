@@ -44,6 +44,7 @@ class MyApplication : Application() {
                 .compactOnLaunch()
                 .schemaVersion(1)
                 .deleteRealmIfMigrationNeeded()
-                .build())
+                .build()
+        )
     }
 }

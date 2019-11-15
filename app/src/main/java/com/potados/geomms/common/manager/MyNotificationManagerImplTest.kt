@@ -43,6 +43,7 @@ import com.potados.geomms.extension.dpToPx
 import com.potados.geomms.extension.isImage
 import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.feature.compose.ComposeActivity
+import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.mapper.CursorToPartImpl
 import com.potados.geomms.receiver.MarkReadReceiver
@@ -51,13 +52,12 @@ import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.service.LocationSupportService
 
-class NotificationManagerImplTest(
+class MyNotificationManagerImplTest(
     private val context: Context,
     private val conversationRepo: ConversationRepository,
     private val messageRepo: MessageRepository,
-    private val service: LocationSupportService,
     private val permissionManager: PermissionManager
-) : com.potados.geomms.manager.NotificationManager() {
+) : MyNotificationManager() {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -194,7 +194,8 @@ class NotificationManagerImplTest(
      * - I am Invited
      * - My invitation is accepted.
      */
-    override fun updateConnection(connectionId: Long) {
+    override fun updateConnection(connectionId: Long, type: Int) {
+        /*
         val request = service.getIncomingRequests()?.find { it.connectionId == connectionId }
         val connection = service.getConnection(connectionId, temporal = false)
 
@@ -207,21 +208,52 @@ class NotificationManagerImplTest(
             return
         }
 
+         */
+
+        // We can't store a null preference, so map it to a null Uri if the pref string is empty
+        val ringtone = Uri.parse("")
+
+        // Must be one of them.
+        //val channelId = request?.connectionId ?: connection?.id ?: return
+        val channelId = connectionId
+
+        val notification = NotificationCompat.Builder(context, getChannelIdForNotification(channelId))
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setColor(context.resolveThemeColor(R.attr.tintPrimary))
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setAutoCancel(true)
+            .setSound(ringtone)
+            .setLights(Color.WHITE, 500, 2000)
+            .setVibrate(VIBRATE_PATTERN)
+
+        when (type) {
+            CONNECTION_INVITATION -> {
+                notification.setContentTitle("Invitation!")
+
+            }
+            CONNECTION_ESTABLISHED -> {
+                notification.setContentTitle("Established!")
+            }
+        }
+
+        /*
         request?.let {
             /**
              * If a request exists, a new request is just received.
              */
-
+            notification.setContentTitle("Invitation from ${it.recipient?.getDisplayName()}.")
         }
 
         connection?.let {
             /**
              * If a connection exists, a new connection is just established.
              */
+            notification.setContentTitle("Connection established with ${it.recipient?.getDisplayName()}.")
         }
 
-
-
+         */
+        notificationManager.notify(channelId.toInt(), notification.build())
     }
 
     override fun notifyFailed(msgId: Long) {

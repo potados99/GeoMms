@@ -33,6 +33,7 @@ import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.unitOnFail
 import com.potados.geomms.manager.KeyManager
 import com.potados.geomms.manager.MapManager
+import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.model.*
 import com.potados.geomms.preference.MyPreferences
 import com.potados.geomms.receiver.SendUpdateReceiver
@@ -73,7 +74,8 @@ class LocationSupportServiceImpl(
     private val scheduler: Scheduler,
     private val keyManager: KeyManager,
     private val pref: MyPreferences,
-    private val mapManager: MapManager
+    private val mapManager: MapManager,
+    private val notificationManager: MyNotificationManager
 ) : LocationSupportService() {
 
     private var started = false
@@ -348,6 +350,8 @@ class LocationSupportServiceImpl(
         executeInDefaultInstance { it.insertOrUpdate(request) }
 
         Timber.i("New incoming request from ${request.recipient?.getDisplayName()} with id ${request.connectionId}.")
+
+        notificationManager.updateConnection(request.connectionId, MyNotificationManager.CONNECTION_INVITATION)
 
         return@falseOnFail true
     }

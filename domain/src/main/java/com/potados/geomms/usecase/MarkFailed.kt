@@ -21,12 +21,12 @@ package com.potados.geomms.usecase
 
 import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
-import com.potados.geomms.manager.NotificationManager
+import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.repository.MessageRepository
 
 class MarkFailed(
     private val messageRepo: MessageRepository,
-    private val notificationMgr: NotificationManager
+    private val notificationMgr: MyNotificationManager
 ) : UseCase<MarkFailed.Params>() {
 
     data class Params(val id: Long, val resultCode: Int)

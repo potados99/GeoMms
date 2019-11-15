@@ -23,7 +23,7 @@ import android.net.Uri
 import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.manager.ActiveConversationManager
-import com.potados.geomms.manager.NotificationManager
+import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.repository.SyncRepository
@@ -33,7 +33,7 @@ class ReceiveMms(
     private val conversationRepo: ConversationRepository,
     private val syncRepo: SyncRepository,
     private val messageRepo: MessageRepository,
-    private val notificationManager: NotificationManager,
+    private val notificationManager: MyNotificationManager,
     private val updateBadge: UpdateBadge
 ) : UseCase<Uri>() {
 

@@ -21,10 +21,10 @@ package com.potados.geomms.manager
 
 import androidx.core.app.NotificationCompat
 
-abstract class NotificationManager : Manager() {
+abstract class MyNotificationManager : Manager() {
     abstract fun updateThread(threadId: Long)
 
-    abstract fun updateConnection(connectionId: Long)
+    abstract fun updateConnection(connectionId: Long, type: Int)
 
     abstract fun notifyFailed(msgId: Long)
 
@@ -33,4 +33,10 @@ abstract class NotificationManager : Manager() {
     abstract fun buildNotificationChannelId(threadId: Long): String
 
     abstract fun getNotificationForBackup(): NotificationCompat.Builder
+
+    companion object {
+        // To use when we have to let "updateConnection" know why we called it.
+        const val CONNECTION_INVITATION = 1
+        const val CONNECTION_ESTABLISHED = 2
+    }
 }

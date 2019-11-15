@@ -21,12 +21,12 @@ package com.potados.geomms.usecase
 
 import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
-import com.potados.geomms.manager.NotificationManager
+import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.repository.ConversationRepository
 
 class DeleteConversations(
     private val conversationRepo: ConversationRepository,
-    private val notificationManager: NotificationManager,
+    private val notificationManager: MyNotificationManager,
     private val updateBadge: UpdateBadge
 ) : UseCase<List<Long>>() {
 

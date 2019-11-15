@@ -36,7 +36,7 @@ open class Conversation(
     var read: Boolean = true,
     var me: Boolean = false,
     var draft: String = "",
-    var name: String = "" /* 그룹 채팅의 경우, 사용자가 별도로 이름 지정 가능. */
+    var name: String = ""
 
 ) : RealmObject() {
 
