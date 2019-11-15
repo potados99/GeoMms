@@ -43,6 +43,7 @@ import com.potados.geomms.extension.dpToPx
 import com.potados.geomms.extension.isImage
 import com.potados.geomms.extension.tryOrNull
 import com.potados.geomms.feature.compose.ComposeActivity
+import com.potados.geomms.feature.main.MainActivity
 import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.mapper.CursorToPartImpl
@@ -213,11 +214,11 @@ class MyNotificationManagerImplTest(
         // We can't store a null preference, so map it to a null Uri if the pref string is empty
         val ringtone = Uri.parse("")
 
-        // Must be one of them.
-        //val channelId = request?.connectionId ?: connection?.id ?: return
-        val channelId = connectionId
+        // Just show main activity when clicked.
+        val contentIntent = Intent(context, MainActivity::class.java)
+        val contentPI = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val notification = NotificationCompat.Builder(context, getChannelIdForNotification(channelId))
+        val notification = NotificationCompat.Builder(context, getChannelIdForNotification(connectionId))
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setColor(context.resolveThemeColor(R.attr.tintPrimary))
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -226,11 +227,11 @@ class MyNotificationManagerImplTest(
             .setSound(ringtone)
             .setLights(Color.WHITE, 500, 2000)
             .setVibrate(VIBRATE_PATTERN)
+            .setContentIntent(contentPI)
 
         when (type) {
             CONNECTION_INVITATION -> {
                 notification.setContentTitle("Invitation!")
-
             }
             CONNECTION_ESTABLISHED -> {
                 notification.setContentTitle("Established!")
@@ -253,7 +254,7 @@ class MyNotificationManagerImplTest(
         }
 
          */
-        notificationManager.notify(channelId.toInt(), notification.build())
+        notificationManager.notify(connectionId.toInt(), notification.build())
     }
 
     override fun notifyFailed(msgId: Long) {
