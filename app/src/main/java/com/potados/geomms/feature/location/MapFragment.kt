@@ -50,7 +50,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
 
     /**
      * Invoked when ACTION_SET_ADDRESS intent received.
-     * It is needed because this fragment and invite fragment has no connection.
+     * It is needed because this fragment has no connection with invite fragment.
      */
     private val addressSetReceiver = newBroadcastReceiver {
         it?.getStringExtra(EXTRA_ADDRESS)?.let { address ->

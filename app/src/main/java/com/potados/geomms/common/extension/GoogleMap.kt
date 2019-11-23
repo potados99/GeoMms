@@ -24,11 +24,16 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import android.R.attr.y
 import android.R.attr.x
+import kotlin.math.max
 
 fun GoogleMap.moveTo(lat: Double, lng: Double, zoom: Float = 10f, bias: Boolean = true) {
     val point = projection.toScreenLocation(LatLng(lat, lng))
 
     point.set(point.x, point.y + if (bias) 200 else 0)
 
-    animateCamera(CameraUpdateFactory.newLatLngZoom(projection.fromScreenLocation(point), zoom))
+    animateCamera(
+        CameraUpdateFactory.newLatLngZoom(
+            projection.fromScreenLocation(point), max(cameraPosition.zoom, zoom) /* Prevent zoom out */
+        )
+    )
 }
