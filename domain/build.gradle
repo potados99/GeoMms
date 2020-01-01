@@ -64,14 +64,17 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:2.2.13"
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
 
-    /** 환경설정 */
+    /** preferences */
     implementation "androidx.preference:preference:$preference_version"
 
-    /** 의존성 주입 */
+    /** DI */
     implementation "org.koin:koin-android:$koin_version"
 
-    /** 로깅 */
+    /** logging */
     implementation "com.jakewharton.timber:timber:$timber_version"
+
+    /** shortcut badger */
+    implementation "me.leolin:ShortcutBadger:1.1.21"
 
     implementation project(":common")
 }

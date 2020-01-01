@@ -22,6 +22,7 @@ package com.potados.geomms.injection
 import android.Manifest
 import com.potados.geomms.common.manager.BottomSheetManagers
 import com.potados.geomms.common.manager.MyNotificationManagerImplTest
+import com.potados.geomms.manager.ShortcutManager
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
 import com.potados.geomms.filter.ContactFilter
@@ -126,6 +127,14 @@ val myModules = module {
     /** Permission Manager */
     single { PermissionManagerImpl(context = get(), permissions = permissions) as PermissionManager }
 
+
+    /** Shortcut manager */
+    single {
+        ShortcutManager(
+            context = get(),
+            messageRepo = get()
+        )
+    }
 
 
     /**********************************************************
@@ -353,7 +362,9 @@ val myModules = module {
     }
 
     /** Update Badges */
-    single { UpdateBadge() }
+    single { UpdateBadge(
+        shortcutManager = get()
+    ) }
 
 
 

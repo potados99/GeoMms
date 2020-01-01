@@ -17,23 +17,19 @@
  * along with GeoMms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.potados.geomms.usecase
+package com.potados.geomms.manager
 
-import com.potados.geomms.functional.Result
-import com.potados.geomms.interactor.UseCase
-import com.potados.geomms.manager.ShortcutManager
-import org.koin.core.inject
-import timber.log.Timber
+import android.content.Context
+import com.potados.geomms.repository.MessageRepository
+import me.leolin.shortcutbadger.ShortcutBadger
 
-/**
- * Update notification badge.
- */
-class UpdateBadge(
-    private val shortcutManager: ShortcutManager
-) : UseCase<Unit>() {
+class ShortcutManager(
+    private val context: Context,
+    private val messageRepo: MessageRepository
+) : Manager() {
 
-    override fun run(params: Unit): Result<*> =
-        Result.of{
-            shortcutManager.updateBadge()
-        }
+    fun updateBadge() {
+        val count = messageRepo.getUnreadCount()?.toInt() ?: 0
+        ShortcutBadger.applyCount(context, count)
+    }
 }
