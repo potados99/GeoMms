@@ -300,6 +300,14 @@ val myModules = module {
         )
     }
 
+    /** Receive MMS Packet */
+    single {
+        ReceiveMMSPacket(
+            service = get(),
+            preference = get()
+        )
+    }
+
     /** Receive Sms */
     single {
         ReceiveSms(

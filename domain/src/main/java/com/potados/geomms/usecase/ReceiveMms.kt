@@ -27,6 +27,8 @@ import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.repository.SyncRepository
+import com.potados.geomms.service.LocationSupportService
+import org.koin.core.inject
 
 /**
  * Do additional things to receive an MMS.

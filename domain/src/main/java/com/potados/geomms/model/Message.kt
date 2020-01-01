@@ -108,7 +108,7 @@ open class Message : RealmObject() {
     }
 
     /**
-     * 클립보드로 복사되어야 할 텍스트
+     * To be in clipboard.
      */
     fun getText(): String {
         return when {
@@ -122,7 +122,7 @@ open class Message : RealmObject() {
     }
 
     /**
-     * 미리보기에 보일 요약 텍스트
+     * To be in preview.
      */
     fun getSummary(): String {
         return when {

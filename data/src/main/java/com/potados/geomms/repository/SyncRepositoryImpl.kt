@@ -234,7 +234,6 @@ class SyncRepositoryImpl(
     }
 
     override fun syncMessage(uri: Uri): Message? = nullOnFail {
-
         // If we don't have a valid type, return null
         val type = when {
             uri.toString().contains("mms") -> "mms"
@@ -243,7 +242,8 @@ class SyncRepositoryImpl(
         }
 
         // If we don't have a valid id, return null
-        val id = tryOrNull(false) { ContentUris.parseId(uri) } ?: throw RuntimeException("Failed to sync message. No valid id for given uri.")
+        val id = tryOrNull(false) { ContentUris.parseId(uri) }
+            ?: throw RuntimeException("Failed to sync message. No valid id for given uri.")
 
         // Check if the message already exists, so we can reuse the id
         val existingId = Realm.getDefaultInstance().use { realm ->
