@@ -25,7 +25,7 @@ import com.potados.geomms.service.LocationSupportService
 import org.koin.core.KoinComponent
 
 /**
- * Clear all geomms things.
+ * Clear all geo-mms things.
  */
 class ClearAll(
     private val service: LocationSupportService

@@ -23,6 +23,9 @@ import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
 import timber.log.Timber
 
+/**
+ * Update notification badge.
+ */
 class UpdateBadge : UseCase<Unit>() {
 
     override fun run(params: Unit): Result<*> =

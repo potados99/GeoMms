@@ -24,6 +24,10 @@ import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.repository.MessageRepository
 
+/**
+ * Mark given message as failed.
+ * Triggered by [SmsSentReceiver] when failed to send.
+ */
 class MarkFailed(
     private val messageRepo: MessageRepository,
     private val notificationMgr: MyNotificationManager

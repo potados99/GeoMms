@@ -28,6 +28,14 @@ import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.repository.SyncRepository
 
+/**
+ * Do additional things to receive an MMS.
+ *
+ * What happens when an MMS arrives:
+ *  1. [MmsReceiver] notified.
+ *  2. [MmsReceivedReceiver] triggered.
+ *  3. [ReceiveMms] executed.
+ */
 class ReceiveMms(
     private val activeConversationManager: ActiveConversationManager,
     private val conversationRepo: ConversationRepository,

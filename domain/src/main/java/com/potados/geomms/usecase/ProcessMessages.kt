@@ -24,7 +24,7 @@ import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.service.LocationSupportService
 
 /**
- * Process geomms messages left unhandled in SMS DB
+ * Process geo-mms messages left unhandled in SMS DB
  */
 class ProcessMessages(
     private val service: LocationSupportService

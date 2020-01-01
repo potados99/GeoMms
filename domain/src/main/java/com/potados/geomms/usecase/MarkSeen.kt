@@ -23,6 +23,13 @@ import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.repository.MessageRepository
 
+/**
+ * Mark messages of given threads as seen.
+ * It differs from [MarkRead], which removes notifications and updates threads,
+ * while this only marks messages in those threads as seen and read.
+ *
+ * @see [MessageRepositoryImpl]
+ */
 class MarkSeen(
     private val messageRepo: MessageRepository
 ) : UseCase<Long>() {

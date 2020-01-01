@@ -25,6 +25,10 @@ import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.SyncRepository
 
+/**
+ * Sync given message.
+ * Usually used for MMS sync.
+ */
 class SyncMessage(
     private val conversationRepo: ConversationRepository,
     private val syncManager: SyncRepository,

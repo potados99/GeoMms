@@ -25,6 +25,9 @@ import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 
+/**
+ * Delete given messages.
+ */
 class DeleteMessages(
     private val conversationRepo: ConversationRepository,
     private val messageRepo: MessageRepository,
@@ -39,7 +42,7 @@ class DeleteMessages(
             params.messageIds.toLongArray()
                 .also { messageIds -> messageRepo.deleteMessages(*messageIds) }                 // delete the messages
                 .also { params.threadId?.let { conversationRepo.updateConversations(it) } }     // updateThread the conversation
-                .also { params.threadId?.let(notificationManager::updateThread) }                     // remove notifications on the conversation
+                .also { params.threadId?.let(notificationManager::updateThread) }               // remove notifications on the conversation
                 .also { updateBadge(Unit) }                                                     // updateThread the badge
         }
 }

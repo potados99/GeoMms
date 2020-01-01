@@ -25,6 +25,9 @@ import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.preference.MyPreferences
 import com.potados.geomms.service.LocationSupportService
 
+/**
+ * Process given Messages
+ */
 class ReceivePacket(
     private val service: LocationSupportService,
     private val preference: MyPreferences

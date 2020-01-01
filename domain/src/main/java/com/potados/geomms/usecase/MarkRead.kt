@@ -25,13 +25,15 @@ import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 
+/**
+ * Mark given conversations as read.
+ */
 class MarkRead(
     private val conversationRepo: ConversationRepository,
     private val messageRepo: MessageRepository,
     private val notificationManager: MyNotificationManager,
     private val updateBadge: UpdateBadge
 ) : UseCase<List<Long>>() {
-
     override fun run(params: List<Long>): Result<*> =
         Result.of {
             params.toLongArray()

@@ -24,6 +24,9 @@ import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.repository.ConversationRepository
 
+/**
+ * Delete given conversations.
+ */
 class DeleteConversations(
     private val conversationRepo: ConversationRepository,
     private val notificationManager: MyNotificationManager,

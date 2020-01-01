@@ -23,6 +23,9 @@ import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.repository.MessageRepository
 
+/**
+ * Mark given message as sent.
+ */
 class MarkSent(
     private val messageRepo: MessageRepository
 ) : UseCase<Long>() {

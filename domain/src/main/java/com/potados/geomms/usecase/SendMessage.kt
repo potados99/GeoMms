@@ -27,6 +27,12 @@ import com.potados.geomms.model.Attachment
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 
+/**
+ * Send a message. MMS or SMS.
+ *
+ * Sent messages are saved to DB.
+ * Feedback will be given, such as succeeded, failed, etc...
+ */
 class SendMessage(
     private val context: Context,
     private val conversationRepo: ConversationRepository,

@@ -26,6 +26,9 @@ import com.potados.geomms.repository.SyncRepository
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
+/**
+ * Sync contacts.
+ */
 class SyncContacts(
     private val syncRepo: SyncRepository
 ) : UseCase<Unit>() {

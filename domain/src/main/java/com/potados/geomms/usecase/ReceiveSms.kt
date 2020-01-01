@@ -26,6 +26,9 @@ import com.potados.geomms.manager.MyNotificationManager
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 
+/**
+ * Do additional things needed when (an) SMS arrives.
+ */
 class ReceiveSms(
     private val conversationRepo: ConversationRepository,
     private val messageRepo: MessageRepository,

@@ -62,7 +62,7 @@ class SmsReceiver : BroadcastReceiver(), KoinComponent {
                         messages
                             .mapNotNull { it.displayMessageBody }
                             .reduce { body, new -> body + new }
-                    ) == true
+                    )
 
             when (isPacket) {
                 true -> receivePacket(messages) {

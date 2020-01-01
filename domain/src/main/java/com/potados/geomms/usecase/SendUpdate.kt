@@ -23,6 +23,9 @@ import com.potados.geomms.functional.Result
 import com.potados.geomms.interactor.UseCase
 import com.potados.geomms.service.LocationSupportService
 
+/**
+ * Send my current location to friend.
+ */
 class SendUpdate(
     private val service: LocationSupportService
 ) : UseCase<Long>() {
