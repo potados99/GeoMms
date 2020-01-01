@@ -37,6 +37,11 @@ class ReceiveMMSPacket(
         Result.of {
             if (!preference.receiveGeoMms) return@of
 
-            service.receivePacket(address = params.address, body = params.body)
+            val body = params.parts
+                .filter { it.type == "text/plain" }
+                .map { it.text }
+                .reduce { acc, part -> acc + part } ?: return@of
+
+            service.receivePacket(address = params.address, body = body)
         }
 }

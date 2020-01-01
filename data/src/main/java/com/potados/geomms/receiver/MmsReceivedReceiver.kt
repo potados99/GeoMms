@@ -67,16 +67,21 @@ class MmsReceivedReceiver : MmsReceivedReceiver(), KoinComponent {
                 val columnsMap = CursorToMessage.MessageColumns(it)
                 cursorToMessage.map(Pair(it, columnsMap))
             }
+            val body = message?.parts
+                ?.filter { it.type == "text/plain" }
+                ?.map { it.text }
+                ?.reduce { acc, part -> acc + part }
 
             // If then, use receiveMMSPacket rather than receiveMms.
-            if (message?.body != null && service.isValidPacket(message.body)) {
-                // At this point the MMS is already stored in the content provider.
-                // So we need to delete it.
-                contentResolver.delete(stableUri, null, null)
+            if (body != null && service.isValidPacket(body)) {
                 receiveMMSPacket(message) {
                     pendingResult.finish()
                     Timber.i("received MMS location packet.")
                 }
+
+                // At this point the MMS is already stored in the content provider.
+                // So we need to delete it.
+                contentResolver.delete(stableUri, null, null)
             }
             else {
                 receiveMms(uri) {
