@@ -27,11 +27,13 @@ import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.provider.ContactsContract
 import android.telephony.PhoneNumberUtils
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.BADGE_ICON_SMALL
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.app.TaskStackBuilder
@@ -52,6 +54,7 @@ import com.potados.geomms.receiver.MarkSeenReceiver
 import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.service.LocationSupportService
+import org.koin.core.inject
 
 class MyNotificationManagerImplTest(
     private val context: Context,
@@ -61,6 +64,8 @@ class MyNotificationManagerImplTest(
 ) : MyNotificationManager() {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    private val service: LocationSupportService by inject()
 
     init {
         @SuppressLint("NewApi")
@@ -196,21 +201,6 @@ class MyNotificationManagerImplTest(
      * - My invitation is accepted.
      */
     override fun updateConnection(connectionId: Long, type: Int) {
-        /*
-        val request = service.getIncomingRequests()?.find { it.connectionId == connectionId }
-        val connection = service.getConnection(connectionId, temporal = false)
-
-        if (request == null && connection == null) {
-            /**
-             * Cancel already shown notification.
-             * This may happen when the notification is shown and no longer needed to exist.
-             */
-            notificationManager.cancel(connectionId.toInt() + 99999)
-            return
-        }
-
-         */
-
         // We can't store a null preference, so map it to a null Uri if the pref string is empty
         val ringtone = Uri.parse("")
 
@@ -218,42 +208,32 @@ class MyNotificationManagerImplTest(
         val contentIntent = Intent(context, MainActivity::class.java)
         val contentPI = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
+        val description = when (type) {
+            CONNECTION_INVITATION -> {
+                val recipientName = service.getRequest(connectionId, inbound = true)?.recipient?.getDisplayName()
+                "New invitation from $recipientName"
+            }
+            CONNECTION_ESTABLISHED -> {
+                val recipientName = service.getConnection(connectionId)?.recipient?.getDisplayName()
+                "Invitation to $recipientName is accepted."
+            }
+            else -> ""
+        }
+
         val notification = NotificationCompat.Builder(context, getChannelIdForNotification(connectionId))
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setColor(context.resolveThemeColor(R.attr.tintPrimary))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setSmallIcon(R.drawable.ic_notification)
+            .setLargeIcon((context.resources.getDrawable(R.drawable.ic_geomms) as BitmapDrawable).bitmap)
             .setAutoCancel(true)
             .setSound(ringtone)
             .setLights(Color.WHITE, 500, 2000)
             .setVibrate(VIBRATE_PATTERN)
             .setContentIntent(contentPI)
+            .setContentTitle("GeoMMS")
+            .setContentText(description)
 
-        when (type) {
-            CONNECTION_INVITATION -> {
-                notification.setContentTitle("Invitation!")
-            }
-            CONNECTION_ESTABLISHED -> {
-                notification.setContentTitle("Established!")
-            }
-        }
-
-        /*
-        request?.let {
-            /**
-             * If a request exists, a new request is just received.
-             */
-            notification.setContentTitle("Invitation from ${it.recipient?.getDisplayName()}.")
-        }
-
-        connection?.let {
-            /**
-             * If a connection exists, a new connection is just established.
-             */
-            notification.setContentTitle("Connection established with ${it.recipient?.getDisplayName()}.")
-        }
-
-         */
         notificationManager.notify(connectionId.toInt(), notification.build())
     }
 
