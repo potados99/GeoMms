@@ -59,10 +59,14 @@ class LocationRepositoryImpl(
         }
     }
 
-    override fun getLocationWithCallback(onLocation: (Location) -> Unit) {
+    override fun getLocationWithCallback(onLocation: (Location) -> Unit, onLocationNotAvailable: () -> Unit) {
         locationClient
             .lastLocation
-            .addOnSuccessListener(onLocation)
+            .addOnSuccessListener {
+                it?.let {
+                    onLocation(it)
+                } ?: onLocationNotAvailable() // This happens when GPS is turned off.
+            }
     }
     
     override fun getCurrentLocation(): Location? = nullOnFail {

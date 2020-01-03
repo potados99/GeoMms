@@ -21,6 +21,7 @@ package com.potados.geomms.service
 
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.telephony.SmsManager
 import androidx.annotation.StringRes
 import com.google.gson.Gson
@@ -543,7 +544,7 @@ class LocationSupportServiceImpl(
             return@falseOnFail false
         }
 
-        locationRepo.getLocationWithCallback { location ->
+        locationRepo.getLocationWithCallback ({ location: Location ->
             // On location success
 
             // We validate it again for two reason:
@@ -566,7 +567,7 @@ class LocationSupportServiceImpl(
 
                 Timber.i("Sent update.")
             }
-        }
+        })
 
         return@falseOnFail true
     }

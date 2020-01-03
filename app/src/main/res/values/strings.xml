@@ -39,7 +39,7 @@
     <string name="main_default_sms_change">Change</string>
 
     <string name="drawer_settings">Settings</string>
-    <string name="drawer_help">Help &amp; feedback</string>
+    <string name="drawer_help">Help and feedback</string>
     <string name="drawer_invite">Invite friends</string>
     <string name="drawer_header_title" translatable="false">GeoMMS</string>
     <string name="drawer_header_description">Don\'t ask friends where they are. \nSee guides.</string>
@@ -180,6 +180,7 @@
     <string name="fail_cannot_share_invalid_recipient">Cannot make a location share with invalid recipient.</string>
     <string name="message_get_geomms">Share location with friends! Get GeoMMS from play store: %s</string>
     <string name="title_troubleshooting">[GeoMMS] Troubleshooting</string>
+    <string name="description_turn_on_gps">Please turn on location service.</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>

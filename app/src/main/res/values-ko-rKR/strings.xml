@@ -36,7 +36,7 @@
     <string name="main_default_sms_message">GeoMMS를 기본 메시지 앱으로 설정하기</string>
     <string name="main_default_sms_change">변경하기</string>
     <string name="drawer_settings">설정</string>
-    <string name="drawer_help">도움말 &amp; 피드백</string>
+    <string name="drawer_help">도움말 및 피드백</string>
     <string name="drawer_invite">친구 초대하기</string>
     <string name="drawer_header_description">친구에게 어디냐고 묻지 마세요. \n도움말 보기</string>
     <string name="compose_messages_empty">새로운 대화가 시작되었어요! 인사말을 건네는 건 어떨까요?</string>
@@ -184,5 +184,6 @@
     <string name="fail_cannot_share_invalid_recipient">위치를 공유할 수 없습니다. 상대방에 대한 정보가 없습니다.</string>
     <string name="message_get_geomms">친구와 위치를 공유해보세요! 플레이스토어에서 GeoMMS 보기: %s</string>
     <string name="title_troubleshooting">[GeoMMS] 문의사항</string>
+    <string name="description_turn_on_gps">GPS를 켜 주세요.</string>
 
 </resources>
