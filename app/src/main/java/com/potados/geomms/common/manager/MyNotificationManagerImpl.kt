@@ -211,11 +211,11 @@ class MyNotificationManagerImpl(
         val description = when (type) {
             CONNECTION_INVITATION -> {
                 val recipientName = service.getRequest(connectionId, inbound = true)?.recipient?.getDisplayName()
-                "New invitation from $recipientName"
+                context.getString(R.string.description_new_invitation, recipientName)
             }
             CONNECTION_ESTABLISHED -> {
                 val recipientName = service.getConnection(connectionId)?.recipient?.getDisplayName()
-                "Invitation to $recipientName is accepted."
+                context.getString(R.string.description_invitation_accepted, recipientName)
             }
             else -> ""
         }
