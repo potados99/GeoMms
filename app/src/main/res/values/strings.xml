@@ -180,7 +180,6 @@
     <string name="fail_cannot_share_invalid_recipient">Cannot make a location share with invalid recipient.</string>
     <string name="message_get_geomms">Share location with friends! Get GeoMMS from play store: %s</string>
     <string name="title_troubleshooting">[GeoMMS] Troubleshooting</string>
-    <string name="description_turn_on_gps">Please turn on location service.</string>
     <string name="description_new_invitation">New invitation from %s.</string>
     <string name="description_invitation_accepted">Invitation to %s is accepted.</string>
 

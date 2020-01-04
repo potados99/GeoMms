@@ -107,10 +107,7 @@ class MapViewModel : BaseViewModel(), KoinComponent {
     }
 
     fun getLocation(onLocation: (Location) -> Unit) {
-        locationRepo.getLocationWithCallback(onLocation) {
-            // When location service is turned off
-            fail(R.string.description_turn_on_gps, show = true)
-        }
+        locationRepo.getLocationWithCallback(onLocation)
     }
 
     fun stopTracking() {

@@ -47,4 +47,6 @@
     <string name="fail_resend_not_sent_before">패킷 재전송에 실패했습니다. 이전에 패킷을 보낸 적이 없습니다.</string>
     <string name="fail_resend_packet_no_connection">패킷 재전송에 실패했습니다. 연결이 유효하지 않습니다.</string>
     <string name="description_install_geomms">GeoMms를 설치하고 친구와 위치를 공유해보세요!</string>
+    <string name="fail_turn_on_gps">GPS를 켜 주세요.</string>
+
 </resources>

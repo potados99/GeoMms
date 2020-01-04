@@ -547,7 +547,7 @@ class LocationSupportServiceImpl(
             return@falseOnFail false
         }
 
-        locationRepo.getLocationWithCallback ({ location: Location ->
+        locationRepo.getLocationWithCallback { location: Location ->
             // On location success
 
             // We validate it again for two reason:
@@ -570,7 +570,7 @@ class LocationSupportServiceImpl(
 
                 Timber.i("Sent update.")
             }
-        })
+        }
 
         return@falseOnFail true
     }

@@ -47,4 +47,6 @@
     <string name="fail_resend_packet_no_connection">Failed to resend packet. No valid connection found.</string>
     <string name="fail_resend_not_sent_before">Failed to resend packet. No packet has been sent before.</string>
     <string name="description_install_geomms">Install GeoMms and share your location with friends!</string>
+    <string name="fail_turn_on_gps">Please turn on location service.</string>
+
 </resources>

@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.potados.geomms.data.R
 import com.potados.geomms.extension.nullOnFail
 import com.potados.geomms.extension.unitOnFail
 import timber.log.Timber
@@ -59,13 +60,13 @@ class LocationRepositoryImpl(
         }
     }
 
-    override fun getLocationWithCallback(onLocation: (Location) -> Unit, onLocationNotAvailable: () -> Unit) {
+    override fun getLocationWithCallback(onLocation: (Location) -> Unit) {
         locationClient
             .lastLocation
             .addOnSuccessListener {
                 it?.let {
                     onLocation(it)
-                } ?: onLocationNotAvailable() // This happens when GPS is turned off.
+                } ?: fail(R.string.fail_turn_on_gps, show = true) // This happens when GPS is turned off.
             }
     }
     
