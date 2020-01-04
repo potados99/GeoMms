@@ -393,6 +393,7 @@ class LocationSupportServiceImpl(
     }
     override fun beAcceptedConnectionRequest(packet: Packet) = falseOnFail {
         val request = validator.validate(getRequest(packet.connectionId, inbound = false)) {
+            // Additional condition: there should be no established connection with the same ID.
             getConnection(it.connectionId, false) == null
         }
 
@@ -401,7 +402,7 @@ class LocationSupportServiceImpl(
             return@falseOnFail false
         }
 
-        // if there is a temporal connection already added, it will be updated.
+        // If there is a temporal connection already added, it will be updated.
         val connection = Connection.fromAcceptedRequest(request)
 
         // Add connection, delete request
@@ -417,6 +418,8 @@ class LocationSupportServiceImpl(
         scheduleSendUpdate(connection.id, 3, 1000)
 
         Timber.i("Accepted -> New connection(${connection.id}) established with ${connection.id}.")
+
+        notificationManager.updateConnection(request.connectionId, MyNotificationManager.CONNECTION_ESTABLISHED)
 
         return@falseOnFail true
     }

@@ -21,7 +21,7 @@ package com.potados.geomms.injection
 
 import android.Manifest
 import com.potados.geomms.common.manager.BottomSheetManagers
-import com.potados.geomms.common.manager.MyNotificationManagerImplTest
+import com.potados.geomms.common.manager.MyNotificationManagerImpl
 import com.potados.geomms.manager.ShortcutManager
 import com.potados.geomms.common.navigation.Navigator
 import com.potados.geomms.common.util.DateFormatter
@@ -116,7 +116,7 @@ val myModules = module {
 
     /** Notification Manager */
     single {
-        MyNotificationManagerImplTest(
+        MyNotificationManagerImpl(
             context = get(),
             conversationRepo = get(),
             messageRepo = get(),

@@ -56,7 +56,7 @@ import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.service.LocationSupportService
 import org.koin.core.inject
 
-class MyNotificationManagerImplTest(
+class MyNotificationManagerImpl(
     private val context: Context,
     private val conversationRepo: ConversationRepository,
     private val messageRepo: MessageRepository,
@@ -197,7 +197,7 @@ class MyNotificationManagerImplTest(
     /**
      * Updates the notification for a particular connection.
      * Called when:
-     * - I am Invited
+     * - I am Invited.
      * - My invitation is accepted.
      */
     override fun updateConnection(connectionId: Long, type: Int) {
