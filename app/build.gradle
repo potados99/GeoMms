@@ -39,8 +39,6 @@ android {
         buildConfigField "String", "STORE_LINK", storeLink
 
         archivesBaseName = "geomms-v" + versionName + "-" + new Date().format("yyyyMMdd")
-
-        multiDexEnabled true
     }
 
     buildTypes {
