@@ -50,7 +50,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "androidx.core:core-ktx:$androidx_core_version"
@@ -61,7 +61,7 @@ dependencies {
 
     /** rxjava */
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
-    implementation "io.reactivex.rxjava2:rxjava:2.2.13"
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.16'
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
 
     /** preferences */
@@ -74,7 +74,7 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timber_version"
 
     /** shortcut badger */
-    implementation "me.leolin:ShortcutBadger:1.1.21"
+    implementation 'me.leolin:ShortcutBadger:1.1.22'
 
     implementation project(":common")
 }
