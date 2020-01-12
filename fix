@@ -1,0 +1,14 @@
+#!/bin/zsh
+
+# Fix god damn fucking 'Resource unresolved' error
+# by removing .idea, except copyright.
+
+# Backup
+cp -r .idea/copyright ./
+
+# Kill
+rm -rf .idea
+
+# Restore
+mv copyright .idea/copyright
+
