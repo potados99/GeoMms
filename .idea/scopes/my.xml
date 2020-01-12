@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="my" pattern="(src:*..*||test:*..*)&amp;&amp;!src[android-smsmms]:*..*&amp;&amp;!src[common]:com.bumptech.glide.gifencoder..*||file[domain]:*/||file[domain]:build/generated/source/buildConfig/debug//*||file[domain]:build/generated/source/kapt/debug//*||file[domain]:src/androidTest/java//*||file[domain]:src/main//*||file[domain]:src/main/java//*||file[domain]:src/test/java//*||file[data]:*/||file[common]:*/||file[app]:*/||file[GeoMms]:*/" />
-</component>

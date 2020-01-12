@@ -9,6 +9,9 @@ cp -r .idea/copyright ./
 # Kill
 rm -rf .idea
 
+# Make .idea
+mkdir .idea
+
 # Restore
-mv copyright .idea/copyright
+mv copyright .idea/
 
