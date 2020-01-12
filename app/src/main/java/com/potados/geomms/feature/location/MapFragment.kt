@@ -207,7 +207,7 @@ class MapFragment : NavigationFragment(), OnMapReadyCallback {
             observe(mapViewModel.markers) { markers ->
                 clear() // map
                 markers?.forEach { marker ->
-                    addMarker(marker) // map
+                    addMarker(marker).showInfoWindow() // map
 
                     Timber.i("Marker drawn.")
                 }
