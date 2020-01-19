@@ -42,7 +42,7 @@ class LocationRepositoryImpl(
     private val request = LocationRequest.create().apply {
         interval = 15000            // 15 sec
         fastestInterval = 5000      // 5 sec
-        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
     }
 
     private val locationCallback = object: LocationCallback() {
