@@ -419,7 +419,8 @@ class LocationSupportServiceImpl(
 
         Timber.i("Accepted -> New connection(${connection.id}) established with ${connection.id}.")
 
-        notificationManager.updateConnection(request.connectionId, MyNotificationManager.CONNECTION_ESTABLISHED)
+        // At this point the request is gone, and the connection is new.
+        notificationManager.updateConnection(connection.id, MyNotificationManager.CONNECTION_ESTABLISHED)
 
         return@falseOnFail true
     }

@@ -203,6 +203,8 @@ class MyNotificationManagerImpl(
      * - My invitation is accepted.
      */
     override fun updateConnection(connectionId: Long, type: Int) {
+        if (type != CONNECTION_INVITATION && type != CONNECTION_ESTABLISHED) return
+
         // We can't store a null preference, so map it to a null Uri if the pref string is empty
         val ringtone = Uri.parse("")
 
