@@ -138,12 +138,14 @@ class CursorToMessageImpl(
             false -> projection
         }
 
+        val dateForMMS = (dateFrom + 1) / 1000
+
         return when (permissionManager.hasReadSms()) {
             true -> SqliteWrapper.query(
                 context,
                 uri,
                 projection,
-                selection = "date >= $dateFrom",
+                selection = "(transport_type='sms' AND date>=$dateFrom) OR (transport_type='mms' AND date>=$dateForMMS)",
                 sortOrder = "normalized_date desc")
             false -> null
         }
