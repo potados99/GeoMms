@@ -91,6 +91,15 @@ class Popup(private val context: Context?) {
     }
     fun withPositiveButton(@StringRes text: Int, listener: () -> Unit = {}) = withPositiveButton(context?.getString(text), listener)
 
+    fun withNeutralButton(text: String?, listener: () -> Unit = {}): Popup {
+        dialogBuilder.setNeutralButton(text) { _, _ ->
+            listener()
+        }
+        return this
+    }
+    fun withNeutralButton(@StringRes text: Int, listener: () -> Unit = {}) = withNeutralButton(context?.getString(text), listener)
+
+
     fun withNegativeButton(text: String?, listener: () -> Unit = {}): Popup {
         dialogBuilder.setNegativeButton(text) { _, _ ->
             listener()

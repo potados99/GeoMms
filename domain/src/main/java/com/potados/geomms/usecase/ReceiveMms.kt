@@ -29,6 +29,7 @@ import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.repository.SyncRepository
 import com.potados.geomms.service.LocationSupportService
 import org.koin.core.inject
+import timber.log.Timber
 
 /**
  * Do additional things to receive an MMS.
@@ -49,6 +50,8 @@ class ReceiveMms(
 
     override fun run(params: Uri): Result<*> =
         Result.of {
+            Timber.i("RecieveMms initiated!!")
+
             val message = syncRepo.syncMessage(params) ?: return@of
 
             message.threadId

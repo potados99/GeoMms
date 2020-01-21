@@ -137,16 +137,24 @@ class Navigator (
      */
     fun showSyncDialog(activity: FragmentActivity?) {
         if (syncRepo.rows > preferences.messagesBig) {
-
             // Assign default.
             var fromDate: Long = Calendar.getInstance().apply {
                 add(Calendar.MONTH, -1)
             }.timeInMillis
 
             Popup(activity)
-                .withTitle(R.string.title_sync_slow)
+                .withTitle(R.string.title_need_to_sync)
                 .withMessage(R.string.dialog_ask_sync_all, syncRepo.rows)
-                .withPositiveButton(R.string.button_confirm) {
+                .withPositiveButton(R.string.button_sync_all) {
+                    syncMessages(0) {
+                        it.either({
+                            Notify(context).short(R.string.notify_sync_completed)
+                        }, {
+                            Notify(context).short(R.string.notify_sync_failed)
+                        })
+                    }
+                }
+                .withNeutralButton(R.string.button_sync_recent) {
                     Popup(activity)
                         .withTitle(R.string.title_choose_range)
                         .withSingleChoiceItems(R.array.sync_limits) {
@@ -166,13 +174,12 @@ class Navigator (
                                     add(Calendar.YEAR, -1)
                                 }.timeInMillis
 
-                                // All
-                                3 -> 0
-
                                 else -> throw RuntimeException("This is IMPOSSIBLE. Check your code.")
                             }
                         }
-                        .withNegativeButton(R.string.button_cancel)
+                        .withNegativeButton(R.string.button_cancel) {
+                            Notify(activity).short(R.string.notify_sync_in_settings)
+                        }
                         .withPositiveButton(R.string.button_sync) {
                             syncMessages(fromDate) {
                                 it.either({
@@ -183,6 +190,9 @@ class Navigator (
                             }
                         }
                         .show()
+                }
+                .withNegativeButton(R.string.button_cancel) {
+                    Notify(activity).short(R.string.notify_sync_in_settings)
                 }
                 .show()
         } else {

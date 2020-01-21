@@ -149,7 +149,6 @@
         <item>최근 1개월</item>
         <item>최근 6개월</item>
         <item>최근 1년</item>
-        <item>모두 동기화</item>
     </string-array>
 
     <string-array name="durations">
@@ -186,5 +185,9 @@
     <string name="title_troubleshooting">[GeoMMS] 문의사항</string>
     <string name="description_invitation_accepted">%s님과의 위치 공유가 시작되었습니다.</string>
     <string name="description_new_invitation">%s님이 위치 공유 초대를 보냈습니다.</string>
+    <string name="button_sync_all">모두 동기화</string>
+    <string name="button_sync_recent">일부만 동기화</string>
+    <string name="title_need_to_sync">연락처와 메시지를 동기화해야 합니다</string>
+    <string name="notify_sync_in_settings">설정에서 메시지를 동기화할 수 있습니다.</string>
 
 </resources>

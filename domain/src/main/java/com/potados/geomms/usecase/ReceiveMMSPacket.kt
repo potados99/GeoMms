@@ -31,17 +31,12 @@ import com.potados.geomms.service.LocationSupportService
 class ReceiveMMSPacket(
     private val service: LocationSupportService,
     private val preference: MyPreferences
-) : UseCase<Message>() {
+) : UseCase<Pair<String, String>>() {
 
-    override fun run(params: Message): Result<*> =
+    override fun run(params: Pair<String, String>): Result<*> =
         Result.of {
             if (!preference.receiveGeoMms) return@of
 
-            val body = params.parts
-                .filter { it.type == "text/plain" }
-                .map { it.text }
-                .reduce { acc, part -> acc + part } ?: return@of
-
-            service.receivePacket(address = params.address, body = body)
+            service.receivePacket(address = params.first, body = params.second)
         }
 }

@@ -182,12 +182,15 @@
     <string name="title_troubleshooting">[GeoMMS] Troubleshooting</string>
     <string name="description_new_invitation">New invitation from %s.</string>
     <string name="description_invitation_accepted">Invitation to %s is accepted.</string>
+    <string name="title_need_to_sync">Need to sync contacts and messages.</string>
+    <string name="notify_sync_in_settings">You can sync messages in settings.</string>
+    <string name="button_sync_all">Sync all</string>
+    <string name="button_sync_recent">Sync recent</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>
         <item>Past 6 months</item>
         <item>Past year</item>
-        <item>Sync all</item>
     </string-array>
 
     <string-array name="durations">
