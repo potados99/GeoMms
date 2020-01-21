@@ -30,6 +30,8 @@ abstract class MyNotificationManager : Manager() {
 
     abstract fun createNotificationChannel(threadId: Long)
 
+    abstract fun createNotificationChannelForConnection(connectionId: Long)
+
     abstract fun buildNotificationChannelId(threadId: Long): String
 
     abstract fun getNotificationForBackup(): NotificationCompat.Builder

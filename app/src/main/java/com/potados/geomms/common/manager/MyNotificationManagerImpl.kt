@@ -55,6 +55,8 @@ import com.potados.geomms.repository.ConversationRepository
 import com.potados.geomms.repository.MessageRepository
 import com.potados.geomms.service.LocationSupportService
 import org.koin.core.inject
+import timber.log.Timber
+import java.lang.RuntimeException
 
 class MyNotificationManagerImpl(
     private val context: Context,
@@ -204,35 +206,103 @@ class MyNotificationManagerImpl(
         // We can't store a null preference, so map it to a null Uri if the pref string is empty
         val ringtone = Uri.parse("")
 
-        // Just show main activity when clicked.
         val contentIntent = Intent(context, MainActivity::class.java)
-        val contentPI = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val taskStackBuilder = TaskStackBuilder.create(context)
+        taskStackBuilder.addParentStack(MainActivity::class.java)
+        taskStackBuilder.addNextIntent(contentIntent)
+        val seenIntent = Intent(context, MarkSeenReceiver::class.java).putExtra("connectionId", connectionId)
+        val seenPI = PendingIntent.getBroadcast(context, connectionId.toInt() + 20000, seenIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        // Just show main activity when clicked.
+        val contentPI = taskStackBuilder.getPendingIntent(connectionId.toInt() + 10000, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val recipient = when (type) {
+            CONNECTION_INVITATION -> service.getRequest(connectionId, inbound = true)?.recipient
+            CONNECTION_ESTABLISHED -> service.getConnection(connectionId)?.recipient
+            else -> throw RuntimeException("Wrong!!")
+        }
+
+        val recipientName = recipient?.getDisplayName() ?: "Unknown"
+
+        val date = when (type) {
+            CONNECTION_INVITATION -> service.getRequest(connectionId, inbound = true)?.date
+            CONNECTION_ESTABLISHED -> service.getConnection(connectionId)?.date
+            else -> throw RuntimeException("Wrong!!")
+        } ?: throw RuntimeException("Wrong!!")
 
         val description = when (type) {
-            CONNECTION_INVITATION -> {
-                val recipientName = service.getRequest(connectionId, inbound = true)?.recipient?.getDisplayName()
-                context.getString(R.string.description_new_invitation, recipientName)
-            }
-            CONNECTION_ESTABLISHED -> {
-                val recipientName = service.getConnection(connectionId)?.recipient?.getDisplayName()
-                context.getString(R.string.description_invitation_accepted, recipientName)
-            }
-            else -> ""
+            CONNECTION_INVITATION -> context.getString(R.string.description_new_invitation, recipientName)
+            CONNECTION_ESTABLISHED -> context.getString(R.string.description_invitation_accepted, recipientName)
+            else -> throw RuntimeException("Wrong!!!")
         }
+
+        // Create first.
+        createNotificationChannelForConnection(connectionId)
 
         val notification = NotificationCompat.Builder(context, getChannelIdForNotification(connectionId))
             .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setColor(context.resolveThemeColor(R.attr.tintPrimary))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setSmallIcon(R.drawable.ic_notification)
-            .setLargeIcon((context.resources.getDrawable(R.drawable.ic_geomms) as BitmapDrawable).bitmap)
             .setAutoCancel(true)
             .setSound(ringtone)
             .setLights(Color.WHITE, 500, 2000)
             .setVibrate(VIBRATE_PATTERN)
             .setContentIntent(contentPI)
+            .setDeleteIntent(seenPI)
             .setContentTitle("GeoMMS")
             .setContentText(description)
+
+        val messagingStyle = NotificationCompat.MessagingStyle(Person.Builder().setName("Me").build())
+
+        val person = Person.Builder()
+
+        person.setName(recipientName)
+
+        person.setIcon(
+            Glide.with(context)
+                .asBitmap()
+                .circleCrop()
+                .load(PhoneNumberUtils.stripSeparators(recipient?.address))
+                .submit(64.dpToPx(context), 64.dpToPx(context))
+                .let { futureGet -> tryOrNull(false) { futureGet.get() } }
+                ?.let(IconCompat::createWithBitmap))
+
+        recipient?.contact
+            ?.let { contact -> "${ContactsContract.Contacts.CONTENT_LOOKUP_URI}/${contact.lookupKey}" }
+            ?.let(person::setUri)
+
+
+        NotificationCompat.MessagingStyle.Message(description, date, person.build()).apply {
+            messagingStyle.addMessage(this)
+        }
+
+        // Set the large icon
+        val avatar = recipient?.address
+            ?.let { address ->
+                Glide.with(context)
+                    .asBitmap()
+                    .circleCrop()
+                    .load(PhoneNumberUtils.stripSeparators(address))
+                    .submit(64.dpToPx(context), 64.dpToPx(context))
+            }
+            ?.let { futureGet -> tryOrNull(false) { futureGet.get() } }
+
+        // Bind the notification contents based on the notification preview mode
+        notification
+            .setLargeIcon(avatar)
+            .setStyle(messagingStyle)
+
+        // Add all of the people from this conversation to the notification, so that the system can
+        // appropriately bypass DND mode
+        notification.addPerson(recipient?.contact?.lookupKey)
+
+        val intent = Intent(context, MarkReadReceiver::class.java).putExtra("threadId", connectionId)
+        val pi = PendingIntent.getBroadcast(context, connectionId?.toInt() ?: 0 + 30000, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val noti = NotificationCompat.Action.Builder(R.drawable.ic_check_white_24dp, "Mark read", pi)
+            .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_MARK_AS_READ).build()
+
+        notification.addAction(noti)
 
         notificationManager.notify(connectionId.toInt(), notification.build())
     }
@@ -313,6 +383,24 @@ class MyNotificationManagerImpl(
             notificationManager.createNotificationChannel(channel)
         }
     }
+
+    override fun createNotificationChannelForConnection(connectionId: Long) {
+        // Only proceed if the android version supports notification channels
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+
+        val channelId = buildNotificationChannelId(connectionId)
+        val name = "Connection$connectionId"
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel(channelId, name, importance).apply {
+            enableLights(true)
+            lightColor = Color.WHITE
+            enableVibration(true)
+            vibrationPattern = VIBRATE_PATTERN
+        }
+
+        notificationManager.createNotificationChannel(channel)
+    }
+
 
     /**
      * Returns the notification channel for the given conversation, or null if it doesn't exist

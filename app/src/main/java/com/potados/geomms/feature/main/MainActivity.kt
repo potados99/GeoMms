@@ -78,7 +78,6 @@ class MainActivity : NavigationActivity(), KoinComponent {
         super.onCreate(savedInstanceState)
 
         viewModel = getViewModel()
-
         viewDataBinding.apply {
             lifecycleOwner = this@MainActivity
             vm = viewModel
