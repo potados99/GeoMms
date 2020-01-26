@@ -72,6 +72,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".feature.license.LicenseActivity" />
+        <activity android:name=".feature.onboarding.OnboardingActivity" />
 
         <!--Receiver-->
         <receiver android:name=".receiver.SmsReceiver"

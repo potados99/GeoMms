@@ -326,8 +326,8 @@ class MyNotificationManagerImpl(
         val contentPI = taskStackBuilder.getPendingIntent(threadId.toInt() + 40000, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notification = NotificationCompat.Builder(context, getChannelIdForNotification(threadId))
-            .setContentTitle("Failed")
-            .setContentText("Send failed: " + conversation.getTitle())
+            .setContentTitle(context.getString(R.string.title_send_failed))
+            .setContentText(context.getString(R.string.description_failed_to_send_to, conversation.getTitle()))
             .setColor(context.resolveThemeColor(R.attr.tintPrimary))
             .setPriority(NotificationManagerCompat.IMPORTANCE_MAX)
             .setSmallIcon(R.drawable.ic_notification_failed)

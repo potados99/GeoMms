@@ -33,6 +33,7 @@ import com.potados.geomms.feature.location.ConnectionDetailFragment
 import com.potados.geomms.feature.location.RequestDetailFragment
 import com.potados.geomms.feature.location.invite.InviteActivity
 import com.potados.geomms.feature.main.MainActivity
+import com.potados.geomms.feature.onboarding.OnboardingActivity
 import com.potados.geomms.feature.settings.SettingsActivity
 import com.potados.geomms.manager.PermissionManager
 import com.potados.geomms.preference.MyPreferences
@@ -60,8 +61,7 @@ class Navigator (
     }
 
     fun showGuides() {
-        // TODO show guides
-        Notify(context).short(R.string.notify_not_implemented)
+        startActivityWithFlag(OnboardingActivity.callingIntent(context))
     }
 
     fun showConversation(threadId: Long, query: String? = null) {

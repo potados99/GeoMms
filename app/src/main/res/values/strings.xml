@@ -186,6 +186,11 @@
     <string name="notify_sync_in_settings">You can sync messages in settings.</string>
     <string name="button_sync_all">Sync all</string>
     <string name="button_sync_recent">Sync recent</string>
+    <string name="title_send_failed">Failed</string>
+    <string name="description_failed_to_send_to">Send failed: %s</string>
+    <string name="title_dont_ask_where">어디냐고 묻지 않아도 돼요.</string>
+    <string name="description_dont_ask_where">Realtime location sharing with friends.</string>
+    <string name="description_privacy">GeoMMS does NOT collect your location data to a server.</string>
 
     <string-array name="sync_limits">
         <item>Past month</item>
@@ -198,5 +203,10 @@
         <item>1 hours</item>
         <item>3 hours</item>
     </string-array>
+    <string name="description_in_app_message">Text your friends without leaving this app.</string>
+    <string name="title_in_app_message">In-app Text Messaging</string>
+    <string name="title_privacy">Privacy</string>
+    <string name="title_geomms_is">Hello!</string>
+    <string name="description_geomms_is">GeoMMS is an SMS based location sharing application.</string>
 
 </resources>

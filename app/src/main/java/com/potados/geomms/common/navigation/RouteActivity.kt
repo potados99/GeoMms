@@ -21,6 +21,9 @@ package com.potados.geomms.common.navigation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
+import com.potados.geomms.feature.onboarding.OnboardingActivity.Companion.ALREADY_SHOWN
 import org.koin.android.ext.android.inject
 
 /**
@@ -34,6 +37,13 @@ class RouteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         navigator.showMain()
+
+        PreferenceManager.getDefaultSharedPreferences(this).apply {
+            if (!getBoolean(ALREADY_SHOWN, false)) {
+                navigator.showGuides()
+            }
+        }
+
         this.finish()
     }
 }

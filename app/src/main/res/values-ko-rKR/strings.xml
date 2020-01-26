@@ -189,5 +189,15 @@
     <string name="button_sync_recent">일부만 동기화</string>
     <string name="title_need_to_sync">연락처와 메시지를 동기화해야 합니다</string>
     <string name="notify_sync_in_settings">설정에서 메시지를 동기화할 수 있습니다.</string>
+    <string name="description_failed_to_send_to">메시지 전송에 실패했습니다: %s</string>
+    <string name="title_send_failed">전송 실패</string>
+    <string name="title_dont_ask_where">어디냐고 묻지 않아도 돼요.</string>
+    <string name="description_dont_ask_where">친구와 실시간으로 위치를 공유해보세요.</string>
+    <string name="description_in_app_message">이동하는 동안 문자 메시지로 친구와 이야기를 나누어 보세요.</string>
+    <string name="title_in_app_message">앱 내에서 메시지를 주고받을 수 있어요.</string>
+    <string name="title_privacy">개인 정보는 안전하게 처리됩니다.</string>
+    <string name="description_privacy">GeoMMS는 사용자의 위치 정보를  서버에 저장하지 않습니다. 문자 메시지를 통해 친구에게만  위치 정보가 전달됩니다.</string>
+    <string name="title_geomms_is">안녕하세요!</string>
+    <string name="description_geomms_is">GeoMMS는 문자 메시지 기반 위치공유 애플리케이션입니다.</string>
 
 </resources>
