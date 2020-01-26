@@ -20,7 +20,7 @@
 package com.potados.geomms.model
 
 import android.location.Location
-import com.potados.geomms.BuildConfig
+import com.potados.geomms.domain.BuildConfig
 
 class Packet(
     var type: Int = 0,

@@ -17,4 +17,4 @@
   ~ along with GeoMms.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<manifest package="com.potados.geomms" />
+<manifest package="com.potados.geomms.common" />

@@ -77,7 +77,6 @@ dependencies {
     implementation "org.koin:koin-android:$koin_version"
 
     implementation project(":android-smsmms")
-
 }
 repositories {
     mavenCentral()
